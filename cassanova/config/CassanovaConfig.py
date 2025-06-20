@@ -3,22 +3,15 @@ from functools import cache
 from json import dump
 from logging import getLogger
 from pathlib import Path
-from typing import Any
 
-from pydantic import Field, BaseModel
 from pydantic_settings import BaseSettings, PydanticBaseSettingsSource, JsonConfigSettingsSource
+
+from cassanova.config.ClusterConfig import ClusterConfig
 
 logger = getLogger(__name__)
 
 
-class ClusterConfig(BaseModel):
-    contact_points: list[str]
-    username: str = Field()
-    password: str = Field()
-    additional_kwargs: dict[str, Any] = Field(default_factory=dict)
-
-
-class ClustersConfig(BaseSettings):
+class CassanovaConfig(BaseSettings):
     clusters: list[ClusterConfig]
 
     @classmethod
@@ -36,7 +29,7 @@ class ClustersConfig(BaseSettings):
         return (JsonConfigSettingsSource(settings_cls, json_file=config_path),)
 
 
-def save_settings_to_file(settings: ClustersConfig, path: str | Path = os.getenv("CASSANOVA_CONFIG_PATH")) -> None:
+def save_settings_to_file(settings: CassanovaConfig, path: str | Path = os.getenv("CASSANOVA_CONFIG_PATH")) -> None:
     path = Path(path)
     with path.open("w", encoding="utf-8") as f:
         dump(settings.model_dump(), f, indent=4)
@@ -44,4 +37,4 @@ def save_settings_to_file(settings: ClustersConfig, path: str | Path = os.getenv
 
 @cache
 def get_clusters_config(*args, **kwargs):
-    return ClustersConfig(*args, **kwargs)
+    return CassanovaConfig(*args, **kwargs)
