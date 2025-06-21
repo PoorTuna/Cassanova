@@ -3,16 +3,20 @@ from functools import cache
 from json import dump
 from logging import getLogger
 from pathlib import Path
+from typing import Any
 
+from pydantic import Field
 from pydantic_settings import BaseSettings, PydanticBaseSettingsSource, JsonConfigSettingsSource
 
+from cassanova.config.APPConfig import APPConfig
 from cassanova.config.ClusterConfig import ClusterConfig
 
 logger = getLogger(__name__)
 
 
 class CassanovaConfig(BaseSettings):
-    clusters: list[ClusterConfig]
+    clusters: dict[str, ClusterConfig]
+    app_config: APPConfig
 
     @classmethod
     def settings_customise_sources(
