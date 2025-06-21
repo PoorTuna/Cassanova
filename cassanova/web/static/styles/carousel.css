@@ -1,0 +1,49 @@
+.keyspace-carousel-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 20px 0;
+}
+
+.keyspace-carousel {
+    display: flex;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    gap: 20px;
+    padding: 10px 0;
+    flex-grow: 1;
+    width: 100%;
+}
+
+.keyspace-carousel::-webkit-scrollbar {
+    height: 8px;
+}
+
+.keyspace-carousel::-webkit-scrollbar-thumb {
+    background: #444;
+    border-radius: 4px;
+}
+
+.carousel-btn {
+    background-color: #2a2a2a;
+    border: none;
+    color: #ccc;
+    font-size: 1.5rem;
+    padding: 8px 15px;
+    cursor: pointer;
+    border-radius: 8px;
+    user-select: none;
+    transition: background-color 0.2s ease;
+}
+
+.carousel-btn:hover {
+    background-color: #333;
+}
+
+.carousel-btn.left {
+    margin-right: 8px;
+}
+
+.carousel-btn.right {
+    margin-left: 8px;
+}

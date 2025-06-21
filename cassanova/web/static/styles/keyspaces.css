@@ -1,0 +1,36 @@
+.keyspace-card {
+    flex: 0 0 350px;
+    background-color: #1e1e1e;
+    border: 1px solid #2a2a2a;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.4);
+    color: #ddd;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    border-left: 4px solid #4fc3f7;
+}
+
+.keyspace-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.5);
+}
+
+#keyspace-filter {
+    font-size: 1.1rem;
+    border: 1px solid #555;
+    background: #222;
+    color: #ddd;
+    padding: 10px 15px;
+    border-radius: 6px;
+    width: 100%;
+    box-sizing: border-box;
+    transition: border-color 0.2s ease;
+}
+
+#keyspace-filter:focus {
+    outline: none;
+    border-color: #4fc3f7;
+    box-shadow: 0 0 5px #4fc3f7;
+}

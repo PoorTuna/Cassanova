@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>Cluster: {{ cluster.name }}</title>
+    <link href="/static/styles/main.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <script>
+        function toggleTables(keyspace) {
+            const content = document.getElementById('tables-' + keyspace);
+            const arrow = document.getElementById('arrow-' + keyspace);
+
+            const isOpen = content.classList.contains('open');
+
+            if (isOpen) {
+                content.classList.remove('open');
+                arrow.style.transform = 'rotate(0deg)';
+            } else {
+                content.classList.add('open');
+                arrow.style.transform = 'rotate(90deg)';
+            }
+        }
+
+        function scrollKeyspaces(direction) {
+            const carousel = document.getElementById('keyspace-carousel');
+            const cardWidth = carousel.querySelector('.keyspace-card').offsetWidth + 20; // card width + gap
+            carousel.scrollBy({
+                left: direction * cardWidth,
+                behavior: 'smooth'
+            });
+        }
+
+        function filterKeyspaces() {
+            const filter = document.getElementById('keyspace-filter').value.toLowerCase();
+            const cards = document.querySelectorAll('.keyspace-card');
+            cards.forEach(card => {
+                let keyspaceName = card.querySelector('h3').innerText.toLowerCase();
+                // Remove "keyspace:" prefix for matching
+                keyspaceName = keyspaceName.replace(/^keyspace:\s*/, '');
+                if (keyspaceName.includes(filter)) {
+                    card.style.display = '';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+    </script>
+</head>
+<body>
+<header style="border-bottom: 4px solid;">
+    <a href="/" style="text-decoration: none;">
+        <h1>
+            <img src="/static/cassanova-logo.png" alt="Logo" style="width: 40px; height: 40px;">
+            <a href="/" style="text-decoration: none; color: inherit;">Cassanova - Cluster: {{ cluster.name }}</a>
+        </h1>
+    </a>
+</header>
+
+<main>
+    <section class="cluster-overview">
+        <h2>Cluster Overview</h2>
+        <ul>
+            <li><strong>Name</strong><span data-fulltext="{{ cluster.name }}" title="{{ cluster.name }}">{{ cluster.name }}</span>
+            </li>
+            <li><strong>Version</strong><span data-fulltext="{{ cluster.version }}" title="{{ cluster.version }}">{{ cluster.version }}</span>
+            </li>
+            <li><strong>Partitioner</strong><span data-fulltext="{{ cluster.partitioner }}"
+                                                  title="{{ cluster.partitioner }}">{{ cluster.partitioner }}</span>
+            </li>
+            <li><strong>Snitch</strong><span data-fulltext="{{ cluster.snitch }}"
+                                             title="{{ cluster.snitch }}">{{ cluster.snitch }}</span>
+            </li>
+            <li><strong>Nodes</strong><span data-fulltext="{{ cluster.total_nodes }}"
+                                            title="{{ cluster.total_nodes }}">{{ cluster.total_nodes }}</span></li>
+            <li><strong>Nodes Up</strong><span data-fulltext="{{ cluster.up_nodes }}"
+                                               title="{{ cluster.up_nodes }}">{{ cluster.up_nodes }}</span></li>
+            <li><strong>Nodes Down</strong><span data-fulltext="{{ cluster.down_nodes }}"
+                                                 title="{{ cluster.down_nodes }}">{{ cluster.down_nodes }}</span></li>
+            <li><strong>Status</strong><span data-fulltext="{{ cluster.status }}"
+                                             title="{{ cluster.status }}">{{ cluster.status }}</span></li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>Nodes Health & Metrics</h2>
+        <table>
+            <thead>
+            <tr>
+                <th>Node</th>
+                <th>Status</th>
+                <th>Load</th>
+                <th>CPU %</th>
+                <th>RAM %</th>
+                <th>Token Range</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for node in cluster.nodes %}
+            <tr>
+                <td>{{ node.name }}</td>
+                <td>{{ node.status }}</td>
+                <td>{{ node.load }}</td>
+                <td>{{ node.cpu_percent }}</td>
+                <td>{{ node.ram_percent }}</td>
+                <td>{{ node.token_range }}</td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="6">No nodes data available.</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </section>
+
+    <section class="fade-in">
+        <h2>Keyspaces & Tables</h2>
+        <input type="search" id="keyspace-filter" placeholder="Filter keyspaces..." oninput="filterKeyspaces()"/>
+
+        <div class="keyspace-carousel-container">
+            <button class="carousel-btn left" onclick="scrollKeyspaces(-1)">&#8592;</button>
+
+            <div class="keyspace-carousel" id="keyspace-carousel">
+                {% for ks in cluster.keyspaces %}
+                <article class="keyspace-card">
+                    <h3><a href="/{{ cluster_config_entry }}/{{ks.name}}"
+                           style="text-decoration: none; color: inherit;">{{ ks.name }}</a></h3>
+                    <p><strong>Replication:</strong> {{ ks.replication }}</p>
+                    <p><strong>Table Count:</strong> {{ ks.table_count }}</p>
+                    <p><strong>Durable Writes:</strong> {{ ks.durable_writes }}</p>
+                    <p><strong>Virtual Table:</strong> {{ ks.virtual }}</p>
+                    <div
+                            style="display: flex; justify-content: space-between; align-items: center; cursor: pointer; user-select: none;"
+                            onclick="toggleTables('{{ ks.name }}')"
+                            title="Click to expand/collapse tables"
+                    >
+                        <h4 style="margin: 0;">Tables</h4>
+                        <span id="arrow-{{ ks.name }}" style="transition: transform 0.3s ease;">&#9656;</span>
+                    </div>
+                    <div id="tables-{{ ks.name }}" class="table-section">
+                        <div class="table-grid">
+                            {% for table in ks.tables %}
+                            <div class="table-card" title="{{ table.name }}">
+                                {{ table.name }}
+                            </div>
+                            {% else %}
+                            <p>No tables data available.</p>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </article>
+                {% else %}
+                <p>No keyspaces data available.</p>
+                {% endfor %}
+            </div>
+
+            <button class="carousel-btn right" onclick="scrollKeyspaces(1)">&#8594;</button>
+        </div>
+    </section>
+
+    <section class="fade-in">
+        <h2>Operations</h2>
+        <form method="post" action="/trigger_repair/cluster_name">
+            <button type="submit">Trigger Repair</button>
+        </form>
+    </section>
+</main>
+
+<footer>
+    <p>&copy; {{ current_year }} Oren Kessler - Cassanova</p>
+</footer>
+</body>
+</html>

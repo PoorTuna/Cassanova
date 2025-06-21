@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link href="/static/styles/main.css" rel="stylesheet">
+    <title>Cassanova Home</title>
+</head>
+<body>
+<header>
+    <a href="/" style="text-decoration: none;">
+        <h1>
+            <img src="/static/cassanova-logo.png" alt="Logo" style="width: 40px; height: 40px;">
+            <a href="/" style="text-decoration: none; color: inherit;">Cassanova</a>
+        </h1>
+    </a>
+</header>
+
+<div class="container">
+    <div class="card">
+        <h2>Clusters</h2>
+        <table>
+            <thead>
+            <tr>
+                <th>Cluster Name</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for cluster in clusters.keys() %}
+            <tr>
+                <td>
+                    <a href="/cluster/{{ cluster }}" style="text-decoration: none;color: inherit">
+                        {{ cluster }}
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+</div>
+</body>
+</html>

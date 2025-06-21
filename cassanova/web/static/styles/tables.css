@@ -1,0 +1,69 @@
+ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+ul li {
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #2a2a2a;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 0.5rem;
+}
+
+th, td {
+    padding: 0.5rem 1rem;
+    text-align: left;
+    border-bottom: 1px solid #333;
+    font-size: 0.9rem;
+}
+
+th {
+    color: #b0bec5;
+}
+
+.table-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 12px;
+    margin-top: 10px;
+}
+
+.table-card {
+    background-color: #1e1e1e;
+    border: 1px solid #2c2c2c;
+    border-radius: 10px;
+    padding: 12px 14px;
+    text-align: center;
+    color: #ddd;
+    font-weight: 500;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.table-card:hover {
+    background-color: #252525;
+    border-color: #3a3a3a;
+}
+
+.table-section {
+    margin-top: 10px;
+    border-top: 1px solid #444;
+    padding-top: 8px;
+    background-color: #2a2a2a;
+    border-radius: 6px;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease;
+}
+
+.table-section.open {
+    max-height: 500px;
+}
