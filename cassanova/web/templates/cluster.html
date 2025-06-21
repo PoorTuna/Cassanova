@@ -6,56 +6,32 @@
     <title>Cluster: {{ cluster.name }}</title>
     <link href="/static/styles/main.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://unpkg.com/vis-network/styles/vis-network.min.css" rel="stylesheet"/>
+    <script src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js" defer></script>
+    <script id="cluster-data" type="application/json" style="display:none;" defer>{{ cluster.model_dump() | tojson | safe }}</script>
+    <script src="/static/scripts/keyspace-controls.js" defer></script>
+    <script src="/static/scripts/topology-graph.js" defer></script>
 
-    <script>
-        function toggleTables(keyspace) {
-            const content = document.getElementById('tables-' + keyspace);
-            const arrow = document.getElementById('arrow-' + keyspace);
-
-            const isOpen = content.classList.contains('open');
-
-            if (isOpen) {
-                content.classList.remove('open');
-                arrow.style.transform = 'rotate(0deg)';
-            } else {
-                content.classList.add('open');
-                arrow.style.transform = 'rotate(90deg)';
-            }
-        }
-
-        function scrollKeyspaces(direction) {
-            const carousel = document.getElementById('keyspace-carousel');
-            const cardWidth = carousel.querySelector('.keyspace-card').offsetWidth + 20; // card width + gap
-            carousel.scrollBy({
-                left: direction * cardWidth,
-                behavior: 'smooth'
-            });
-        }
-
-        function filterKeyspaces() {
-            const filter = document.getElementById('keyspace-filter').value.toLowerCase();
-            const cards = document.querySelectorAll('.keyspace-card');
-            cards.forEach(card => {
-                let keyspaceName = card.querySelector('h3').innerText.toLowerCase();
-                // Remove "keyspace:" prefix for matching
-                keyspaceName = keyspaceName.replace(/^keyspace:\s*/, '');
-                if (keyspaceName.includes(filter)) {
-                    card.style.display = '';
-                } else {
-                    card.style.display = 'none';
-                }
-            });
-        }
-    </script>
 </head>
 <body>
-<header style="border-bottom: 4px solid;">
-    <a href="/" style="text-decoration: none;">
-        <h1>
-            <img src="/static/cassanova-logo.png" alt="Logo" style="width: 40px; height: 40px;">
-            <a href="/" style="text-decoration: none; color: inherit;">Cassanova - Cluster: {{ cluster.name }}</a>
-        </h1>
-    </a>
+<header class="status-{{ cluster.status.lower() | default('unknown') }}">
+    <h1>
+        <a href="/cluster/{{ cluster_config_entry }}"
+           style="text-decoration: none; color: inherit; display: flex; align-items: center;">
+            <img src="/static/icons/logo/cassanova-logo.png" alt="Logo"
+                 style="width: 40px; height: 40px; margin-right: 8px;">
+            Cassanova - Cluster: {{ cluster.name }}
+        </a>
+    </h1>
+
+    <div class="header-buttons">
+        <a href="/cluster/{{ cluster_config_entry }}/nodes" title="Nodes" aria-label="Nodes" class="nodes-btn-link">
+            <button type="button" class="nodes-btn">Nodes</button>
+        </a>
+        <a href="/" title="Disconnect" aria-label="Disconnect" class="header-icon-link">
+            <img src="/static/icons/misc/disconnect.png" alt="Disconnect" class="header-icon"/>
+        </a>
+    </div>
 </header>
 
 <main>
@@ -83,44 +59,17 @@
         </ul>
     </section>
 
-    <section>
-        <h2>Nodes Health & Metrics</h2>
-        <table>
-            <thead>
-            <tr>
-                <th>Node</th>
-                <th>Status</th>
-                <th>Load</th>
-                <th>CPU %</th>
-                <th>RAM %</th>
-                <th>Token Range</th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for node in cluster.nodes %}
-            <tr>
-                <td>{{ node.name }}</td>
-                <td>{{ node.status }}</td>
-                <td>{{ node.load }}</td>
-                <td>{{ node.cpu_percent }}</td>
-                <td>{{ node.ram_percent }}</td>
-                <td>{{ node.token_range }}</td>
-            </tr>
-            {% else %}
-            <tr>
-                <td colspan="6">No nodes data available.</td>
-            </tr>
-            {% endfor %}
-            </tbody>
-        </table>
-    </section>
-
     <section class="fade-in">
-        <h2>Keyspaces & Tables</h2>
-        <input type="search" id="keyspace-filter" placeholder="Filter keyspaces..." oninput="filterKeyspaces()"/>
-
+        <h2>Keyspaces</h2>
+        <input
+                type="search"
+                id="keyspace-filter"
+                placeholder="Filter keyspaces..."
+                aria-label="Filter keyspaces"
+                autocomplete="off"
+        />
         <div class="keyspace-carousel-container">
-            <button class="carousel-btn left" onclick="scrollKeyspaces(-1)">&#8592;</button>
+            <button class="carousel-btn left" aria-label="Scroll keyspaces left">&#8592;</button>
 
             <div class="keyspace-carousel" id="keyspace-carousel">
                 {% for ks in cluster.keyspaces %}
@@ -131,40 +80,19 @@
                     <p><strong>Table Count:</strong> {{ ks.table_count }}</p>
                     <p><strong>Durable Writes:</strong> {{ ks.durable_writes }}</p>
                     <p><strong>Virtual Table:</strong> {{ ks.virtual }}</p>
-                    <div
-                            style="display: flex; justify-content: space-between; align-items: center; cursor: pointer; user-select: none;"
-                            onclick="toggleTables('{{ ks.name }}')"
-                            title="Click to expand/collapse tables"
-                    >
-                        <h4 style="margin: 0;">Tables</h4>
-                        <span id="arrow-{{ ks.name }}" style="transition: transform 0.3s ease;">&#9656;</span>
-                    </div>
-                    <div id="tables-{{ ks.name }}" class="table-section">
-                        <div class="table-grid">
-                            {% for table in ks.tables %}
-                            <div class="table-card" title="{{ table.name }}">
-                                {{ table.name }}
-                            </div>
-                            {% else %}
-                            <p>No tables data available.</p>
-                            {% endfor %}
-                        </div>
-                    </div>
                 </article>
                 {% else %}
                 <p>No keyspaces data available.</p>
                 {% endfor %}
             </div>
 
-            <button class="carousel-btn right" onclick="scrollKeyspaces(1)">&#8594;</button>
+            <button class="carousel-btn right" aria-label="Scroll keyspaces right">&#8594;</button>
         </div>
     </section>
 
     <section class="fade-in">
-        <h2>Operations</h2>
-        <form method="post" action="/trigger_repair/cluster_name">
-            <button type="submit">Trigger Repair</button>
-        </form>
+        <h2>Data Layout</h2>
+        <div id="topology-graph" style="width: 100%; height: 400px; border: 1px solid #ccc; border-radius: 8px;"></div>
     </section>
 </main>
 

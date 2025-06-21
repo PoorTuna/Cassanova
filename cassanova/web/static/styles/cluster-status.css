@@ -1,0 +1,15 @@
+header.status-healthy {
+    border-bottom: 4px solid lightgreen;
+}
+
+header.status-degraded {
+    border-bottom: 4px solid orange;
+}
+
+header.status-down {
+    border-bottom: 4px solid red;
+}
+
+header.status-unknown {
+    border-bottom: 4px solid white;
+}

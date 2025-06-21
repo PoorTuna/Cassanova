@@ -15,3 +15,53 @@ a {
 a:hover {
     text-decoration: underline;
 }
+
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1rem;
+}
+
+header h1 {
+  margin: 0;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.header-buttons {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+/* Disconnect icon styling */
+.header-icon {
+  width: 50px;
+  height: 50px;
+  cursor: pointer;
+  filter: invert(1); /* invert for dark bg; adjust as needed */
+  transition: filter 0.2s ease;
+}
+
+.header-icon:hover {
+  filter: invert(0.7);
+}
+
+/* Nodes button styling */
+.nodes-btn {
+  background-color: #4fc3f7;
+  border: none;
+  color: #000;
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.nodes-btn:hover {
+  background-color: #81d4fa;
+}

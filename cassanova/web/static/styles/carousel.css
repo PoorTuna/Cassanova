@@ -2,17 +2,31 @@
     display: flex;
     align-items: center;
     gap: 10px;
+    width: 100%;
+    box-sizing: border-box;
+    position: relative;
     margin: 20px 0;
+    overflow-x: auto; /* horizontal scroll */
+    scrollbar-width: thin; /* Firefox */
+    scrollbar-color: #444 transparent;
+    padding: 5px 0;
 }
 
 .keyspace-carousel {
-    display: flex;
-    overflow-x: auto;
+
     scroll-behavior: smooth;
-    gap: 20px;
     padding: 10px 0;
     flex-grow: 1;
+    flex-direction: row;
+    overflow-y: visible;
+    max-width: 100%;
+    display: flex;
+    gap: 20px;
+    overflow-x: auto;
     width: 100%;
+    scroll-snap-type: x mandatory; /* optional: for nicer snapping */
+    -webkit-overflow-scrolling: touch;
+    flex-wrap: nowrap;
 }
 
 .keyspace-carousel::-webkit-scrollbar {
