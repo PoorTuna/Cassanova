@@ -84,6 +84,7 @@ function renderTopologyGraph(cluster) {
         edges: {
             arrows: {to: true},
             smooth: true,
+            color: '#e0e0e0'
         },
         physics: false
     };

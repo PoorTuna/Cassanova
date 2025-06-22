@@ -8,7 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <link href="https://unpkg.com/vis-network/styles/vis-network.min.css" rel="stylesheet"/>
     <script src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js" defer></script>
-    <script id="cluster-data" type="application/json" style="display:none;" defer>{{ cluster.model_dump() | tojson | safe }}</script>
+    <script id="cluster-data" type="application/json" style="display:none;" defer>{{cluster.model_dump() | tojson | safe}}</script>
     <script src="/static/scripts/keyspace-controls.js" defer></script>
     <script src="/static/scripts/topology-graph.js" defer></script>
 
@@ -20,13 +20,19 @@
            style="text-decoration: none; color: inherit; display: flex; align-items: center;">
             <img src="/static/icons/logo/cassanova-logo.png" alt="Logo"
                  style="width: 40px; height: 40px; margin-right: 8px;">
-            Cassanova - Cluster: {{ cluster.name }}
+            Cassanova - {{ cluster.name }}
         </a>
     </h1>
 
     <div class="header-buttons">
         <a href="/cluster/{{ cluster_config_entry }}/nodes" title="Nodes" aria-label="Nodes" class="nodes-btn-link">
             <button type="button" class="nodes-btn">Nodes</button>
+        </a>
+        <a href="{{ monitoring_url }}" title="Monitoring" aria-label="Monitoring" class="nodes-btn-link">
+            <button type="button" class="nodes-btn">Monitoring</button>
+        </a>
+        <a href="{{ monitoring_url }}" title="Operations" aria-label="Operations" class="nodes-btn-link">
+            <button type="button" class="nodes-btn">Operations</button>
         </a>
         <a href="/" title="Disconnect" aria-label="Disconnect" class="header-icon-link">
             <img src="/static/icons/misc/disconnect.png" alt="Disconnect" class="header-icon"/>
@@ -56,6 +62,12 @@
                                                  title="{{ cluster.down_nodes }}">{{ cluster.down_nodes }}</span></li>
             <li><strong>Status</strong><span data-fulltext="{{ cluster.status }}"
                                              title="{{ cluster.status }}">{{ cluster.status }}</span></li>
+            <li><strong>Datacenters</strong><span data-fulltext="{{ cluster.dc_count }}"
+                                                  title="{{ cluster.dc_count }}">{{ cluster.dc_count }}</span></li>
+            <li><strong>Racks</strong><span data-fulltext="{{ cluster.rack_count }}"
+                                            title="{{ cluster.rack_count }}">{{ cluster.rack_count }}</span></li>
+            <li><strong>Cluster Size</strong><span data-fulltext="{{ cluster.cluster_size }}"
+                                            title="{{ cluster.cluster_size }}">{{ cluster.cluster_size }}</span></li>
         </ul>
     </section>
 
@@ -74,7 +86,7 @@
             <div class="keyspace-carousel" id="keyspace-carousel">
                 {% for ks in cluster.keyspaces %}
                 <article class="keyspace-card">
-                    <h3><a href="/{{ cluster_config_entry }}/{{ks.name}}"
+                    <h3><a href="/cluster/{{ cluster_config_entry }}/keyspace/{{ks.name}}"
                            style="text-decoration: none; color: inherit;">{{ ks.name }}</a></h3>
                     <p><strong>Replication:</strong> {{ ks.replication }}</p>
                     <p><strong>Table Count:</strong> {{ ks.table_count }}</p>

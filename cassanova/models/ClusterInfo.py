@@ -62,5 +62,8 @@ class ClusterInfo(BaseModel):
     up_nodes: int
     down_nodes: int
     status: str
+    rack_count: int
+    dc_count: int
+    cluster_size: str
 
     model_config = ConfigDict(populate_by_name=True)
