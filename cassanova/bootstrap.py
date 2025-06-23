@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from starlette.staticfiles import StaticFiles
 
-from cassanova.config.APPConfig import APPConfig
+from cassanova.config.app_config import APPConfig
 from cassanova.consts.app_routers import APPConsts
 
 

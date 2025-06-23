@@ -1,0 +1,20 @@
+from typing import Optional
+
+from pydantic import BaseModel, Field
+
+
+class ClusterMetrics(BaseModel):
+    partitioner: Optional[str] = None
+    name: str = Field(alias='cluster')
+    snitch: str
+    version: str
+    rack_count: int
+    dc_count: int
+    cluster_size: str
+    total_nodes: int
+    up_nodes: int
+    down_nodes: int
+    status: str
+    version: str = 'N/A'
+    is_fully_upgraded: bool = False
+    # todo: Default values here

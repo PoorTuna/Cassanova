@@ -7,7 +7,7 @@ function renderTopologyGraph(cluster) {
 
     nodes.push({
         id: 'cluster',
-        label: cluster.name,
+        label: cluster.metrics.name,
         shape: 'box',
         color: {
             background: '#121212',
