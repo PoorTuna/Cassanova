@@ -8,14 +8,14 @@ from typing import Any
 from pydantic import Field
 from pydantic_settings import BaseSettings, PydanticBaseSettingsSource, JsonConfigSettingsSource
 
-from cassanova.config.APPConfig import APPConfig
-from cassanova.config.ClusterConfig import ClusterConfig
+from cassanova.config.app_config import APPConfig
+from cassanova.config.cluster_config import ClusterConnectionConfig
 
 logger = getLogger(__name__)
 
 
 class CassanovaConfig(BaseSettings):
-    clusters: dict[str, ClusterConfig]
+    clusters: dict[str, ClusterConnectionConfig]
     app_config: APPConfig
 
     @classmethod

@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from uvicorn import run
 
 from cassanova.bootstrap import bootstrap_app
-from cassanova.config.CassanovaConfig import get_clusters_config
+from cassanova.config.cassanova_config import get_clusters_config
 
 app = FastAPI()
 
