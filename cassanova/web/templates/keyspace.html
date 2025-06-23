@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Keyspace: {{ keyspace.name }}</title>
+    <link href="/static/styles/main.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+<header>
+    <h1>
+        <a href="/cluster/{{ cluster_config_entry }}" style="text-decoration: none; color: inherit; display: flex; align-items: center;">
+            <img src="/static/icons/logo/cassanova-logo.png" alt="Logo" style="width: 40px; height: 40px; margin-right: 8px;">
+            Cassanova - {{ keyspace.name.upper() }}
+        </a>
+    </h1>
+
+    <div class="header-buttons">
+        <a href="/cluster/{{ cluster_config_entry }}/nodes" class="nodes-btn-link">
+            <button type="button" class="nodes-btn">Nodes</button>
+        </a>
+        <a href="/cluster/{{ cluster_config_entry }}" class="nodes-btn-link">
+            <button type="button" class="nodes-btn">Back to Cluster</button>
+        </a>
+        <a href="/" class="header-icon-link" title="Disconnect" aria-label="Disconnect">
+            <img src="/static/icons/misc/disconnect.png" alt="Disconnect" class="header-icon" />
+        </a>
+    </div>
+</header>
+
+<main>
+    <section class="cluster-overview fade-in">
+        <h2>Keyspace Overview</h2>
+        <ul>
+            <li><strong>Name</strong><span>{{ keyspace.name }}</span></li>
+            <li><strong>Replication</strong><span>{{ keyspace.replication }}</span></li>
+            <li><strong>Durable Writes</strong><span>{{ keyspace.durable_writes }}</span></li>
+            <li><strong>Virtual Table</strong><span>{{ keyspace.virtual }}</span></li>
+            <li><strong>Total Tables</strong><span>{{ keyspace.table_count }}</span></li>
+        </ul>
+    </section>
+
+    <section class="fade-in">
+        <h2>Tables</h2>
+        {% for table in keyspace.tables %}
+        <details class="table-card">
+            <summary><strong>{{ table.name }}</strong></summary>
+            <div class="table-details">
+                <h4>Primary Key</h4>
+                <p>
+                    <strong>Partition Key:</strong>
+                    {{ table.partition_key | map(attribute="name") | join(", ") }}
+                </p>
+                {% if table.clustering_key %}
+                <p>
+                    <strong>Clustering Columns:</strong>
+                    {{ table.clustering_key | map(attribute="name") | join(", ") }}
+                </p>
+                {% endif %}
+
+                <h4>Columns</h4>
+                <table>
+                    <thead>
+                    <tr><th>Name</th><th>Type</th><th>Static</th><th>Reversed</th></tr>
+                    </thead>
+                    <tbody>
+                    {% for col_name, col in table.columns.items() %}
+                    <tr>
+                        <td>{{ col.name }}</td>
+                        <td>{{ col.cql_type }}</td>
+                        <td>{{ "✔" if col.is_static else "" }}</td>
+                        <td>{{ "✔" if col.is_reversed else "" }}</td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+
+                {% if table.indexes %}
+                <h4>Indexes</h4>
+                <ul>
+                    {% for index_name, index_def in table.indexes.items() %}
+                    <li><strong>{{ index_name }}</strong>: {{ index_def }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+
+                {% if table.options %}
+                <h4>Options</h4>
+                <pre>{{ table.options | tojson(indent=2) }}</pre>
+                {% endif %}
+            </div>
+        </details>
+        {% else %}
+        <p>No tables found in this keyspace.</p>
+        {% endfor %}
+    </section>
+</main>
+
+<footer>
+    <p>&copy; {{ current_year }} Oren Kessler - Cassanova</p>
+</footer>
+</body>
+</html>
