@@ -45,6 +45,7 @@ button:hover {
     cursor: pointer;
     font-size: 0.9rem;
     transition: background-color 0.2s ease;
+    width: 8%;
 }
 
 .toggle-btn:hover {
