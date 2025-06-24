@@ -6,7 +6,7 @@ from cassanova.cass.metrics.cluster.get_description import get_cluster_descripti
 from cassanova.cass.metrics.cluster.get_estimated_size import get_total_cluster_size_estimate
 from cassanova.cass.metrics.cluster.get_health import get_cluster_health
 from cassanova.cass.metrics.topology.get_dc_rack_distribution import get_dc_rack_distribution
-from cassanova.models.cluster_info import ClusterInfo
+from cassanova.models.cluster_info.cluster import ClusterInfo
 from cassanova.models.cluster_metrics import ClusterMetrics
 
 

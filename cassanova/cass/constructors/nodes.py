@@ -1,4 +1,4 @@
-from cassanova.models.cluster_info import NodeInfo
+from cassanova.models.cluster_info.node import NodeInfo
 
 
 def generate_nodes_info() -> list[NodeInfo]:
