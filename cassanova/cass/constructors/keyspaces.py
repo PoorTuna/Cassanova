@@ -13,7 +13,7 @@ def generate_keyspaces_info(keyspaces: list[tuple[str, KeyspaceMetadata]]) -> li
             virtual=keyspace_metadata.virtual,
             durable_writes=keyspace_metadata.durable_writes,
             tables=generate_tables_info(keyspace_metadata.tables.values()),
-            indexes={k: serialize_to_primitive(v) for k, v in keyspace_metadata.indexes.items()} ,
+            indexes=[serialize_to_primitive(vars(v)) for v in keyspace_metadata.indexes.values()] ,
             user_types={k: serialize_to_primitive(v) for k, v in keyspace_metadata.user_types.items()},
             functions={k: serialize_to_primitive(v) for k, v in keyspace_metadata.functions.items()},
             aggregates={k: serialize_to_primitive(v) for k, v in keyspace_metadata.aggregates.items()},
