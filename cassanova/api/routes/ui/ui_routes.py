@@ -1,7 +1,7 @@
 from datetime import datetime
 
 from cassandra.cluster import Session
-from fastapi import APIRouter, HTTPException
+from fastapi import HTTPException, APIRouter
 from fastapi.requests import Request
 from fastapi.templating import Jinja2Templates
 
@@ -11,16 +11,16 @@ from cassanova.config.cassanova_config import get_clusters_config
 from cassanova.config.cluster_config import ClusterConnectionConfig, generate_cluster_connection
 
 clusters_config = get_clusters_config()
-cassanova_router = APIRouter(tags=["UI"])
 templates = Jinja2Templates(directory="web/templates")
+cassanova_ui_router = APIRouter(tags=['UI'])
 
 
-@cassanova_router.get('/')
+@cassanova_ui_router.get('/')
 def index(request: Request):
     return templates.TemplateResponse('index.html', {'request': request, 'clusters': clusters_config.clusters})
 
 
-@cassanova_router.get("/cluster/{cluster_name}")
+@cassanova_ui_router.get("/cluster/{cluster_name}")
 async def cluster_dashboard(request: Request, cluster_name: str):
     cluster_config: ClusterConnectionConfig = clusters_config.clusters.get(cluster_name, None)
     if cluster_config is None:
@@ -37,7 +37,7 @@ async def cluster_dashboard(request: Request, cluster_name: str):
     })
 
 
-@cassanova_router.get("/cluster/{cluster_name}/keyspace/{keyspace_name}")
+@cassanova_ui_router.get("/cluster/{cluster_name}/keyspace/{keyspace_name}")
 async def keyspace_dashboard(request: Request, cluster_name: str, keyspace_name: str):
     cluster_config: ClusterConnectionConfig = clusters_config.clusters.get(cluster_name, None)
     if cluster_config is None:
