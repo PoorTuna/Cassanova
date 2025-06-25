@@ -1,0 +1,187 @@
+/* Global box-sizing for predictable sizing */
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+.cql-devtools body,
+.cql-devtools html {
+    margin: 0;
+    height: 100%;
+    background-color: #121212;
+    color: #ddd;
+    font-family: 'Inter', sans-serif;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Container */
+.cql-devtools #container {
+    flex: 1 1 auto;
+    display: flex;
+    height: 90vh;
+    overflow: hidden;
+    min-height: 0;
+}
+
+.cql-devtools #container > * {
+    min-width: 0;
+    min-height: 0;
+}
+
+/* Editor panel */
+.cql-devtools #editor {
+    flex: 0 1 50%;
+    border-right: 3px solid #333;
+    display: flex;
+    flex-direction: column;
+    background: #1e1e1e;
+    overflow: hidden;
+    border-radius: 5px;
+}
+
+/* Monaco editor container */
+.cql-devtools #monaco-editor {
+    flex: 1 1 auto;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+/* Resizer bar */
+.cql-devtools #resizer {
+    width: 8px;
+    cursor: col-resize;
+    background-color: #333;
+    transition: background-color 0.2s ease;
+    flex-shrink: 0;
+    user-select: none;
+    align-self: stretch;
+    display: flex;
+    height: auto;
+    box-sizing: border-box;
+}
+
+.cql-devtools #resizer:hover {
+    background-color: #4fc3f7;
+}
+
+/* Result panel */
+.cql-devtools #result {
+    flex: 1 1 0;
+    background: #1e1e1e;
+    color: #ddd;
+    overflow: auto;
+    padding: 20px;
+    font-family: 'Courier New', monospace;
+    white-space: pre-wrap;
+    user-select: text;
+    font-size: 0.9rem;
+    border-radius: 5px;
+}
+
+/* Loading and error text */
+.cql-devtools .loading {
+    color: #4fc3f7;
+}
+
+.cql-devtools .error {
+    color: #9a170d;
+    font-weight: 700;
+    white-space: pre-wrap;
+}
+
+/* Run query button */
+.cql-devtools #run-btn {
+    background-color: #4fc3f7;
+    border: none;
+    color: #000;
+    font-weight: 700;
+    padding: 12px 20px;
+    cursor: pointer;
+    font-size: 1rem;
+    user-select: none;
+    transition: background-color 0.2s ease;
+    border-radius: 6px;
+    margin: 12px;
+    align-self: flex-start;
+    flex-shrink: 0;
+}
+
+.cql-devtools #run-btn:hover:not(:disabled) {
+    background-color: #81d4fa;
+}
+
+.cql-devtools #run-btn:disabled {
+    opacity: 0.6;
+    cursor: default;
+}
+
+
+.run-query-row {
+    margin-top: 8px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+/* Style for the consistency dropdown */
+#consistency-level {
+    background-color: #1e1e1e; /* dark background matching your editor */
+    color: #ddd; /* light text color */
+    border: 1px solid #444; /* subtle border */
+    border-radius: 4px;
+    padding: 6px 12px;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.9rem;
+    width: 180px;
+    cursor: pointer;
+    transition: border-color 0.2s ease;
+    margin-left: auto;
+    margin-right: 1%;
+}
+
+#consistency-level:hover,
+#consistency-level:focus {
+    border-color: #6a9fb5; /* nice blue accent on hover/focus */
+    outline: none;
+}
+
+/* Polished Run Query button */
+#run-btn {
+    background-color: #2a5d9f; /* Cassandra blue-ish */
+    color: #f0f0f0;
+    border: none;
+    padding: 8px 20px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.25s ease;
+    box-shadow: 0 0 6px rgba(42, 93, 159, 0.7);
+}
+
+#run-btn:hover,
+#run-btn:focus {
+    background-color: #3a7fc9;
+    box-shadow: 0 0 10px rgba(58, 127, 201, 0.9);
+    outline: none;
+}
+
+.tracing-label {
+    color: #ccc;
+    font-size: 0.9rem;
+    margin-left: 12px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    user-select: none;
+}
+
+.tracing-label input[type="checkbox"] {
+    accent-color: #4fc3f7;
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+}

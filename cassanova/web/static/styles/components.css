@@ -1,5 +1,9 @@
 section {
-    background-color: #1e1e1e;
+    background: linear-gradient(
+            135deg,
+            rgba(30, 30, 30, 0.9) 50%,
+            rgba(15, 15, 15, 0.95) 100%
+    );
     border: 1px solid #2a2a2a;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
     border-radius: 12px;

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Cassanova - {{ cluster_name }} - CQL DevTools</title>
+    <link href="/static/styles/main.css" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet"/>
+    <script src="https://unpkg.com/monaco-editor@latest/min/vs/loader.js" defer></script>
+    <script defer>
+        const clusterName = "{{ cluster_config_entry }}";
+    </script>
+    <script src="/static/scripts/cqlsh.js" defer></script>
+</head>
+<body class="cql-devtools">
+<header class="header">
+    <h1>
+        <a href="/cluster/{{ cluster_config_entry }}"
+           style="text-decoration: none; color: inherit; display: flex; align-items: center;">
+            <img src="/static/icons/logo/cassanova-logo.png" alt="Logo"
+                 style="width: 40px; height: 40px; margin-right: 8px;">
+            Cassanova - {{ cluster_name }} - CQLSH
+        </a>
+    </h1>
+</header>
+
+<main id="container">
+    <div id="editor" class="editor-panel">
+        <div id="monaco-editor" class="monaco-editor"></div>
+        <div class="run-query-row">
+            <button id="run-btn" class="btn btn-primary">Run Query</button>
+            <label class="tracing-label">
+                <input type="checkbox" id="enable-tracing" />
+                Enable Tracing
+            </label>
+            <label for="consistency-level"></label>
+            <select id="consistency-level" name="consistency_level">
+                <option value="ANY">ANY</option>
+                <option value="ONE">ONE</option>
+                <option value="TWO">TWO</option>
+                <option value="THREE">THREE</option>
+                <option value="QUORUM" selected>QUORUM</option>
+                <option value="ALL">ALL</option>
+                <option value="LOCAL_QUORUM">LOCAL_QUORUM</option>
+                <option value="EACH_QUORUM">EACH_QUORUM</option>
+                <option value="SERIAL">SERIAL</option>
+                <option value="LOCAL_SERIAL">LOCAL_SERIAL</option>
+                <option value="LOCAL_ONE">LOCAL_ONE</option>
+            </select>
+        </div>
+    </div>
+    <div id="resizer" class="resizer" aria-label="Resize editor panel" role="separator" tabindex="0"></div>
+    <div id="result" class="result-panel" aria-live="polite" aria-atomic="true">
+        <em>Results will appear here...</em>
+    </div>
+</main>
+</body>
+</html>

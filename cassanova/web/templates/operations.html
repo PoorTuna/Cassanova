@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Cassanova - {{ cluster_name }} - Operations Hub</title>
+    <link href="/static/styles/main.css" rel="stylesheet">
+    <link href="/static/styles/operations.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://unpkg.com/vis-network/styles/vis-network.min.css" rel="stylesheet"/>
+</head>
+<body>
+<header>
+    <h1>
+        <a href="/cluster/{{ cluster_config_entry }}"
+           style="text-decoration: none; color: inherit; display: flex; align-items: center;">
+            <img src="/static/icons/logo/cassanova-logo.png" alt="Logo"
+                 style="width: 40px; height: 40px; margin-right: 8px;">
+            Cassanova - {{ cluster_name }} - Operations Hub
+        </a>
+    </h1>
+
+    <div class="header-buttons">
+        <a href="/cluster/{{ cluster_config_entry }}/nodes" class="nodes-btn-link">
+            <button class="nodes-btn">Nodes</button>
+        </a>
+        <a href="{{ monitoring_url }}" class="nodes-btn-link">
+            <button class="nodes-btn">Monitoring</button>
+        </a>
+        <a href="/cluster/{{ cluster_config_entry }}/operations" class="nodes-btn-link">
+            <button class="nodes-btn">Operations</button>
+        </a>
+        <a href="/" class="header-icon-link" title="Disconnect">
+            <img src="/static/icons/misc/disconnect.png" alt="Disconnect" class="header-icon"/>
+        </a>
+    </div>
+</header>
+
+<main class="operations-container">
+    <h1>Operations Hub</h1>
+    <p class="subtitle">Access Cassandra utilities and tooling</p>
+
+    <section class="operations-section">
+        <h2>Core Tools</h2>
+        <div class="operations-grid">
+            <a href="/cluster/{{ cluster_config_entry }}/operations/cqlsh" class="op-card">CQLSH</a>
+            <a href="/operations/nodetool" class="op-card">Nodetool</a>
+        </div>
+    </section>
+
+    <section class="operations-section">
+        <h2>Stress Tools</h2>
+        <div class="operations-grid">
+            <a href="/operations/stress/cassandra-stress" class="op-card">Cassandra Stress</a>
+            <a href="/operations/stress/compaction-stress" class="op-card">Compaction Stress</a>
+        </div>
+    </section>
+
+    <section class="operations-section">
+        <h2>SSTable Tools</h2>
+        <div class="operations-grid">
+            <a href="/operations/sstable/sstabledump" class="op-card">SSTable Dump</a>
+            <a href="/operations/sstable/sstablemetadata" class="op-card">SSTable Metadata</a>
+            <a href="/operations/sstable/sstableexpiredblockers" class="op-card">SSTable Expired Blockers</a>
+            <a href="/operations/sstable/sstablepartitions" class="op-card">SSTable Partitions</a>
+            <a href="/operations/sstable/sstableofflinerelevel" class="op-card">Offline Relevel</a>
+            <a href="/operations/sstable/sstablelevelreset" class="op-card">Level Reset</a>
+            <a href="/operations/sstable/sstablerepairedset" class="op-card">Repaired Set</a>
+            <a href="/operations/sstable/sstablesplit" class="op-card">SSTable Split</a>
+        </div>
+    </section>
+
+    <section class="operations-section">
+        <h2>Utility Scripts</h2>
+        <div class="operations-grid">
+            <a href="/operations/util/hash_password" class="op-card">Hash Password</a>
+            <a href="/operations/util/jmxtool" class="op-card">JMX Tool</a>
+            <a href="/operations/util/fqltool" class="op-card">FQL Tool</a>
+            <a href="/operations/util/generatetokens" class="op-card">Generate Tokens</a>
+            <a href="/operations/util/auditlogviewer" class="op-card">Audit Log Viewer</a>
+        </div>
+    </section>
+</main>
+</body>
+</html>

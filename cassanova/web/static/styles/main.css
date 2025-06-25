@@ -7,4 +7,6 @@
 @import url('./cluster-overview.css');
 @import url('./animations.css');
 @import url('./cluster-status.css');
+@import url('./operations.css');
+@import url('./cqlsh.css');
 
