@@ -73,7 +73,7 @@ function showTableDescription(clusterName, keyspaceName, table) {
             return response.json();
         })
         .then(data => {
-             showModal(data);
+            showModal(data);
         })
         .catch(err => {
             alert(`Truncate failed: ${err.message}`);
@@ -124,9 +124,13 @@ document.addEventListener('DOMContentLoaded', () => {
             } else if (action === 'schema') {
                 showTableSchema(clusterName, keyspaceName, table);
             } else if (action === 'delete') {
-                deleteTable(clusterName, keyspaceName, table);
+                openConfirmModal(`Are you sure you want to delete table "${table}"? This cannot be undone.`, () => {
+                    deleteTable(clusterName, keyspaceName, table);
+                });
             } else if (action === 'truncate') {
-                truncateTable(clusterName, keyspaceName, table);
+                openConfirmModal(`Are you sure you want to truncate table "${table}"? This will remove all data.`, () => {
+                    truncateTable(clusterName, keyspaceName, table);
+                });
             }
         });
     });
@@ -158,3 +162,22 @@ function hideModal() {
     const modal = document.getElementById('json-modal');
     modal.classList.add('hidden');
 }
+
+
+let confirmCallback = null;
+
+function openConfirmModal(message, onConfirm) {
+    document.getElementById('confirm-message').textContent = message;
+    document.getElementById('confirm-modal').classList.remove('hidden');
+    confirmCallback = onConfirm;
+}
+
+function closeConfirmModal() {
+    document.getElementById('confirm-modal').classList.add('hidden');
+    confirmCallback = null;
+}
+
+document.getElementById('confirm-action-btn').addEventListener('click', () => {
+    if (confirmCallback) confirmCallback();
+    closeConfirmModal();
+});

@@ -67,8 +67,9 @@
                         <div class="dropdown-menu hidden">
                             <button data-action="description" data-table="{{ table.name }}">Show Description</button>
                             <button data-action="schema" data-table="{{ table.name }}">Show Schema</button>
-                            <button data-action="delete" data-table="{{ table.name }}">Delete Table</button>
                             <button data-action="truncate" data-table="{{ table.name }}">Truncate Table</button>
+                            <button data-action="delete" data-table="{{ table.name }}">Delete Table</button>
+
                         </div>
                     </div>
                 </div>
@@ -120,8 +121,8 @@
                     <div>
                         <p><strong>Indexes:</strong></p>
                         <ul>
-                            {% for k, v in table.indexes.items() %}
-                            <li><span style="color:#ccc">{{ k }}</span>: <span style="color:#aaa">{{ v }}</span></li>
+                            {% for index in table.indexes %}
+                                <li><span style="color:#ccc">{{ index.name }}</span>: <span style="color:#aaa">{{ index }}</span></li>
                             {% endfor %}
                         </ul>
                     </div>
@@ -193,8 +194,8 @@
     <section class="fade-in">
         <h2>Indexes</h2>
         <ul>
-            {% for name, idx in keyspace.indexes.items() %}
-            <li><strong>{{ name }}:</strong> {{ idx }}</li>
+            {% for index in keyspace.indexes %}
+            <li><strong>{{ index.name }}:</strong> {{ index }}</li>
             {% endfor %}
         </ul>
     </section>
@@ -262,6 +263,16 @@
     <div class="modal-content">
         <span id="modal-close" class="modal-close">&times;</span>
         <pre id="modal-pre" style="white-space: pre-wrap; max-height: 70vh; overflow-y: auto;"></pre>
+    </div>
+</div>
+<div id="confirm-modal" class="modal hidden">
+    <div class="modal-content">
+        <span class="modal-close" onclick="closeConfirmModal()">&times;</span>
+        <p id="confirm-message"></p>
+        <div style="margin-top: 16px; display: flex; justify-content: flex-end; gap: 10px;">
+            <button onclick="closeConfirmModal()">Cancel</button>
+            <button id="confirm-action-btn">Confirm</button>
+        </div>
     </div>
 </div>
 </body>

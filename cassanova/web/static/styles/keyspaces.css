@@ -150,3 +150,12 @@
 .modal-content button:hover {
     background-color: #81d4fa;
 }
+
+.modal-content button:last-child {
+    background-color: #e53935;
+    color: #fff;
+}
+
+.modal-content button:last-child:hover {
+    background-color: #f44336;
+}
