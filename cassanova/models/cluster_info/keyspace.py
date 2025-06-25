@@ -2,6 +2,7 @@ from typing import Annotated, Optional, Any, List
 
 from pydantic import BaseModel, BeforeValidator, Field, computed_field
 
+from cassanova.models.cluster_info.index import IndexInfo
 from cassanova.models.cluster_info.table import TableInfo
 
 
@@ -20,7 +21,7 @@ class KeyspaceInfo(BaseModel):
         BeforeValidator(lambda v: False if v is None else v)
     ] = Field(default=False)
     tables: List[TableInfo]
-    indexes: dict[str, Any] = Field(default_factory=dict)
+    indexes: list[IndexInfo] = Field(default_factory=dict)
     user_types: dict[str, Any] = Field(default_factory=dict)
     functions: dict[str, Any] = Field(default_factory=dict)
     aggregates: dict[str, Any] = Field(default_factory=dict)

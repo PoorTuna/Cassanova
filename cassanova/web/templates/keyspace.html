@@ -122,7 +122,7 @@
                         <p><strong>Indexes:</strong></p>
                         <ul>
                             {% for index in table.indexes %}
-                                <li><span style="color:#ccc">{{ index.name }}</span>: <span style="color:#aaa">{{ index }}</span></li>
+                                <li><span style="color:#aaa">{{ index }}</span></li>
                             {% endfor %}
                         </ul>
                     </div>
@@ -195,7 +195,7 @@
         <h2>Indexes</h2>
         <ul>
             {% for index in keyspace.indexes %}
-            <li><strong>{{ index.name }}:</strong> {{ index }}</li>
+            <li>{{ index }}</li>
             {% endfor %}
         </ul>
     </section>

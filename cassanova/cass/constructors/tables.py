@@ -17,7 +17,7 @@ def _serialize_table_metadata(table: TableMetadata) -> dict[str, Any]:
         "partition_key": [col.name for col in table.partition_key],
         "clustering_key": [col.name for col in table.clustering_key],
         "columns": {k: serialize_to_primitive(v) for k, v in table.columns.items()},
-        "indexes": {index: str(v) for index, v in (table.indexes or {}).items()},
+        "indexes": [serialize_to_primitive(vars(v)) for v in table.indexes.values()],
         "options": {k: str(v) for k, v in table.options.items()},
         "comparator": serialize_to_primitive(table.comparator),
         "triggers": dict(table.triggers),

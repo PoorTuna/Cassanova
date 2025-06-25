@@ -2,6 +2,8 @@ from typing import Any, Annotated, Optional
 
 from pydantic import BaseModel, BeforeValidator, Field
 
+from cassanova.models.cluster_info.index import IndexInfo
+
 
 class TableColumnInfo(BaseModel):
     name: str
@@ -18,7 +20,7 @@ class TableInfo(BaseModel):
         BeforeValidator(lambda v: ['N/A'] if not v else v)
     ]
     columns: dict[str, TableColumnInfo]
-    indexes: Optional[dict[str, Any]] = Field(default_factory=dict)
+    indexes: Optional[list[IndexInfo]] = Field(default_factory=list)
     options: dict[str, Any]
     comparator: Optional[Any] = None
     triggers: dict[str, Any] = Field(default_factory=list)
