@@ -1,10 +1,12 @@
-from cassandra.cluster import Cluster, Session
+from cassandra import ConsistencyLevel
+from cassandra.cluster import Cluster, Session, SimpleStatement
 from pkg_resources import parse_version
 
 
-def get_cluster_description(cluster_session: Session) -> dict[str, str]:
+def get_cluster_description(cluster_session: Session, cl: ConsistencyLevel = ConsistencyLevel.QUORUM) -> dict[str, str]:
+    statement = SimpleStatement(query_string="DESCRIBE CLUSTER;", consistency_level=cl)
     return {
-        key: value for row in cluster_session.execute("DESCRIBE CLUSTER;")
+        key: value for row in cluster_session.execute(statement)
         for key, value in row._asdict().items()
     }
 
