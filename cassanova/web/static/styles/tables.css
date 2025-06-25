@@ -122,59 +122,6 @@ th {
     gap: 1rem;
 }
 
-.modal.hidden {
-    display: none !important;
-}
-
-.modal {
-    position: fixed;
-    inset: 0;
-    background-color: rgba(18, 18, 18, 0.9);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-}
-
-.modal-content {
-    background-color: #1e1e1e;
-    padding: 24px 32px;
-    border-radius: 12px;
-    max-width: 360px;
-    width: 90%;
-    box-shadow: 0 0 20px rgba(31, 31, 31, 0.8);
-    color: #e0e0e0;
-    position: relative;
-    font-size: 1rem;
-}
-
-.modal-close {
-    position: absolute;
-    top: 12px;
-    right: 14px;
-    font-size: 1.8rem;
-    cursor: pointer;
-    color: #81d4fa;
-    user-select: none;
-    font-weight: 700;
-}
-
-.modal-content button {
-    margin-top: 12px;
-    padding: 8px 14px;
-    border-radius: 6px;
-    background-color: #4fc3f7;
-    border: none;
-    color: #000;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-}
-
-.modal-content button:hover {
-    background-color: #81d4fa;
-}
-
 .danger-btn {
     background-color: #8a2b2b;
 }
