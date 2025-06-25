@@ -12,15 +12,15 @@ from cassanova.config.cluster_config import ClusterConnectionConfig, generate_cl
 
 clusters_config = get_clusters_config()
 templates = Jinja2Templates(directory="web/templates")
-cassanova_ui_router = APIRouter(tags=['UI'])
+cassanova_ui_dashboard_router = APIRouter(tags=['UI'])
 
 
-@cassanova_ui_router.get('/')
+@cassanova_ui_dashboard_router.get('/')
 def index(request: Request):
     return templates.TemplateResponse('index.html', {'request': request, 'clusters': clusters_config.clusters})
 
 
-@cassanova_ui_router.get("/cluster/{cluster_name}")
+@cassanova_ui_dashboard_router.get("/cluster/{cluster_name}")
 async def cluster_dashboard(request: Request, cluster_name: str):
     cluster_config: ClusterConnectionConfig = clusters_config.clusters.get(cluster_name, None)
     if cluster_config is None:
@@ -37,7 +37,7 @@ async def cluster_dashboard(request: Request, cluster_name: str):
     })
 
 
-@cassanova_ui_router.get("/cluster/{cluster_name}/keyspace/{keyspace_name}")
+@cassanova_ui_dashboard_router.get("/cluster/{cluster_name}/keyspace/{keyspace_name}")
 async def keyspace_dashboard(request: Request, cluster_name: str, keyspace_name: str):
     cluster_config: ClusterConnectionConfig = clusters_config.clusters.get(cluster_name, None)
     if cluster_config is None:
@@ -51,6 +51,7 @@ async def keyspace_dashboard(request: Request, cluster_name: str, keyspace_name:
     return templates.TemplateResponse("keyspace.html", {
         "request": request,
         "keyspace": keyspace_info,
+        "cluster_name": cluster.metadata.cluster_name,
         "cluster_config_entry": cluster_name,
         "current_year": current_year
     })
