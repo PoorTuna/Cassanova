@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Cluster Unreachable</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet"/>
+    <link href="/static/styles/exceptions.css" rel="stylesheet"/>
+    <link href="/static/styles/main.css" rel="stylesheet"/>
+</head>
+<body>
+<header class="header">
+    <h1>
+        <a href="/"
+           style="text-decoration: none; color: inherit; display: flex; align-items: center;">
+            <img src="/static/icons/logo/cassanova-logo.png" alt="Logo"
+                 style="width: 40px; height: 40px; margin-right: 8px;">
+            Cassanova
+        </a>
+    </h1>
+</header>
+
+<div class="starfield"></div>
+
+<div class="cluster-down-container" role="alert" aria-live="assertive" aria-atomic="true">
+    <h1 class="title">CLUSTER UNAVAILABLE</h1>
+    <p class="subtitle">No nodes were reachable.</p>
+
+    <pre class="diagnostic">
+[Alert]
+↳ Connection timed out.
+↳ No reachable nodes available.
+↳ Status: NoHostAvailable
+    </pre>
+
+    <img class="logo" src="/static/icons/logo/cassanova-logo.png" alt="Cassanova Icon"/>
+</div>
+
+</body>
+</html>
