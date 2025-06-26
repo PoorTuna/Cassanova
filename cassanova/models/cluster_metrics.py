@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, Literal
 
 from pydantic import BaseModel, Field
 
@@ -17,4 +17,4 @@ class ClusterMetrics(BaseModel):
     status: str
     version: str = 'N/A'
     is_fully_upgraded: bool = False
-    # todo: Default values here
+    technology: Literal['cassandra', 'scylla', 'dse']
