@@ -3,13 +3,19 @@
 <head>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <link rel="icon" type="image/png" href="/static/icons/logo/cassanova-logo.png" />
+    <link rel="icon" type="image/png" href="/static/icons/logo/cassanova-logo.png"/>
     <title>Cluster: {{ cluster.metrics.name }}</title>
-    <link href="/static/styles/main.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <link href="https://unpkg.com/vis-network/styles/vis-network.min.css" rel="stylesheet"/>
+    <link href="/static/styles/main.css" rel="stylesheet">
     <script src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js" defer></script>
-    <script id="cluster-data" type="application/json" style="display:none;" defer>{{cluster.model_dump() | tojson | safe}}</script>
+    <script id="cluster-data" type="application/json" style="display:none;" defer>{{
+        cluster.model_dump()
+        |
+        tojson
+        |
+        safe
+    }}</script>
     <script src="/static/scripts/keyspace-controls.js" defer></script>
     <script src="/static/scripts/topology-graph.js" defer></script>
 
@@ -26,15 +32,16 @@
     </h1>
 
     <div class="header-buttons">
-        <a href="/cluster/{{ cluster_config_entry }}/nodes" title="Nodes" aria-label="Nodes" class="nodes-btn-link">
-            <button type="button" class="nodes-btn">Nodes</button>
-        </a>
-        <a href="{{ monitoring_url }}" title="Monitoring" aria-label="Monitoring" class="nodes-btn-link">
-            <button type="button" class="nodes-btn">Monitoring</button>
-        </a>
-        <a href="/cluster/{{ cluster_config_entry }}/operations" title="Operations" aria-label="Operations" class="nodes-btn-link">
-            <button type="button" class="nodes-btn">Operations</button>
-        </a>
+        <details class="dropdown">
+            <summary class="nodes-btn" aria-haspopup="true" aria-expanded="false">
+                More
+            </summary>
+            <ul class="dropdown-menu">
+                <li><a href="/cluster/{{ cluster_config_entry }}/nodes">Nodes</a></li>
+                <li><a href="{{ monitoring_url }}">Monitoring</a></li>
+                <li><a href="/cluster/{{ cluster_config_entry }}/operations">Operations</a></li>
+            </ul>
+        </details>
         <a href="/" title="Disconnect" aria-label="Disconnect" class="header-icon-link">
             <img src="/static/icons/misc/disconnect.png" alt="Disconnect" class="header-icon"/>
         </a>
@@ -45,12 +52,15 @@
     <section class="cluster-overview">
         <h2>Cluster Overview</h2>
         <ul>
-            <li><strong>Name</strong><span data-fulltext="{{ cluster.metrics.name }}" title="{{ cluster.metrics.name }}">{{ cluster.metrics.name }}</span>
+            <li><strong>Name</strong><span data-fulltext="{{ cluster.metrics.name }}"
+                                           title="{{ cluster.metrics.name }}">{{ cluster.metrics.name }}</span>
             </li>
-            <li><strong>Version</strong><span data-fulltext="{{ cluster.metrics.version }}" title="{{ cluster.metrics.version }}">{{ cluster.metrics.version }}</span>
+            <li><strong>Version</strong><span data-fulltext="{{ cluster.metrics.version }}"
+                                              title="{{ cluster.metrics.version }}">{{ cluster.metrics.version }}</span>
             </li>
             <li><strong>Technology</strong><span data-fulltext="{{ cluster.metrics.technology }}"
-                      title="{{ cluster.metrics.technology }}">{{ cluster.metrics.technology | capitalize }}</span></li>
+                                                 title="{{ cluster.metrics.technology }}">{{ cluster.metrics.technology | capitalize }}</span>
+            </li>
             <li><strong>Partitioner</strong><span data-fulltext="{{ cluster.metrics.partitioner }}"
                                                   title="{{ cluster.metrics.partitioner }}">{{ cluster.metrics.partitioner }}</span>
             </li>
@@ -58,22 +68,32 @@
                                              title="{{ cluster.metrics.snitch }}">{{ cluster.metrics.snitch }}</span>
             </li>
             <li><strong>Status</strong><span data-fulltext="{{ cluster.metrics.status }}"
-                                             title="{{ cluster.metrics.status }}">{{ cluster.metrics.status }}</span></li>
+                                             title="{{ cluster.metrics.status }}">{{ cluster.metrics.status }}</span>
+            </li>
+            {% if cluster.metrics.cluster_size %}
             <li><strong>Cluster Size</strong><span data-fulltext="{{ cluster.metrics.cluster_size }}"
-                                            title="{{ cluster.metrics.cluster_size }}">{{ cluster.metrics.cluster_size }}</span></li>
+                                                   title="{{ cluster.metrics.cluster_size }}">{{ cluster.metrics.cluster_size }}</span>
+            </li>
+            {% endif %}
             <li><strong>Nodes Same Version</strong><span data-fulltext="{{ cluster.metrics.is_fully_upgraded }}"
-                                            title="{{ cluster.metrics.is_fully_upgraded }}">{{ cluster.metrics.is_fully_upgraded }}</span></li>
+                                                         title="{{ cluster.metrics.is_fully_upgraded }}">{{ cluster.metrics.is_fully_upgraded }}</span>
+            </li>
             <li><strong>Total Nodes</strong><span data-fulltext="{{ cluster.metrics.total_nodes }}"
-                                            title="{{ cluster.metrics.total_nodes }}">{{ cluster.metrics.total_nodes }}</span></li>
+                                                  title="{{ cluster.metrics.total_nodes }}">{{ cluster.metrics.total_nodes }}</span>
+            </li>
             <li><strong>Nodes Up</strong><span data-fulltext="{{ cluster.metrics.up_nodes }}"
-                                               title="{{ cluster.metrics.up_nodes }}">{{ cluster.metrics.up_nodes }}</span></li>
+                                               title="{{ cluster.metrics.up_nodes }}">{{ cluster.metrics.up_nodes }}</span>
+            </li>
             <li><strong>Nodes Down</strong><span data-fulltext="{{ cluster.metrics.down_nodes }}"
-                                                 title="{{ cluster.metrics.down_nodes }}">{{ cluster.metrics.down_nodes }}</span></li>
+                                                 title="{{ cluster.metrics.down_nodes }}">{{ cluster.metrics.down_nodes }}</span>
+            </li>
 
             <li><strong>Datacenters</strong><span data-fulltext="{{ cluster.metrics.dc_count }}"
-                                                  title="{{ cluster.metrics.dc_count }}">{{ cluster.metrics.dc_count }}</span></li>
+                                                  title="{{ cluster.metrics.dc_count }}">{{ cluster.metrics.dc_count }}</span>
+            </li>
             <li><strong>Racks</strong><span data-fulltext="{{ cluster.metrics.rack_count }}"
-                                            title="{{ cluster.metrics.rack_count }}">{{ cluster.metrics.rack_count }}</span></li>
+                                            title="{{ cluster.metrics.rack_count }}">{{ cluster.metrics.rack_count }}</span>
+            </li>
         </ul>
     </section>
 

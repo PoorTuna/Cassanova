@@ -3,16 +3,23 @@
 <head>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="icon" type="image/png" href="/static/icons/logo/cassanova-logo.png"/>
     <title>Keyspace: {{ keyspace.name }}</title>
-    <link href="/static/styles/main.css" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet"/>
+    <link href="https://unpkg.com/vis-network/styles/vis-network.min.css" rel="stylesheet"/>
+    <link href="/static/styles/main.css" rel="stylesheet">
     <script src="/static/scripts/table-actions.js" defer></script>
-    <script id="schema-data" type="application/json" style="display:none;">{{ keyspace.model_dump() | tojson | safe }}</script>
+    <script id="schema-data" type="application/json" style="display:none;">{{
+        keyspace.model_dump()
+        |
+        tojson
+        |
+        safe
+    }}</script>
     <script>
         const clusterName = "{{ cluster_config_entry }}";
         const keyspaceName = "{{ keyspace.name }}";
     </script>
-    <link href="https://unpkg.com/vis-network/styles/vis-network.min.css" rel="stylesheet"/>
     <script src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js" defer></script>
     <script src="/static/scripts/schema-graph.js" defer></script>
     <script>
@@ -24,7 +31,7 @@
 
 </head>
 <body>
-<header class="status-ok">
+<header>
     <h1>
         <a href="/cluster/{{ cluster_config_entry }}"
            style="text-decoration: none; color: inherit; display: flex; align-items: center;">
@@ -33,6 +40,21 @@
             Cassanova - {{ cluster_name }} - {{ keyspace.name }}
         </a>
     </h1>
+    <div class="header-buttons">
+        <details class="dropdown">
+            <summary class="nodes-btn" aria-haspopup="true" aria-expanded="false">
+                More
+            </summary>
+            <ul class="dropdown-menu">
+                <li><a href="/cluster/{{ cluster_config_entry }}/nodes">Nodes</a></li>
+                <li><a href="{{ monitoring_url }}">Monitoring</a></li>
+                <li><a href="/cluster/{{ cluster_config_entry }}/operations">Operations</a></li>
+            </ul>
+        </details>
+        <a href="/" title="Disconnect" aria-label="Disconnect" class="header-icon-link">
+            <img src="/static/icons/misc/disconnect.png" alt="Disconnect" class="header-icon"/>
+        </a>
+    </div>
 </header>
 
 <main>
@@ -122,7 +144,7 @@
                         <p><strong>Indexes:</strong></p>
                         <ul>
                             {% for index in table.indexes %}
-                                <li><span style="color:#aaa">{{ index }}</span></li>
+                            <li><span style="color:#aaa">{{ index }}</span></li>
                             {% endfor %}
                         </ul>
                     </div>

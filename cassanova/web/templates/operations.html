@@ -18,18 +18,18 @@
             Cassanova - {{ cluster_name }} - Operations Hub
         </a>
     </h1>
-
     <div class="header-buttons">
-        <a href="/cluster/{{ cluster_config_entry }}/nodes" class="nodes-btn-link">
-            <button class="nodes-btn">Nodes</button>
-        </a>
-        <a href="{{ monitoring_url }}" class="nodes-btn-link">
-            <button class="nodes-btn">Monitoring</button>
-        </a>
-        <a href="/cluster/{{ cluster_config_entry }}/operations" class="nodes-btn-link">
-            <button class="nodes-btn">Operations</button>
-        </a>
-        <a href="/" class="header-icon-link" title="Disconnect">
+        <details class="dropdown">
+            <summary class="nodes-btn" aria-haspopup="true" aria-expanded="false">
+                More
+            </summary>
+            <ul class="dropdown-menu">
+                <li><a href="/cluster/{{ cluster_config_entry }}/nodes">Nodes</a></li>
+                <li><a href="{{ monitoring_url }}">Monitoring</a></li>
+                <li><a href="/cluster/{{ cluster_config_entry }}/operations">Operations</a></li>
+            </ul>
+        </details>
+        <a href="/" title="Disconnect" aria-label="Disconnect" class="header-icon-link">
             <img src="/static/icons/misc/disconnect.png" alt="Disconnect" class="header-icon"/>
         </a>
     </div>

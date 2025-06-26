@@ -1,124 +1,127 @@
-// Toggle dropdown menu visibility, close others
-function toggleDropdown(event) {
-    event.stopPropagation();
-
-    const button = event.currentTarget;
-    const menu = button.nextElementSibling;
-
-    // Close all other dropdowns except this one
-    document.querySelectorAll('.dropdown-menu').forEach(otherMenu => {
-        if (otherMenu !== menu) {
-            otherMenu.classList.add('hidden');
-        }
-    });
-
-    menu.classList.toggle('hidden');
+// Generic fetch helper for table actions
+async function performTableAction(cluster, keyspace, table, path = '', method = 'GET') {
+    const url = `/api/v1/cluster/${encodeURIComponent(cluster)}/keyspace/${encodeURIComponent(keyspace)}/table/${encodeURIComponent(table)}${path}`;
+    const response = await fetch(url, {method});
+    if (!response.ok) {
+        const err = await response.json().catch(() => ({}));
+        throw new Error(err.detail || response.statusText);
+    }
+    return response.json();
 }
 
-// Close all dropdown menus
-function closeAllDropdowns() {
-    document.querySelectorAll('.dropdown-menu').forEach(menu => menu.classList.add('hidden'));
+// Specific actions using the generic helper
+function deleteTable(cluster, keyspace, table) {
+    return performTableAction(cluster, keyspace, table, '', 'DELETE')
+        .then(() => window.location.reload())
+        .catch(err => alert(`Delete failed: ${err.message}`));
 }
 
-function deleteTable(clusterName, keyspaceName, table) {
-    fetch(`/api/v1/cluster/${encodeURIComponent(clusterName)}/keyspace/${encodeURIComponent(keyspaceName)}/table/${encodeURIComponent(table)}`, {
-        method: 'DELETE',
-    })
-        .then(response => {
-            if (!response.ok) {
-                return response.json().then(error => {
-                    throw new Error(error.detail || response.statusText);
-                });
-            }
-            return response.json();
-        })
-        .then(() => {
-            window.location.reload();
-        })
-        .catch(err => {
-            alert(`Delete failed: ${err.message}`);
-        });
+function truncateTable(cluster, keyspace, table) {
+    return performTableAction(cluster, keyspace, table, '/truncate', 'DELETE')
+        .then(() => window.location.reload())
+        .catch(err => alert(`Truncate failed: ${err.message}`));
 }
 
-function truncateTable(clusterName, keyspaceName, table) {
-    fetch(`/api/v1/cluster/${encodeURIComponent(clusterName)}/keyspace/${encodeURIComponent(keyspaceName)}/table/${encodeURIComponent(table)}/truncate`, {
-        method: 'DELETE',
-    })
-        .then(response => {
-            if (!response.ok) {
-                return response.json().then(error => {
-                    throw new Error(error.detail || response.statusText);
-                });
-            }
-            return response.json();
-        })
-        .then(() => {
-            window.location.reload();
-        })
-        .catch(err => {
-            alert(`Truncate failed: ${err.message}`);
-        });
+function showTableDescription(cluster, keyspace, table) {
+    return performTableAction(cluster, keyspace, table, '/description')
+        .then(showModal)
+        .catch(err => alert(`Show description failed: ${err.message}`));
 }
 
-function showTableDescription(clusterName, keyspaceName, table) {
-    fetch(`/api/v1/cluster/${encodeURIComponent(clusterName)}/keyspace/${encodeURIComponent(keyspaceName)}/table/${encodeURIComponent(table)}/description`, {
-        method: 'GET',
-    })
-        .then(response => {
-            if (!response.ok) {
-                return response.json().then(error => {
-                    throw new Error(error.detail || response.statusText);
-                });
-            }
-            return response.json();
-        })
-        .then(data => {
-            showModal(data);
-        })
-        .catch(err => {
-            alert(`Truncate failed: ${err.message}`);
-        });
+function showTableSchema(cluster, keyspace, table) {
+    return performTableAction(cluster, keyspace, table, '/schema')
+        .then(showModal)
+        .catch(err => alert(`Show schema failed: ${err.message}`));
 }
 
-function showTableSchema(clusterName, keyspaceName, table) {
-    fetch(`/api/v1/cluster/${encodeURIComponent(clusterName)}/keyspace/${encodeURIComponent(keyspaceName)}/table/${encodeURIComponent(table)}/schema`, {
-        method: 'GET',
-    })
-        .then(response => {
-            if (!response.ok) {
-                return response.json().then(error => {
-                    throw new Error(error.detail || response.statusText);
-                });
-            }
-            return response.json();
-        })
-        .then(data => {
-            showModal(data);
-        })
-        .catch(err => {
-            alert(`Truncate failed: ${err.message}`);
-        });
+// Modal functions
+function showModal(jsonData) {
+    const modal = document.getElementById('json-modal');
+    const pre = document.getElementById('modal-pre');
+    pre.textContent = JSON.stringify(jsonData, null, 2);
+    modal.classList.remove('hidden');
 }
 
+function hideModal() {
+    document.getElementById('json-modal').classList.add('hidden');
+}
 
-// Close dropdowns when clicking outside
-document.addEventListener('click', closeAllDropdowns);
+let confirmCallback = null;
 
-// Setup event listeners after DOM is loaded
+function openConfirmModal(message, onConfirm) {
+    document.getElementById('confirm-message').textContent = message;
+    document.getElementById('confirm-modal').classList.remove('hidden');
+    confirmCallback = onConfirm;
+}
+
+function closeConfirmModal() {
+    document.getElementById('confirm-modal').classList.add('hidden');
+    confirmCallback = null;
+}
+
+// DOM setup
 document.addEventListener('DOMContentLoaded', () => {
-    // Attach toggleDropdown to all .table-options-btn buttons (no inline onclick)
-    document.querySelectorAll('.table-options-btn').forEach(button => {
-        button.addEventListener('click', toggleDropdown);
+    document.getElementById('confirm-action-btn').addEventListener('click', () => {
+        if (confirmCallback) confirmCallback();
+        closeConfirmModal();
     });
     document.getElementById('modal-close').addEventListener('click', hideModal);
-    document.getElementById('json-modal').addEventListener('click', (e) => {
+    document.getElementById('json-modal').addEventListener('click', e => {
         if (e.target === e.currentTarget) hideModal();
     });
-    // Dropdown menu button actions
+
+    // Filter tables input
+    const filterInput = document.getElementById('table-filter');
+    const tables = document.querySelectorAll('.keyspace-card.table-card');
+    if (filterInput) {
+        filterInput.addEventListener('input', () => {
+            const filter = filterInput.value.toLowerCase();
+            tables.forEach(table => {
+                const name = table.getAttribute('data-table').toLowerCase();
+                table.style.display = name.includes(filter) ? 'block' : 'none';
+            });
+        });
+    }
+
+    // Manage each table options dropdown individually
+    document.querySelectorAll('.table-options-btn').forEach(button => {
+        const menu = button.nextElementSibling;
+        let isOpen = false;
+
+        function openMenu() {
+            menu.classList.remove('hidden');
+            isOpen = true;
+            document.addEventListener('click', outsideClickListener);
+        }
+
+        function closeMenu() {
+            menu.classList.add('hidden');
+            isOpen = false;
+            document.removeEventListener('click', outsideClickListener);
+        }
+
+        function toggleMenu(event) {
+            event.stopPropagation();
+            if (isOpen) closeMenu();
+            else openMenu();
+        }
+
+        function outsideClickListener(event) {
+            if (!button.contains(event.target) && !menu.contains(event.target)) {
+                closeMenu();
+            }
+        }
+
+        button.addEventListener('click', toggleMenu);
+    });
+
+    // Handle clicks on dropdown menu buttons
     document.querySelectorAll('.dropdown-menu button').forEach(btn => {
-        btn.addEventListener('click', (e) => {
+        btn.addEventListener('click', e => {
             const action = e.target.dataset.action;
             const table = e.target.dataset.table;
+            if (!action || !table) return;
+
             if (action === 'description') {
                 showTableDescription(clusterName, keyspaceName, table);
             } else if (action === 'schema') {
@@ -134,50 +137,4 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     });
-
-    // Filter input for tables
-    const filterInput = document.getElementById('table-filter');
-    const tables = document.querySelectorAll('.keyspace-card.table-card');
-
-    if (filterInput) {
-        filterInput.addEventListener('input', () => {
-            const filter = filterInput.value.toLowerCase();
-            tables.forEach(table => {
-                const name = table.getAttribute('data-table').toLowerCase();
-                table.style.display = name.includes(filter) ? 'block' : 'none';
-            });
-        });
-    }
-});
-
-
-function showModal(jsonData) {
-    const modal = document.getElementById('json-modal');
-    const pre = document.getElementById('modal-pre');
-    pre.textContent = JSON.stringify(jsonData, null, 2);
-    modal.classList.remove('hidden');
-}
-
-function hideModal() {
-    const modal = document.getElementById('json-modal');
-    modal.classList.add('hidden');
-}
-
-
-let confirmCallback = null;
-
-function openConfirmModal(message, onConfirm) {
-    document.getElementById('confirm-message').textContent = message;
-    document.getElementById('confirm-modal').classList.remove('hidden');
-    confirmCallback = onConfirm;
-}
-
-function closeConfirmModal() {
-    document.getElementById('confirm-modal').classList.add('hidden');
-    confirmCallback = null;
-}
-
-document.getElementById('confirm-action-btn').addEventListener('click', () => {
-    if (confirmCallback) confirmCallback();
-    closeConfirmModal();
 });
