@@ -27,9 +27,9 @@
     <div id="editor" class="editor-panel">
         <div id="monaco-editor" class="monaco-editor"></div>
         <div class="run-query-row">
-            <button id="run-btn" class="btn btn-primary">Run Query</button>
+            <button id="run-btn" class="btn">Run Query</button>
             <label class="tracing-label">
-                <input type="checkbox" id="enable-tracing" />
+                <input type="checkbox" id="enable-tracing"/>
                 Enable Tracing
             </label>
             <label for="consistency-level"></label>
@@ -49,9 +49,22 @@
         </div>
     </div>
     <div id="resizer" class="resizer" aria-label="Resize editor panel" role="separator" tabindex="0"></div>
-    <div id="result" class="result-panel" aria-live="polite" aria-atomic="true">
-        <em>Results will appear here...</em>
+    <div id="result" class="result-panel">
+        <div id="query-result"><em>Results will appear here...</em></div>
+
+        <div class="result-toolbar">
+            <button id="export-btn" class="btn">Export Result</button>
+            <button id="clear-history-btn" class="btn">Clear History</button>
+            <button id="toggle-history-btn" class="btn">Show History</button>
+        </div>
     </div>
 </main>
+<div id="history-drawer">
+    <div class="drawer-header">
+        <h2>Query History</h2>
+        <button id="close-history-btn" class="close-btn" title="Close History">×</button>
+    </div>
+    <ul id="history-list"></ul>
+</div>
 </body>
 </html>

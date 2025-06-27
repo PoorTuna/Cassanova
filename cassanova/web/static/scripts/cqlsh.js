@@ -19,7 +19,7 @@ const container = document.getElementById('container');
 const editor = document.getElementById('editor');
 const resizer = document.getElementById('resizer');
 const runBtn = document.getElementById('run-btn');
-const resultEl = document.getElementById('result');
+const resultEl = document.getElementById('query-result');
 const consistencySelect = document.getElementById('consistency-level');
 const consistencyMap = {
     ANY: 0,
@@ -34,6 +34,8 @@ const consistencyMap = {
     LOCAL_SERIAL: 9,
     LOCAL_ONE: 10,
 };
+const historyList = document.getElementById('history-list');
+let queryHistory = [];
 
 let isResizing = false;
 
@@ -122,6 +124,23 @@ runBtn.addEventListener('click', () => {
             return res.json();
         })
         .then((data) => {
+            if (!queryHistory.includes(cql)) {
+                queryHistory.unshift(cql);
+                if (queryHistory.length > 30) queryHistory.pop(); // max 30 entries
+                localStorage.setItem('cqlshHistory', JSON.stringify(queryHistory));
+
+                const entry = document.createElement('li');
+                entry.textContent = cql.slice(0, 100);
+                entry.title = cql;
+                entry.onclick = () => {
+                    window.editorInstance.setValue(cql);
+                };
+                historyList.prepend(entry);
+                if (historyList.children.length > 30) {
+                    historyList.removeChild(historyList.lastChild);
+                }
+            }
+
             try {
                 resultEl.textContent = JSON.stringify(data, null, 2);
             } catch {
@@ -132,4 +151,76 @@ runBtn.addEventListener('click', () => {
             resultEl.innerHTML = `<span class="error">Error: ${err.toString()}</span>`;
         });
 
+});
+
+document.getElementById('export-btn').addEventListener('click', () => {
+    const content = resultEl.textContent;
+    if (!content) return;
+
+    const blob = new Blob([content], {type: "application/json"});
+    const url = URL.createObjectURL(blob);
+
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `cql_result_${Date.now()}.json`;
+    link.click();
+
+    URL.revokeObjectURL(url);
+});
+document.getElementById('clear-history-btn').addEventListener('click', () => {
+    localStorage.removeItem('cqlshHistory');
+    historyList.innerHTML = '';
+    queryHistory = [];
+});
+window.addEventListener('DOMContentLoaded', () => {
+    const saved = localStorage.getItem('cqlshHistory');
+    if (saved) {
+        try {
+            queryHistory = JSON.parse(saved);
+            queryHistory.forEach((cql) => {
+                const entry = document.createElement('li');
+                entry.textContent = cql.slice(0, 100);
+                entry.title = cql;
+                entry.onclick = () => {
+                    window.editorInstance.setValue(cql);
+                };
+                historyList.appendChild(entry);
+            });
+        } catch {
+            console.warn('Invalid saved CQL history');
+        }
+    }
+});
+
+const toggleBtn = document.getElementById('toggle-history-btn');
+const historyDrawer = document.getElementById('history-drawer');
+const closeBtn = document.getElementById('close-history-btn'); // new close button
+
+function closeDrawer() {
+    historyDrawer.classList.remove('open');
+    toggleBtn.textContent = 'Show History';
+}
+
+if (toggleBtn && historyDrawer) {
+    toggleBtn.addEventListener('click', (e) => {
+        e.stopPropagation(); // prevent outside-click from firing
+        const isOpen = historyDrawer.classList.contains('open');
+        historyDrawer.classList.toggle('open');
+        toggleBtn.textContent = isOpen ? 'Show History' : 'Hide History';
+    });
+}
+
+if (closeBtn) {
+    closeBtn.addEventListener('click', closeDrawer);
+}
+
+// Auto-close if clicking outside the drawer or toggle button
+document.addEventListener('click', (e) => {
+    if (
+        historyDrawer.classList.contains('open') &&
+        !historyDrawer.contains(e.target) &&
+        !toggleBtn.contains(e.target)
+    ) {
+        closeDrawer();
+    }
 });

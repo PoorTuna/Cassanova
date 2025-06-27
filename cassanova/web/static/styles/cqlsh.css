@@ -71,13 +71,21 @@
     flex: 1 1 0;
     background: #1e1e1e;
     color: #ddd;
-    overflow: auto;
-    padding: 20px;
+    display: flex;
+    flex-direction: column;
     font-family: 'Courier New', monospace;
     white-space: pre-wrap;
     user-select: text;
     font-size: 0.9rem;
     border-radius: 5px;
+    overflow: hidden;
+}
+
+/* Query result section */
+#query-result {
+    flex: 1 1 auto;
+    padding: 20px;
+    overflow: auto;
 }
 
 /* Loading and error text */
@@ -93,31 +101,44 @@
 
 /* Run query button */
 .cql-devtools #run-btn {
-    background-color: #4fc3f7;
-    border: none;
-    color: #000;
-    font-weight: 700;
-    padding: 12px 20px;
-    cursor: pointer;
+    padding: 8px 20px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
     font-size: 1rem;
-    user-select: none;
-    transition: background-color 0.2s ease;
-    border-radius: 6px;
+    border-radius: 4px;
+    cursor: pointer;
     margin: 12px;
     align-self: flex-start;
     flex-shrink: 0;
+    user-select: none;
+
+    background-color: #2a2a2a;
+    color: #4fc3f7;
+    border: 1.5px solid #4fc3f7;
+    box-shadow: none;
+
+    transition: background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease;
 }
 
-.cql-devtools #run-btn:hover:not(:disabled) {
-    background-color: #81d4fa;
+.cql-devtools #run-btn:hover:not(:disabled),
+.cql-devtools #run-btn:focus:not(:disabled) {
+    background-color: #2a2a2a;
+    color: #4fc3f7;
+    border-color: #4fc3f7;
+    box-shadow: 0 0 10px rgba(79, 195, 247, 0.6);
+    outline: none;
 }
 
 .cql-devtools #run-btn:disabled {
     opacity: 0.6;
     cursor: default;
+    background-color: #1e1e1e;
+    border-color: #333;
+    color: #555;
+    box-shadow: none;
 }
 
-
+/* Run query row styling */
 .run-query-row {
     margin-top: 8px;
     display: flex;
@@ -127,9 +148,9 @@
 
 /* Style for the consistency dropdown */
 #consistency-level {
-    background-color: #1e1e1e; /* dark background matching your editor */
-    color: #ddd; /* light text color */
-    border: 1px solid #444; /* subtle border */
+    background-color: #1e1e1e;
+    color: #ddd;
+    border: 1px solid #444;
     border-radius: 4px;
     padding: 6px 12px;
     font-family: 'Inter', sans-serif;
@@ -143,32 +164,11 @@
 
 #consistency-level:hover,
 #consistency-level:focus {
-    border-color: #6a9fb5; /* nice blue accent on hover/focus */
+    border-color: #6a9fb5;
     outline: none;
 }
 
-/* Polished Run Query button */
-#run-btn {
-    background-color: #2a5d9f; /* Cassandra blue-ish */
-    color: #f0f0f0;
-    border: none;
-    padding: 8px 20px;
-    font-family: 'Inter', sans-serif;
-    font-weight: 600;
-    font-size: 1rem;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.25s ease;
-    box-shadow: 0 0 6px rgba(42, 93, 159, 0.7);
-}
-
-#run-btn:hover,
-#run-btn:focus {
-    background-color: #3a7fc9;
-    box-shadow: 0 0 10px rgba(58, 127, 201, 0.9);
-    outline: none;
-}
-
+/* Tracing label */
 .tracing-label {
     color: #ccc;
     font-size: 0.9rem;
@@ -184,4 +184,162 @@
     width: 16px;
     height: 16px;
     cursor: pointer;
+}
+
+/* History panel */
+.history-panel {
+    margin-top: 20px;
+    padding-top: 10px;
+    border-top: 1px solid #444;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.85rem;
+    color: #aaa;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.history-panel h2 {
+    font-size: 0.9rem;
+    margin-bottom: 8px;
+    color: #ccc;
+}
+
+#history-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+#history-list li {
+    padding: 6px 8px;
+    cursor: pointer;
+    border-bottom: 1px solid #2a2a2a;
+    font-family: monospace;
+    white-space: pre-wrap;
+    overflow-wrap: break-word;
+    max-height: 10em;
+    overflow-y: clip;
+}
+
+#history-list li:hover {
+    background-color: #2a2a2a;
+}
+
+/* History toggle button */
+#toggle-history-btn.history-toggle-btn {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    z-index: 1001;
+    background-color: #2a2a2a;
+    color: #4fc3f7;
+    font-weight: 600;
+    font-size: 0.9rem;
+    border: 1.5px solid #4fc3f7;
+    padding: 10px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    box-shadow: none;
+    font-family: 'Inter', sans-serif;
+    transition: background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease;
+}
+
+#toggle-history-btn.history-toggle-btn:hover,
+#toggle-history-btn.history-toggle-btn:focus {
+    background-color: #2a2a2a;
+    color: #4fc3f7;
+    border-color: #4fc3f7;
+    box-shadow: 0 0 10px rgba(79, 195, 247, 0.6);
+    outline: none;
+}
+
+/* History drawer */
+#history-drawer {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translate(-50%, 100%);
+    width: 60%;
+    background: #1e1e1e;
+    border-top: 2px solid #4fc3f7;
+    box-shadow: 0 -2px 20px rgba(0, 0, 0, 0.6);
+    z-index: 1000;
+    transition: transform 0.3s ease;
+    border-radius: 8px 8px 0 0;
+    padding: 16px 20px;
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+#history-drawer.open {
+    transform: translate(-50%, 0);
+}
+
+/* Result toolbar inside result panel */
+.result-toolbar {
+    flex-shrink: 0;
+    display: flex;
+    gap: 8px;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 12px 20px;
+    border-top: 1px solid #444;
+    background: #1e1e1e;
+}
+
+/* Result toolbar buttons */
+.result-toolbar .btn {
+    background-color: #2a2a2a;
+    color: #4fc3f7;
+    font-weight: 600;
+    border: 1.5px solid #4fc3f7;
+    padding: 8px 14px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.9rem;
+    box-shadow: none;
+}
+
+.result-toolbar .btn:hover,
+.result-toolbar .btn:focus {
+    background-color: #2a2a2a;
+    color: #4fc3f7;
+    border-color: #4fc3f7;
+    box-shadow: 0 0 10px rgba(79, 195, 247, 0.6);
+    outline: none;
+}
+
+#history-drawer .drawer-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+#close-history-btn {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: #4fc3f7;
+    cursor: pointer;
+    padding: 4px 8px;
+    transition: color 0.25s ease;
+}
+
+#close-history-btn:hover,
+#close-history-btn:focus {
+    color: #ff5c5c;
+    outline: none;
+}
+
+/* Focus styles for accessibility */
+#run-btn:focus-visible,
+#toggle-history-btn:focus-visible,
+#close-history-btn:focus-visible,
+#consistency-level:focus-visible,
+.tracing-label input[type="checkbox"]:focus-visible {
+    outline: 2px solid #4fc3f7;
+    outline-offset: 2px;
 }
