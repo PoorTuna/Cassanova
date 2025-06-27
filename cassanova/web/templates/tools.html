@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>Tools - Cassanova</title>
+
+    <!-- Fonts & Base Styles -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet"/>
+    <link href="/static/styles/main.css" rel="stylesheet"/>
+    <script src="/static/scripts/tools.js" defer></script>
+
+</head>
+<body>
+<header>
+    <h1>
+        <a href="/" style="text-decoration:none; color:inherit; display:flex; align-items:center;">
+            <img src="/static/icons/logo/cassanova-logo.png" alt="Cassanova Logo"
+                 style="width:40px; height:40px; margin-right:8px;"/>
+            Cassanova - Tools
+        </a>
+    </h1>
+</header>
+
+<main class="tools-page">
+    <form id="tools-form" enctype="multipart/form-data">
+        <label for="tool-select">Select Tool</label>
+        <select id="tool-select" name="tool" required aria-describedby="tool-note">
+            <option value="" disabled selected>-- Choose a tool --</option>
+            {% for tool in tools %}
+            <option value="{{ tool }}">{{ tool }}</option>
+            {% endfor %}
+        </select>
+        <div id="tool-note" class="note">
+            Select a tool to run. Some tools may require file uploads or a running Cassandra instance.
+        </div>
+
+        <label for="args-input">Command Line Arguments (Optional)</label>
+        <input
+                type="text"
+                id="args-input"
+                name="args"
+                placeholder="e.g. --help or -f datafile.txt"
+                aria-describedby="args-note"
+                autocomplete="off"
+        />
+
+        <label for="files-input">Upload Files (Optional)</label>
+        <input
+                type="file"
+                id="files-input"
+                name="files"
+                multiple
+                webkitdirectory
+                directory
+                aria-describedby="files-note"
+        />
+        <div id="files-note" class="note">
+            Upload individual files or folders (for SSTable or data inputs). Folder upload supported in modern browsers.
+        </div>
+
+        <button type="submit" aria-label="Execute selected tool with arguments and files">
+            Run Tool
+        </button>
+    </form>
+
+    <section id="output" class="output-container" aria-live="polite" aria-atomic="true" hidden>
+        <div class="output-section">
+            <h3>Standard Output</h3>
+            <pre id="stdout"></pre>
+        </div>
+        <div class="output-section">
+            <h3>Standard Error</h3>
+            <pre id="stderr"></pre>
+        </div>
+        <div class="output-section">
+            <h3>Exit Code</h3>
+            <pre id="exit-code"></pre>
+        </div>
+    </section>
+</main>
+
+</body>
+</html>

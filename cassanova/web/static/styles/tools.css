@@ -1,0 +1,92 @@
+.tools-page {
+    max-width: 900px;
+    margin: 1.5rem auto;
+    padding: 0 1rem;
+}
+
+.tools-page h1 {
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: #81d4fa;
+}
+
+.tools-page form {
+    background-color: #161b22;
+    border-radius: 8px;
+    padding: 1.25rem 1.5rem;
+    box-shadow: 0 0 12px rgba(0, 0, 0, 0.6);
+}
+
+.tools-page label {
+    display: block;
+    margin-top: 1rem;
+    font-weight: 600;
+    color: #90caf9;
+}
+
+.tools-page select,
+.tools-page input[type="text"],
+.tools-page textarea {
+    width: 100%;
+    padding: 0.5rem 0.75rem;
+    margin-top: 0.3rem;
+    background-color: #0d1117;
+    border: 1px solid #30363d;
+    border-radius: 4px;
+    color: #c9d1d9;
+    font-family: 'Inter', sans-serif;
+    font-size: 1rem;
+    resize: vertical;
+}
+
+.tools-page input[type="file"] {
+    margin-top: 0.4rem;
+    color: #c9d1d9;
+}
+
+.tools-page button[type="submit"] {
+    margin-top: 1.5rem;
+    padding: 0.75rem 1.5rem;
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: #0d1117;
+    background-color: #58a6ff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+}
+
+.tools-page button[type="submit"]:hover {
+    background-color: #1f6feb;
+}
+
+.tools-page .output-container {
+    margin-top: 2rem;
+    background-color: #0d1117;
+    border: 1px solid #30363d;
+    border-radius: 6px;
+    padding: 1rem;
+    font-family: monospace;
+    font-size: 0.9rem;
+    color: #c9d1d9;
+    white-space: pre-wrap;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.tools-page .output-section {
+    margin-bottom: 1.25rem;
+}
+
+.tools-page .output-section h3 {
+    color: #58a6ff;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+}
+
+.tools-page .note {
+    margin-top: 0.75rem;
+    font-size: 0.85rem;
+    color: #8b949e;
+}
