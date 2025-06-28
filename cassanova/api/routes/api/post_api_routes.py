@@ -44,6 +44,7 @@ async def run_tool(
         namespace: Optional[str] = Form(None),
         files: Optional[List[UploadFile]] = File(None)
 ):
+    workdir, namespace = get_namespace_dir(namespace)
     try:
         if not is_tool_allowed(tool):
             return JSONResponse(
@@ -59,7 +60,6 @@ async def run_tool(
             )
 
         safe_args = parse_args(args)
-        workdir, namespace = get_namespace_dir(namespace)
         saved_paths = await save_uploaded_files(files, workdir) if files else []
         resolved_args = resolve_args(safe_args, workdir)
 

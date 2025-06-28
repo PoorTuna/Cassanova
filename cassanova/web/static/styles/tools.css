@@ -90,3 +90,130 @@
     font-size: 0.85rem;
     color: #8b949e;
 }
+
+#tools-result-drawer {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translate(-50%, 100%);
+    width: 70%;
+    background: #1e1e1e;
+    border-top: 2px solid #4fc3f7;
+    box-shadow: 0 -2px 20px rgba(0, 0, 0, 0.6);
+    z-index: 1000;
+    transition: transform 0.3s ease;
+    border-radius: 8px 8px 0 0;
+    padding: 16px 20px;
+    overflow-y: auto;
+    max-height: 80vh;
+    color: #eee;
+}
+
+#tools-result-drawer.open {
+    transform: translate(-50%, 0);
+}
+
+#tools-result-drawer .drawer-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+#tools-result-drawer .close-btn {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: #f0f0f0;
+    cursor: pointer;
+    padding: 4px 8px;
+    transition: color 0.2s ease;
+}
+
+#tools-result-drawer .close-btn:hover {
+    color: #ff5c5c;
+}
+
+#tools-result-drawer .output-section h3 {
+    margin-top: 16px;
+    font-size: 1rem;
+    color: #4fc3f7;
+}
+
+#tools-result-drawer .output-section pre {
+    background: #111;
+    color: #ddd;
+    padding: 12px;
+    border-radius: 4px;
+    overflow-x: auto;
+    white-space: pre-wrap;
+    font-family: monospace;
+    max-height: 200px;
+}
+
+.spinner {
+    border: 4px solid #333;
+    border-top: 4px solid #58a6ff;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    animation: spin 1s linear infinite;
+    margin-left: 10px;
+    display: inline-block;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.output-tabs {
+    display: flex;
+    gap: 12px;
+    margin: 0 0 10px 0;
+}
+
+.output-tabs .tab {
+    cursor: pointer;
+    padding: 6px 14px;
+    background-color: #1e1e1e;
+    border: 1.5px solid #4fc3f7;
+    border-radius: 6px;
+    color: #4fc3f7;
+    font-weight: 600;
+    transition: background-color 0.3s ease;
+    user-select: none;
+}
+
+.output-tabs .tab.active,
+.output-tabs .tab:hover {
+    background-color: #4fc3f7;
+    color: #121212;
+}
+
+.output-actions {
+    text-align: right;
+    margin: 0 0 10px 0;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.output-actions button {
+    background-color: #4fc3f7;
+    color: #121212;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.output-actions button:hover {
+    background-color: #3587c7;
+}

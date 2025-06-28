@@ -63,22 +63,33 @@
             Run Tool
         </button>
     </form>
-
-    <section id="output" class="output-container" aria-live="polite" aria-atomic="true" hidden>
-        <div class="output-section">
-            <h3>Standard Output</h3>
-            <pre id="stdout"></pre>
-        </div>
-        <div class="output-section">
-            <h3>Standard Error</h3>
-            <pre id="stderr"></pre>
-        </div>
-        <div class="output-section">
-            <h3>Exit Code</h3>
-            <pre id="exit-code"></pre>
-        </div>
-    </section>
 </main>
+
+<div id="tools-result-drawer">
+    <div class="drawer-header">
+        <h2>Tool Result</h2>
+        <button id="close-tools-drawer-btn" class="close-btn" title="Close Result">×</button>
+    </div>
+
+    <div class="output-actions">
+        <button id="download-output-btn">Export Json</button>
+        <div id="spinner" class="spinner" style="display:none;"></div>
+
+    </div>
+
+    <div class="output-tabs">
+        <button class="tab active" data-target="stdout">Stdout</button>
+        <button class="tab" data-target="stderr">Stderr</button>
+        <button class="tab" data-target="exit-code">Exit Code</button>
+    </div>
+
+    <div id="output-content">
+        <pre id="stdout"></pre>
+        <pre id="stderr" style="display:none;"></pre>
+        <pre id="exit-code" style="display:none;"></pre>
+    </div>
+</div>
+
 
 </body>
 </html>
