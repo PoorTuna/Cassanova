@@ -21,7 +21,7 @@
 
 </head>
 <body>
-<header class="status-{{ cluster.metrics.status.lower() | default('unknown') }}">
+<header>
     <h1>
         <a href="/cluster/{{ cluster_config_entry }}"
            style="text-decoration: none; color: inherit; display: flex; align-items: center;">
@@ -50,7 +50,7 @@
 </header>
 
 <main>
-    <section class="cluster-overview">
+    <section class="cluster-overview status-{{ cluster.metrics.status.lower() | default('unknown') }}">
         <h2>Cluster Overview</h2>
         <ul>
             <li><strong>Name</strong><span data-fulltext="{{ cluster.metrics.name }}"

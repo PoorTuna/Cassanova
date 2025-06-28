@@ -1,15 +1,15 @@
-header.status-healthy {
+.cluster-overview.status-healthy {
     border-bottom: 4px solid lightgreen;
 }
 
-header.status-degraded {
+.cluster-overview.status-degraded {
     border-bottom: 4px solid orange;
 }
 
-header.status-down {
+.cluster-overview.status-down {
     border-bottom: 4px solid red;
 }
 
-header.status-unknown {
+.cluster-overview.status-unknown {
     border-bottom: 4px solid white;
 }
