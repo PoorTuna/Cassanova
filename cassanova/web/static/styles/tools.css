@@ -34,7 +34,6 @@
     border: 1px solid #30363d;
     border-radius: 4px;
     color: #c9d1d9;
-    font-family: 'Inter', sans-serif;
     font-size: 1rem;
     resize: vertical;
 }
@@ -67,7 +66,6 @@
     border: 1px solid #30363d;
     border-radius: 6px;
     padding: 1rem;
-    font-family: monospace;
     font-size: 0.9rem;
     color: #c9d1d9;
     white-space: pre-wrap;
@@ -147,7 +145,6 @@
     border-radius: 4px;
     overflow-x: auto;
     white-space: pre-wrap;
-    font-family: monospace;
     max-height: 200px;
 }
 

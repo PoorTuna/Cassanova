@@ -201,6 +201,5 @@ th {
 }
 
 .table-section ul.options-list li span:nth-child(2) {
-    font-family: monospace;
     color: #999;
 }

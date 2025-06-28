@@ -2,7 +2,7 @@
 
 body {
     margin: 0;
-    font-family: 'Inter', sans-serif;
+    font-family: "Motiva Sans", "Twemoji", "Noto Sans", "Helvetica", "sans-serif";
     background-color: #121212;
     color: #e0e0e0;
 }
@@ -20,15 +20,19 @@ header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0 1rem;
+    padding: 1rem 2rem;
+    background: linear-gradient(to right, #1f1f1f, #1a2226);
+    border-bottom: 1px solid #333;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
 }
 
 header h1 {
     margin: 0;
-    font-size: 1rem;
+    font-size: 1.8rem;
+    color: #fff;
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 10px;
 }
 
 .header-buttons {
@@ -37,12 +41,11 @@ header h1 {
     gap: 1rem;
 }
 
-/* Disconnect icon styling */
 .header-icon {
     width: 50px;
     height: 50px;
     cursor: pointer;
-    filter: invert(1); /* invert for dark bg; adjust as needed */
+    filter: invert(1);
     transition: filter 0.2s ease;
 }
 
@@ -65,7 +68,6 @@ header h1 {
 .nodes-btn:hover {
     background-color: #81d4fa;
 }
-
 
 /* Dropdown Styling */
 .dropdown {
@@ -129,6 +131,21 @@ header h1 {
 }
 
 .dropdown-menu a:hover {
-    background-color: #4fc3f7; /* soft cassandra blue highlight */
+    background-color: #4fc3f7;
     color: #ffffff;
+}
+
+main {
+    padding: 2rem;
+    max-width: 90%;
+    margin: 0 auto;
+}
+
+footer {
+    text-align: center;
+    padding: 1rem 0;
+    color: #555;
+    font-size: 0.85rem;
+    border-top: 1px solid #2a2a2a;
+    margin-top: 3rem;
 }
