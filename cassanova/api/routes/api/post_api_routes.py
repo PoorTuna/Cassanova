@@ -1,4 +1,3 @@
-from asyncio import wait_for, subprocess, create_subprocess_exec
 from http import HTTPStatus
 from json import dumps
 from shutil import rmtree
@@ -8,13 +7,14 @@ from fastapi import APIRouter
 from fastapi import UploadFile, File, Form, HTTPException
 from fastapi.responses import JSONResponse
 
-from cassanova.core.cql.execute_query import execute_query_cql
-from cassanova.core.tools.argument_handling import parse_args, resolve_args
-from cassanova.core.tools.tool_validation import is_tool_allowed, get_tool_path
-from cassanova.core.tools.user_workspace import save_uploaded_files, get_namespace_dir
 from cassanova.config.cassanova_config import get_clusters_config
 from cassanova.config.cluster_config import generate_cluster_connection, ClusterConnectionConfig
 from cassanova.consts.cass_tools import CassTools
+from cassanova.core.cql.execute_query import execute_query_cql
+from cassanova.core.tools.argument_handling import parse_args, resolve_args
+from cassanova.core.tools.execute_tool import execute_tool
+from cassanova.core.tools.tool_validation import is_tool_allowed, get_tool_path
+from cassanova.core.tools.user_workspace import save_uploaded_files, get_namespace_dir
 from cassanova.models.cql_query import CQLQuery
 
 clusters_config = get_clusters_config()
@@ -62,24 +62,16 @@ async def run_tool(
         safe_args = parse_args(args)
         saved_paths = await save_uploaded_files(files, workdir) if files else []
         resolved_args = resolve_args(safe_args, workdir)
-
-        process = await create_subprocess_exec(
-            tool_path, *resolved_args,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            cwd=workdir
-        )
-
-        stdout, stderr = await wait_for(process.communicate(), timeout=30)
+        stdout, stderr, ret_code = await execute_tool(tool_path, workdir, resolved_args)
 
         return JSONResponse({
             "namespace": namespace,
             "tool": tool,
             "args": safe_args,
             "saved_path": saved_paths,
-            "exit_code": process.returncode,
-            "stdout": stdout.decode(),
-            "stderr": stderr.decode(),
+            "exit_code": ret_code,
+            "stdout": stdout,
+            "stderr": stderr,
         })
 
     except TimeoutError:
