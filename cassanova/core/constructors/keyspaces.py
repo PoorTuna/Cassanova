@@ -1,7 +1,7 @@
 from cassandra.metadata import KeyspaceMetadata
 
-from cassanova.cass.constructors.tables import generate_tables_info
-from cassanova.cass.constructors.serialize_to_primitive import serialize_to_primitive
+from cassanova.core.constructors.tables import generate_tables_info
+from cassanova.core.constructors.serialize_to_primitive import serialize_to_primitive
 from cassanova.models.cluster_info.keyspace import KeyspaceInfo
 
 

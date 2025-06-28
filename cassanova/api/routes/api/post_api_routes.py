@@ -8,10 +8,10 @@ from fastapi import APIRouter
 from fastapi import UploadFile, File, Form, HTTPException
 from fastapi.responses import JSONResponse
 
-from cassanova.cass.cql.execute_query import execute_query_cql
-from cassanova.cass.tools.argument_handling import parse_args, resolve_args
-from cassanova.cass.tools.tool_validation import is_tool_allowed, get_tool_path
-from cassanova.cass.tools.user_workspace import save_uploaded_files, get_namespace_dir
+from cassanova.core.cql.execute_query import execute_query_cql
+from cassanova.core.tools.argument_handling import parse_args, resolve_args
+from cassanova.core.tools.tool_validation import is_tool_allowed, get_tool_path
+from cassanova.core.tools.user_workspace import save_uploaded_files, get_namespace_dir
 from cassanova.config.cassanova_config import get_clusters_config
 from cassanova.config.cluster_config import generate_cluster_connection, ClusterConnectionConfig
 from cassanova.consts.cass_tools import CassTools

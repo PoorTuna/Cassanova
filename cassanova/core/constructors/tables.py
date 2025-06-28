@@ -2,7 +2,7 @@ from typing import Any
 
 from cassandra.metadata import TableMetadata
 
-from cassanova.cass.constructors.serialize_to_primitive import serialize_to_primitive
+from cassanova.core.constructors.serialize_to_primitive import serialize_to_primitive
 from cassanova.models.cluster_info.table import TableInfo
 
 

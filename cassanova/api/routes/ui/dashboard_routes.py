@@ -5,8 +5,8 @@ from fastapi import HTTPException, APIRouter
 from fastapi.requests import Request
 from fastapi.templating import Jinja2Templates
 
-from cassanova.cass.constructors.cluster_info import generate_cluster_info
-from cassanova.cass.constructors.keyspaces import generate_keyspaces_info
+from cassanova.core.constructors.cluster_info import generate_cluster_info
+from cassanova.core.constructors.keyspaces import generate_keyspaces_info
 from cassanova.config.cassanova_config import get_clusters_config
 from cassanova.config.cluster_config import ClusterConnectionConfig, generate_cluster_connection
 

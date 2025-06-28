@@ -2,7 +2,7 @@ from cassandra import ConsistencyLevel
 from cassandra.cluster import Session
 from cassandra.query import SimpleStatement
 
-from cassanova.cass.cql.sanitize_input import sanitize_identifier
+from cassanova.core.cql.sanitize_input import sanitize_identifier
 
 
 def drop_table_cql(session: Session, keyspace: str, table: str, cl: ConsistencyLevel = ConsistencyLevel.QUORUM):

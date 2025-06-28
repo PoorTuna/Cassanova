@@ -1,10 +1,10 @@
 from cassandra.cluster import Session
 from fastapi import HTTPException, APIRouter
 
-from cassanova.cass.constructors.cluster_info import generate_cluster_info
-from cassanova.cass.constructors.keyspaces import generate_keyspaces_info
-from cassanova.cass.constructors.tables import generate_tables_info
-from cassanova.cass.cql.table_info import show_table_schema_cql, show_table_description_cql
+from cassanova.core.constructors.cluster_info import generate_cluster_info
+from cassanova.core.constructors.keyspaces import generate_keyspaces_info
+from cassanova.core.constructors.tables import generate_tables_info
+from cassanova.core.cql.table_info import show_table_schema_cql, show_table_description_cql
 from cassanova.config.cassanova_config import get_clusters_config
 from cassanova.config.cluster_config import generate_cluster_connection, ClusterConnectionConfig
 

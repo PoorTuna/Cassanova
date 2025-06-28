@@ -1,7 +1,7 @@
 from fastapi import HTTPException, APIRouter
 from fastapi.responses import JSONResponse
 
-from cassanova.cass.cql.table_cleanup import drop_table_cql, truncate_table_cql
+from cassanova.core.cql.table_cleanup import drop_table_cql, truncate_table_cql
 from cassanova.config.cassanova_config import get_clusters_config
 from cassanova.config.cluster_config import generate_cluster_connection, ClusterConnectionConfig
 
