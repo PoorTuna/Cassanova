@@ -2,12 +2,16 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8"/>
-    <link rel="icon" type="image/png" href="/static/icons/logo/cassanova-logo.png" />
+    <link rel="icon" type="image/png" href="/static/icons/logo/cassanova-logo.png"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <link href="/static/styles/main.css" rel="stylesheet">
     <title>Cassanova Home</title>
+
+    <!-- Fonts & Base Styles -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="/static/styles/main.css" rel="stylesheet">
     <link href="https://unpkg.com/vis-network/styles/vis-network.min.css" rel="stylesheet"/>
+    <script src="/static/scripts/index.js" defer></script>
+
 </head>
 <body>
 <header>
@@ -15,30 +19,42 @@
         <img src="/static/icons/logo/cassanova-logo.png" alt="Logo" style="width: 40px; height: 40px;">
         <a href="/" style="text-decoration: none; color: inherit;">Cassanova</a>
     </h1>
+    <div class="header-buttons">
+        <details class="dropdown">
+            <summary class="nodes-btn" aria-haspopup="true" aria-expanded="false">
+                More
+            </summary>
+            <ul class="dropdown-menu">
+                <li><a href="{{ monitoring_url }}">Monitoring</a></li>
+                <li><a href="/tools">Tools</a></li>
+            </ul>
+        </details>
+    </div>
 </header>
 
-<div class="container">
-    <div class="card">
-        <h2>Clusters</h2>
-        <table>
-            <thead>
-            <tr>
-                <th>Cluster Name</th>
-            </tr>
-            </thead>
-            <tbody>
+<main class="home-container">
+    <section class="cluster-card">
+        <h2>Configured Clusters</h2>
+        <p class="helper-text">Choose a cluster to explore. Status will be shown on the next page.</p>
+
+        <input type="text" id="cluster-filter" placeholder="Filter clusters..." aria-label="Filter clusters by name"/>
+
+        <div id="cluster-list">
             {% for cluster in clusters.keys() %}
-            <tr>
-                <td>
-                    <a href="/cluster/{{ cluster }}" style="text-decoration: none;color: inherit">
-                        {{ cluster }}
-                    </a>
-                </td>
-            </tr>
+            <div class="cluster-row" data-name="{{ cluster | lower }}"
+                 onclick="window.location.href='/cluster/{{ cluster }}'">
+                <div class="name">{{ cluster }}</div>
+                <div style="width: 1rem; height: 1rem;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="#4fc3f7" stroke-width="2" stroke-linecap="round"
+                         stroke-linejoin="round">
+                        <polyline points="9 6 15 12 9 18"/>
+                    </svg>
+                </div>
+            </div>
             {% endfor %}
-            </tbody>
-        </table>
-    </div>
-</div>
+        </div>
+    </section>
+</main>
+
 </body>
 </html>
