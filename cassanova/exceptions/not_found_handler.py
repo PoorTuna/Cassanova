@@ -9,7 +9,7 @@ from starlette.exceptions import HTTPException as StarletteHTTPException
 templates = Jinja2Templates(directory="web/templates")
 
 
-def add_not_found_exceptions(app: FastAPI):
+def add_notfound_exceptions(app: FastAPI):
     @app.exception_handler(StarletteHTTPException)
     async def not_found_exception_handler(request: Request, exc: StarletteHTTPException):
         if exc.status_code == 404:
