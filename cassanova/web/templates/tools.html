@@ -58,72 +58,12 @@
 </aside>
 
 <!-- Main content -->
-<main class="tools-page">
-    <form id="tools-form" enctype="multipart/form-data">
-        <label for="tool-select">Select Tool</label>
-        <select id="tool-select" name="tool" required aria-describedby="tool-note">
-            <option value="" disabled selected>-- Choose a tool --</option>
-            {% for tool in tools %}
-            <option value="{{ tool }}">{{ tool }}</option>
-            {% endfor %}
-        </select>
-        <div id="tool-note" class="note">
-            Select a tool to run. Some tools may require file uploads or a running Cassandra instance.
-        </div>
-
-        <label for="args-input">Command Line Arguments (Optional)</label>
-        <input
-                type="text"
-                id="args-input"
-                name="args"
-                placeholder="e.g. --help or -f datafile.txt"
-                aria-describedby="args-note"
-                autocomplete="off"
-        />
-
-        <label for="files-input">Upload Files (Optional)</label>
-        <input
-                type="file"
-                id="files-input"
-                name="files"
-                multiple
-                webkitdirectory
-                directory
-                aria-describedby="files-note"
-        />
-        <div id="files-note" class="note">
-            Upload individual files or folders (for SSTable or data inputs). Folder upload supported in modern browsers.
-        </div>
-
-        <button type="submit" aria-label="Execute selected tool with arguments and files">
-            Run Tool
-        </button>
+<div id="terminal-container">
+    <div id="terminal-output"></div>
+    <form id="terminal-form" autocomplete="off">
+        <span class="prompt">cassanova@tools:~$</span>
+        <input type="text" id="terminal-input" placeholder="Type a command..." autofocus />
     </form>
-</main>
-
-<!-- Tools Result Drawer -->
-<div id="tools-result-drawer">
-    <div class="drawer-header">
-        <h2>Tool Result</h2>
-        <button id="close-tools-drawer-btn" class="close-btn" title="Close Result">×</button>
-    </div>
-
-    <div class="output-actions">
-        <button id="download-output-btn">Export Json</button>
-        <div id="spinner" class="spinner" style="display:none;"></div>
-    </div>
-
-    <div class="output-tabs">
-        <button class="tab active" data-target="stdout">Stdout</button>
-        <button class="tab" data-target="stderr">Stderr</button>
-        <button class="tab" data-target="exit-code">Exit Code</button>
-    </div>
-
-    <div id="output-content">
-        <pre id="stdout"></pre>
-        <pre id="stderr" style="display:none;"></pre>
-        <pre id="exit-code" style="display:none;"></pre>
-    </div>
 </div>
 
 </body>
