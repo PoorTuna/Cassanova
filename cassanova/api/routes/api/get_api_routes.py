@@ -1,6 +1,8 @@
 from cassandra.cluster import Session
 from fastapi import HTTPException, APIRouter
+from starlette.responses import JSONResponse
 
+from cassanova.consts.cass_tools import CassTools
 from cassanova.core.constructors.cluster_info import generate_cluster_info
 from cassanova.core.constructors.keyspaces import generate_keyspaces_info
 from cassanova.core.constructors.tables import generate_tables_info
@@ -108,3 +110,8 @@ def get_table_description(cluster_name: str, keyspace_name: str, table_name: str
     session = cluster.connect()
 
     return show_table_description_cql(session, keyspace_name, table_name)
+
+
+@cassanova_api_getter_router.get("/tool/list")
+def get_available_tools():
+    return JSONResponse({'tools': CassTools.ALLOWED_TOOLS})

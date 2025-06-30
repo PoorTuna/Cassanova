@@ -6,20 +6,23 @@
     <title>Tools - Cassanova</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet"/>
     <link href="/static/styles/main.css" rel="stylesheet"/>
+    <link href="/static/styles/tools.css" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Mono&display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/xterm/css/xterm.css"/>
+    <script src="https://cdn.jsdelivr.net/npm/xterm/lib/xterm.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xterm-addon-fit/lib/xterm-addon-fit.js"></script>
+    <script type="module" src="/static/scripts/tools.js" defer></script>
     <script src="/static/scripts/sidebar.js" defer></script>
-    <script src="/static/scripts/tools.js" defer></script>
 </head>
 <body class="with-sidebar">
 
-<!-- Sidebar -->
 <aside class="sidebar collapsed">
     <div class="sidebar-header">
-        <a href="/cluster/{{ cluster_config_entry }}" class="sidebar-brand">
+        <a href="/" class="sidebar-brand">
             <img src="/static/icons/logo/cassanova-logo.png" alt="Cassanova Logo" class="sidebar-logo">
             <span class="sidebar-title">Cassanova</span>
         </a>
         <button class="sidebar-toggle" aria-label="Toggle Menu" aria-expanded="false">
-            <!-- SVG burger icon -->
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#e0e0e0" stroke-width="2"
                  stroke-linecap="round" stroke-linejoin="round">
                 <line x1="3" y1="6" x2="21" y2="6"/>
@@ -57,14 +60,16 @@
     </nav>
 </aside>
 
-<!-- Main content -->
-<div id="terminal-container">
-    <div id="terminal-output"></div>
-    <form id="terminal-form" autocomplete="off">
-        <span class="prompt">cassanova@tools:~$</span>
-        <input type="text" id="terminal-input" placeholder="Type a command..." autofocus />
-    </form>
-</div>
+<main>
+    <div id="xterm-upload">
+        <label for="files-input">Upload Files or Folder (optional)</label>
+        <input type="file" id="files-input" multiple webkitdirectory directory/>
+        <small class="note">Select multiple files or a folder to send with your commands.</small>
+    </div>
+    <div id="xterm-wrapper">
+        <div id="xterm-container"></div>
+    </div>
+</main>
 
 </body>
 </html>
