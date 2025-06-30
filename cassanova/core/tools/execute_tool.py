@@ -1,8 +1,8 @@
 from asyncio import subprocess, create_subprocess_exec, wait_for
-from typing import List
+from typing import List, Optional
 
 
-async def execute_tool(tool_path: str, workdir: str, resolved_args: List[str], timeout: int = 30,
+async def execute_tool(tool_path: str, resolved_args: List[str], workdir: Optional[str] = None, timeout: int = 30,
                        stdout=subprocess.PIPE, stderr=subprocess.PIPE) -> tuple[str, str, int | None]:
     process = await create_subprocess_exec(
         tool_path, *resolved_args,

@@ -62,7 +62,7 @@ async def run_tool(
         safe_args = parse_args(args)
         saved_paths = await save_uploaded_files(files, workdir) if files else []
         resolved_args = resolve_args(safe_args, workdir)
-        stdout, stderr, ret_code = await execute_tool(tool_path, workdir, resolved_args)
+        stdout, stderr, ret_code = await execute_tool(tool_path, resolved_args, workdir)
 
         return JSONResponse({
             "namespace": namespace,
