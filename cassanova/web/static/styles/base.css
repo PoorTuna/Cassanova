@@ -139,6 +139,7 @@ main {
     padding: 2rem;
     max-width: 90%;
     margin: 0 auto;
+    min-height: calc(100vh - 25vh);
 }
 
 footer {

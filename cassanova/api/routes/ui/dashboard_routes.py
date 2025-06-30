@@ -5,10 +5,11 @@ from fastapi import HTTPException, APIRouter
 from fastapi.requests import Request
 from fastapi.templating import Jinja2Templates
 
-from cassanova.core.constructors.cluster_info import generate_cluster_info
-from cassanova.core.constructors.keyspaces import generate_keyspaces_info
+from cassanova.api.routes.api.get_api_routes import get_node_status
 from cassanova.config.cassanova_config import get_clusters_config
 from cassanova.config.cluster_config import ClusterConnectionConfig, generate_cluster_connection
+from cassanova.core.constructors.cluster_info import generate_cluster_info
+from cassanova.core.constructors.keyspaces import generate_keyspaces_info
 
 clusters_config = get_clusters_config()
 templates = Jinja2Templates(directory="web/templates")
@@ -51,6 +52,26 @@ async def keyspace_dashboard(request: Request, cluster_name: str, keyspace_name:
     return templates.TemplateResponse("keyspace.html", {
         "request": request,
         "keyspace": keyspace_info,
+        "cluster_name": cluster.metadata.cluster_name,
+        "cluster_config_entry": cluster_name,
+        "current_year": current_year
+    })
+
+
+@cassanova_ui_dashboard_router.get("/cluster/{cluster_name}/nodes")
+async def nodes_dashboard(request: Request, cluster_name: str):
+    cluster_config: ClusterConnectionConfig = clusters_config.clusters.get(cluster_name, None)
+    if cluster_config is None:
+        raise HTTPException(status_code=404, detail="Cluster not found")
+
+    cluster = generate_cluster_connection(cluster_config)
+    cluster.connect()
+    nodetool_status_info = await get_node_status(cluster_name)
+
+    current_year = datetime.now().year
+    return templates.TemplateResponse("nodes.html", {
+        "request": request,
+        "nodetool_status": nodetool_status_info,
         "cluster_name": cluster.metadata.cluster_name,
         "cluster_config_entry": cluster_name,
         "current_year": current_year
