@@ -125,7 +125,7 @@
         });
     }
 
-    function setupSearch(data) {
+    function setupSearch() {
         document.getElementById('cs-searchInput').addEventListener('input', e => {
             const filter = e.target.value.toLowerCase();
             document.querySelectorAll('.cs-group').forEach(group => {
@@ -143,5 +143,5 @@
     }
 
     render(settingsData);
-    setupSearch(settingsData);
+    setupSearch();
 })();

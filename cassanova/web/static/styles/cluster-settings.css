@@ -8,7 +8,6 @@
     background-color: #121212;
     color: #e0e0e0;
     overflow-x: hidden;
-    /* overflow-y: visible is default, no need to specify */
 }
 
 .cs-content h1 {
@@ -162,6 +161,7 @@
 }
 
 .cs-copy-btn:hover {
+    background: none;
     color: #4fc3f7;
 }
 
