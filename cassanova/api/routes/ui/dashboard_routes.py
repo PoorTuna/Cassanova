@@ -76,3 +76,28 @@ async def nodes_dashboard(request: Request, cluster_name: str):
         "cluster_config_entry": cluster_name,
         "current_year": current_year
     })
+
+
+@cassanova_ui_dashboard_router.get("/cluster/{cluster_name}/settings")
+def cluster_settings(request: Request, cluster_name: str):
+    cluster_config = clusters_config.clusters.get(cluster_name)
+    if not cluster_config:
+        raise HTTPException(status_code=404, detail="Cluster not found")
+
+    cluster = generate_cluster_connection(cluster_config)
+    session = cluster.connect()
+
+    try:
+        rows = session.execute("SELECT * FROM system_views.settings")
+        settings_dict = {row.name: row.value for row in rows}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to query settings: {e}")
+    finally:
+        session.shutdown()
+
+    return templates.TemplateResponse("settings.html", {
+        "request": request,
+        "cluster_name": cluster.metadata.cluster_name,
+        "cluster_config_entry": cluster_name,
+        "cluster_settings": settings_dict  # pass dict directly
+    })
