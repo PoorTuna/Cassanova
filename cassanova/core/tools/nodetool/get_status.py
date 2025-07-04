@@ -11,8 +11,8 @@ from cassanova.models.nodetool.status import NodeToolStatus
 
 async def get_nodetool_status(cluster_config: ClusterConnectionConfig) -> list[NodeToolStatus]:
     tool_path = get_tool_path('nodetool')
-    username = cluster_config.username
-    password = cluster_config.password
+    username = cluster_config.jmx_credentials.username if cluster_config.jmx_credentials else None
+    password = cluster_config.jmx_credentials.password if cluster_config.jmx_credentials else None
     random_contact = choice(cluster_config.contact_points)
 
     args = _format_nodetool_status_args(random_contact, username, password)
