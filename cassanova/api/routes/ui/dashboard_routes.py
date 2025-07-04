@@ -10,6 +10,7 @@ from cassanova.config.cassanova_config import get_clusters_config
 from cassanova.config.cluster_config import ClusterConnectionConfig, generate_cluster_connection
 from cassanova.core.constructors.cluster_info import generate_cluster_info
 from cassanova.core.constructors.keyspaces import generate_keyspaces_info
+from cassanova.exceptions.system_views_unavailable import SystemViewsUnavailableException
 
 clusters_config = get_clusters_config()
 templates = Jinja2Templates(directory="web/templates")
@@ -91,7 +92,11 @@ def cluster_settings(request: Request, cluster_name: str):
         rows = session.execute("SELECT * FROM system_views.settings")
         settings_dict = {row.name: row.value for row in rows}
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Failed to query settings: {e}")
+        error_message = str(e)
+        if "Keyspace system_views does not exist" in error_message:
+            raise SystemViewsUnavailableException(error_message)
+        else:
+            raise HTTPException(status_code=500, detail=f"Failed to query settings: {error_message}")
     finally:
         session.shutdown()
 
@@ -99,5 +104,5 @@ def cluster_settings(request: Request, cluster_name: str):
         "request": request,
         "cluster_name": cluster.metadata.cluster_name,
         "cluster_config_entry": cluster_name,
-        "cluster_settings": settings_dict  # pass dict directly
+        "cluster_settings": settings_dict,
     })
