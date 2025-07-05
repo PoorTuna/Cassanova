@@ -114,10 +114,11 @@
 
 /* === Navigation Links === */
 .sidebar-nav {
+    gap: 1rem;
     display: flex;
     flex-direction: column;
-    gap: 1rem;
     flex-grow: 1;
+    justify-content: space-between;
 }
 
 .sidebar-link {
@@ -140,11 +141,6 @@
 .sidebar-link.active {
     background-color: #263238;
     color: #4fc3f7;
-}
-
-.sidebar-link.disconnect {
-    margin-top: auto;
-    color: #ff8a80;
 }
 
 /* === Icons & Labels === */
@@ -194,4 +190,22 @@
     .with-sidebar {
         margin-left: 0;
     }
+}
+
+.sidebar-bottom {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-top: auto;
+}
+
+.sidebar-top {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.sidebar-link.disconnect {
+    color: #ff8a80;
+    margin-top: 0;
 }
