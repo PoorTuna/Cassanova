@@ -1,0 +1,63 @@
+.keyspace-carousel-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    box-sizing: border-box;
+    position: relative;
+    margin: 20px 0;
+    overflow-x: auto; /* horizontal scroll */
+    scrollbar-width: thin; /* Firefox */
+    scrollbar-color: #444 transparent;
+    padding: 5px 0;
+}
+
+.keyspace-carousel {
+
+    scroll-behavior: smooth;
+    padding: 10px 0;
+    flex-grow: 1;
+    flex-direction: row;
+    overflow-y: visible;
+    max-width: 100%;
+    display: flex;
+    gap: 20px;
+    overflow-x: auto;
+    width: 100%;
+    scroll-snap-type: x mandatory; /* optional: for nicer snapping */
+    -webkit-overflow-scrolling: touch;
+    flex-wrap: nowrap;
+}
+
+.keyspace-carousel::-webkit-scrollbar {
+    height: 8px;
+}
+
+.keyspace-carousel::-webkit-scrollbar-thumb {
+    background: #444;
+    border-radius: 4px;
+}
+
+.carousel-btn {
+    background-color: #2a2a2a;
+    border: none;
+    color: #ccc;
+    font-size: 1.5rem;
+    padding: 8px 15px;
+    cursor: pointer;
+    border-radius: 8px;
+    user-select: none;
+    transition: background-color 0.2s ease;
+}
+
+.carousel-btn:hover {
+    background-color: #333;
+}
+
+.carousel-btn.left {
+    margin-right: 8px;
+}
+
+.carousel-btn.right {
+    margin-left: 8px;
+}

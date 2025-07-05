@@ -1,0 +1,58 @@
+.cluster-overview ul {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 1rem 1.5rem;
+    max-width: 70%;
+    margin: 0 auto;
+    padding: 0;
+    list-style: none;
+}
+
+.cluster-overview ul li {
+    padding: 12px 16px;
+}
+
+.cluster-overview ul li strong {
+    font-weight: 700;
+    color: #4fc3f7;
+    margin-bottom: 6px;
+    font-size: 1.05rem;
+}
+
+.cluster-overview ul li span {
+    font-weight: 500;
+    font-size: 0.95rem;
+    line-height: 1.2;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+    max-width: 100%;
+    position: relative;
+}
+
+.cluster-overview ul li span:hover::after {
+    content: attr(data-fulltext);
+    position: absolute;
+    left: 0;
+    bottom: 100%;
+    background: #222;
+    color: #eee;
+    padding: 5px 8px;
+    border-radius: 4px;
+    white-space: normal;
+    max-width: 300px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+    z-index: 10;
+    opacity: 1;
+    transition: opacity 0.2s ease-in-out;
+    pointer-events: none;
+    transform: translateY(-8px);
+}
+
+.cluster-overview ul li span::after {
+    content: '';
+    opacity: 0;
+    transition: opacity 0.2s ease-in-out;
+    pointer-events: none;
+}

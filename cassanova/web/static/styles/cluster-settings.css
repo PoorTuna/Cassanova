@@ -1,0 +1,171 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+
+.cs-content {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem;
+    box-sizing: border-box;
+    background-color: #121212;
+    color: #e0e0e0;
+    overflow-x: hidden;
+}
+
+.cs-content h1 {
+    color: #4fc3f7;
+    font-size: 2rem;
+    margin-bottom: 2rem;
+}
+
+.cs-controls {
+    max-width: 600px;
+    margin-bottom: 2rem;
+}
+
+.cs-controls input[type="search"] {
+    width: 100%;
+    padding: 0.6rem 1rem;
+    border-radius: 6px;
+    border: 1px solid #2a2a2a;
+    background: #1e1e1e;
+    color: #e0e0e0;
+    font-size: 1rem;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    transition: border-color 0.2s ease;
+}
+
+.cs-controls input[type="search"]:focus {
+    border-color: #4fc3f7;
+    outline: none;
+}
+
+.cs-controls input[type="search"]::placeholder {
+    color: #888;
+}
+
+.cs-group {
+    margin-bottom: 2rem;
+    background: #1a1a1a;
+    border: 1px solid #2a2a2a;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.cs-group summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #1e1e1e;
+    padding: 1rem 1.25rem;
+    font-weight: 600;
+    color: #e0e0e0;
+    font-size: 1.15rem;
+    cursor: pointer;
+    user-select: none;
+    list-style: none;
+}
+
+.cs-group summary::after {
+    content: '▾';
+    font-size: 1rem;
+    transition: transform 0.3s ease;
+}
+
+.cs-group:not([open]) summary::after {
+    transform: rotate(-90deg);
+}
+
+.cs-settings-list {
+    padding: 0.75rem 1.25rem;
+    font-size: 0.95rem;
+    width: 100%;
+}
+
+.cs-setting-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #2a2a2a;
+    font-family: 'Fira Mono', monospace;
+    user-select: text;
+    white-space: nowrap;
+}
+
+.cs-setting-item:last-child {
+    border-bottom: none;
+}
+
+.cs-key {
+    color: #4fc3f7;
+    min-width: 220px;
+    flex-shrink: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    position: relative;
+    white-space: nowrap;
+}
+
+.cs-value {
+    flex: 1;
+    color: #e0e0e0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    position: relative;
+    padding-left: 1rem;
+    white-space: nowrap;
+}
+
+.cs-value.type-bool.true {
+  color: #2f6f4e;
+  font-weight: 600;
+  padding-left: 0.5rem;
+}
+
+.cs-value.type-bool.false {
+  color: #6f2f3f;
+  font-weight: 600;
+  opacity: 0.75;
+  padding-left: 0.5rem;
+}
+
+.cs-value.type-null {
+  color: #555555;
+  font-style: italic;
+  padding-left: 0.5rem;
+}
+
+.cs-setting-item span:hover::after {
+    content: attr(data-full);
+    position: absolute;
+    left: 0;
+    top: 100%;
+    background: #1e1e1e;
+    color: #f0f0f0;
+    padding: 4px 8px;
+    border-radius: 6px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+    z-index: 10;
+    margin-top: 6px;
+    white-space: normal;
+    max-width: 400px;
+}
+
+.cs-copy-btn {
+    background: none;
+    border: none;
+    color: #aaa;
+    cursor: pointer;
+    padding-left: 0.5rem;
+    transition: color 0.2s ease;
+    flex-shrink: 0;
+}
+
+.cs-copy-btn:hover {
+    background: none;
+    color: #4fc3f7;
+}
+
+.cs-copy-btn svg {
+    width: 1rem;
+    height: 1rem;
+}

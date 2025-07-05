@@ -1,0 +1,15 @@
+.cluster-overview.status-healthy {
+    border-bottom: 4px solid lightgreen;
+}
+
+.cluster-overview.status-degraded {
+    border-bottom: 4px solid orange;
+}
+
+.cluster-overview.status-down {
+    border-bottom: 4px solid red;
+}
+
+.cluster-overview.status-unknown {
+    border-bottom: 4px solid white;
+}

@@ -1,0 +1,147 @@
+
+html, body {
+    margin: 0;
+    padding: 0;
+    background: #0b0f1a;
+    color: #f0f0f0;
+    overflow: hidden;
+    height: 100vh;
+    position: relative;
+}
+
+/* Base starfield */
+.starfield {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(ellipse at bottom, #0b0f1a 0%, #000000 100%);
+    z-index: 0;
+    overflow: hidden;
+}
+
+.starfield::after {
+    content: '';
+    position: absolute;
+    width: 200%;
+    height: 200%;
+    background-image: radial-gradient(2px 2px at 20% 30%, #6cc6ff 60%, transparent 70%),
+    radial-gradient(1px 1px at 70% 80%, #ffffff 50%, transparent 60%),
+    radial-gradient(1px 1px at 50% 50%, #88e0ff 50%, transparent 60%);
+    background-repeat: repeat;
+    background-size: 400px 400px;
+    animation: starScroll 60s linear infinite;
+    opacity: 0.3;
+}
+
+/* Message */
+.message {
+    position: absolute;
+    top: 10%;
+    width: 100%;
+    text-align: center;
+    z-index: 5;
+}
+
+.message h1 {
+    font-size: 3rem;
+    color: #21a1ff;
+    margin: 0;
+}
+
+.message p {
+    font-size: 1.2rem;
+    color: #ccc;
+    opacity: 0.8;
+    margin-top: 0.3em;
+}
+
+/* Rings container */
+.rings-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 400px;
+    height: 400px;
+    margin-left: -200px;
+    margin-top: -200px;
+    pointer-events: none;
+    z-index: 10; /* Above message */
+    filter: drop-shadow(0 0 10px #1b91ff55);
+}
+
+.ring-1 {
+    animation: spinClockwise 30s linear infinite;
+}
+
+.ring-2 {
+    animation: spinCounter 45s linear infinite;
+}
+
+.ring-3 {
+    animation: spinClockwise 60s linear infinite;
+}
+
+/* CLUSTER DOWN */
+
+.cluster-down-container {
+    position: relative;
+    z-index: 5;
+    max-width: 420px;
+    margin: 4rem auto;
+    padding: 2rem 2.5rem;
+    background-color: rgba(11, 15, 26, 0.85);
+    border-radius: 12px;
+    box-shadow: 0 0 30px #1b91ff66;
+    text-align: center;
+}
+
+.title {
+    font-size: 3rem;
+    font-weight: 700;
+    color: #21a1ff;
+    text-shadow: 0 0 10px #1b91ff77;
+    letter-spacing: 1.5px;
+    margin: 0;
+}
+
+.subtitle {
+    font-size: 1.25rem;
+    color: #cccccc;
+    margin-top: 0.5rem;
+    opacity: 0.85;
+}
+
+.diagnostic {
+    font-size: 1rem;
+    margin-top: 2rem;
+    padding: 1.25rem 2rem;
+    background-color: #121a26;
+    border: 1px solid #1b91ff55;
+    border-radius: 8px;
+    color: #7fd6ff;
+    box-shadow: 0 0 12px #1b91ff33;
+    white-space: pre-line;
+    user-select: text;
+}
+
+.logo {
+    margin-top: 2.5rem;
+    width: 72px;
+    filter: grayscale(100%) brightness(0.8) blur(0.5px);
+    animation: pulse 3s ease-in-out infinite;
+}
+
+@media (max-width: 480px) {
+    .cluster-down-container {
+        max-width: 90vw;
+        padding: 1rem 1.5rem 2rem;
+    }
+
+    .title {
+        font-size: 2.2rem;
+    }
+
+    .subtitle {
+        font-size: 1rem;
+    }
+}
