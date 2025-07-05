@@ -15,7 +15,7 @@ def execute_query_cql(session: Session, query: CQLQuery) -> list[dict[str, Any]]
         result = [row._asdict() for row in result_set]
         if query.enable_tracing:
             result = {'result': result, 'trace': get_trace_info(result_set)}
-        return result
+        return {'result': result}
     except (SyntaxException, InvalidRequest) as e:
         return str(e)
     except Exception as e:

@@ -1,14 +1,14 @@
 from http import HTTPStatus
-from json import dumps
 from shutil import rmtree
 from typing import List, Optional, Literal
 
 from fastapi import APIRouter
 from fastapi import UploadFile, File, Form, HTTPException
+from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
 
 from cassanova.config.cassanova_config import get_clusters_config
-from cassanova.config.cluster_config import generate_cluster_connection, ClusterConnectionConfig
+from cassanova.config.cluster_config import generate_cluster_connection
 from cassanova.consts.cass_tools import CassTools
 from cassanova.core.cql.execute_query import execute_query_cql
 from cassanova.core.tools.argument_handling import parse_args, resolve_args
@@ -22,19 +22,20 @@ cassanova_api_post_router = APIRouter()
 
 
 @cassanova_api_post_router.post("/cluster/{cluster_name}/operations/cqlsh")
-def delete_table(cluster_name: str, query: CQLQuery):
-    cluster_config: ClusterConnectionConfig = clusters_config.clusters.get(cluster_name, None)
-    if cluster_config is None:
+def run_cqlsh(cluster_name: str, query: CQLQuery):
+    cluster_config = clusters_config.clusters.get(cluster_name)
+    if not cluster_config:
         raise HTTPException(status_code=404, detail="Cluster not found")
 
     cluster = generate_cluster_connection(cluster_config)
     session = cluster.connect()
-    result = execute_query_cql(session, query)
     try:
-        serialized_result = dumps(result)
-    except (UnicodeDecodeError, TypeError) as e:
-        serialized_result = str(result)
-    return serialized_result
+        result = execute_query_cql(session, query)
+        encoded = jsonable_encoder(result, custom_encoder={bytes: lambda var: var.hex()})
+    finally:
+        session.shutdown()
+
+    return encoded
 
 
 @cassanova_api_post_router.post("/tool/run")
