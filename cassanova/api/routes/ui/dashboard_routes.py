@@ -33,6 +33,7 @@ async def cluster_dashboard(request: Request, cluster_name: str):
     current_year = datetime.now().year
     return templates.TemplateResponse("cluster.html", {
         "request": request,
+        "monitoring_url": clusters_config.monitoring_url,
         "cluster": cluster_info,
         "cluster_config_entry": cluster_name,
         "current_year": current_year
@@ -52,6 +53,7 @@ async def keyspace_dashboard(request: Request, cluster_name: str, keyspace_name:
     current_year = datetime.now().year
     return templates.TemplateResponse("keyspace.html", {
         "request": request,
+        "monitoring_url": clusters_config.monitoring_url,
         "keyspace": keyspace_info,
         "cluster_name": cluster.metadata.cluster_name,
         "cluster_config_entry": cluster_name,
@@ -72,6 +74,7 @@ async def nodes_dashboard(request: Request, cluster_name: str):
     current_year = datetime.now().year
     return templates.TemplateResponse("nodes.html", {
         "request": request,
+        "monitoring_url": clusters_config.monitoring_url,
         "nodetool_status": nodetool_status_info,
         "cluster_name": cluster.metadata.cluster_name,
         "cluster_config_entry": cluster_name,
@@ -102,6 +105,7 @@ def cluster_settings(request: Request, cluster_name: str):
 
     return templates.TemplateResponse("settings.html", {
         "request": request,
+        "monitoring_url": clusters_config.monitoring_url,
         "cluster_name": cluster.metadata.cluster_name,
         "cluster_config_entry": cluster_name,
         "cluster_settings": settings_dict,

@@ -10,7 +10,6 @@
 </head>
 <body>
 
-<!-- Sidebar -->
 <aside class="sidebar collapsed">
     <div class="sidebar-header">
         <a href="/cluster/{{ cluster_config_entry }}" class="sidebar-brand">
@@ -46,6 +45,7 @@
 
             <span class="label">Nodes</span>
         </a>
+        {% if monitoring_url %}
         <a href="{{ monitoring_url }}" class="sidebar-link">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                  stroke="currentColor" class="icon">
@@ -56,6 +56,7 @@
 
             <span class="label">Monitoring</span>
         </a>
+        {% endif %}
         <a href="/cluster/{{ cluster_config_entry }}/tools/cqlsh" class="sidebar-link">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                  stroke="currentColor" class="icon">
@@ -92,10 +93,7 @@
     </nav>
 </aside>
 
-<!-- Page content wrapper -->
 <div class="with-sidebar">
-
-    <!-- Header -->
     <header class="header" role="banner">
         <h1>Cassandra Nodes Status — {{ cluster_name }}</h1>
         <div class="header-buttons">
@@ -103,7 +101,6 @@
         </div>
     </header>
 
-    <!-- Main content -->
     <main class="fade-in" role="main" aria-label="Nodes status table">
         <table>
             <thead>
@@ -141,7 +138,6 @@
         </table>
     </main>
 
-    <!-- Footer -->
 </div>
 <footer>
     &copy; {{ current_year }} Oren Kessler - Cassanova
