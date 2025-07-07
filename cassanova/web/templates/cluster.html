@@ -9,21 +9,14 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <link href="https://unpkg.com/vis-network/styles/vis-network.min.css" rel="stylesheet"/>
     <link href="/static/styles/main.css" rel="stylesheet">
-    <link href="/static/styles/sidebar.css" rel="stylesheet">
     <script src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js" defer></script>
     <script src="/static/scripts/keyspace-controls.js" defer></script>
-    <script src="/static/scripts/topology-graph.js" defer></script>
     <script src="/static/scripts/sidebar.js" defer></script>
-
-    <script id="cluster-data" type="application/json" style="display:none;">
-        {{
-            cluster.model_dump()
-            |
-            tojson
-            |
-            safe
-        }}
+    <script>
+        const clusterData = JSON.parse('{{ cluster.model_dump() | tojson | safe }}');
     </script>
+    <script src="/static/scripts/topology-graph.js" defer></script>
+
 </head>
 <body>
 

@@ -1,17 +1,12 @@
-let originalKeyspaceData = null;
-
 document.addEventListener('DOMContentLoaded', () => {
-    const dataEl = document.getElementById('schema-data');
     const container = document.getElementById('schema-graph');
 
-    if (!dataEl || !container) {
+    if (!schemaData || !container) {
         console.warn("Required DOM elements for schema graph not found.");
         return;
     }
-
-    originalKeyspaceData = JSON.parse(dataEl.textContent);
-
-    renderSchemaGraph(container, originalKeyspaceData);
+    
+    renderSchemaGraph(container, schemaData);
 
     // Optional: keep filter but only filter tables, columns always shown under visible tables
     const filterInput = document.getElementById('table-filter');
@@ -20,13 +15,13 @@ document.addEventListener('DOMContentLoaded', () => {
             const filterVal = filterInput.value.toLowerCase();
 
             // Filter tables by name matching filterVal
-            const filteredTables = originalKeyspaceData.tables.filter(table =>
+            const filteredTables = schemaData.tables.filter(table =>
                 table.name.toLowerCase().includes(filterVal)
             );
 
             // Clone original data and replace tables with filteredTables
             const filteredData = {
-                ...originalKeyspaceData,
+                ...schemaData,
                 tables: filteredTables
             };
 
@@ -40,8 +35,8 @@ function createRootNode(keyspaceName) {
         id: `keyspace-${keyspaceName}`,
         label: keyspaceName,
         shape: 'box',
-        color: { background: '#121212', border: '#81d4fa' },
-        font: { color: '#fff', size: 16 }
+        color: {background: '#121212', border: '#81d4fa'},
+        font: {color: '#fff', size: 16}
     };
 }
 
@@ -50,9 +45,9 @@ function createGroupLabelNode(groupId, groupLabel) {
         id: `${groupId}-label`,
         label: groupLabel,
         shape: 'box',
-        color: { background: '#333', border: '#888' },
-        font: { color: '#eee', size: 14 },
-        widthConstraint: { maximum: 140 }
+        color: {background: '#333', border: '#888'},
+        font: {color: '#eee', size: 14},
+        widthConstraint: {maximum: 140}
     };
 }
 
@@ -61,7 +56,7 @@ function addGroupNodes(nodes, edges, items, groupId, groupLabel, shape, color, r
 
     const labelNode = createGroupLabelNode(groupId, groupLabel);
     nodes.push(labelNode);
-    edges.push({ from: rootId, to: labelNode.id });
+    edges.push({from: rootId, to: labelNode.id});
 
     Object.entries(items).forEach(([name, item]) => {
         const nodeId = `${groupId}-${name}`;
@@ -70,9 +65,9 @@ function addGroupNodes(nodes, edges, items, groupId, groupLabel, shape, color, r
             label: name,
             shape,
             color,
-            font: { color: '#eee' }
+            font: {color: '#eee'}
         });
-        edges.push({ from: labelNode.id, to: nodeId });
+        edges.push({from: labelNode.id, to: nodeId});
 
         // If this group is 'tables', add columns as children nodes
         if (groupId === 'table' && item.columns) {
@@ -82,10 +77,10 @@ function addGroupNodes(nodes, edges, items, groupId, groupLabel, shape, color, r
                     id: colNodeId,
                     label: colName,
                     shape: 'ellipse',
-                    color: { background: '#555', border: '#999' },
-                    font: { color: '#ccc', size: 12 }
+                    color: {background: '#555', border: '#999'},
+                    font: {color: '#ccc', size: 12}
                 });
-                edges.push({ from: nodeId, to: colNodeId });
+                edges.push({from: nodeId, to: colNodeId});
             });
         }
     });
@@ -108,17 +103,29 @@ function renderSchemaGraph(container, keyspace) {
         'table',
         'Tables',
         'box',
-        { background: '#1e1e1e', border: '#4fc3f7' },
+        {background: '#1e1e1e', border: '#4fc3f7'},
         rootNode.id
     );
 
-    addGroupNodes(nodes, edges, keyspace.user_types, 'udt', 'User Types', 'diamond', { background: '#2a2a40', border: '#7c4dff' }, rootNode.id);
+    addGroupNodes(nodes, edges, keyspace.user_types, 'udt', 'User Types', 'diamond', {
+        background: '#2a2a40',
+        border: '#7c4dff'
+    }, rootNode.id);
 
-    addGroupNodes(nodes, edges, keyspace.views, 'view', 'Views', 'box', { background: '#4a148c', border: '#ce93d8' }, rootNode.id);
+    addGroupNodes(nodes, edges, keyspace.views, 'view', 'Views', 'box', {
+        background: '#4a148c',
+        border: '#ce93d8'
+    }, rootNode.id);
 
-    addGroupNodes(nodes, edges, keyspace.functions, 'func', 'Functions', 'ellipse', { background: '#004d40', border: '#26a69a' }, rootNode.id);
+    addGroupNodes(nodes, edges, keyspace.functions, 'func', 'Functions', 'ellipse', {
+        background: '#004d40',
+        border: '#26a69a'
+    }, rootNode.id);
 
-    addGroupNodes(nodes, edges, keyspace.aggregates, 'agg', 'Aggregates', 'hexagon', { background: '#263238', border: '#4fc3f7' }, rootNode.id);
+    addGroupNodes(nodes, edges, keyspace.aggregates, 'agg', 'Aggregates', 'hexagon', {
+        background: '#263238',
+        border: '#4fc3f7'
+    }, rootNode.id);
 
     const data = {
         nodes: new vis.DataSet(nodes),
@@ -135,12 +142,12 @@ function renderSchemaGraph(container, keyspace) {
             }
         },
         nodes: {
-            font: { size: 14 },
+            font: {size: 14},
             borderWidth: 2,
-            widthConstraint: { maximum: 140 }
+            widthConstraint: {maximum: 140}
         },
         edges: {
-            arrows: { to: true },
+            arrows: {to: true},
             color: '#aaa',
             smooth: true
         },

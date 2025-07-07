@@ -7,7 +7,7 @@ function scrollKeyspaces(direction) {
     });
 }
 
-function filterKeyspaces() {
+function filterKeyspaces(clusterData) {
     const filterValue = document.getElementById('keyspace-filter').value.toLowerCase();
 
     const cards = document.querySelectorAll('.keyspace-card');
@@ -21,11 +21,11 @@ function filterKeyspaces() {
         }
     });
 
-    if (!window.originalClusterData) return;
+    if (!clusterData) return;
 
     const filteredCluster = {
-        ...window.originalClusterData,
-        keyspaces: window.originalClusterData.keyspaces.filter(ks =>
+        ...clusterData,
+        keyspaces: clusterData.keyspaces.filter(ks =>
             ks.name.toLowerCase().includes(filterValue)
         )
     };
@@ -34,15 +34,13 @@ function filterKeyspaces() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    const dataEl = document.getElementById('cluster-data');
-    if (!dataEl) {
+    if (!clusterData) {
         console.error('Cluster data element missing');
         return;
     }
-    window.originalClusterData = JSON.parse(dataEl.textContent);
-    renderTopologyGraph(window.originalClusterData);
+    renderTopologyGraph(clusterData);
 
-    document.getElementById('keyspace-filter').addEventListener('input', filterKeyspaces);
+    document.getElementById('keyspace-filter').addEventListener('input', () => filterKeyspaces(clusterData));
     document.querySelector('.carousel-btn.left').addEventListener('click', () => scrollKeyspaces(-1));
     document.querySelector('.carousel-btn.right').addEventListener('click', () => scrollKeyspaces(1));
 });
