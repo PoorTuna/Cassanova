@@ -16,33 +16,33 @@
     <section class="cluster-overview status-{{ cluster.metrics.status.lower() | default('unknown') }}">
         <h2>Cluster Overview</h2>
         <ul>
-            <li><strong>Name</strong><span data-fulltext="{{ cluster.metrics.name }}">{{ cluster.metrics.name }}</span>
+            <li><strong>Name</strong><span title="{{ cluster.metrics.name }}">{{ cluster.metrics.name }}</span>
             </li>
-            <li><strong>Version</strong><span data-fulltext="{{ cluster.metrics.version }}">{{ cluster.metrics.version }}</span>
+            <li><strong>Version</strong><span title="{{ cluster.metrics.version }}">{{ cluster.metrics.version }}</span>
             </li>
-            <li><strong>Technology</strong><span data-fulltext="{{ cluster.metrics.technology }}">{{ cluster.metrics.technology | capitalize }}</span>
+            <li><strong>Technology</strong><span title="{{ cluster.metrics.technology }}">{{ cluster.metrics.technology | capitalize }}</span>
             </li>
-            <li><strong>Partitioner</strong><span data-fulltext="{{ cluster.metrics.partitioner }}">{{ cluster.metrics.partitioner }}</span>
+            <li><strong>Partitioner</strong><span title="{{ cluster.metrics.partitioner }}">{{ cluster.metrics.partitioner }}</span>
             </li>
             <li><strong>Snitch</strong><span
-                    data-fulltext="{{ cluster.metrics.snitch }}">{{ cluster.metrics.snitch }}</span></li>
+                    title="{{ cluster.metrics.snitch }}">{{ cluster.metrics.snitch }}</span></li>
             <li><strong>Status</strong><span
-                    data-fulltext="{{ cluster.metrics.status }}">{{ cluster.metrics.status }}</span></li>
+                    title="{{ cluster.metrics.status }}">{{ cluster.metrics.status }}</span></li>
             {% if cluster.metrics.cluster_size %}
-            <li><strong>Cluster Size</strong><span data-fulltext="{{ cluster.metrics.cluster_size }}">{{ cluster.metrics.cluster_size }}</span>
+            <li><strong>Cluster Size</strong><span title="{{ cluster.metrics.cluster_size }}">{{ cluster.metrics.cluster_size }}</span>
             </li>
             {% endif %}
-            <li><strong>Nodes Same Version</strong><span data-fulltext="{{ cluster.metrics.is_fully_upgraded }}">{{ cluster.metrics.is_fully_upgraded }}</span>
+            <li><strong>Nodes Same Version</strong><span title="{{ cluster.metrics.is_fully_upgraded }}">{{ cluster.metrics.is_fully_upgraded }}</span>
             </li>
-            <li><strong>Total Nodes</strong><span data-fulltext="{{ cluster.metrics.total_nodes }}">{{ cluster.metrics.total_nodes }}</span>
+            <li><strong>Total Nodes</strong><span title="{{ cluster.metrics.total_nodes }}">{{ cluster.metrics.total_nodes }}</span>
             </li>
-            <li><strong>Nodes Up</strong><span data-fulltext="{{ cluster.metrics.up_nodes }}">{{ cluster.metrics.up_nodes }}</span>
+            <li><strong>Nodes Up</strong><span title="{{ cluster.metrics.up_nodes }}">{{ cluster.metrics.up_nodes }}</span>
             </li>
-            <li><strong>Nodes Down</strong><span data-fulltext="{{ cluster.metrics.down_nodes }}">{{ cluster.metrics.down_nodes }}</span>
+            <li><strong>Nodes Down</strong><span title="{{ cluster.metrics.down_nodes }}">{{ cluster.metrics.down_nodes }}</span>
             </li>
-            <li><strong>Datacenters</strong><span data-fulltext="{{ cluster.metrics.dc_count }}">{{ cluster.metrics.dc_count }}</span>
+            <li><strong>Datacenters</strong><span title="{{ cluster.metrics.dc_count }}">{{ cluster.metrics.dc_count }}</span>
             </li>
-            <li><strong>Racks</strong><span data-fulltext="{{ cluster.metrics.rack_count }}">{{ cluster.metrics.rack_count }}</span>
+            <li><strong>Racks</strong><span title="{{ cluster.metrics.rack_count }}">{{ cluster.metrics.rack_count }}</span>
             </li>
         </ul>
     </section>

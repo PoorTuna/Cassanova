@@ -32,7 +32,7 @@
 }
 
 .cluster-overview ul li span:hover::after {
-    content: attr(data-fulltext);
+    content: attr(title);
     position: absolute;
     left: 0;
     bottom: 100%;
