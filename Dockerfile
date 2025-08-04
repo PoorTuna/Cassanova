@@ -10,13 +10,15 @@ RUN apt-get update && apt-get install -y curl && \
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     JAVA_HOME=/opt/jdk-17.0.8+7-jre \
-    PATH="/opt/jdk-17.0.8+7-jre/bin:$PATH"
+    PATH="/opt/jdk-17.0.8+7-jre/bin:$PATH" \
+    PYTHONPATH=/opt/cassanova:$PYTHONPATH
 
 WORKDIR /opt/cassanova
 
-COPY requirements.txt .
+COPY . /opt/cassanova
+
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY . .
+WORKDIR /opt/cassanova/cassanova
 
-CMD ["python", "-m", "cassanova.run"]
+CMD ["python", "run.py"]

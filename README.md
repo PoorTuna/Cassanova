@@ -5,7 +5,7 @@ Built with Python using the FastAPI framework,
 it aims to provide real-time cluster introspection, 
 interactive CQL tools and diagnostic utilities.
 
-[![Docker Pulls](https://img.shields.io/docker/pulls/your-org/cassanova.svg)](https://hub.docker.com/r/poortuna/cassanova)
+[![Docker Pulls](https://img.shields.io/docker/pulls/poortuna/cassanova.svg)](https://hub.docker.com/r/poortuna/cassanova)
 ---
 
 ## ✨ Features
@@ -26,7 +26,7 @@ To run Cassanova using Docker:
 #### 1. Pull the image:
 
 ```bash
-docker pull poortuna/cassanova:v1.0.1
+docker pull poortuna/cassanova:v1.0.3
 ```
 
 #### 2. Create a configuration file:
@@ -56,7 +56,7 @@ Save this as `cassanova.json` in your current directory.
 #### 3. Run Cassanova:
 
 ```bash
-docker run -p 8080:8080   -e CASSANOVA_CONFIG_PATH=/config/cassanova.json   -v $(pwd)/cassanova.json:/config/cassanova.json   poortuna/cassanova:v1.0.1
+docker run -p 8080:8080   -e CASSANOVA_CONFIG_PATH=/config/cassanova.json   -v $(pwd)/cassanova.json:/config/cassanova.json   poortuna/cassanova:v1.0.3
 ```
 
 > Make sure Cassandra is accessible from within the container, and your `contact_points` in the config file point to a resolvable address (e.g., `host.docker.internal` on macOS/Windows).
