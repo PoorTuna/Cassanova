@@ -59,6 +59,12 @@ function closeConfirmModal() {
     confirmCallback = null;
 }
 
+
+function toggleSection(elem) {
+    const section = elem.nextElementSibling;
+    section.classList.toggle('open');
+}
+
 // DOM setup
 document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('confirm-action-btn').addEventListener('click', () => {

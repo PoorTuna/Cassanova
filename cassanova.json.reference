@@ -1,0 +1,27 @@
+{
+  "app_config": { // Optional
+    "host": "0.0.0.0",
+    "port": 8080,
+    "routers": ["cassanova_ui_router", "cassanova_api_router"]
+  },
+  "monitoring_url": "https://localboast:8080", // Optional
+  "clusters": {
+    "orencluster": {
+      "contact_points": [ // The cluster connection uri
+        "localhost"
+      ],
+      "port": 9042, // Optional & Default is 9042
+      "credentials": { // Optional
+        "username": "cassandra",
+        "password": "cassandra"
+      },
+      "jmx_credentials": { // Optional
+        "username": "jmx",
+        "password": "jmx"
+      }
+    },
+    "additional_kwargs": { // Optional
+      "ssl_options": null // Everything inside here is directly injected into the Cluster object instantiation.
+    }
+  }
+}

@@ -1,3 +1,5 @@
+from typing import Any
+
 from cassandra.cluster import Session
 from fastapi import HTTPException, APIRouter
 from starlette.responses import JSONResponse
@@ -10,6 +12,7 @@ from cassanova.core.constructors.keyspaces import generate_keyspaces_info
 from cassanova.core.constructors.tables import generate_tables_info
 from cassanova.core.cql.table_info import show_table_schema_cql, show_table_description_cql
 from cassanova.core.tools.nodetool.get_status import get_nodetool_status
+from cassanova.exceptions.system_views_unavailable import SystemViewsUnavailableException
 
 clusters_config = get_clusters_config()
 cassanova_api_getter_router = APIRouter()
@@ -127,3 +130,25 @@ async def get_node_status(cluster_name: str):
     status = await get_nodetool_status(cluster_config)
 
     return [node_status.model_dump(by_alias=True) for node_status in status]
+
+
+@cassanova_api_getter_router.get("/cluster/{cluster_name}/settings")
+def get_cluster_settings(cluster_name: str) -> dict[str, Any]:
+    cluster_config = clusters_config.clusters.get(cluster_name)
+    if not cluster_config:
+        raise HTTPException(status_code=404, detail="Cluster not found")
+
+    cluster = generate_cluster_connection(cluster_config)
+    session = cluster.connect()
+
+    try:
+        rows = session.execute("SELECT * FROM system_views.settings")
+        settings_dict = {row.name: row.value for row in rows}
+    except Exception as e:
+        error_message = str(e)
+        if "Keyspace system_views does not exist" in error_message:
+            raise SystemViewsUnavailableException(error_message)
+        else:
+            raise HTTPException(status_code=500, detail=f"Failed to query settings: {error_message}")
+
+    return settings_dict

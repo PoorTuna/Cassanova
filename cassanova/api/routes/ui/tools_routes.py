@@ -20,6 +20,7 @@ def cqlsh_devtools(request: Request, cluster_name: str):
 
     return templates.TemplateResponse("cqlsh.html", {
         "request": request,
+        "monitoring_url": clusters_config.monitoring_url,
         "cluster_config_entry": cluster_name,
         "cluster_name": cluster.metadata.cluster_name,
     })
