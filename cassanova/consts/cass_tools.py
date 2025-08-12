@@ -6,4 +6,4 @@ class CassTools:
         "sstablemetadata", "sstableofflinerelevel", "sstablepartitions", "sstablerepairedset",
         "sstablescrub", "sstablesplit", "sstableupgrade", "sstableutil", "sstableverify",
     )
-    TOOLS_DIR = "/home/ubuntu/pycharm/app/cassanova/external_tools/cassandra-5-0-4/bin/"
+    TOOLS_DIR = "/opt/cassanova/cassanova/external_tools/cassandra-5-0-4/bin"
