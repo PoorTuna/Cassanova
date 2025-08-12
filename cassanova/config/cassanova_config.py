@@ -17,7 +17,7 @@ logger = getLogger(__name__)
 class CassanovaConfig(BaseSettings):
     clusters: dict[str, ClusterConnectionConfig]
     monitoring_url: Optional[str] = None
-    app_config: APPConfig
+    app_config: APPConfig = APPConfig()
 
     @classmethod
     def settings_customise_sources(

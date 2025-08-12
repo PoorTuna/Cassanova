@@ -5,7 +5,7 @@
 {% block body_class %}cql-devtools with-sidebar{% endblock %}
 
 {% block head_extra %}
-<script src="https://unpkg.com/monaco-editor@latest/min/vs/loader.js" defer></script>
+<script src="/static/scripts/external/loader.js" defer></script>
 <script src="/static/scripts/cqlsh.js" defer></script>
 <script>
     const clusterName = "{{ cluster_config_entry }}";
