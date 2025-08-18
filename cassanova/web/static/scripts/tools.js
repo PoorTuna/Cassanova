@@ -1,6 +1,6 @@
 // tools.js
-import { Terminal } from 'https://cdn.jsdelivr.net/npm/xterm@5.3.0/+esm';
-import { FitAddon } from 'https://cdn.jsdelivr.net/npm/xterm-addon-fit@0.8.0/+esm';
+import { Terminal } from '/static/scripts/external/xterm-esm.js';
+import { FitAddon } from '/static/scripts/external/xterm-addon-fit-esm.js';
 
 const PROMPT = 'cassanova@tools:~$ ';
 const term = new Terminal({
