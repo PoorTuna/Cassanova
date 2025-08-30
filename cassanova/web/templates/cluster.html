@@ -3,11 +3,11 @@
 {% block title %}Cluster: {{ cluster.metrics.name }}{% endblock %}
 
 {% block head_extra %}
-<link href="/static/styles/external/vis-network.min.css" rel="stylesheet"/>
-<script src="/static/scripts/external/vis-network.min.js" defer></script>
-<script src="/static/scripts/keyspace-controls.js" defer></script>
+<link href="/static/scripts/vendor/vis/vis-network.min.css" rel="stylesheet"/>
+<script src="/static/scripts/vendor/vis/vis-network.min.js" defer></script>
+<script src="/static/scripts/app/keyspace-controls.js" defer></script>
 <script>const clusterData = JSON.parse('{{ cluster.model_dump() | tojson | safe }}');</script>
-<script src="/static/scripts/topology-graph.js" defer></script>
+<script src="/static/scripts/app/topology-graph.js" defer></script>
 {% endblock %}
 
 {% block content %}

@@ -8,7 +8,6 @@ document.addEventListener("DOMContentLoaded", () => {
         toggleBtn.setAttribute("aria-expanded", expanded);
     });
 
-    // Highlight active link
     const links = document.querySelectorAll(".sidebar-link");
     const currentPath = window.location.pathname;
     links.forEach(link => {

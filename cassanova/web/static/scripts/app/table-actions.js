@@ -1,4 +1,3 @@
-// Generic fetch helper for table actions
 async function performTableAction(cluster, keyspace, table, path = '', method = 'GET') {
     const url = `/api/v1/cluster/${encodeURIComponent(cluster)}/keyspace/${encodeURIComponent(keyspace)}/table/${encodeURIComponent(table)}${path}`;
     const response = await fetch(url, {method});
@@ -9,7 +8,6 @@ async function performTableAction(cluster, keyspace, table, path = '', method = 
     return response.json();
 }
 
-// Specific actions using the generic helper
 function deleteTable(cluster, keyspace, table) {
     return performTableAction(cluster, keyspace, table, '', 'DELETE')
         .then(() => window.location.reload())
@@ -34,7 +32,6 @@ function showTableSchema(cluster, keyspace, table) {
         .catch(err => alert(`Show schema failed: ${err.message}`));
 }
 
-// Modal functions
 function showModal(jsonData) {
     const modal = document.getElementById('json-modal');
     const pre = document.getElementById('modal-pre');
@@ -65,7 +62,6 @@ function toggleSection(elem) {
     section.classList.toggle('open');
 }
 
-// DOM setup
 document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('confirm-action-btn').addEventListener('click', () => {
         if (confirmCallback) confirmCallback();
@@ -76,7 +72,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (e.target === e.currentTarget) hideModal();
     });
 
-    // Filter tables input
     const filterInput = document.getElementById('table-filter');
     const tables = document.querySelectorAll('.keyspace-card.table-card');
     if (filterInput) {
@@ -89,7 +84,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Manage each table options dropdown individually
     document.querySelectorAll('.table-options-btn').forEach(button => {
         const menu = button.nextElementSibling;
         let isOpen = false;
@@ -121,7 +115,6 @@ document.addEventListener('DOMContentLoaded', () => {
         button.addEventListener('click', toggleMenu);
     });
 
-    // Handle clicks on dropdown menu buttons
     document.querySelectorAll('.dropdown-menu button').forEach(btn => {
         btn.addEventListener('click', e => {
             const action = e.target.dataset.action;

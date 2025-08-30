@@ -8,7 +8,6 @@ document.addEventListener('DOMContentLoaded', () => {
     
     renderSchemaGraph(container, schemaData);
 
-    // Optional: keep filter but only filter tables, columns always shown under visible tables
     const filterInput = document.getElementById('table-filter');
     if (filterInput) {
         filterInput.addEventListener('input', () => {

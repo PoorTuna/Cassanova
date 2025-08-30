@@ -1,4 +1,3 @@
-// cluster-settings.js
 (() => {
     const isBool = v => v === true || v === false || v === 'true' || v === 'false';
     const isNull = v => v === null || v === undefined || v === 'null';
@@ -14,12 +13,10 @@
         const groups = {};
         const generalGroup = {};
 
-        // First, group keys by prefix (dot or underscore)
         for (const key in data) {
             let dotIdx = key.indexOf('.');
             let underscoreIdx = key.indexOf('_');
 
-            // Find earliest separator index (dot or underscore)
             let firstSep = -1;
             if (dotIdx !== -1 && underscoreIdx !== -1) firstSep = Math.min(dotIdx, underscoreIdx);
             else if (dotIdx !== -1) firstSep = dotIdx;
@@ -30,7 +27,6 @@
             groups[groupName][key] = data[key];
         }
 
-        // Merge small groups (< MIN_GROUP_SIZE entries) into General
         for (const [groupName, entries] of Object.entries(groups)) {
             if (groupName === 'General') continue;
             if (Object.keys(entries).length < MIN_GROUP_SIZE) {
@@ -42,7 +38,6 @@
         groups['General'] = groups['General'] || {};
         Object.assign(groups['General'], generalGroup);
 
-        // Now sort groups keys so "General" is first, then others alphabetically
         const sortedGroups = {};
         sortedGroups['General'] = groups['General'];
 

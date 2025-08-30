@@ -3,16 +3,16 @@
 {% block title %}Keyspace: {{ keyspace.name }}{% endblock %}
 
 {% block head_extra %}
-    <link href="/static/styles/external/vis-network.min.css" rel="stylesheet"/>
-    <link href="/static/styles/main.css" rel="stylesheet">
+    <link href="/static/scripts/vendor/vis/vis-network.min.css" rel="stylesheet"/>
+    <link href="/static/styles/app/main.css" rel="stylesheet">
     <script>
         const clusterName = "{{ cluster_config_entry }}";
         const keyspaceName = "{{ keyspace.name }}";
         const schemaData = JSON.parse('{{ keyspace.model_dump() | tojson | safe }}');
     </script>
-    <script src="/static/scripts/external/vis-network.min.js" defer></script>
-    <script src="/static/scripts/table-actions.js" defer></script>
-    <script src="/static/scripts/schema-graph.js" defer></script>
+    <script src="/static/scripts/vendor/vis/vis-network.min.js" defer></script>
+    <script src="/static/scripts/app/table-actions.js" defer></script>
+    <script src="/static/scripts/app/schema-graph.js" defer></script>
 {% endblock %}
 
 {% block content %}

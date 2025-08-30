@@ -5,12 +5,12 @@
 {% block body_class %}with-sidebar{% endblock %}
 
 {% block head_extra %}
-    <link href="/static/styles/tools.css" rel="stylesheet"/>
+    <link href="/static/styles/app/tools.css" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css2?family=Fira+Mono&display=swap" rel="stylesheet"/>
-    <link rel="stylesheet" href="/static/styles/external/xterm.css"/>
-    <script src="/static/scripts/external/xterm.js"></script>
-    <script src="/static/scripts/external/xterm-addon-fit.js"></script>
-    <script type="module" src="/static/scripts/tools.js" defer></script>
+    <link rel="stylesheet" href="/static/scripts/vendor/xterm/xterm.css"/>
+    <script src="/static/scripts/vendor/xterm/xterm.js"></script>
+    <script src="/static/scripts/vendor/xterm/xterm-addon-fit.js"></script>
+    <script type="module" src="/static/scripts/app/tools.js" defer></script>
 {% endblock %}
 {% block content %}
 <main>

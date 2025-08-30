@@ -1,4 +1,4 @@
-require.config({paths: {vs: 'https://unpkg.com/monaco-editor@latest/min/vs'}});
+require.config({paths: {vs: '/static/scripts/vendor/monaco'}});
 
 window.editorInstance = null;
 
