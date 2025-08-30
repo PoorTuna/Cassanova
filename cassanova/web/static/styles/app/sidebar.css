@@ -12,6 +12,7 @@
     flex-direction: column;
     z-index: 1000;
     transition: width 0.3s ease;
+    font-family: "Fira Mono", monospace;
 }
 
 /* === Collapsed Sidebar === */

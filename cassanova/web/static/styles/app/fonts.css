@@ -1,0 +1,15 @@
+@font-face {
+  font-family: 'Fira Mono';
+  font-weight: 400;
+  src: url('/static/fonts/firaMono/FiraMono-Regular.ttf') format('ttf');
+}
+@font-face {
+  font-family: 'Fira Mono';
+  font-weight: 600;
+  src: url('/static/fonts/firaMono/FiraMono-Medium.ttf') format('ttf');
+}
+@font-face {
+  font-family: 'Fira Mono';
+  font-weight: 700;
+  src: url('/static/fonts/firaMono/FiraMono-Bold.ttf') format('ttf');
+}
