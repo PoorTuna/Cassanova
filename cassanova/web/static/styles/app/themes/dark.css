@@ -1,0 +1,39 @@
+.dark-theme {
+    /* === Primary / Accent Colors === */
+    --color-primary: #4fc3f7; /* Main UI accents, sidebar titles, key highlights */
+    --color-primary-hover: #81d4fa; /* Hover effects on buttons, modals */
+    --color-primary-active: #21a1ff; /* Main headings, cluster down titles */
+    --color-primary-light: #7fd6ff; /* Cluster down diagnostics */
+    --color-primary-strong: #58a6ff; /* Cluster card headings */
+
+    /* === Backgrounds / Darks === */
+    --bg-main: #101010; /* Main page background */
+    --bg-main-rgb: 11, 15, 26; /* Exceptions background */
+    --bg-terminal: #0d1117; /* Terminal & upload backgrounds */
+    --bg-panel: #121212; /* General panel backgrounds */
+    --bg-xterm: #161b22; /* xterm wrapper */
+    --bg-sidebar: #1a1a1a; /* Sidebar, keyspace filter */
+    --bg-detail: #1b1b1b; /* Keyspace detail, theme dropdown */
+    --bg-panel-alt: #1e1e1e; /* Panels, result panels */
+    --bg-hover: #2a2a2a; /* Hover backgrounds, dot wrapper */
+    --bg-hover-active: #333; /* Hover background for active items */
+
+
+    /* === Text / Grays === */
+    --text-primary: #e0e0e0; /* Primary text */
+    --text-secondary: #c9d1d9; /* Secondary text, terminal text */
+    --text-meta: #aaa; /* Meta / helper text */
+    --text-placeholder: #888; /* Placeholders */
+    --text-disabled: #555; /* Null / disabled text */
+
+    /* === Reds / Error / Alerts === */
+    --color-error: #f44336; /* Modal cancel button / hover */
+    --color-error-light: #ff8a80; /* Disconnect link */
+
+    /* === Shadows / Overlays === */
+    --shadow-light: rgba(0, 0, 0, 0.3);
+    --shadow-medium: rgba(0, 0, 0, 0.6);
+    --shadow-strong: rgba(0, 0, 0, 0.8);
+    --shadow-primary-hover: rgba(79, 195, 247, 0.9);
+    --hover-highlight: rgba(88, 166, 255, 0.1);
+}

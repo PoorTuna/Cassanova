@@ -1,3 +1,6 @@
+import os
+
+
 class CassTools:
     ALLOWED_TOOLS: tuple[str] = (
         "auditlogviewer", "cassandra-stress", "compaction-stress",
@@ -6,4 +9,5 @@ class CassTools:
         "sstablemetadata", "sstableofflinerelevel", "sstablepartitions", "sstablerepairedset",
         "sstablescrub", "sstablesplit", "sstableupgrade", "sstableutil", "sstableverify",
     )
-    TOOLS_DIR = "/opt/cassanova/cassanova/external_tools/cassandra-5-0-4/bin"
+    TOOLS_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+                             "external_tools", "cassandra-5-0-4", "bin")

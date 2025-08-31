@@ -1,7 +1,7 @@
 from typing import Any, NoReturn
 
 from cassandra import InvalidRequest
-from cassandra.cluster import Session, ResultSet
+from cassandra.cluster import Session, ResultSet, NoHostAvailable
 from cassandra.protocol import SyntaxException
 from cassandra.query import SimpleStatement
 
@@ -16,7 +16,7 @@ def execute_query_cql(session: Session, query: CQLQuery) -> list[dict[str, Any]]
         if query.enable_tracing:
             result = {'result': result, 'trace': get_trace_info(result_set)}
         return {'result': result}
-    except (SyntaxException, InvalidRequest) as e:
+    except (SyntaxException, InvalidRequest, NoHostAvailable) as e:
         return str(e)
     except Exception as e:
         raise e
@@ -29,7 +29,8 @@ def get_trace_info(result_set: ResultSet) -> dict[str, Any]:
         'duration': trace.duration,
         'coordinator': trace.coordinator,
         'parameters': trace.parameters,
-        'events': [{'description': e.description, 'source': e.source, 'duration': e.source_elapsed.total_seconds()} for e in
+        'events': [{'description': e.description, 'source': e.source, 'duration': e.source_elapsed.total_seconds()} for
+                   e in
                    trace.events]
     }
     return trace_info

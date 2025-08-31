@@ -6,7 +6,7 @@
 
 {% block head_extra %}
 <script>const settingsData = JSON.parse('{{ cluster_settings | tojson | safe }}');</script>
-<script src="/static/scripts/cluster-settings.js" defer></script>
+<script src="/static/scripts/app/cluster-settings.js" defer></script>
 {% endblock %}
 
 {% block content %}

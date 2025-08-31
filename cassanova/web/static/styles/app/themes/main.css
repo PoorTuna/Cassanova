@@ -1,0 +1,23 @@
+@import url('dark.css');
+@import url('light.css');
+@import url('orokin.css');
+@import url('kibana-light.css');
+
+
+.theme-preview.light {
+    background: #ffffff;
+}
+
+.theme-preview.dark {
+    background: #101010;
+}
+
+.theme-preview.orokin {
+    background: #ffe066;
+}
+
+
+.theme-preview.kibana-light {
+    background: #00b3a4;
+}
+

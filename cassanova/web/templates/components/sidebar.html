@@ -16,6 +16,30 @@
     </div>
     <nav class="sidebar-nav">
         <div class="sidebar-top">
+            <div class="theme-selector">
+                <div class="theme-dot-wrapper">
+                    <div class="theme-dot" id="theme-dot"></div>
+                    <span class="theme-label">Dark</span>
+                </div>
+                <div class="theme-dropdown hidden" id="theme-dropdown">
+                    <div class="theme-option" data-theme="light">
+                        <span class="theme-preview light"></span>
+                        <span class="theme-name">Light</span>
+                    </div>
+                    <div class="theme-option" data-theme="dark">
+                        <span class="theme-preview dark"></span>
+                        <span class="theme-name">Dark</span>
+                    </div>
+                    <div class="theme-option" data-theme="orokin">
+                        <span class="theme-preview orokin"></span>
+                        <span class="theme-name">Orokin</span>
+                    </div>
+                    <div class="theme-option" data-theme="kibana-light">
+                        <span class="theme-preview kibana-light"></span>
+                        <span class="theme-name">Kibana-Light</span>
+                    </div>
+                </div>
+            </div>
             <a href="/cluster/{{ cluster_config_entry }}" class="sidebar-link">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                      stroke="currentColor" class="icon">

@@ -1,0 +1,146 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    background: var(--bg-main);
+    color: var(--text-primary);
+    overflow: hidden;
+    height: 100vh;
+    position: relative;
+}
+
+/* Base starfield */
+.starfield {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(ellipse at bottom, var(--bg-main) 0%, var(--bg-panel) 100%);
+    z-index: 0;
+    overflow: hidden;
+}
+
+.starfield::after {
+    content: '';
+    position: absolute;
+    width: 200%;
+    height: 200%;
+    background-image:
+        radial-gradient(2px 2px at 20% 30%, var(--color-primary-light) 60%, transparent 70%),
+        radial-gradient(1px 1px at 70% 80%, var(--text-primary) 50%, transparent 60%),
+        radial-gradient(1px 1px at 50% 50%, var(--color-primary) 50%, transparent 60%);
+    background-repeat: repeat;
+    background-size: 400px 400px;
+    animation: starScroll 60s linear infinite;
+    opacity: 0.3;
+}
+
+/* Message */
+.message {
+    position: absolute;
+    top: 10%;
+    width: 100%;
+    text-align: center;
+    z-index: 5;
+}
+
+.message h1 {
+    font-size: 3rem;
+    color: var(--color-primary-active);
+    margin: 0;
+}
+
+.message p {
+    font-size: 1.2rem;
+    color: var(--text-secondary);
+    opacity: 0.8;
+    margin-top: 0.3em;
+}
+
+/* Rings container */
+.rings-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 400px;
+    height: 400px;
+    margin-left: -200px;
+    margin-top: -200px;
+    pointer-events: none;
+    z-index: 10; /* Above message */
+    filter: drop-shadow(0 0 10px var(--color-primary-strong)55);
+}
+
+.ring-1 {
+    animation: spinClockwise 30s linear infinite;
+}
+
+.ring-2 {
+    animation: spinCounter 45s linear infinite;
+}
+
+.ring-3 {
+    animation: spinClockwise 60s linear infinite;
+}
+
+/* CLUSTER DOWN */
+.cluster-down-container {
+    position: relative;
+    z-index: 5;
+    max-width: 420px;
+    margin: 4rem auto;
+    padding: 2rem 2.5rem;
+    background-color: rgba(var(--bg-main-rgb), 0.85); /* added RGB variable for transparency */
+    border-radius: 12px;
+    box-shadow: 0 0 30px var(--color-primary-strong)66;
+    text-align: center;
+}
+
+.title {
+    font-size: 3rem;
+    font-weight: 700;
+    color: var(--color-primary-active);
+    text-shadow: 0 0 10px var(--color-primary-strong)77;
+    letter-spacing: 1.5px;
+    margin: 0;
+}
+
+.subtitle {
+    font-size: 1.25rem;
+    color: var(--text-secondary);
+    margin-top: 0.5rem;
+    opacity: 0.85;
+}
+
+.diagnostic {
+    font-size: 1rem;
+    margin-top: 2rem;
+    padding: 1.25rem 2rem;
+    background-color: var(--bg-panel);
+    border: 1px solid var(--color-primary-strong)55;
+    border-radius: 8px;
+    color: var(--color-primary-light);
+    box-shadow: 0 0 12px var(--color-primary-light)33;
+    white-space: pre-line;
+    user-select: text;
+}
+
+.logo {
+    margin-top: 2.5rem;
+    width: 72px;
+    filter: grayscale(100%) brightness(0.8) blur(0.5px);
+    animation: pulse 3s ease-in-out infinite;
+}
+
+@media (max-width: 480px) {
+    .cluster-down-container {
+        max-width: 90vw;
+        padding: 1rem 1.5rem 2rem;
+    }
+
+    .title {
+        font-size: 2.2rem;
+    }
+
+    .subtitle {
+        font-size: 1rem;
+    }
+}

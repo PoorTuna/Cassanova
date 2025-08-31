@@ -1,0 +1,42 @@
+.orokin-theme {
+    /* === Primary / Accent Colors === */
+    --color-primary: #c9a34d;        /* Warm, muted gold for main accents */
+    --color-primary-hover: #d4b25d;  /* Lighter gold for hover states */
+    --color-primary-active: #aa8c3f; /* Slightly darker gold for headings */
+    --color-primary-light: #f5e9c3;  /* Very soft gold for subtle highlights */
+    --color-primary-strong: #e0c87c; /* Strong gold for card headings */
+
+    /* === Backgrounds / Lights === */
+    --bg-main: #f9f7f0;             /* Soft cream/off-white main background */
+    --bg-main-rgb: 249, 247, 240;   /* RGB for semi-transparent elements */
+    --bg-terminal: #f4f2eb;         /* Slightly darker cream for terminals */
+    --bg-panel: #ffffff;             /* Clean white panels */
+    --bg-xterm: #f8f6f0;            /* Terminal wrapper */
+    --bg-sidebar: #f7f5ef;          /* Sidebar / keyspace filter */
+    --bg-detail: #fdfaf3;           /* Keyspace detail panels */
+    --bg-panel-alt: #f3f0e4;        /* Alternate panels / results */
+    --bg-hover: #eee7d5;            /* Hover backgrounds / row highlights */
+    --bg-hover-active: #e6ddb0;     /* Active hover background */
+
+    /* === Text / Grays === */
+    --text-primary: #2e2e2e;        /* Main readable text */
+    --text-secondary: #5a5a5a;      /* Secondary / muted text */
+    --text-meta: #7f7f7f;           /* Helper / meta text */
+    --text-placeholder: #a0a0a0;    /* Placeholder text */
+    --text-disabled: #c0c0c0;       /* Disabled / inactive text */
+
+    /* === Blues / Accents === */
+    --color-accent: #7fbce3;        /* Soft muted blue for info / highlights */
+    --color-accent-hover: #a0d2f0;  /* Lighter blue hover accent */
+
+    /* === Reds / Error / Alerts === */
+    --color-error: #c94b4b;         /* Warm muted red for alerts */
+    --color-error-light: #e08a8a;   /* Lighter red for minor alerts */
+
+    /* === Shadows / Overlays === */
+    --shadow-light: rgba(0, 0, 0, 0.04);
+    --shadow-medium: rgba(0, 0, 0, 0.12);
+    --shadow-strong: rgba(0, 0, 0, 0.25);
+    --shadow-primary-hover: rgba(201, 163, 77, 0.25); /* subtle gold glow */
+    --hover-highlight: rgba(201, 163, 77, 0.06);     /* soft hover highlight */
+}

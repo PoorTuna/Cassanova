@@ -1,0 +1,64 @@
+section {
+    background: linear-gradient(
+        135deg,
+        var(--bg-panel-alt) 50%,
+        var(--bg-panel) 100%
+    );
+    border: 1px solid var(--bg-hover);
+    box-shadow: 0 2px 4px var(--shadow-medium);
+    border-radius: 12px;
+    padding: 1rem;
+    margin-bottom: 2.5rem;
+}
+
+h2 {
+    margin-top: 0;
+    font-size: 1.4rem;
+    color: var(--text-primary);
+    margin-bottom: 1rem;
+}
+
+h3 {
+    color: var(--text-secondary);
+    margin-bottom: 0.5rem;
+}
+
+button {
+    background-color: var(--color-primary);
+    color: var(--text-primary); /* optional: black text could also be a variable if needed */
+    border: none;
+    padding: 0.6rem 1.2rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: background-color 0.2s ease;
+}
+
+button:hover {
+    background-color: var(--color-primary-hover);
+}
+
+.toggle-btn {
+    margin-bottom: 8px;
+    padding: 5px 10px;
+    background-color: var(--bg-hover);
+    color: var(--text-secondary);
+    border: 1px solid var(--bg-hover-active);
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background-color 0.2s ease;
+    width: 8%;
+}
+
+.toggle-btn:hover {
+    background-color: var(--bg-hover-active);
+}
+
+.container {
+    padding: 2rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 2rem;
+}
