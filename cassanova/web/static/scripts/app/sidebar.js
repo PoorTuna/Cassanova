@@ -64,10 +64,11 @@ document.addEventListener("DOMContentLoaded", () => {
         const dotColor = getComputedStyle(option.querySelector('.theme-preview')).backgroundColor;
         themeDot.style.background = dotColor;
 
-        // Update label text (only visible if sidebar not collapsed)
+        // Update label text
         themeLabel.textContent = option.querySelector('.theme-name').textContent;
 
-        // Apply theme class to body
-        document.body.dataset.theme = theme;
+        // Apply theme class to <html>
+        document.documentElement.classList.remove('light-theme', 'dark-theme');
+        document.documentElement.classList.add(`${theme}-theme`);
     }
 });

@@ -6,34 +6,34 @@
 }
 
 .cluster-card {
-    background: #161b22;
+    background: var(--bg-xterm);
     border-radius: 12px;
     padding: 2rem;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
-    border: 1px solid #30363d;
+    box-shadow: 0 0 20px var(--shadow-medium);
+    border: 1px solid var(--bg-hover);
 }
 
 .cluster-card h2 {
     margin-top: 0;
     font-size: 1.5rem;
     font-weight: 600;
-    color: #58a6ff;
+    color: var(--color-primary-strong);
     margin-bottom: 1.25rem;
 }
 
 .cluster-card .helper-text {
     font-size: 0.9rem;
-    color: #8b949e;
+    color: var(--text-meta);
     margin-bottom: 1rem;
 }
 
 .cluster-card #cluster-filter {
     width: 100%;
     padding: 0.5rem 0.75rem;
-    background-color: #0d1117;
-    border: 1px solid #30363d;
+    background-color: var(--bg-terminal);
+    border: 1px solid var(--bg-hover);
     border-radius: 6px;
-    color: #c9d1d9;
+    color: var(--text-secondary);
     margin-bottom: 1.5rem;
     font-size: 1rem;
 }
@@ -42,24 +42,24 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: #1e242c;
+    background: var(--bg-panel-alt);
     border-radius: 6px;
     padding: 1rem 1.25rem;
     margin-bottom: 1rem;
     cursor: pointer;
     transition: background 0.2s, box-shadow 0.2s;
-    border: 1px solid #2a2f36;
+    border: 1px solid var(--bg-hover);
 }
 
 .cluster-row:hover {
-    background: #2a2f36;
-    box-shadow: 0 2px 12px rgba(88, 166, 255, 0.1);
+    background: var(--bg-hover);
+    box-shadow: 0 2px 12px var(--hover-highlight);
 }
 
 .cluster-row .name {
     font-weight: 600;
     font-size: 1.1rem;
-    color: #c9d1d9;
+    color: var(--text-secondary);
 }
 
 .cluster-row[hidden] {
@@ -104,7 +104,7 @@
 
 .cluster-row:hover {
     transform: scale(1.015);
-    background-color: rgba(79, 195, 247, 0.1);
+    background-color: var(--hover-highlight);
 }
 
 @keyframes fadeSlideIn {
@@ -120,7 +120,7 @@
 
 /* Optional helper text style */
 .helper-text {
-    color: #aaa;
+    color: var(--text-meta);
     margin-bottom: 1rem;
     font-size: 0.95rem;
 }

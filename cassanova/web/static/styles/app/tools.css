@@ -1,9 +1,9 @@
 /* Terminal container */
 #xterm-wrapper {
-    background-color: #161b22;
-    border: 1px solid #30363d;
+    background-color: var(--bg-xterm);
+    border: 1px solid var(--bg-panel-alt);
     border-radius: 8px;
-    box-shadow: 0 0 12px rgba(0, 0, 0, 0.6);
+    box-shadow: 0 0 12px var(--shadow-medium);
     overflow: hidden;
     max-width: 95%;
     margin: 2rem auto 0 auto;
@@ -19,8 +19,8 @@
 .xterm {
     padding: 8px;
     font-family: 'Fira Mono', monospace;
-    background-color: #0d1117;
-    color: #c9d1d9;
+    background-color: var(--bg-terminal);
+    color: var(--text-secondary);
 }
 
 /* Upload section below terminal */
@@ -28,26 +28,26 @@
     max-width: 95%;
     margin: 0 auto 2rem;
     padding: 1rem;
-    background-color: #0d1117;
-    border: 1px solid #30363d;
+    background-color: var(--bg-terminal);
+    border: 1px solid var(--bg-panel-alt);
     border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 4px 12px var(--shadow-light);
 }
 
 #xterm-upload label {
     display: block;
     font-weight: 600;
-    color: #90caf9;
+    color: var(--color-primary);
     margin-bottom: 0.5rem;
 }
 
 #xterm-upload input[type="file"] {
     width: 100%;
     padding: 0.5rem 0.75rem;
-    background-color: #161b22;
-    border: 1px solid #30363d;
+    background-color: var(--bg-xterm);
+    border: 1px solid var(--bg-panel-alt);
     border-radius: 4px;
-    color: #c9d1d9;
+    color: var(--text-secondary);
     font-size: 1rem;
 }
 
@@ -56,5 +56,5 @@
     display: block;
     margin-top: 0.5rem;
     font-size: 0.85rem;
-    color: #8b949e;
+    color: var(--text-meta);
 }

@@ -3,8 +3,8 @@
     padding: .5rem 1rem;
     border-radius: 8px;
     border: none;
-    background: #1a1a1a;
-    color: #eee;
+    background: var(--bg-sidebar);
+    color: var(--text-primary);
     width: 100%;
     font-size: 1rem;
     transition: box-shadow 0.2s ease, border-color 0.2s ease;
@@ -13,8 +13,8 @@
 
 #table-filter:focus {
     outline: none;
-    border: 1px solid #4fc3f7;
-    box-shadow: 0 0 5px #4fc3f7;
+    border: 1px solid var(--color-primary);
+    box-shadow: 0 0 5px var(--color-primary);
 }
 
 /* === Tables Container === */
@@ -28,7 +28,7 @@
 /* === Sidebar List === */
 #table-list {
     flex: 0 0 250px;
-    background: #1b1b1b;
+    background: var(--bg-detail);
     border-radius: 8px;
     overflow: auto;
     padding: .5rem;
@@ -40,49 +40,49 @@
     margin-bottom: .4rem;
     cursor: pointer;
     transition: background 0.2s, transform 0.15s;
-    color: #4fc3f7;
+    color: var(--color-primary);
 }
 
 .table-item:hover {
-    background: #2f2f2f;
+    background: var(--bg-hover);
     transform: translateX(2px);
 }
 
 .table-item.active {
-    background: #333;
-    border-left: 4px solid #4fc3f7;
+    background: var(--bg-hover-active);
+    border-left: 4px solid var(--color-primary);
 }
 
-.table-meta {
+.table-meta,
+.no-tables {
     font-size: .8rem;
-    color: #aaa;
+    color: var(--text-meta);
 }
 
 .no-tables {
-    color: #aaa;
     padding: 0.5rem;
 }
 
 /* === Detail Panel === */
 #table-detail {
     flex: 1;
-    background: #1b1b1b;
+    background: var(--bg-detail);
     border-radius: 12px;
     padding: 1.5rem;
     display: flex;
     flex-direction: column;
-    justify-content: flex-start; /* top-align content */
-    align-items: flex-start;     /* left-align text */
-    color: #ddd;
+    justify-content: flex-start;
+    align-items: flex-start;
+    color: var(--text-secondary);
     overflow-y: auto;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5); /* subtle depth */
+    box-shadow: 0 4px 12px var(--shadow-medium);
     transition: background 0.3s, transform 0.2s;
 }
 
 #table-detail h3 {
     font-size: 1.4rem;
     margin-bottom: 0.75rem;
-    color: #4fc3f7;
+    color: var(--color-primary-strong);
     font-weight: 600;
 }
 
@@ -90,15 +90,15 @@
     margin: 0.4rem 0;
     font-size: 1rem;
     line-height: 1.5;
-    color: #ccc;
+    color: var(--text-primary);
 }
 
 /* === Table Action Buttons === */
 #table-detail .button {
-    background-color: #2a2a2a;
-    color: #4fc3f7;
+    background-color: var(--bg-hover);
+    color: var(--color-primary);
     font-weight: 600;
-    border: 1.5px solid #4fc3f7;
+    border: 1.5px solid var(--color-primary);
     padding: 8px 12px;
     border-radius: 6px;
     cursor: pointer;
@@ -111,10 +111,10 @@
 
 #table-detail .button:hover,
 #table-detail .button:focus {
-    background-color: #2a2a2a;
-    color: #4fc3f7;
-    border-color: #4fc3f7;
-    box-shadow: 0 0 10px rgba(79, 195, 247, 0.6);
+    background-color: var(--bg-hover);
+    color: var(--color-primary-hover);
+    border-color: var(--color-primary-hover);
+    box-shadow: 0 0 10px var(--shadow-primary-hover);
     outline: none;
 }
 
@@ -128,10 +128,10 @@
     position: absolute;
     right: 0;
     top: 100%;
-    background-color: #2a2a2a;
-    border: 1px solid #444;
+    background-color: var(--bg-hover);
+    border: 1px solid var(--bg-panel-alt);
     border-radius: 6px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.6);
+    box-shadow: 0 4px 10px var(--shadow-medium);
     padding: 6px 0;
     z-index: 10;
     display: flex;
@@ -142,7 +142,7 @@
 .dropdown-menu button {
     background: none;
     border: none;
-    color: #ddd;
+    color: var(--text-primary);
     padding: 10px 16px;
     text-align: left;
     font-size: 0.95rem;
@@ -151,7 +151,7 @@
 }
 
 .dropdown-menu button:hover {
-    background-color: #333;
+    background-color: var(--bg-hover-active);
 }
 
 /* === Hidden Class === */
@@ -161,12 +161,12 @@
 
 /* === Modal (for table removal, edit, etc.) === */
 .modal-content {
-    background-color: #1e1e1e;
+    background-color: var(--bg-panel-alt);
     padding: 24px 32px;
     border-radius: 12px;
     width: 90%;
-    box-shadow: 0 0 20px rgba(31, 31, 31, 0.8);
-    color: #e0e0e0;
+    box-shadow: 0 0 20px var(--shadow-strong);
+    color: var(--text-primary);
     position: relative;
     font-size: 1rem;
     max-width: 700px;
@@ -194,7 +194,7 @@
     right: 14px;
     font-size: 1.8rem;
     cursor: pointer;
-    color: #81d4fa;
+    color: var(--color-primary-hover);
     user-select: none;
     font-weight: 700;
 }
@@ -203,7 +203,7 @@
     margin-top: 12px;
     padding: 8px 14px;
     border-radius: 6px;
-    background-color: #4fc3f7;
+    background-color: var(--color-primary);
     border: none;
     color: #000;
     font-weight: 600;
@@ -212,14 +212,14 @@
 }
 
 .modal-content button:hover {
-    background-color: #81d4fa;
+    background-color: var(--color-primary-hover);
 }
 
 .modal-content button:last-child {
-    background-color: #e53935;
+    background-color: var(--color-error);
     color: #fff;
 }
 
 .modal-content button:last-child:hover {
-    background-color: #f44336;
+    background-color: var(--color-error-light);
 }

@@ -3,13 +3,13 @@
     margin: 0 auto;
     padding: 2rem;
     box-sizing: border-box;
-    background-color: #121212;
-    color: #e0e0e0;
+    background-color: var(--bg-panel);
+    color: var(--text-primary);
     overflow-x: hidden;
 }
 
 .cs-content h1 {
-    color: #4fc3f7;
+    color: var(--color-primary);
     font-size: 2rem;
     margin-bottom: 2rem;
 }
@@ -23,27 +23,27 @@
     width: 100%;
     padding: 0.6rem 1rem;
     border-radius: 6px;
-    border: 1px solid #2a2a2a;
-    background: #1e1e1e;
-    color: #e0e0e0;
+    border: 1px solid var(--bg-hover);
+    background: var(--bg-panel-alt);
+    color: var(--text-primary);
     font-size: 1rem;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 1px 2px var(--shadow-light);
     transition: border-color 0.2s ease;
 }
 
 .cs-controls input[type="search"]:focus {
-    border-color: #4fc3f7;
+    border-color: var(--color-primary);
     outline: none;
 }
 
 .cs-controls input[type="search"]::placeholder {
-    color: #888;
+    color: var(--text-placeholder);
 }
 
 .cs-group {
     margin-bottom: 2rem;
-    background: #1a1a1a;
-    border: 1px solid #2a2a2a;
+    background: var(--bg-sidebar);
+    border: 1px solid var(--bg-hover);
     border-radius: 8px;
     overflow: hidden;
 }
@@ -52,10 +52,10 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: #1e1e1e;
+    background: var(--bg-panel-alt);
     padding: 1rem 1.25rem;
     font-weight: 600;
-    color: #e0e0e0;
+    color: var(--text-primary);
     font-size: 1.15rem;
     cursor: pointer;
     user-select: none;
@@ -83,7 +83,7 @@
     justify-content: space-between;
     align-items: center;
     padding: 0.5rem 0;
-    border-bottom: 1px solid #2a2a2a;
+    border-bottom: 1px solid var(--bg-hover);
     font-family: 'Fira Mono', monospace;
     user-select: text;
     white-space: nowrap;
@@ -94,7 +94,7 @@
 }
 
 .cs-key {
-    color: #4fc3f7;
+    color: var(--color-primary);
     min-width: 220px;
     flex-shrink: 0;
     overflow: hidden;
@@ -105,7 +105,7 @@
 
 .cs-value {
     flex: 1;
-    color: #e0e0e0;
+    color: var(--text-primary);
     overflow: hidden;
     text-overflow: ellipsis;
     position: relative;
@@ -114,22 +114,22 @@
 }
 
 .cs-value.type-bool.true {
-  color: #2f6f4e;
-  font-weight: 600;
-  padding-left: 0.5rem;
+    color: #2f6f4e; /* Could create a theme variable like --color-bool-true */
+    font-weight: 600;
+    padding-left: 0.5rem;
 }
 
 .cs-value.type-bool.false {
-  color: #6f2f3f;
-  font-weight: 600;
-  opacity: 0.75;
-  padding-left: 0.5rem;
+    color: #6f2f3f; /* Could create a theme variable like --color-bool-false */
+    font-weight: 600;
+    opacity: 0.75;
+    padding-left: 0.5rem;
 }
 
 .cs-value.type-null {
-  color: #555555;
-  font-style: italic;
-  padding-left: 0.5rem;
+    color: var(--text-disabled);
+    font-style: italic;
+    padding-left: 0.5rem;
 }
 
 .cs-setting-item span:hover::after {
@@ -137,11 +137,11 @@
     position: absolute;
     left: 0;
     top: 100%;
-    background: #1e1e1e;
-    color: #f0f0f0;
+    background: var(--bg-panel-alt);
+    color: var(--text-primary);
     padding: 4px 8px;
     border-radius: 6px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+    box-shadow: 0 2px 8px var(--shadow-medium);
     z-index: 10;
     margin-top: 6px;
     white-space: normal;
@@ -151,7 +151,7 @@
 .cs-copy-btn {
     background: none;
     border: none;
-    color: #aaa;
+    color: var(--text-meta);
     cursor: pointer;
     padding-left: 0.5rem;
     transition: color 0.2s ease;
@@ -159,8 +159,7 @@
 }
 
 .cs-copy-btn:hover {
-    background: none;
-    color: #4fc3f7;
+    color: var(--color-primary);
 }
 
 .cs-copy-btn svg {

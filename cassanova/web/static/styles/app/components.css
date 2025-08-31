@@ -1,11 +1,11 @@
 section {
     background: linear-gradient(
-            135deg,
-            rgba(30, 30, 30, 0.9) 50%,
-            rgba(15, 15, 15, 0.95) 100%
+        135deg,
+        var(--bg-panel-alt) 50%,
+        var(--bg-panel) 100%
     );
-    border: 1px solid #2a2a2a;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+    border: 1px solid var(--bg-hover);
+    box-shadow: 0 2px 4px var(--shadow-medium);
     border-radius: 12px;
     padding: 1rem;
     margin-bottom: 2.5rem;
@@ -14,18 +14,18 @@ section {
 h2 {
     margin-top: 0;
     font-size: 1.4rem;
-    color: #ddd;
+    color: var(--text-primary);
     margin-bottom: 1rem;
 }
 
 h3 {
-    color: #ccc;
+    color: var(--text-secondary);
     margin-bottom: 0.5rem;
 }
 
 button {
-    background-color: #4fc3f7;
-    color: #000;
+    background-color: var(--color-primary);
+    color: var(--text-primary); /* optional: black text could also be a variable if needed */
     border: none;
     padding: 0.6rem 1.2rem;
     border-radius: 6px;
@@ -36,15 +36,15 @@ button {
 }
 
 button:hover {
-    background-color: #81d4fa;
+    background-color: var(--color-primary-hover);
 }
 
 .toggle-btn {
     margin-bottom: 8px;
     padding: 5px 10px;
-    background-color: #2a2a2a;
-    color: #ccc;
-    border: 1px solid #444;
+    background-color: var(--bg-hover);
+    color: var(--text-secondary);
+    border: 1px solid var(--bg-hover-active);
     border-radius: 6px;
     cursor: pointer;
     font-size: 0.9rem;
@@ -53,7 +53,7 @@ button:hover {
 }
 
 .toggle-btn:hover {
-    background-color: #333;
+    background-color: var(--bg-hover-active);
 }
 
 .container {

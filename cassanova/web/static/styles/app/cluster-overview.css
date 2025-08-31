@@ -14,7 +14,7 @@
 
 .cluster-overview ul li strong {
     font-weight: 700;
-    color: #4fc3f7;
+    color: var(--color-primary);
     margin-bottom: 6px;
     font-size: 1.05rem;
 }
@@ -31,18 +31,19 @@
     position: relative;
 }
 
+/* Tooltip on hover */
 .cluster-overview ul li span:hover::after {
     content: attr(title);
     position: absolute;
     left: 0;
     bottom: 100%;
-    background: #222;
-    color: #eee;
+    background: var(--bg-panel-alt);
+    color: var(--text-primary);
     padding: 5px 8px;
     border-radius: 4px;
     white-space: normal;
     max-width: 300px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+    box-shadow: 0 2px 8px var(--shadow-medium);
     z-index: 10;
     opacity: 1;
     transition: opacity 0.2s ease-in-out;

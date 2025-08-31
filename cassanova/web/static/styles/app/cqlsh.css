@@ -7,8 +7,8 @@
 .cql-devtools html {
     margin: 0;
     height: 100%;
-    background-color: #121212;
-    color: #ddd;
+    background-color: var(--bg-panel);
+    color: var(--text-primary);
     overflow: hidden;
     display: flex;
     flex-direction: column;
@@ -31,10 +31,10 @@
 /* Editor panel */
 .cql-devtools #editor {
     flex: 0 1 50%;
-    border-right: 3px solid #333;
+    border-right: 3px solid var(--bg-hover-active);
     display: flex;
     flex-direction: column;
-    background: #1e1e1e;
+    background: var(--bg-panel-alt);
     overflow: hidden;
     border-radius: 5px;
 }
@@ -51,7 +51,7 @@
 .cql-devtools #resizer {
     width: 8px;
     cursor: col-resize;
-    background-color: #333;
+    background-color: var(--bg-hover-active);
     transition: background-color 0.2s ease;
     flex-shrink: 0;
     user-select: none;
@@ -62,14 +62,14 @@
 }
 
 .cql-devtools #resizer:hover {
-    background-color: #4fc3f7;
+    background-color: var(--color-primary);
 }
 
 /* Result panel */
 .cql-devtools #result {
     flex: 1 1 0;
-    background: #1e1e1e;
-    color: #ddd;
+    background: var(--bg-panel-alt);
+    color: var(--text-primary);
     display: flex;
     flex-direction: column;
     white-space: pre-wrap;
@@ -88,11 +88,11 @@
 
 /* Loading and error text */
 .cql-devtools .loading {
-    color: #4fc3f7;
+    color: var(--color-primary);
 }
 
 .cql-devtools .error {
-    color: #9a170d;
+    color: var(--color-error);
     font-weight: 700;
     white-space: pre-wrap;
 }
@@ -109,9 +109,9 @@
     flex-shrink: 0;
     user-select: none;
 
-    background-color: #2a2a2a;
-    color: #4fc3f7;
-    border: 1.5px solid #4fc3f7;
+    background-color: var(--bg-hover);
+    color: var(--color-primary);
+    border: 1.5px solid var(--color-primary);
     box-shadow: none;
 
     transition: background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease;
@@ -119,19 +119,19 @@
 
 .cql-devtools #run-btn:hover:not(:disabled),
 .cql-devtools #run-btn:focus:not(:disabled) {
-    background-color: #2a2a2a;
-    color: #4fc3f7;
-    border-color: #4fc3f7;
-    box-shadow: 0 0 10px rgba(79, 195, 247, 0.6);
+    background-color: var(--bg-hover);
+    color: var(--color-primary);
+    border-color: var(--color-primary);
+    box-shadow: 0 0 10px var(--shadow-primary-hover);
     outline: none;
 }
 
 .cql-devtools #run-btn:disabled {
     opacity: 0.6;
     cursor: default;
-    background-color: #1e1e1e;
-    border-color: #333;
-    color: #555;
+    background-color: var(--bg-panel-alt);
+    border-color: var(--bg-hover-active);
+    color: var(--text-disabled);
     box-shadow: none;
 }
 
@@ -145,9 +145,9 @@
 
 /* Style for the consistency dropdown */
 #consistency-level {
-    background-color: #1e1e1e;
-    color: #ddd;
-    border: 1px solid #444;
+    background-color: var(--bg-panel-alt);
+    color: var(--text-primary);
+    border: 1px solid var(--bg-hover-active);
     border-radius: 4px;
     padding: 6px 12px;
     font-size: 0.9rem;
@@ -160,13 +160,13 @@
 
 #consistency-level:hover,
 #consistency-level:focus {
-    border-color: #6a9fb5;
+    border-color: var(--color-primary-strong);
     outline: none;
 }
 
 /* Tracing label */
 .tracing-label {
-    color: #ccc;
+    color: var(--text-secondary);
     font-size: 0.9rem;
     margin-left: 12px;
     display: flex;
@@ -176,7 +176,7 @@
 }
 
 .tracing-label input[type="checkbox"] {
-    accent-color: #4fc3f7;
+    accent-color: var(--color-primary);
     width: 16px;
     height: 16px;
     cursor: pointer;
@@ -186,9 +186,9 @@
 .history-panel {
     margin-top: 20px;
     padding-top: 10px;
-    border-top: 1px solid #444;
+    border-top: 1px solid var(--bg-hover-active);
     font-size: 0.85rem;
-    color: #aaa;
+    color: var(--text-meta);
     max-height: 200px;
     overflow-y: auto;
 }
@@ -196,7 +196,7 @@
 .history-panel h2 {
     font-size: 0.9rem;
     margin-bottom: 8px;
-    color: #ccc;
+    color: var(--text-secondary);
 }
 
 #history-list {
@@ -208,7 +208,7 @@
 #history-list li {
     padding: 6px 8px;
     cursor: pointer;
-    border-bottom: 1px solid #2a2a2a;
+    border-bottom: 1px solid var(--bg-hover);
     white-space: pre-wrap;
     overflow-wrap: break-word;
     max-height: 10em;
@@ -216,7 +216,7 @@
 }
 
 #history-list li:hover {
-    background-color: #2a2a2a;
+    background-color: var(--bg-hover);
 }
 
 /* History toggle button */
@@ -225,11 +225,11 @@
     bottom: 20px;
     left: 20px;
     z-index: 1001;
-    background-color: #2a2a2a;
-    color: #4fc3f7;
+    background-color: var(--bg-hover);
+    color: var(--color-primary);
     font-weight: 600;
     font-size: 0.9rem;
-    border: 1.5px solid #4fc3f7;
+    border: 1.5px solid var(--color-primary);
     padding: 10px 16px;
     border-radius: 4px;
     cursor: pointer;
@@ -239,10 +239,10 @@
 
 #toggle-history-btn.history-toggle-btn:hover,
 #toggle-history-btn.history-toggle-btn:focus {
-    background-color: #2a2a2a;
-    color: #4fc3f7;
-    border-color: #4fc3f7;
-    box-shadow: 0 0 10px rgba(79, 195, 247, 0.6);
+    background-color: var(--bg-hover);
+    color: var(--color-primary);
+    border-color: var(--color-primary);
+    box-shadow: 0 0 10px var(--shadow-primary-hover);
     outline: none;
 }
 
@@ -253,9 +253,9 @@
     left: 50%;
     transform: translate(-50%, 100%);
     width: 60%;
-    background: #1e1e1e;
-    border-top: 2px solid #4fc3f7;
-    box-shadow: 0 -2px 20px rgba(0, 0, 0, 0.6);
+    background: var(--bg-panel-alt);
+    border-top: 2px solid var(--color-primary);
+    box-shadow: 0 -2px 20px var(--shadow-medium);
     z-index: 1000;
     transition: transform 0.3s ease;
     border-radius: 8px 8px 0 0;
@@ -276,16 +276,16 @@
     justify-content: flex-start;
     align-items: center;
     padding: 12px 20px;
-    border-top: 1px solid #444;
-    background: #1e1e1e;
+    border-top: 1px solid var(--bg-hover-active);
+    background: var(--bg-panel-alt);
 }
 
 /* Result toolbar buttons */
 .result-toolbar .btn {
-    background-color: #2a2a2a;
-    color: #4fc3f7;
+    background-color: var(--bg-hover);
+    color: var(--color-primary);
     font-weight: 600;
-    border: 1.5px solid #4fc3f7;
+    border: 1.5px solid var(--color-primary);
     padding: 8px 14px;
     border-radius: 4px;
     cursor: pointer;
@@ -296,10 +296,10 @@
 
 .result-toolbar .btn:hover,
 .result-toolbar .btn:focus {
-    background-color: #2a2a2a;
-    color: #4fc3f7;
-    border-color: #4fc3f7;
-    box-shadow: 0 0 10px rgba(79, 195, 247, 0.6);
+    background-color: var(--bg-hover);
+    color: var(--color-primary);
+    border-color: var(--color-primary);
+    box-shadow: 0 0 10px var(--shadow-primary-hover);
     outline: none;
 }
 
@@ -314,7 +314,7 @@
     background: none;
     border: none;
     font-size: 1.5rem;
-    color: #4fc3f7;
+    color: var(--color-primary);
     cursor: pointer;
     padding: 4px 8px;
     transition: color 0.25s ease;
@@ -322,7 +322,7 @@
 
 #close-history-btn:hover,
 #close-history-btn:focus {
-    color: #ff5c5c;
+    color: var(--color-error-light);
     outline: none;
 }
 
@@ -332,6 +332,6 @@
 #close-history-btn:focus-visible,
 #consistency-level:focus-visible,
 .tracing-label input[type="checkbox"]:focus-visible {
-    outline: 2px solid #4fc3f7;
+    outline: 2px solid var(--color-primary);
     outline-offset: 2px;
 }
