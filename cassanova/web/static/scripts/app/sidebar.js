@@ -67,8 +67,14 @@ document.addEventListener("DOMContentLoaded", () => {
         // Update label text
         themeLabel.textContent = option.querySelector('.theme-name').textContent;
 
-        // Apply theme class to <html>
-        document.documentElement.classList.remove('light-theme', 'dark-theme');
+        // Remove any existing theme classes (dynamic)
+        document.documentElement.classList.forEach(cls => {
+            if (cls.endsWith('-theme')) {
+                document.documentElement.classList.remove(cls);
+            }
+        });
+
+        // Apply the selected theme
         document.documentElement.classList.add(`${theme}-theme`);
     }
 });

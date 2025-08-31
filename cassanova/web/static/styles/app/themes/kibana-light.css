@@ -1,0 +1,38 @@
+.kibana-light-theme {
+    /* === Primary / Accent Colors (Kibana Palette) === */
+    --color-primary: #00B3A4;        /* Main UI accents, sidebar titles, key highlights */
+    --color-primary-hover: #3185FC;  /* Hover effects on buttons, modals */
+    --color-primary-active: #DB1374; /* Main headings, cluster down titles */
+    --color-primary-light: #FEB6DB;  /* Cluster down diagnostics */
+    --color-primary-strong: #490092; /* Cluster card headings */
+
+    /* === Backgrounds / Lights === */
+    --bg-main: #ffffff;        /* Main page background */
+    --bg-main-rgb: 255, 255, 255; /* RGB for semi-transparent elements */
+    --bg-terminal: #f8f9fa;    /* Terminal & upload backgrounds */
+    --bg-panel: #f1f3f5;       /* General panel backgrounds */
+    --bg-xterm: #f8f9fa;       /* xterm wrapper */
+    --bg-sidebar: #f5f5f5;     /* Sidebar, keyspace filter */
+    --bg-detail: #ffffff;      /* Keyspace detail, theme dropdown */
+    --bg-panel-alt: #e9ecef;   /* Panels, result panels */
+    --bg-hover: #dee2e6;       /* Hover backgrounds, dot wrapper */
+    --bg-hover-active: #ced4da; /* Hover background for active items */
+
+    /* === Text / Grays === */
+    --text-primary: #1e1e1e;     /* Primary text */
+    --text-secondary: #495057;   /* Secondary text, terminal text */
+    --text-meta: #6c757d;        /* Meta / helper text */
+    --text-placeholder: #adb5bd; /* Placeholders */
+    --text-disabled: #868e96;    /* Null / disabled text */
+
+    /* === Reds / Error / Alerts === */
+    --color-error: #920000;      /* Modal cancel button / hover */
+    --color-error-light: #FF6B6B; /* Disconnect link */
+
+    /* === Shadows / Overlays === */
+    --shadow-light: rgba(0, 0, 0, 0.08);
+    --shadow-medium: rgba(0, 0, 0, 0.2);
+    --shadow-strong: rgba(0, 0, 0, 0.35);
+    --shadow-primary-hover: rgba(49, 133, 252, 0.6);
+    --hover-highlight: rgba(49, 133, 252, 0.05);
+}

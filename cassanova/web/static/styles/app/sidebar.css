@@ -295,9 +295,6 @@
     box-shadow: 0 0 4px var(--shadow-light);
 }
 
-.theme-preview.light { background: #ffffff; }
-.theme-preview.dark { background: var(--color-primary); }
-
 /* --- Collapsed Sidebar --- */
 .sidebar.collapsed .theme-dot-wrapper {
     justify-content: center;
