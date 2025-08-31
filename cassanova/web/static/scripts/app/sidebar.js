@@ -1,4 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
+    // --- Sidebar Toggle ---
     const toggleBtn = document.querySelector(".sidebar-toggle");
     const sidebar = document.querySelector(".sidebar");
 
@@ -8,6 +9,7 @@ document.addEventListener("DOMContentLoaded", () => {
         toggleBtn.setAttribute("aria-expanded", expanded);
     });
 
+    // --- Highlight Active Link ---
     const links = document.querySelectorAll(".sidebar-link");
     const currentPath = window.location.pathname;
     links.forEach(link => {
@@ -15,4 +17,57 @@ document.addEventListener("DOMContentLoaded", () => {
             link.classList.add("active");
         }
     });
+
+    // --- Theme Selector ---
+    const themeDotWrapper = document.querySelector('.theme-dot-wrapper');
+    const themeDot = document.getElementById('theme-dot');
+    const themeDropdown = document.getElementById('theme-dropdown');
+    const themeLabel = document.querySelector('.theme-label');
+    const themeOptions = document.querySelectorAll('.theme-option');
+
+    // Load theme from localStorage
+    const savedTheme = localStorage.getItem('selectedTheme');
+    if (savedTheme) {
+        applyTheme(savedTheme);
+    }
+
+    // Toggle dropdown
+    themeDotWrapper.addEventListener('click', () => {
+        themeDropdown.classList.toggle('hidden');
+    });
+
+    // Select a theme
+    themeOptions.forEach(option => {
+        option.addEventListener('click', () => {
+            const selectedTheme = option.dataset.theme;
+            applyTheme(selectedTheme);
+            themeDropdown.classList.add('hidden');
+
+            // Save to localStorage
+            localStorage.setItem('selectedTheme', selectedTheme);
+        });
+    });
+
+    // Click outside to close dropdown
+    document.addEventListener('click', e => {
+        if (!themeDotWrapper.contains(e.target) && !themeDropdown.contains(e.target)) {
+            themeDropdown.classList.add('hidden');
+        }
+    });
+
+    // --- Apply Theme Function ---
+    function applyTheme(theme) {
+        const option = Array.from(themeOptions).find(opt => opt.dataset.theme === theme);
+        if (!option) return;
+
+        // Update dot color
+        const dotColor = getComputedStyle(option.querySelector('.theme-preview')).backgroundColor;
+        themeDot.style.background = dotColor;
+
+        // Update label text (only visible if sidebar not collapsed)
+        themeLabel.textContent = option.querySelector('.theme-name').textContent;
+
+        // Apply theme class to body
+        document.body.dataset.theme = theme;
+    }
 });
