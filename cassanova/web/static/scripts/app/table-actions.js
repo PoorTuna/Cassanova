@@ -1,6 +1,6 @@
 async function performTableAction(cluster, keyspace, table, path = '', method = 'GET') {
     const url = `/api/v1/cluster/${encodeURIComponent(cluster)}/keyspace/${encodeURIComponent(keyspace)}/table/${encodeURIComponent(table)}${path}`;
-    const response = await fetch(url, {method});
+    const response = await fetch(url, { method });
     if (!response.ok) {
         const err = await response.json().catch(() => ({}));
         throw new Error(err.detail || response.statusText);
@@ -32,6 +32,7 @@ function showTableSchema(cluster, keyspace, table) {
         .catch(err => alert(`Show schema failed: ${err.message}`));
 }
 
+/* ------------------- Modals ------------------- */
 function showModal(jsonData) {
     const modal = document.getElementById('json-modal');
     const pre = document.getElementById('modal-pre');
@@ -56,13 +57,9 @@ function closeConfirmModal() {
     confirmCallback = null;
 }
 
-
-function toggleSection(elem) {
-    const section = elem.nextElementSibling;
-    section.classList.toggle('open');
-}
-
+/* ------------------- Init ------------------- */
 document.addEventListener('DOMContentLoaded', () => {
+    /* Confirm Modal */
     document.getElementById('confirm-action-btn').addEventListener('click', () => {
         if (confirmCallback) confirmCallback();
         closeConfirmModal();
@@ -72,49 +69,61 @@ document.addEventListener('DOMContentLoaded', () => {
         if (e.target === e.currentTarget) hideModal();
     });
 
+    /* Table filter */
     const filterInput = document.getElementById('table-filter');
-    const tables = document.querySelectorAll('.keyspace-card.table-card');
+    const tableItems = document.querySelectorAll("#table-list .keyspace-item");
     if (filterInput) {
-        filterInput.addEventListener('input', () => {
-            const filter = filterInput.value.toLowerCase();
-            tables.forEach(table => {
-                const name = table.getAttribute('data-table').toLowerCase();
-                table.style.display = name.includes(filter) ? 'block' : 'none';
+        filterInput.addEventListener("input", () => {
+            const q = filterInput.value.toLowerCase();
+            tableItems.forEach(item => {
+                const name = item.getAttribute("data-name").toLowerCase();
+                item.style.display = name.includes(q) ? "" : "none";
             });
         });
     }
 
-    document.querySelectorAll('.table-options-btn').forEach(button => {
-        const menu = button.nextElementSibling;
-        let isOpen = false;
+    /* Table detail panel */
+    const tableDetails = document.querySelectorAll("#table-detail .table-detail");
+    const detailPanel = document.getElementById("table-detail");
+    const placeholder = detailPanel.querySelector("p");
 
-        function openMenu() {
-            menu.classList.remove('hidden');
-            isOpen = true;
-            document.addEventListener('click', outsideClickListener);
-        }
+    tableItems.forEach(item => {
+        item.addEventListener("click", () => {
+            // highlight selected
+            tableItems.forEach(i => i.classList.remove("active"));
+            item.classList.add("active");
 
-        function closeMenu() {
-            menu.classList.add('hidden');
-            isOpen = false;
-            document.removeEventListener('click', outsideClickListener);
-        }
+            // hide all details
+            tableDetails.forEach(d => d.classList.add("hidden"));
 
-        function toggleMenu(event) {
-            event.stopPropagation();
-            if (isOpen) closeMenu();
-            else openMenu();
-        }
-
-        function outsideClickListener(event) {
-            if (!button.contains(event.target) && !menu.contains(event.target)) {
-                closeMenu();
+            // show selected table
+            const name = item.getAttribute("data-name");
+            const detail = document.getElementById(`table-${name}`);
+            if (detail) {
+                if (placeholder) placeholder.style.display = "none";
+                detail.classList.remove("hidden");
+                detailPanel.scrollTop = 0;
             }
-        }
-
-        button.addEventListener('click', toggleMenu);
+        });
     });
 
+    /* Dropdown menus */
+    document.querySelectorAll('.table-options-btn').forEach(button => {
+        const menu = button.nextElementSibling;
+
+        button.addEventListener('click', e => {
+            e.stopPropagation();
+            menu.classList.toggle('hidden');
+        });
+
+        document.addEventListener('click', e => {
+            if (!button.contains(e.target) && !menu.contains(e.target)) {
+                menu.classList.add('hidden');
+            }
+        });
+    });
+
+    /* Dropdown actions */
     document.querySelectorAll('.dropdown-menu button').forEach(btn => {
         btn.addEventListener('click', e => {
             const action = e.target.dataset.action;

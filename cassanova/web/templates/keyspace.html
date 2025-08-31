@@ -28,19 +28,35 @@
         </ul>
     </section>
 
-    <section id="keyspace-tables-section" class="fade-in">
-        <h2>Tables</h2>
-        <input
-                type="search"
-                id="table-filter"
-                placeholder="Filter tables..."
-                autocomplete="off"
-                aria-label="Filter tables"
-        />
+<section id="keyspace-tables-section" class="fade-in">
+    <h2>Tables</h2>
+    <input
+        type="search"
+        id="table-filter"
+        placeholder="Filter tables..."
+        autocomplete="off"
+        aria-label="Filter tables"
+    />
 
-        <div id="tables-container">
+    <div class="keyspaces-container">
+        <!-- Sidebar List -->
+        <div id="table-list">
             {% for table in keyspace.tables %}
-            <article class="keyspace-card table-card" data-table="{{ table.name }}">
+            <div class="keyspace-item"
+                 data-name="{{ table.name }}">
+                <strong>{{ table.name }}</strong>
+                <div class="keyspace-meta">Columns: {{ table.columns | length }}</div>
+            </div>
+            {% else %}
+            <p class="no-keyspaces">No tables available.</p>
+            {% endfor %}
+        </div>
+
+        <!-- Detail Panel -->
+        <div id="table-detail">
+            <p>Select a table to view details.</p>
+            {% for table in keyspace.tables %}
+            <div class="table-detail hidden" id="table-{{ table.name }}">
                 <div style="display: flex; justify-content: space-between; align-items: center;">
                     <h3 style="margin: 0;">{{ table.name }}</h3>
                     <div class="dropdown-wrapper">
@@ -50,7 +66,6 @@
                             <button data-action="schema" data-table="{{ table.name }}">Show Schema</button>
                             <button data-action="truncate" data-table="{{ table.name }}">Truncate Table</button>
                             <button data-action="delete" data-table="{{ table.name }}">Delete Table</button>
-
                         </div>
                     </div>
                 </div>
@@ -59,64 +74,54 @@
                 <p><strong>Clustering Key:</strong> {{ table.clustering_key | join(', ') }}</p>
                 <p><strong>Total Columns:</strong> {{ table.columns | length }}</p>
 
-                <button class="toggle-btn" onclick="toggleSection(this)">More Info</button>
-                <div class="table-section">
-                    {% if table.columns %}
-                    <div style="margin-bottom: 10px">
-                        <p><strong>Columns:</strong></p>
-                        <table style="width: 100%; border-collapse: collapse; margin-top: 0.5rem;">
-                            <thead>
-                            <tr>
-                                <th style="text-align: left; padding: 0.5rem; color: #81d4fa; border-bottom: 1px solid #444;">
-                                    Name
-                                </th>
-                                <th style="text-align: left; padding: 0.5rem; color: #81d4fa; border-bottom: 1px solid #444;">
-                                    Type
-                                </th>
-                                <th style="text-align: left; padding: 0.5rem; color: #81d4fa; border-bottom: 1px solid #444;">
-                                    Static
-                                </th>
-                                <th style="text-align: left; padding: 0.5rem; color: #81d4fa; border-bottom: 1px solid #444;">
-                                    Reversed
-                                </th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {% for name, info in table.columns.items() %}
-                            <tr>
-                                <td style="padding: 0.4rem 0.5rem; color: #ccc;">{{ name }}</td>
-                                <td style="padding: 0.4rem 0.5rem; color: #aaa;">{{ info.cql_type }}</td>
-                                <td style="padding: 0.4rem 0.5rem; color: #aaa;">{{ info.is_static }}</td>
-                                <td style="padding: 0.4rem 0.5rem; color: #aaa;">{{ info.is_reversed }}</td>
-                            </tr>
-                            {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
-                    {% endif %}
+                {% if table.columns %}
+                <div style="margin-bottom: 10px">
+                    <p><strong>Columns:</strong></p>
+                    <table style="width: 100%; border-collapse: collapse; margin-top: 0.5rem;">
+                        <thead>
+                        <tr>
+                            <th style="text-align: left; padding: 0.5rem; color: #81d4fa; border-bottom: 1px solid #444;">Name</th>
+                            <th style="text-align: left; padding: 0.5rem; color: #81d4fa; border-bottom: 1px solid #444;">Type</th>
+                            <th style="text-align: left; padding: 0.5rem; color: #81d4fa; border-bottom: 1px solid #444;">Static</th>
+                            <th style="text-align: left; padding: 0.5rem; color: #81d4fa; border-bottom: 1px solid #444;">Reversed</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for name, info in table.columns.items() %}
+                        <tr>
+                            <td style="padding: 0.4rem 0.5rem; color: #ccc;">{{ name }}</td>
+                            <td style="padding: 0.4rem 0.5rem; color: #aaa;">{{ info.cql_type }}</td>
+                            <td style="padding: 0.4rem 0.5rem; color: #aaa;">{{ info.is_static }}</td>
+                            <td style="padding: 0.4rem 0.5rem; color: #aaa;">{{ info.is_reversed }}</td>
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% endif %}
 
-                    <p><strong>Uses Compact Storage:</strong> {{ table.is_compact_storage }}</p>
-                    <p><strong>Virtual:</strong> {{ table.virtual }}</p>
+                <p><strong>Uses Compact Storage:</strong> {{ table.is_compact_storage }}</p>
+                <p><strong>Virtual:</strong> {{ table.virtual }}</p>
 
-                    {% if table.indexes %}
-                    <div>
-                        <p><strong>Indexes:</strong></p>
-                        <ul>
-                            {% for index in table.indexes %}
-                            <li><span style="color:#aaa">{{ index }}</span></li>
-                            {% endfor %}
-                        </ul>
-                    </div>
-                    {% endif %}
+                {% if table.indexes %}
+                <div>
+                    <p><strong>Indexes:</strong></p>
+                    <ul>
+                        {% for index in table.indexes %}
+                        <li><span style="color:#aaa">{{ index }}</span></li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
 
-                    {% if table.options %}
-                    <div>
-                        <p><strong>Options:</strong></p>
-                        <ul class="options-list">
-                            {% for opt, val in table.options.items() %}
-                            <li>
-                                <span style="color:#ccc">{{ opt }}</span>:
-                                <span style="color:#aaa">
+                {% if table.options %}
+                <div>
+                    <p><strong>Options:</strong></p>
+                    <ul class="options-list">
+                        {% for opt, val in table.options.items() %}
+                        <li>
+                            <span style="color:#ccc">{{ opt }}</span>:
+                            <span style="color:#aaa">
                               {% if val is mapping %}
                                 {%- for k2, v2 in val.items() -%}
                                   {{ k2 }}: {{ v2 }}{% if not loop.last %}, {% endif %}
@@ -127,49 +132,46 @@
                                 {{ val }}
                               {% endif %}
                             </span>
-                            </li>
-                            {% endfor %}
-                        </ul>
-                    </div>
-                    {% endif %}
-
-                    {% if table.triggers %}
-                    <p><strong>Triggers:</strong> {{ table.triggers | join(', ') }}</p>
-                    {% endif %}
-
-                    {% if table.views %}
-                    <div>
-                        <p><strong>Views:</strong></p>
-                        <ul>
-                            {% for view, def in table.views.items() %}
-                            <li><span style="color:#ccc">{{ view }}</span></li>
-                            {% endfor %}
-                        </ul>
-                    </div>
-                    {% endif %}
-
-                    {% if table.extensions %}
-                    <div>
-                        <p><strong>Extensions:</strong></p>
-                        <ul>
-                            {% for ext, val in table.extensions.items() %}
-                            <li><span style="color:#ccc">{{ ext }}</span>: <span style="color:#aaa">{{ val }}</span>
-                            </li>
-                            {% endfor %}
-                        </ul>
-                    </div>
-                    {% endif %}
-
-                    {% if table.comparator %}
-                    <p><strong>Comparator:</strong> {{ table.comparator }}</p>
-                    {% endif %}
+                        </li>
+                        {% endfor %}
+                    </ul>
                 </div>
-            </article>
-            {% else %}
-            <p>No tables found in this keyspace.</p>
+                {% endif %}
+
+                {% if table.triggers %}
+                <p><strong>Triggers:</strong> {{ table.triggers | join(', ') }}</p>
+                {% endif %}
+
+                {% if table.views %}
+                <div>
+                    <p><strong>Views:</strong></p>
+                    <ul>
+                        {% for view, def in table.views.items() %}
+                        <li><span style="color:#ccc">{{ view }}</span></li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+
+                {% if table.extensions %}
+                <div>
+                    <p><strong>Extensions:</strong></p>
+                    <ul>
+                        {% for ext, val in table.extensions.items() %}
+                        <li><span style="color:#ccc">{{ ext }}</span>: <span style="color:#aaa">{{ val }}</span></li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+
+                {% if table.comparator %}
+                <p><strong>Comparator:</strong> {{ table.comparator }}</p>
+                {% endif %}
+            </div>
             {% endfor %}
         </div>
-    </section>
+    </div>
+</section>
 
     {% if keyspace.indexes %}
     <section class="fade-in">
