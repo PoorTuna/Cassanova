@@ -1,3 +1,67 @@
+.keyspace-overview ul {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 0.75rem 1.25rem;
+    max-width: 65%;
+    margin: 0 auto;
+    padding: 0;
+    list-style: none;
+}
+
+.keyspace-overview ul li {
+    border: 1px solid var(--bg-hover);
+    border-radius: 8px;
+    padding: 10px 14px;
+    box-shadow: 0 1px 3px var(--shadow-light);
+    display: flex;
+    flex-direction: column;
+}
+
+.keyspace-overview ul li strong {
+    font-weight: 600;
+    color: var(--color-primary);
+    margin-bottom: 4px;
+    font-size: 0.95rem;
+}
+
+.keyspace-overview ul li span {
+    font-weight: 500;
+    font-size: 0.9rem;
+    line-height: 1.3;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+    max-width: 100%;
+    position: relative;
+    color: var(--text-secondary);
+}
+
+/* Tooltip on hover */
+.keyspace-overview ul li span:hover::after {
+    content: attr(title);
+    position: absolute;
+    left: 0;
+    bottom: 100%;
+    color: var(--text-primary);
+    padding: 4px 7px;
+    border-radius: 4px;
+    white-space: normal;
+    max-width: 280px;
+    z-index: 10;
+    opacity: 1;
+    transition: opacity 0.2s ease-in-out;
+    pointer-events: none;
+    transform: translateY(-6px);
+}
+
+.keyspace-overview ul li span::after {
+    content: '';
+    opacity: 0;
+    transition: opacity 0.2s ease-in-out;
+    pointer-events: none;
+}
+
 #keyspace-filter {
     padding: .5rem 1rem;
     border-radius: 8px;
@@ -39,6 +103,7 @@
     margin-bottom: .4rem;
     cursor: pointer;
     transition: background 0.2s, transform 0.15s;
+    overflow: hidden;
     color: var(--color-primary);
 }
 

@@ -1,0 +1,42 @@
+.orokin-light-theme {
+  /* === Primary / Accent Colors === */
+  --color-primary: #e6c76e;        /* Bright Orokin gold */
+  --color-primary-hover: #f0d891;  /* Lighter, glowing gold */
+  --color-primary-active: #c4a94d; /* Antique/darker gold */
+  --color-primary-light: #fff4d6;  /* Subtle pale gold highlight */
+  --color-primary-strong: #d4af37; /* Classic rich gold */
+
+  /* === Backgrounds / Lights === */
+  --bg-main: #fdfdfd;              /* Clean marble white */
+  --bg-main-rgb: 253, 253, 253;    /* RGB for transparency */
+  --bg-terminal: #f7f7f5;          /* Slightly off-white for terminals */
+  --bg-panel: #ffffff;             /* Bright white panels */
+  --bg-xterm: #f8f8f6;             /* Light ivory wrapper */
+  --bg-sidebar: #f4f4f2;           /* Subtle contrast ivory */
+  --bg-detail: #ffffff;            /* Details remain crisp */
+  --bg-panel-alt: #f1f1ef;         /* Alternate panels with soft gray */
+  --bg-hover: #eceae4;             /* Gentle hover ivory-gray */
+  --bg-hover-active: #e4decf;      /* Active hover (marble tone) */
+
+  /* === Text / Grays === */
+  --text-primary: #1f1f1f;         /* Strong contrast black */
+  --text-secondary: #474747;       /* Softer gray */
+  --text-meta: #6a6a6a;            /* Helper text gray */
+  --text-placeholder: #a1a1a1;     /* Placeholder */
+  --text-disabled: #c5c5c5;        /* Disabled text */
+
+  /* === Teal / Orokin Glow Accents === */
+  --color-accent: #5fd6c4;         /* Orokin teal glow */
+  --color-accent-hover: #7fe7d8;   /* Brighter teal hover */
+
+  /* === Reds / Error / Alerts === */
+  --color-error: #b44242;          /* Muted red */
+  --color-error-light: #e38585;    /* Lighter red for alerts */
+
+  /* === Shadows / Overlays === */
+  --shadow-light: rgba(0, 0, 0, 0.04);
+  --shadow-medium: rgba(0, 0, 0, 0.12);
+  --shadow-strong: rgba(0, 0, 0, 0.22);
+  --shadow-primary-hover: rgba(230, 199, 110, 0.35); /* golden glow */
+  --hover-highlight: rgba(95, 214, 196, 0.08);       /* subtle teal aura */
+}

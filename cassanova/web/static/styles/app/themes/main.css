@@ -1,8 +1,9 @@
 @import url('dark.css');
 @import url('light.css');
-@import url('orokin.css');
+@import url('orokin-dark.css');
+@import url('orokin-light.css');
+@import url('kibana-dark.css');
 @import url('kibana-light.css');
-
 
 .theme-preview.light {
     background: #ffffff;
@@ -12,7 +13,11 @@
     background: #101010;
 }
 
-.theme-preview.orokin {
+.theme-preview.orokin-light {
+    background: #fff4d6;
+}
+
+.theme-preview.orokin-dark {
     background: #ffe066;
 }
 
@@ -21,3 +26,6 @@
     background: #00b3a4;
 }
 
+.theme-preview.kibana-dark {
+    background: #DB1374;
+}
