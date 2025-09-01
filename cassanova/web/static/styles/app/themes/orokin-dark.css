@@ -1,0 +1,43 @@
+.orokin-dark-theme {
+  /* === Primary / Accent Colors === */
+  --color-primary: #e6c76e;        /* Bright Orokin gold */
+  --color-primary-hover: #f0d891;  /* Glowing lighter gold */
+  --color-primary-active: #c4a94d; /* Darker antique gold */
+  --color-primary-light: #fff0c2;  /* Soft pale gold highlight */
+  --color-primary-strong: #d4af37; /* Classic rich gold */
+
+  /* === Backgrounds / Darks === */
+  --bg-main: #121212;              /* Deep void black */
+  --bg-main-rgb: 18, 18, 18;       /* RGB for transparent overlays */
+  --bg-terminal: #1a1a1a;          /* Terminal black/charcoal */
+  --bg-panel: #1e1e1e;             /* Panels slightly lifted */
+  --bg-xterm: #181818;             /* Console wrapper */
+  --bg-sidebar: #151515;           /* Sidebar dark marble */
+  --bg-detail: #1c1c1c;            /* Keyspace detail areas */
+  --bg-panel-alt: #222222;         /* Alternate darker panels */
+  --bg-hover: #2a2a2a;             /* Hover dark slate */
+  --bg-hover-active: #333333;      /* Active hover contrast */
+
+  /* === Text / Grays === */
+  --text-primary: #f5f5f5;         /* Bright readable white */
+  --text-secondary: #c8c8c8;       /* Softer gray */
+  --text-meta: #a0a0a0;            /* Helper / metadata text */
+  --text-placeholder: #7a7a7a;     /* Placeholder */
+  --text-disabled: #555555;        /* Disabled text */
+
+  /* === Teal / Orokin Glow Accents === */
+  --color-accent: #5fd6c4;         /* Orokin teal glow */
+  --color-accent-hover: #7fe7d8;   /* Brighter teal hover */
+  --color-accent-strong: #3cbfad;  /* Deeper teal for highlights */
+
+  /* === Reds / Error / Alerts === */
+  --color-error: #d16464;          /* Muted red for alerts */
+  --color-error-light: #e58a8a;    /* Soft warning red */
+
+  /* === Shadows / Overlays === */
+  --shadow-light: rgba(0, 0, 0, 0.25);
+  --shadow-medium: rgba(0, 0, 0, 0.35);
+  --shadow-strong: rgba(0, 0, 0, 0.55);
+  --shadow-primary-hover: rgba(230, 199, 110, 0.35); /* golden aura */
+  --hover-highlight: rgba(95, 214, 196, 0.12);       /* teal aura */
+}

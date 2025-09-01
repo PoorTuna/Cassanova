@@ -39,6 +39,7 @@
     margin-bottom: .4rem;
     cursor: pointer;
     transition: background 0.2s, transform 0.15s;
+    overflow: hidden;
     color: var(--color-primary);
 }
 
