@@ -152,3 +152,30 @@ def get_cluster_settings(cluster_name: str) -> dict[str, Any]:
             raise HTTPException(status_code=500, detail=f"Failed to query settings: {error_message}")
 
     return settings_dict
+
+
+@cassanova_api_getter_router.get("/cluster/{cluster_name}/vnodes")
+def get_cluster_vnodes(cluster_name: str) -> dict[str, list[dict[str, Any]]]:
+    cluster_config = clusters_config.clusters.get(cluster_name)
+    if not cluster_config:
+        raise HTTPException(status_code=404, detail="Cluster not found")
+
+    cluster = generate_cluster_connection(cluster_config)
+    session = cluster.connect()
+
+    try:
+        rows = list(session.execute("SELECT host_id, rpc_address, tokens FROM system.local")) + \
+               list(session.execute("SELECT host_id, rpc_address, tokens FROM system.peers"))
+        nodes = [
+            {
+                "host_id": str(row.host_id),
+                "address": str(row.rpc_address),
+                "tokens": [int(t) for t in row.tokens]
+            }
+            for row in rows
+        ]
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to fetch cluster vnodes: {e}")
+
+    return {"nodes": nodes}
