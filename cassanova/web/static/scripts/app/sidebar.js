@@ -26,10 +26,12 @@ document.addEventListener("DOMContentLoaded", () => {
     const themeOptions = document.querySelectorAll('.theme-option');
 
     // Load theme from localStorage
-    const savedTheme = localStorage.getItem('selectedTheme');
-    if (savedTheme) {
-        applyTheme(savedTheme);
+    let savedTheme = localStorage.getItem('selectedTheme');
+    if (!savedTheme) {
+        savedTheme = 'dark'; // default theme
+        localStorage.setItem('selectedTheme', savedTheme);
     }
+    applyTheme(savedTheme);
 
     // Toggle dropdown
     themeDotWrapper.addEventListener('click', () => {
