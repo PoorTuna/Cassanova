@@ -14,7 +14,7 @@ from cassanova.models.cluster_metrics import ClusterMetrics
 def generate_cluster_info(cluster: Cluster, session: Session) -> ClusterInfo:
     return ClusterInfo(
         metrics=generate_cluster_metrics(cluster, session),
-        nodes=generate_nodes_info(),
+        nodes=generate_nodes_info(session),
         keyspaces=generate_keyspaces_info(list(cluster.metadata.keyspaces.items()))
     )
 

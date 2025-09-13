@@ -1,54 +1,111 @@
 {% extends "base.html" %}
 
-{% block title %}Nodes Status - {{ cluster_name }}{% endblock %}
+{% block title %}Nodes — {{ cluster_name }}{% endblock %}
+
+{% block head_extra %}
+<script type="module" src="/static/scripts/app/nodes.js" defer></script>
+
+{% endblock %}
 
 {% block content %}
+<main class="with-sidebar">
+    <div class="nodes-dashboard">
 
-<div class="with-sidebar">
-    <header class="header" role="banner">
-        <h1>Cassandra Nodes Status — {{ cluster_name }}</h1>
-        <div class="header-buttons">
-            <button class="nodes-btn" aria-label="Refresh Nodes" onclick="location.reload()">Refresh</button>
-        </div>
-    </header>
+        <header class="dashboard-header">
+            <h1 class="dashboard-title">{{ cluster_name }} - Nodes</h1>
+            <div class="header-actions">
+                <input type="search" id="node-filter" placeholder="Filter nodes..." autocomplete="off"/>
+                <button class="refresh-btn" onclick="location.reload()">Refresh</button>
+            </div>
+        </header>
 
-    <main class="fade-in" role="main" aria-label="Nodes status table">
-        <table>
-            <thead>
-            <tr>
-                <th scope="col">Address</th>
-                <th scope="col">Disk Usage</th>
-                <th scope="col">Tokens</th>
-                <th scope="col">Owns (%)</th>
-                <th scope="col">Host ID</th>
-                <th scope="col">Data Center</th>
-                <th scope="col">Rack</th>
-                <th scope="col">Status</th>
-                <th scope="col">State</th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for node in nodetool_status %}
-            <tr class="status-{{ node.status }}">
-                <td>{{ node.address }}</td>
-                <td>{{ node.disk_usage }}</td>
-                <td>{{ node.tokens }}</td>
-                <td>{{ node.owns }}</td>
-                <td>{{ node.host_id }}</td>
-                <td>{{ node.dc }}</td>
-                <td>{{ node.rack }}</td>
-                <td><span class="status-badge">{{ node.status }}</span></td>
-                <td>{{ node.state }}</td>
-            </tr>
-            {% else %}
-            <tr>
-                <td colspan="9" style="text-align:center; padding: 2rem 0; color: #666;">No nodes found.</td>
-            </tr>
+        <section class="nodes-list" id="nodes-list">
+            {% if nodes %}
+            {% for node in nodes %}
+            <div class="node-card status-{{ node.status|lower }}">
+                <!-- Left: Node identity -->
+                <div class="node-identity">
+                    <div class="node-address">
+                        {{ node.broadcast_address }}
+                    </div>
+                    <span class="status-badge">{{ node.status|upper }}</span>
+                </div>
+
+                <!-- Middle: System & Schema -->
+                <div class="node-main">
+                    <div class="node-field important">
+                        <label>Host ID</label>
+                        <span class="truncate" title="{{ node.host_id }}">{{ node.host_id }}</span>
+                    </div>
+                    <div class="node-field important">
+                        <label>DC / Rack</label>
+                        <span>{{ node.data_center }} / {{ node.rack }}</span>
+                    </div>
+                    <div class="node-field">
+                        <label>Release</label>
+                        <span>{{ node.release_version }}</span>
+                    </div>
+                    <div class="node-field">
+                        <label>CQL</label>
+                        <span>{{ node.cql_version }}</span>
+                    </div>
+                    <div class="node-field">
+                        <label>Native Protocol</label>
+                        <span>{{ node.native_protocol_version }}</span>
+                    </div>
+                    <div class="node-field">
+                        <label>Gossip Generation</label>
+                        <span>{{ node.gossip_generation }}</span>
+                    </div>
+                    <div class="node-field">
+                        <label>Bootstrapped</label>
+                        <span>{{ node.bootstrapped }}</span>
+                    </div>
+                </div>
+
+                <!-- Right: Networking & Storage -->
+                <div class="node-secondary">
+                    <div class="node-field small">
+                        <label>Broadcast Port</label>
+                        <span>{{ node.broadcast_port }}</span>
+                    </div>
+                    <div class="node-field small">
+                        <label>Partitioner</label>
+                        <span>{{ node.partitioner.split('.')[-1] if node.partitioner else '' }}</span>
+                    </div>
+                    <div class="node-field small">
+                        <label>Tokens</label>
+                        <span>{{ node.tokens|length }}</span>
+                    </div>
+                    <div class="node-field small">
+                        <label>Schema</label>
+                        <span class="truncate" title="{{ node.schema_version }}">{{ node.schema_version }}</span>
+                    </div>
+                    {% if node.listen_address %}
+                    <div class="node-field small">
+                        <label>Listen</label>
+                        <span>{{ node.listen_address }}{% if node.listen_port %}:{{ node.listen_port }}{% endif %}</span>
+                    </div>
+                    {% endif %}
+                    {% if node.rpc_address %}
+                    <div class="node-field small">
+                        <label>RPC</label>
+                        <span>{{ node.rpc_address }}{% if node.rpc_port %}:{{ node.rpc_port }}{% endif %}</span>
+                    </div>
+                    {% endif %}
+                    {% if node.truncated_at %}
+                    <div class="node-field small">
+                        <label>Truncated</label>
+                        <span>{{ node.truncated_at }}</span>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
             {% endfor %}
-            </tbody>
-        </table>
-    </main>
-
-</div>
-
+            {% else %}
+            <p class="no-nodes">No nodes found.</p>
+            {% endif %}
+        </section>
+    </div>
+</main>
 {% endblock %}

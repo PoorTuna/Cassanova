@@ -5,7 +5,7 @@ from fastapi import HTTPException, APIRouter
 from fastapi.requests import Request
 from fastapi.templating import Jinja2Templates
 
-from cassanova.api.routes.api.get_api_routes import get_node_status, get_cluster_settings, get_cluster_vnodes
+from cassanova.api.routes.api.get_api_routes import get_nodes, get_cluster_settings, get_cluster_vnodes
 from cassanova.config.cassanova_config import get_clusters_config
 from cassanova.config.cluster_config import ClusterConnectionConfig, generate_cluster_connection
 from cassanova.core.constructors.cluster_info import generate_cluster_info
@@ -68,13 +68,13 @@ async def nodes_dashboard(request: Request, cluster_name: str):
 
     cluster = generate_cluster_connection(cluster_config)
     cluster.connect()
-    nodetool_status_info = await get_node_status(cluster_name)
+    nodes_info = get_nodes(cluster_name)
 
     current_year = datetime.now().year
     return templates.TemplateResponse("nodes.html", {
         "request": request,
         "monitoring_url": clusters_config.monitoring_url,
-        "nodetool_status": nodetool_status_info,
+        "nodes": nodes_info,
         "cluster_name": cluster.metadata.cluster_name,
         "cluster_config_entry": cluster_name,
         "current_year": current_year

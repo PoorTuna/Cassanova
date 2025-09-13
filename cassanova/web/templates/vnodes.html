@@ -3,7 +3,6 @@
 {% block title %}Cluster: {{ cluster_name }} - VNode Distribution{% endblock %}
 
 {% block head_extra %}
-<link rel="stylesheet" href="/static/styles/app/vnodes.css"/>
 <script src="/static/scripts/vendor/d3/d3.v7.min.js" defer></script>
 <script type="module" src="/static/scripts/app/vnodes.js" defer></script>
 <script>const clusterData = JSON.parse('{{ vnodes | tojson | safe }}');</script>
