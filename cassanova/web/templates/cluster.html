@@ -26,9 +26,6 @@
             <li><strong>Partitioner</strong><span>{{ cluster.metrics.partitioner }}</span></li>
             <li><strong>Snitch</strong><span>{{ cluster.metrics.snitch }}</span></li>
             <li><strong>Status</strong><span>{{ cluster.metrics.status }}</span></li>
-            {% if cluster.metrics.cluster_size %}
-            <li><strong>Cluster Size</strong><span>{{ cluster.metrics.cluster_size }}</span></li>
-            {% endif %}
             <li><strong>Nodes Same Version</strong><span>{{ cluster.metrics.is_fully_upgraded }}</span></li>
             <li><strong>Total Nodes</strong><span>{{ cluster.metrics.total_nodes }}</span></li>
             <li><strong>Nodes Up</strong><span>{{ cluster.metrics.up_nodes }}</span></li>

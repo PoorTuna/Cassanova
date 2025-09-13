@@ -9,9 +9,9 @@ from cassanova.config.cluster_config import generate_cluster_connection, Cluster
 from cassanova.consts.cass_tools import CassTools
 from cassanova.core.constructors.cluster_info import generate_cluster_info
 from cassanova.core.constructors.keyspaces import generate_keyspaces_info
+from cassanova.core.constructors.nodes import generate_nodes_info
 from cassanova.core.constructors.tables import generate_tables_info
 from cassanova.core.cql.table_info import show_table_schema_cql, show_table_description_cql
-from cassanova.core.tools.nodetool.get_status import get_nodetool_status
 from cassanova.exceptions.system_views_unavailable import SystemViewsUnavailableException
 
 clusters_config = get_clusters_config()
@@ -121,15 +121,18 @@ def get_available_tools():
     return JSONResponse({'tools': CassTools.ALLOWED_TOOLS})
 
 
-@cassanova_api_getter_router.get("/cluster/{cluster_name}/nodes/status")
-async def get_node_status(cluster_name: str):
+@cassanova_api_getter_router.get("/cluster/{cluster_name}/nodes")
+def get_nodes(cluster_name: str):
     cluster_config: ClusterConnectionConfig = clusters_config.clusters.get(cluster_name, None)
     if cluster_config is None:
         raise HTTPException(status_code=404, detail="Cluster not found")
 
-    status = await get_nodetool_status(cluster_config)
-
-    return [node_status.model_dump(by_alias=True) for node_status in status]
+    cluster = generate_cluster_connection(cluster_config)
+    session = cluster.connect()
+    try:
+        return generate_nodes_info(session)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to fetch nodes: {e}")
 
 
 @cassanova_api_getter_router.get("/cluster/{cluster_name}/settings")
