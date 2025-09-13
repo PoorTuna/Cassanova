@@ -10,7 +10,6 @@ class ClusterMetrics(BaseModel):
     version: str
     rack_count: int
     dc_count: int
-    cluster_size: Optional[str]
     total_nodes: int
     up_nodes: int
     down_nodes: int
