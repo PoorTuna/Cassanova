@@ -22,7 +22,7 @@ def index(request: Request):
 
 
 @cassanova_ui_dashboard_router.get("/cluster/{cluster_name}")
-async def cluster_dashboard(request: Request, cluster_name: str):
+def cluster_dashboard(request: Request, cluster_name: str):
     cluster_config: ClusterConnectionConfig = clusters_config.clusters.get(cluster_name, None)
     if not cluster_config:
         raise HTTPException(status_code=404, detail="Cluster not found")
@@ -40,7 +40,7 @@ async def cluster_dashboard(request: Request, cluster_name: str):
 
 
 @cassanova_ui_dashboard_router.get("/cluster/{cluster_name}/keyspace/{keyspace_name}")
-async def keyspace_dashboard(request: Request, cluster_name: str, keyspace_name: str):
+def keyspace_dashboard(request: Request, cluster_name: str, keyspace_name: str):
     cluster_config: ClusterConnectionConfig = clusters_config.clusters.get(cluster_name, None)
     if not cluster_config:
         raise HTTPException(status_code=404, detail="Cluster not found")
@@ -61,7 +61,7 @@ async def keyspace_dashboard(request: Request, cluster_name: str, keyspace_name:
 
 
 @cassanova_ui_dashboard_router.get("/cluster/{cluster_name}/nodes")
-async def nodes_dashboard(request: Request, cluster_name: str):
+def nodes_dashboard(request: Request, cluster_name: str):
     cluster_config: ClusterConnectionConfig = clusters_config.clusters.get(cluster_name, None)
     if not cluster_config:
         raise HTTPException(status_code=404, detail="Cluster not found")
