@@ -1,31 +1,36 @@
-from typing import Annotated, Literal
+from typing import Annotated, Literal, Optional
 
 from cassandra.cqltypes import UUID
-from pydantic import BaseModel, BeforeValidator
+from pydantic import BaseModel, Field, BeforeValidator, ConfigDict
 
 
 class NodeInfo(BaseModel):
-    key: str
-    bootstrapped: Literal["COMPLETED", "IN_PROGRESS", "FAILED", "NONE"]
-    broadcast_address: str
-    broadcast_port: int
-    cluster_name: str
-    cql_version: str
-    data_center: str
-    gossip_generation: int
-
     host_id: Annotated[str | UUID, BeforeValidator(lambda v: str(v))]
-    listen_address: str
-    listen_port: int
-    native_protocol_version: int
-    partitioner: str
-    rack: str
-    release_version: str
-    rpc_address: str
-    rpc_port: int
-    schema_version: Annotated[str | UUID, BeforeValidator(lambda v: str(v))]
+    data_center: Optional[str] = None
+    rack: Optional[str] = None
+    release_version: Optional[str] = None
+    schema_version: Annotated[
+        Optional[str | UUID],
+        BeforeValidator(lambda v: str(v) if v else None),
+    ] = None
     tokens: Annotated[list[int], BeforeValidator(lambda v: v or [])]
+    broadcast_address: Optional[str] = Field(default=None, alias="peer")
+    broadcast_port: Optional[int] = Field(default=None, alias="peer_port")
+    listen_address: Optional[str] = None
+    listen_port: Optional[int] = None
+    preferred_ip: Optional[str] = None
+    preferred_port: Optional[int] = None
+    rpc_address: Optional[str] = Field(default=None, alias="native_address")
+    rpc_port: Optional[int] = Field(default=None, alias="native_port")
+    key: Optional[str] = None
+    bootstrapped: Optional[Literal["COMPLETED", "IN_PROGRESS", "FAILED", "NONE"]] = None
+    cluster_name: Optional[str] = None
+    cql_version: Optional[str] = None
+    gossip_generation: Optional[int] = None
+    native_protocol_version: Optional[int] = None
+    partitioner: Optional[str] = None
     truncated_at: Annotated[
-        dict[str, str],
-        BeforeValidator(lambda v: {str(k): val.hex() for k, val in dict(v).items()} if v else {}),
-    ]
+        Optional[dict[str, str]],
+        BeforeValidator(lambda value: {str(k): v.hex() for k, v in dict(value).items()} if value else {})] = None
+
+    model_config = ConfigDict(populate_by_name=True)

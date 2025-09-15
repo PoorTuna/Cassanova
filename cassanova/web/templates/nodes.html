@@ -4,7 +4,6 @@
 
 {% block head_extra %}
 <script type="module" src="/static/scripts/app/nodes.js" defer></script>
-
 {% endblock %}
 
 {% block content %}
@@ -22,77 +21,103 @@
         <section class="nodes-list" id="nodes-list">
             {% if nodes %}
             {% for node in nodes %}
-            <div class="node-card status-{{ node.status|lower }}">
+            <div class="node-card">
                 <!-- Left: Node identity -->
                 <div class="node-identity">
                     <div class="node-address">
-                        {{ node.broadcast_address }}
+                        {{ node.broadcast_address }}{% if node.broadcast_port %}:{{ node.broadcast_port }}{% endif %}
                     </div>
-                    <span class="status-badge">{{ node.status|upper }}</span>
                 </div>
 
                 <!-- Middle: System & Schema -->
                 <div class="node-main">
-                    <div class="node-field important">
+                    {% if node.host_id %}
+                    <div class="node-field">
                         <label>Host ID</label>
                         <span class="truncate" title="{{ node.host_id }}">{{ node.host_id }}</span>
                     </div>
-                    <div class="node-field important">
+                    {% endif %}
+
+                    {% if node.data_center or node.rack %}
+                    <div class="node-field">
                         <label>DC / Rack</label>
                         <span>{{ node.data_center }} / {{ node.rack }}</span>
                     </div>
+                    {% endif %}
+
+                    {% if node.release_version %}
                     <div class="node-field">
                         <label>Release</label>
                         <span>{{ node.release_version }}</span>
                     </div>
+                    {% endif %}
+
+                    {% if node.cql_version %}
                     <div class="node-field">
                         <label>CQL</label>
                         <span>{{ node.cql_version }}</span>
                     </div>
+                    {% endif %}
+
+                    {% if node.native_protocol_version %}
                     <div class="node-field">
                         <label>Native Protocol</label>
                         <span>{{ node.native_protocol_version }}</span>
                     </div>
+                    {% endif %}
+
+                    {% if node.gossip_generation %}
                     <div class="node-field">
                         <label>Gossip Generation</label>
                         <span>{{ node.gossip_generation }}</span>
                     </div>
+                    {% endif %}
+
+                    {% if node.bootstrapped %}
                     <div class="node-field">
                         <label>Bootstrapped</label>
                         <span>{{ node.bootstrapped }}</span>
                     </div>
+                    {% endif %}
                 </div>
 
                 <!-- Right: Networking & Storage -->
                 <div class="node-secondary">
+                    {% if node.rpc_address %}
                     <div class="node-field small">
-                        <label>Broadcast Port</label>
-                        <span>{{ node.broadcast_port }}</span>
+                        <label>Native</label>
+                        <span>{{ node.rpc_address }}{% if node.rpc_port %}:{{ node.rpc_port }}{% endif %}</span>
                     </div>
-                    <div class="node-field small">
-                        <label>Partitioner</label>
-                        <span>{{ node.partitioner.split('.')[-1] if node.partitioner else '' }}</span>
-                    </div>
-                    <div class="node-field small">
-                        <label>Tokens</label>
-                        <span>{{ node.tokens|length }}</span>
-                    </div>
-                    <div class="node-field small">
-                        <label>Schema</label>
-                        <span class="truncate" title="{{ node.schema_version }}">{{ node.schema_version }}</span>
-                    </div>
+                    {% endif %}
+
                     {% if node.listen_address %}
                     <div class="node-field small">
                         <label>Listen</label>
                         <span>{{ node.listen_address }}{% if node.listen_port %}:{{ node.listen_port }}{% endif %}</span>
                     </div>
                     {% endif %}
-                    {% if node.rpc_address %}
+
+                    {% if node.partitioner %}
                     <div class="node-field small">
-                        <label>RPC</label>
-                        <span>{{ node.rpc_address }}{% if node.rpc_port %}:{{ node.rpc_port }}{% endif %}</span>
+                        <label>Partitioner</label>
+                        <span>{{ node.partitioner.split('.')[-1] }}</span>
                     </div>
                     {% endif %}
+
+                    {% if node.tokens %}
+                    <div class="node-field small">
+                        <label>Tokens</label>
+                        <span title="{{ node.tokens | join(', ') }}">{{ node.tokens|length }}</span>
+                    </div>
+                    {% endif %}
+
+                    {% if node.schema_version %}
+                    <div class="node-field small">
+                        <label>Schema</label>
+                        <span class="truncate" title="{{ node.schema_version }}">{{ node.schema_version }}</span>
+                    </div>
+                    {% endif %}
+
                     {% if node.truncated_at %}
                     <div class="node-field small">
                         <label>Truncated</label>
