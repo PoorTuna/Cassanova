@@ -1,39 +1,62 @@
 .dark-theme {
-    /* === Primary / Accent Colors === */
-    --color-primary: #4fc3f7; /* Main UI accents, sidebar titles, key highlights */
-    --color-primary-hover: #81d4fa; /* Hover effects on buttons, modals */
-    --color-primary-active: #21a1ff; /* Main headings, cluster down titles */
-    --color-primary-light: #7fd6ff; /* Cluster down diagnostics */
-    --color-primary-strong: #58a6ff; /* Cluster card headings */
+    /* --- Brand & Typography --- */
+    --font-display: 'Outfit', sans-serif;
+    --font-body: 'Inter', sans-serif;
+    --font-mono: 'Fira Code', monospace;
 
-    /* === Backgrounds / Darks === */
-    --bg-main: #101010; /* Main page background */
-    --bg-main-rgb: 11, 15, 26; /* Exceptions background */
-    --bg-terminal: #0d1117; /* Terminal & upload backgrounds */
-    --bg-panel: #121212; /* General panel backgrounds */
-    --bg-xterm: #161b22; /* xterm wrapper */
-    --bg-sidebar: #1a1a1a; /* Sidebar, keyspace filter */
-    --bg-detail: #1b1b1b; /* Keyspace detail, theme dropdown */
-    --bg-panel-alt: #1e1e1e; /* Panels, result panels */
-    --bg-hover: #2a2a2a; /* Hover backgrounds, dot wrapper */
-    --bg-hover-active: #333; /* Hover background for active items */
+    /* --- Core Palette (Obsidian & Electric Accents) --- */
+    --color-primary: #00E5FF; /* Electric Cyan */
+    --color-primary-rgb: 0, 229, 255;
+    --color-secondary: #2979FF; /* Electric Blue */
+    --color-success: #00E676; /* Neon Green */
+    --color-warning: #FFAB00; /* Amber Glow */
+    --color-danger: #FF1744; /* Red Laser */
+    --color-info: #00B0FF;
 
+    /* --- Backgrounds (Deep Obsidian) --- */
+    --bg-app: #050507; /* Deepest void */
+    --bg-surface: #0E0E12; /* Card surface (fallback) */
+    --bg-sidebar: rgba(10, 10, 14, 0.7);
 
-    /* === Text / Grays === */
-    --text-primary: #e0e0e0; /* Primary text */
-    --text-secondary: #c9d1d9; /* Secondary text, terminal text */
-    --text-meta: #aaa; /* Meta / helper text */
-    --text-placeholder: #888; /* Placeholders */
-    --text-disabled: #555; /* Null / disabled text */
+    /* --- Glassmorphism Tokens --- */
+    --glass-surface: rgba(22, 22, 28, 0.65);
+    --glass-surface-hover: rgba(30, 30, 40, 0.75);
+    --glass-border: rgba(255, 255, 255, 0.08);
+    --glass-border-light: rgba(255, 255, 255, 0.15);
+    --glass-shine: rgba(255, 255, 255, 0.03);
+    --backdrop-blur: blur(16px);
+    --backdrop-blur-heavy: blur(24px);
 
-    /* === Reds / Error / Alerts === */
-    --color-error: #f44336; /* Modal cancel button / hover */
-    --color-error-light: #ff8a80; /* Disconnect link */
+    /* --- Text Colors --- */
+    --text-primary: #ECEFF1;
+    --text-secondary: #B0BEC5;
+    --text-muted: #607D8B;
+    --text-on-primary: #000000;
 
-    /* === Shadows / Overlays === */
-    --shadow-light: rgba(0, 0, 0, 0.3);
-    --shadow-medium: rgba(0, 0, 0, 0.6);
-    --shadow-strong: rgba(0, 0, 0, 0.8);
-    --shadow-primary-hover: rgba(79, 195, 247, 0.9);
-    --hover-highlight: rgba(88, 166, 255, 0.1);
+    /* --- Legacy Compatibility (Mapping to new tokens) --- */
+    --bg-main: var(--bg-app);
+    --bg-main-rgb: 5, 5, 7;
+    --bg-panel: var(--glass-surface);
+    --bg-panel-alt: rgba(255, 255, 255, 0.02);
+    --bg-terminal: #09090b;
+    --bg-xterm: #0d1117;
+
+    --bg-detail: transparent;
+    --bg-hover: rgba(255, 255, 255, 0.05);
+    --bg-hover-active: rgba(0, 229, 255, 0.1);
+
+    --color-primary-hover: #40C4FF;
+    --color-primary-active: #00B0FF;
+    --color-primary-light: rgba(0, 229, 255, 0.2);
+    --color-primary-strong: #00E5FF;
+
+    --color-error: var(--color-danger);
+    --color-error-light: #FF8A80;
+
+    /* --- Shadows & Glows --- */
+    --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.4);
+    --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+    --glow-primary: 0 0 20px rgba(0, 229, 255, 0.15);
+    --glow-text: 0 0 10px rgba(255, 255, 255, 0.1);
 }

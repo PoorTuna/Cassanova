@@ -1,21 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <link rel="icon" type="image/png" href="/static/icons/logo/cassanova-logo.png"/>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/png" href="/static/icons/logo/cassanova-logo.png" />
     <title>{% block title %}Cassanova{% endblock %}</title>
-    <link rel="stylesheet" href="/static/styles/app/main.css"/>
+
+    <link rel="stylesheet" href="/static/styles/app/main.css" />
     <script src="/static/scripts/app/sidebar.js" defer></script>
+    <script src="/static/scripts/app/copy-utils.js" defer></script>
+    <script src="/static/scripts/app/syntax.js" defer></script>
     {% block head_extra %}{% endblock %}
 </head>
+
 <body class="{% block body_class %}{% endblock %}">
-{% if cluster_config_entry %}
-{% include "components/sidebar.html" %}
-{% else %}
-{% include "components/sidebar-disconnected.html" %}
-{% endif %}
-{% block content %}
-{% endblock %}
+    {% if cluster_config_entry %}
+    {% include "components/sidebar.html" %}
+    {% else %}
+    {% include "components/sidebar-disconnected.html" %}
+    {% endif %}
+    {% block content %}
+    {% endblock %}
 </body>
+
 </html>

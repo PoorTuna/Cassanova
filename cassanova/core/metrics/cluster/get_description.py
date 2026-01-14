@@ -1,6 +1,7 @@
 from cassandra import ConsistencyLevel
 from cassandra.cluster import Cluster, Session, SimpleStatement
-from pkg_resources import parse_version
+from cassandra.cluster import Cluster, Session, SimpleStatement
+from packaging.version import parse as parse_version
 
 
 def get_cluster_description(cluster_session: Session, cl: ConsistencyLevel = ConsistencyLevel.QUORUM) -> dict[str, str]:

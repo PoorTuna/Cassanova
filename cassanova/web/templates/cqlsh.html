@@ -13,18 +13,19 @@
 {% endblock %}
 
 {% block content %}
-<main id="container">
+<main id="container" class="with-sidebar">
     <div id="editor" class="editor-panel">
         <div id="monaco-editor" class="monaco-editor"></div>
         <div class="run-query-row">
             <button id="run-btn" class="btn">Run Query</button>
             <label class="tracing-label">
-                <input type="checkbox" id="enable-tracing"/>
+                <input type="checkbox" id="enable-tracing" />
                 Enable Tracing
             </label>
             <select id="consistency-level" name="consistency_level">
-                {% for level in ["ANY", "ONE", "TWO", "THREE", "QUORUM", "ALL", "LOCAL_QUORUM", "EACH_QUORUM", "SERIAL", "LOCAL_SERIAL", "LOCAL_ONE"] %}
-                <option value="{{ level }}" {% if level == "QUORUM" %}selected{% endif %}>{{ level }}</option>
+                {% for level in ["ANY", "ONE", "TWO", "THREE", "QUORUM", "ALL", "LOCAL_QUORUM", "EACH_QUORUM", "SERIAL",
+                "LOCAL_SERIAL", "LOCAL_ONE"] %}
+                <option value="{{ level }}" {% if level=="QUORUM" %}selected{% endif %}>{{ level }}</option>
                 {% endfor %}
             </select>
         </div>

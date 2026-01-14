@@ -1,29 +1,23 @@
-/* Global box-sizing for predictable sizing */
-*, *::before, *::after {
-    box-sizing: border-box;
-}
+/* Global box-sizing handles by base.css now */
 
-.cql-devtools body,
-.cql-devtools html {
-    margin: 0;
-    height: 100%;
-    background-color: var(--bg-panel);
-    color: var(--text-primary);
-    overflow: hidden;
+.cql-devtools .main-content {
     display: flex;
     flex-direction: column;
+    height: calc(100vh - 4rem);
+    /* Adjust for padding/footer if needed */
 }
 
 /* Container */
 .cql-devtools #container {
-    flex: 1 1 auto;
+    flex: 1;
     display: flex;
-    height: 90vh;
+    height: calc(100vh - 4rem);
+    /* Subtract padding */
     overflow: hidden;
     min-height: 0;
 }
 
-.cql-devtools #container > * {
+.cql-devtools #container>* {
     min-width: 0;
     min-height: 0;
 }

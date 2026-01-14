@@ -18,6 +18,10 @@ term.loadAddon(fitAddon);
 term.open(document.getElementById('xterm-container'));
 fitAddon.fit();
 
+window.addEventListener('resize', () => {
+    fitAddon.fit();
+});
+
 let commandBuffer = '';
 let cursorPos = 0;
 let history = [];
