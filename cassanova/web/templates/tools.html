@@ -5,17 +5,17 @@
 {% block body_class %}with-sidebar{% endblock %}
 
 {% block head_extra %}
-    <link href="/static/styles/app/tools.css" rel="stylesheet"/>
-    <link rel="stylesheet" href="/static/scripts/vendor/xterm/xterm.css"/>
-    <script src="/static/scripts/vendor/xterm/xterm.js"></script>
-    <script src="/static/scripts/vendor/xterm/xterm-addon-fit.js"></script>
-    <script type="module" src="/static/scripts/app/tools.js" defer></script>
+<link href="/static/styles/app/tools.css" rel="stylesheet" />
+<link rel="stylesheet" href="/static/scripts/vendor/xterm/xterm.css" />
+<script src="/static/scripts/vendor/xterm/xterm.js"></script>
+<script src="/static/scripts/vendor/xterm/xterm-addon-fit.js"></script>
+<script type="module" src="/static/scripts/app/tools.js" defer></script>
 {% endblock %}
 {% block content %}
-<main>
+<main class="with-sidebar">
     <div id="xterm-upload">
         <label for="files-input">Upload Files or Folder (optional)</label>
-        <input type="file" id="files-input" multiple webkitdirectory directory/>
+        <input type="file" id="files-input" multiple webkitdirectory directory />
         <small class="note">Select multiple files or a folder to send with your commands.</small>
     </div>
     <div id="xterm-wrapper">

@@ -100,6 +100,8 @@
     transition: all 0.2s ease;
     border: 1px solid transparent;
     overflow: hidden;
+    flex-shrink: 0;
+    /* Prevent squashing in flex container */
 }
 
 .keyspace-item:hover {

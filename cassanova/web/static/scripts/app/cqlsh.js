@@ -1,4 +1,4 @@
-require.config({paths: {vs: '/static/scripts/vendor/monaco'}});
+require.config({ paths: { vs: '/static/scripts/vendor/monaco' } });
 
 window.editorInstance = null;
 
@@ -8,7 +8,7 @@ require(['vs/editor/editor.main'], function () {
         language: 'sql', // closest for CQL
         theme: 'vs-dark',
         automaticLayout: false, // manual layout control for better resizing
-        minimap: {enabled: false},
+        minimap: { enabled: false },
         fontSize: 14,
         tabSize: 2,
         lineNumbers: 'on',
@@ -103,8 +103,8 @@ runBtn.addEventListener('click', () => {
 
     fetch(`/api/v1/cluster/${encodeURIComponent(clusterName)}/operations/cqlsh`, {
         method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({cql: cql, cl: consistency, enable_tracing: tracing}),
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ cql: cql, cl: consistency, enable_tracing: tracing }),
     })
         .then(async (res) => {
             runBtn.disabled = false;
@@ -142,9 +142,15 @@ runBtn.addEventListener('click', () => {
             }
 
             try {
+                if (window.syntaxHighlight) {
+                    resultEl.innerHTML = window.syntaxHighlight(data);
+                } else {
+                    // Fallback formatting if library missing
+                    resultEl.textContent = JSON.stringify(data, null, 2);
+                }
+            } catch (e) {
+                console.error("Highlighting failed:", e);
                 resultEl.textContent = JSON.stringify(data, null, 2);
-            } catch {
-                resultEl.textContent = data;
             }
         })
         .catch((err) => {
@@ -157,7 +163,7 @@ document.getElementById('export-btn').addEventListener('click', () => {
     const content = resultEl.textContent;
     if (!content) return;
 
-    const blob = new Blob([content], {type: "application/json"});
+    const blob = new Blob([content], { type: "application/json" });
     const url = URL.createObjectURL(blob);
 
     const link = document.createElement("a");
