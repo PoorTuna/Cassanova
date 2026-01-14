@@ -9,6 +9,7 @@
     overflow: hidden;
     max-width: 100%;
     margin: 2rem 0;
+    width: 100%;
 }
 
 #xterm-container {

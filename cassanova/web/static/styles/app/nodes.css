@@ -18,7 +18,18 @@
     font-size: 2rem;
     font-weight: 700;
     color: var(--color-primary);
+    color: var(--color-primary);
     text-shadow: var(--glow-text);
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex: 1;
+    justify-content: flex-end;
+    min-width: 0;
+    /* Prevent flex blowout */
 }
 
 /* Filter & Actions */
@@ -26,10 +37,10 @@
     padding: 0.8rem 1.2rem;
     border: 1px solid var(--glass-border);
     border-radius: 12px;
-    background: var(--glass-surface);
-    color: var(--text-primary);
     font-size: 1rem;
-    min-width: 300px;
+    width: 100%;
+    max-width: 400px;
+    background: var(--glass-surface);
     backdrop-filter: var(--backdrop-blur);
     transition: all 0.3s ease;
 }
@@ -68,7 +79,7 @@
 /* === Node Card === */
 .node-card {
     display: grid;
-    grid-template-columns: 200px 1.5fr 1fr;
+    grid-template-columns: minmax(150px, 200px) 1.5fr 1fr;
     gap: 1.5rem;
     padding: 1.5rem;
     background: var(--glass-surface);
