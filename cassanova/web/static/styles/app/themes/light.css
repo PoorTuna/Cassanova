@@ -1,38 +1,71 @@
 .light-theme {
-    /* === Primary / Accent Colors === */
-    --color-primary: #0d6efd; /* Main UI accents, sidebar titles, key highlights */
-    --color-primary-hover: #3a8dff; /* Hover effects on buttons, modals */
-    --color-primary-active: #084cd4; /* Main headings, cluster down titles */
-    --color-primary-light: #5aa0ff; /* Cluster down diagnostics */
-    --color-primary-strong: #1150c0; /* Cluster card headings */
+    /* --- Brand & Typography --- */
+    --font-display: 'Outfit', sans-serif;
+    --font-body: 'Inter', sans-serif;
+    --font-mono: 'Fira Code', monospace;
 
-    /* === Backgrounds / Lights === */
-    --bg-main: #f3f4f6; /* Main page background, slightly gray for contrast */
-    --bg-main-rgb: 245, 245, 245; /* RGB for semi-transparent elements */
-    --bg-terminal: #e9ecef; /* Terminal & upload backgrounds */
-    --bg-panel: #ffffff; /* General panel backgrounds */
-    --bg-xterm: #f8f9fa; /* xterm wrapper */
-    --bg-sidebar: #f8f9fa; /* Sidebar, keyspace filter */
-    --bg-detail: #ffffff; /* Keyspace detail, theme dropdown */
-    --bg-panel-alt: #f0f2f5; /* Panels, result panels */
-    --bg-hover: #e0e3e7; /* Hover backgrounds, dot wrapper */
-    --bg-hover-active: #d4d7db; /* Hover background for active items */
+    /* --- Core Palette (Clean & Professional) --- */
+    --color-primary: #0066FF;
+    /* Strong Blue */
+    --color-primary-rgb: 0, 102, 255;
+    --color-secondary: #00C8F8;
+    /* Cyan Accent */
+    --color-success: #00C853;
+    /* Green */
+    --color-warning: #FFAB00;
+    /* Amber */
+    --color-danger: #D50000;
+    /* Red */
+    --color-info: #00B0FF;
 
-    /* === Text / Grays === */
-    --text-primary: #1e1e1e; /* Primary text (strong contrast on panels) */
-    --text-secondary: #3c3c3c; /* Secondary text, terminal text */
-    --text-meta: #555; /* Meta / helper text */
-    --text-placeholder: #888; /* Placeholders */
-    --text-disabled: #aaa; /* Null / disabled text */
+    /* --- Backgrounds (Clean White/Gray) --- */
+    --bg-app: #F5F7FA;
+    /* Light gray-blue tint */
+    --bg-surface: #FFFFFF;
+    /* Pure white surface */
+    --bg-sidebar: rgba(255, 255, 255, 0.85);
 
-    /* === Reds / Error / Alerts === */
-    --color-error: #d32f2f; /* Modal cancel button / hover */
-    --color-error-light: #e57373; /* Disconnect link */
+    /* --- Glassmorphism Tokens (Frosted Glass) --- */
+    --glass-surface: rgba(255, 255, 255, 0.7);
+    --glass-surface-hover: rgba(255, 255, 255, 0.9);
+    --glass-border: rgba(0, 0, 0, 0.08);
+    --glass-border-light: rgba(0, 0, 0, 0.15);
+    --glass-shine: rgba(255, 255, 255, 0.5);
+    --backdrop-blur: blur(12px);
+    --backdrop-blur-heavy: blur(20px);
 
-    /* === Shadows / Overlays === */
-    --shadow-light: rgba(0, 0, 0, 0.08);
-    --shadow-medium: rgba(0, 0, 0, 0.2);
-    --shadow-strong: rgba(0, 0, 0, 0.35);
-    --shadow-primary-hover: rgba(13, 110, 253, 0.6);
-    --hover-highlight: rgba(13, 110, 253, 0.05);
+    /* --- Text Colors --- */
+    --text-primary: #1A1D1F;
+    --text-secondary: #5F6B7C;
+    --text-muted: #94A3B8;
+    --text-on-primary: #FFFFFF;
+
+    /* --- Legacy Compat --- */
+    --bg-main: var(--bg-app);
+    --bg-main-rgb: 245, 247, 250;
+    --bg-panel: var(--glass-surface);
+    --bg-panel-alt: rgba(0, 0, 0, 0.03);
+    --bg-terminal: #FFFFFF;
+    --bg-xterm: #F1F3F5;
+
+    --bg-detail: transparent;
+    --bg-hover: rgba(0, 0, 0, 0.05);
+    --bg-hover-active: rgba(0, 102, 255, 0.08);
+
+    --color-primary-hover: #3384FF;
+    --color-primary-active: #0052CC;
+    --color-primary-light: rgba(0, 102, 255, 0.15);
+    --color-primary-strong: #0066FF;
+
+    --color-error: var(--color-danger);
+    --color-error-light: #FF8A80;
+
+    /* --- Shadows & Glows --- */
+    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 6px 12px rgba(0, 0, 0, 0.08);
+    --shadow-lg: 0 12px 24px rgba(0, 0, 0, 0.12);
+    --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.15);
+
+    --glow-primary: 0 0 15px rgba(0, 102, 255, 0.15);
+    --glow-text: none;
 }

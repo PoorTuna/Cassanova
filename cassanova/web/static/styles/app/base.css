@@ -1,150 +1,167 @@
+html {
+    background-color: #050507;
+}
+
 body {
     margin: 0;
-    font-family: "Fira Mono", "Motiva Sans", "Twemoji", "Noto Sans", "Helvetica", "sans-serif";
-    background-color: var(--bg-main);
+    font-family: var(--font-body, var(--font-primary-stack));
+    background-color: var(--bg-app);
     color: var(--text-primary);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+    line-height: 1.6;
+}
+
+/* === Copy Utilities === */
+.copyable {
+    cursor: pointer;
+    position: relative;
+    transition: all 0.2s ease;
+}
+
+.copyable:hover {
+    background: var(--bg-hover);
+    border-radius: 6px;
+    /* soft corners on hover */
+    box-shadow: 0 0 0 4px var(--bg-hover);
+    /* extend hit area visually */
+}
+
+/* Tooltip (Fixed) */
+.copy-tooltip-fixed {
+    position: fixed;
+    background: var(--color-primary);
+    color: #000;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    pointer-events: none;
+    z-index: 10000;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    opacity: 0;
+    transform: translateY(10px);
+}
+
+/* --- Typography --- */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    margin-top: 0;
+    color: var(--text-primary);
+    letter-spacing: -0.02em;
+}
+
+code,
+pre {
+    font-family: var(--font-mono);
 }
 
 a {
     color: var(--color-primary);
     text-decoration: none;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
 }
 
 a:hover {
-    text-decoration: underline;
+    color: var(--color-primary-hover);
+    text-shadow: 0 0 8px var(--color-primary-light);
 }
 
-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 1rem 2rem;
-    background: linear-gradient(to right, var(--bg-panel-alt), var(--bg-panel));
-    border-bottom: 1px solid var(--bg-hover-active);
-    box-shadow: 0 2px 4px var(--shadow-medium);
+/* --- Scrollbars --- */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
 }
 
-header h1 {
-    margin: 0;
-    font-size: 1.8rem;
-    color: var(--text-primary);
-    display: flex;
-    align-items: center;
-    gap: 10px;
+::-webkit-scrollbar-track {
+    background: transparent;
 }
 
-.header-buttons {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
+::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
 }
 
-.header-icon {
-    width: 50px;
-    height: 50px;
-    cursor: pointer;
-    filter: invert(1);
-    transition: filter 0.2s ease;
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.2);
 }
 
-.header-icon:hover {
-    filter: invert(0.7);
-}
-
-/* Nodes button styling */
-.nodes-btn {
-    background-color: var(--color-primary);
-    border: none;
-    color: var(--text-primary);
-    padding: 0.4rem 0.8rem;
-    border-radius: 6px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-}
-
-.nodes-btn:hover {
-    background-color: var(--color-primary-hover);
-}
-
-/* Dropdown Styling */
-.dropdown {
-    position: relative;
-    display: inline-block;
-}
-
-.dropdown summary {
-    list-style: none;
-    cursor: pointer;
-    user-select: none;
-    background-color: var(--bg-panel-alt);
-    color: var(--text-primary);
-    border: 1px solid var(--bg-hover-active);
-    border-radius: 6px;
-    padding: 8px 16px;
-    font-size: 14px;
-    font-weight: 500;
-    transition: background-color 0.2s ease, color 0.2s ease;
-}
-
-.dropdown summary:hover {
-    background-color: var(--bg-hover);
-    color: var(--color-primary);
-}
-
-.dropdown[open] summary {
-    background-color: var(--bg-hover);
-    color: var(--color-primary);
-}
-
-.dropdown-menu {
-    display: none;
-    position: absolute;
-    right: 0;
-    margin-top: 4px;
-    padding: 0;
-    background: var(--bg-panel-alt);
-    border: 1px solid var(--bg-hover-active);
-    border-radius: 8px;
-    z-index: 10;
-    min-width: 160px;
-}
-
-.dropdown[open] .dropdown-menu {
-    display: block;
-}
-
-.dropdown-menu li {
-    list-style: none;
-    padding: 0;
-}
-
-.dropdown-menu a {
-    display: block;
-    padding: 10px 16px;
-    color: var(--text-primary);
-    text-decoration: none;
-    font-weight: 500;
-    transition: background 0.2s;
-}
-
-.dropdown-menu a:hover {
-    background-color: var(--color-primary);
-    color: var(--text-primary);
-}
-
+/* --- Layout --- */
 main {
-    padding: 2rem;
-    max-width: 90%;
-    margin: 0 auto;
-    min-height: calc(100vh - 25vh);
+    padding: 2rem 3rem;
+    margin: 0;
+    min-height: 100vh;
+    box-sizing: border-box;
+    transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+/* Sidebar Adjustment */
+main.with-sidebar {
+    margin-left: 260px;
+    /* Matched to sidebar width */
+    max-width: calc(100vw - 260px);
+}
+
+/* --- Glass Elements --- */
+.glass-panel {
+    background: var(--glass-surface);
+    backdrop-filter: var(--backdrop-blur);
+    border: 1px solid var(--glass-border);
+    border-radius: 16px;
+    box-shadow: var(--shadow-md);
+}
+
+
+
+/* Syntax Highlighting */
+.syntax-key {
+    color: var(--color-primary) !important;
+}
+
+.syntax-string {
+    color: #a5d6ff !important;
+}
+
+.syntax-number {
+    color: var(--color-warning) !important;
+}
+
+.syntax-boolean {
+    color: var(--color-danger) !important;
+}
+
+.syntax-null {
+    color: var(--text-muted) !important;
+}
+
+/* --- Footer --- */
 footer {
     text-align: center;
-    padding: 1rem 0;
-    color: var(--text-disabled);
+    padding: 2rem 0;
+    color: var(--text-muted);
     font-size: 0.85rem;
-    border-top: 1px solid var(--bg-hover);
-    margin-top: 3rem;
+    margin-top: 4rem;
+    border-top: 1px solid var(--glass-border);
+}
+
+/* --- Buttons (Global) --- */
+button {
+    font-family: var(--font-body);
+    font-weight: 500;
+    cursor: pointer;
 }

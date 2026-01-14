@@ -1,60 +1,60 @@
-/* Terminal container */
+/* Terminal Wrapper */
 #xterm-wrapper {
-    background-color: var(--bg-xterm);
-    border: 1px solid var(--bg-panel-alt);
-    border-radius: 8px;
-    box-shadow: 0 0 12px var(--shadow-medium);
+    background: rgba(13, 17, 23, 0.85);
+    /* Dark opaque for readability */
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
+    box-shadow: var(--shadow-xl);
     overflow: hidden;
-    max-width: 95%;
-    margin: 2rem auto 0 auto;
-    position: relative;
-    box-sizing: border-box;
+    max-width: 100%;
+    margin: 2rem 0;
+    width: 100%;
 }
 
 #xterm-container {
-    width: 100%;
-    height: 100%;
-}
-
-.xterm {
-    padding: 8px;
-    font-family: 'Fira Mono', monospace;
-    background-color: var(--bg-terminal);
-    color: var(--text-secondary);
-}
-
-/* Upload section below terminal */
-#xterm-upload {
-    max-width: 95%;
-    margin: 0 auto 2rem;
     padding: 1rem;
-    background-color: var(--bg-terminal);
-    border: 1px solid var(--bg-panel-alt);
-    border-radius: 8px;
-    box-shadow: 0 4px 12px var(--shadow-light);
+    /* Styles for xterm are injected by the lib, typically canvas */
+}
+
+/* Upload Section */
+#xterm-upload {
+    background: var(--glass-surface);
+    backdrop-filter: var(--backdrop-blur);
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
+    padding: 2rem;
+    max-width: 600px;
+    margin: 0 auto;
+    text-align: center;
 }
 
 #xterm-upload label {
     display: block;
-    font-weight: 600;
+    font-size: 1.1rem;
     color: var(--color-primary);
-    margin-bottom: 0.5rem;
+    margin-bottom: 1rem;
+    font-weight: 600;
 }
 
 #xterm-upload input[type="file"] {
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px dashed var(--glass-border);
+    padding: 1rem;
+    border-radius: 8px;
     width: 100%;
-    padding: 0.5rem 0.75rem;
-    background-color: var(--bg-xterm);
-    border: 1px solid var(--bg-panel-alt);
-    border-radius: 4px;
     color: var(--text-secondary);
-    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.2s;
 }
 
-#xterm-upload small,
-#xterm-upload .note {
+#xterm-upload input[type="file"]:hover {
+    background: rgba(0, 229, 255, 0.05);
+    border-color: var(--color-primary);
+}
+
+#xterm-upload small {
     display: block;
-    margin-top: 0.5rem;
-    font-size: 0.85rem;
-    color: var(--text-meta);
+    margin-top: 1rem;
+    color: var(--text-muted);
 }

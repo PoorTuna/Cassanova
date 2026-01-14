@@ -36,7 +36,7 @@ function showTableSchema(cluster, keyspace, table) {
 function showModal(jsonData) {
     const modal = document.getElementById('json-modal');
     const pre = document.getElementById('modal-pre');
-    pre.textContent = JSON.stringify(jsonData, null, 2);
+    pre.innerHTML = syntaxHighlight(jsonData);
     modal.classList.remove('hidden');
 }
 
