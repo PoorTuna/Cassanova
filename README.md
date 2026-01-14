@@ -14,9 +14,11 @@ interactive CQL tools and diagnostic utilities.
 - Keyspace & Schema Exploration and Graph Visualization
 - Interactive CQL Terminal with History
 - Basic Table Operations
-- Nodetool Status Visualization
+- Node List Visualization
 - Diagnostic Tools (sstabledump, cassandra-stress, nodetool, etc.)
 - Read-Only Settings Page 
+- Vnodes Distribution Visualization
+- User Management
 ---
 
 ## 🐳 Docker Installation
@@ -26,7 +28,7 @@ To run Cassanova using Docker:
 #### 1. Pull the image:
 
 ```bash
-docker pull poortuna/cassanova:v1.1.5
+docker pull poortuna/cassanova:v1.2.0
 ```
 
 #### 2. Create a configuration file:
@@ -56,7 +58,7 @@ Save this as `cassanova.json` in your current directory.
 #### 3. Run Cassanova:
 
 ```bash
-docker run -p 8080:8080   -e CASSANOVA_CONFIG_PATH=/config/cassanova.json   -v $(pwd)/cassanova.json:/config/cassanova.json   poortuna/cassanova:v1.1.5
+docker run -p 8080:8080   -e CASSANOVA_CONFIG_PATH=/config/cassanova.json   -v $(pwd)/cassanova.json:/config/cassanova.json   poortuna/cassanova:v1.2.0
 ```
 
 > Make sure Cassandra is accessible from within the container, and your `contact_points` in the config file point to a resolvable address (e.g., `host.docker.internal` on macOS/Windows).

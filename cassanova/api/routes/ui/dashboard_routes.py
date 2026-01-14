@@ -1,13 +1,12 @@
 from datetime import datetime
 
-from cassandra.cluster import Session
 from fastapi import HTTPException, APIRouter
 from fastapi.requests import Request
 from fastapi.templating import Jinja2Templates
 
-from cassanova.api.routes.api.get_api_routes import get_nodes, get_cluster_settings, get_cluster_vnodes
+from cassanova.api.dependencies.db_session import get_session
+from cassanova.api.routes.api.cluster_routes import get_nodes, get_cluster_settings, get_cluster_vnodes
 from cassanova.config.cassanova_config import get_clusters_config
-from cassanova.config.cluster_config import ClusterConnectionConfig, generate_cluster_connection
 from cassanova.core.constructors.cluster_info import generate_cluster_info
 from cassanova.core.constructors.keyspaces import generate_keyspaces_info
 
@@ -23,11 +22,8 @@ def index(request: Request):
 
 @cassanova_ui_dashboard_router.get("/cluster/{cluster_name}")
 def cluster_dashboard(request: Request, cluster_name: str):
-    cluster_config: ClusterConnectionConfig = clusters_config.clusters.get(cluster_name, None)
-    if not cluster_config:
-        raise HTTPException(status_code=404, detail="Cluster not found")
-    cluster = generate_cluster_connection(cluster_config)
-    session: Session = cluster.connect()
+    session = get_session(cluster_name)
+    cluster = session.cluster
     cluster_info = generate_cluster_info(cluster, session)
     current_year = datetime.now().year
     return templates.TemplateResponse("cluster.html", {
@@ -41,12 +37,8 @@ def cluster_dashboard(request: Request, cluster_name: str):
 
 @cassanova_ui_dashboard_router.get("/cluster/{cluster_name}/keyspace/{keyspace_name}")
 def keyspace_dashboard(request: Request, cluster_name: str, keyspace_name: str):
-    cluster_config: ClusterConnectionConfig = clusters_config.clusters.get(cluster_name, None)
-    if not cluster_config:
-        raise HTTPException(status_code=404, detail="Cluster not found")
-
-    cluster = generate_cluster_connection(cluster_config)
-    cluster.connect()
+    session = get_session(cluster_name)
+    cluster = session.cluster
     keyspace_info = generate_keyspaces_info([(keyspace_name, cluster.metadata.keyspaces.get(keyspace_name))])[0]
 
     current_year = datetime.now().year
@@ -62,12 +54,8 @@ def keyspace_dashboard(request: Request, cluster_name: str, keyspace_name: str):
 
 @cassanova_ui_dashboard_router.get("/cluster/{cluster_name}/nodes")
 def nodes_dashboard(request: Request, cluster_name: str):
-    cluster_config: ClusterConnectionConfig = clusters_config.clusters.get(cluster_name, None)
-    if not cluster_config:
-        raise HTTPException(status_code=404, detail="Cluster not found")
-
-    cluster = generate_cluster_connection(cluster_config)
-    cluster.connect()
+    session = get_session(cluster_name)
+    cluster = session.cluster
     nodes_info = get_nodes(cluster_name)
 
     current_year = datetime.now().year
@@ -82,13 +70,9 @@ def nodes_dashboard(request: Request, cluster_name: str):
 
 
 @cassanova_ui_dashboard_router.get("/cluster/{cluster_name}/settings")
-def cluster_settings(request: Request, cluster_name: str):
-    cluster_config: ClusterConnectionConfig = clusters_config.clusters.get(cluster_name, None)
-    if not cluster_config:
-        raise HTTPException(status_code=404, detail="Cluster not found")
-
-    cluster = generate_cluster_connection(cluster_config)
-    cluster.connect()
+def cluster_settings_dashboard(request: Request, cluster_name: str):
+    session = get_session(cluster_name)
+    cluster = session.cluster
 
     settings_dict = get_cluster_settings(cluster_name)
     return templates.TemplateResponse("settings.html", {
@@ -101,13 +85,9 @@ def cluster_settings(request: Request, cluster_name: str):
 
 
 @cassanova_ui_dashboard_router.get("/cluster/{cluster_name}/vnodes")
-def cluster_settings(request: Request, cluster_name: str):
-    cluster_config: ClusterConnectionConfig = clusters_config.clusters.get(cluster_name, None)
-    if not cluster_config:
-        raise HTTPException(status_code=404, detail="Cluster not found")
-
-    cluster = generate_cluster_connection(cluster_config)
-    cluster.connect()
+def vnodes_dashboard(request: Request, cluster_name: str):
+    session = get_session(cluster_name)
+    cluster = session.cluster
 
     vnodes = get_cluster_vnodes(cluster_name).get('nodes')
     return templates.TemplateResponse("vnodes.html", {
@@ -116,4 +96,17 @@ def cluster_settings(request: Request, cluster_name: str):
         "cluster_name": cluster.metadata.cluster_name,
         "cluster_config_entry": cluster_name,
         "vnodes": vnodes,
+    })
+
+
+@cassanova_ui_dashboard_router.get("/cluster/{cluster_name}/users")
+def users_dashboard(request: Request, cluster_name: str):
+    session = get_session(cluster_name)
+    cluster = session.cluster
+
+    return templates.TemplateResponse("users.html", {
+        "request": request,
+        "monitoring_url": clusters_config.monitoring_url,
+        "cluster_name": cluster.metadata.cluster_name,
+        "cluster_config_entry": cluster_name,
     })
