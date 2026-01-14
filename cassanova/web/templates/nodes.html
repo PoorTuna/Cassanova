@@ -8,129 +8,134 @@
 
 {% block content %}
 <main class="with-sidebar">
-    <div class="nodes-dashboard">
+    <section class="nodes-overview">
+        <h2>Cluster Nodes</h2>
+        <div class="header-actions">
+            <input type="search" id="node-filter" placeholder="Filter nodes..." autocomplete="off" />
+            <button class="refresh-btn" onclick="location.reload()">Refresh</button>
+        </div>
+    </section>
 
-        <header class="dashboard-header">
-            <h1 class="dashboard-title">{{ cluster_name }} - Nodes</h1>
-            <div class="header-actions">
-                <input type="search" id="node-filter" placeholder="Filter nodes..." autocomplete="off"/>
-                <button class="refresh-btn" onclick="location.reload()">Refresh</button>
-            </div>
-        </header>
-
-        <section class="nodes-list" id="nodes-list">
+    <div class="nodes-container">
+        <!-- Sidebar List -->
+        <div id="node-list">
             {% if nodes %}
             {% for node in nodes %}
-            <div class="node-card">
-                <!-- Left: Node identity -->
-                <div class="node-identity">
-                    <div class="node-address">
-                        {{ node.broadcast_address }}{% if node.broadcast_port %}:{{ node.broadcast_port }}{% endif %}
-                    </div>
-                </div>
-
-                <!-- Middle: System & Schema -->
-                <div class="node-main">
-                    {% if node.host_id %}
-                    <div class="node-field">
-                        <label>Host ID</label>
-                        <span class="truncate" title="{{ node.host_id }}">{{ node.host_id }}</span>
-                    </div>
-                    {% endif %}
-
-                    {% if node.data_center or node.rack %}
-                    <div class="node-field">
-                        <label>DC / Rack</label>
-                        <span>{{ node.data_center }} / {{ node.rack }}</span>
-                    </div>
-                    {% endif %}
-
-                    {% if node.release_version %}
-                    <div class="node-field">
-                        <label>Release</label>
-                        <span>{{ node.release_version }}</span>
-                    </div>
-                    {% endif %}
-
-                    {% if node.cql_version %}
-                    <div class="node-field">
-                        <label>CQL</label>
-                        <span>{{ node.cql_version }}</span>
-                    </div>
-                    {% endif %}
-
-                    {% if node.native_protocol_version %}
-                    <div class="node-field">
-                        <label>Native Protocol</label>
-                        <span>{{ node.native_protocol_version }}</span>
-                    </div>
-                    {% endif %}
-
-                    {% if node.gossip_generation %}
-                    <div class="node-field">
-                        <label>Gossip Generation</label>
-                        <span>{{ node.gossip_generation }}</span>
-                    </div>
-                    {% endif %}
-
-                    {% if node.bootstrapped %}
-                    <div class="node-field">
-                        <label>Bootstrapped</label>
-                        <span>{{ node.bootstrapped }}</span>
-                    </div>
-                    {% endif %}
-                </div>
-
-                <!-- Right: Networking & Storage -->
-                <div class="node-secondary">
-                    {% if node.rpc_address %}
-                    <div class="node-field small">
-                        <label>Native</label>
-                        <span>{{ node.rpc_address }}{% if node.rpc_port %}:{{ node.rpc_port }}{% endif %}</span>
-                    </div>
-                    {% endif %}
-
-                    {% if node.listen_address %}
-                    <div class="node-field small">
-                        <label>Listen</label>
-                        <span>{{ node.listen_address }}{% if node.listen_port %}:{{ node.listen_port }}{% endif %}</span>
-                    </div>
-                    {% endif %}
-
-                    {% if node.partitioner %}
-                    <div class="node-field small">
-                        <label>Partitioner</label>
-                        <span>{{ node.partitioner.split('.')[-1] }}</span>
-                    </div>
-                    {% endif %}
-
-                    {% if node.tokens %}
-                    <div class="node-field small">
-                        <label>Tokens</label>
-                        <span title="{{ node.tokens | join(', ') }}">{{ node.tokens|length }}</span>
-                    </div>
-                    {% endif %}
-
-                    {% if node.schema_version %}
-                    <div class="node-field small">
-                        <label>Schema</label>
-                        <span class="truncate" title="{{ node.schema_version }}">{{ node.schema_version }}</span>
-                    </div>
-                    {% endif %}
-
-                    {% if node.truncated_at %}
-                    <div class="node-field small">
-                        <label>Truncated</label>
-                        <span>{{ node.truncated_at }}</span>
-                    </div>
-                    {% endif %}
-                </div>
+            <div class="node-item {% if loop.first %}active{% endif %}" data-address="{{ node.broadcast_address }}"
+                onclick="selectNode(this, '{{ node.broadcast_address }}')">
+                <div class="status-dot {% if node.is_up %}on{% else %}off{% endif %}"></div>
+                <strong>{{ node.broadcast_address }}</strong>
+                <div class="node-meta">{{ node.data_center }}</div>
             </div>
             {% endfor %}
             {% else %}
             <p class="no-nodes">No nodes found.</p>
             {% endif %}
-        </section>
+        </div>
+
+        <!-- Detail Panel -->
+        <div id="node-detail">
+            {% if nodes %}
+            {% for node in nodes %}
+            <div class="node-detail-view {% if not loop.first %}hidden{% endif %}"
+                id="detail-{{ node.broadcast_address }}">
+
+                <!-- Header -->
+                <header class="detail-header">
+                    <div class="title-group">
+                        <h3>{{ node.broadcast_address }}</h3>
+                    </div>
+                </header>
+
+                <!-- Core Stats -->
+                <div class="detail-grid">
+                    <div class="detail-card">
+                        <span class="label">Host ID</span>
+                        <span class="value code copyable" title="Click to copy">{{ node.host_id }}</span>
+                    </div>
+                    <div class="detail-card">
+                        <span class="label">Data Center</span>
+                        <span class="value">{{ node.data_center }}</span>
+                    </div>
+                    <div class="detail-card">
+                        <span class="label">Rack</span>
+                        <span class="value">{{ node.rack }}</span>
+                    </div>
+                    <div class="detail-card">
+                        <span class="label">Cassandra Version</span>
+                        <span class="value">{{ node.release_version }}</span>
+                    </div>
+                </div>
+
+                <!-- Network & Protocol -->
+                <div class="detail-section">
+                    <h4>Networking & Protocol</h4>
+                    <div class="options-grid">
+                        <div class="option-item">
+                            <span class="opt-key">Native Transport</span>
+                            <span class="opt-val">{{ node.rpc_address }}:{{ node.rpc_port }}</span>
+                        </div>
+                        <div class="option-item">
+                            <span class="opt-key">Listen Address</span>
+                            <span class="opt-val">{{ node.listen_address }}:{{ node.listen_port }}</span>
+                        </div>
+                        <div class="option-item">
+                            <span class="opt-key">Protocol Version</span>
+                            <span class="opt-val">{{ node.native_protocol_version }}</span>
+                        </div>
+                        <div class="option-item">
+                            <span class="opt-key">Partitioner</span>
+                            <span class="opt-val">{{ node.partitioner.split('.')[-1] }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tokens -->
+                <div class="detail-section">
+                    <h4>Tokens ({{ node.tokens | length }})</h4>
+                    <div class="token-box code">
+                        {{ node.tokens | join(', ') }}
+                    </div>
+                </div>
+
+                <!-- Schema Info -->
+                <div class="detail-section">
+                    <h4>Schema Version</h4>
+                    <div class="schema-box code copyable" title="Click to copy">
+                        {{ node.schema_version }}
+                    </div>
+                </div>
+
+            </div>
+            {% endfor %}
+            {% else %}
+            <div class="empty-state">
+                <p>No nodes available.</p>
+            </div>
+            {% endif %}
+        </div>
     </div>
+
+    <script>
+        function selectNode(el, address) {
+            // Update active state in list
+            document.querySelectorAll('.node-item').forEach(item => item.classList.remove('active'));
+            el.classList.add('active');
+
+            // Show detail view
+            document.querySelectorAll('.node-detail-view').forEach(view => view.classList.add('hidden'));
+            const target = document.getElementById('detail-' + address);
+            if (target) target.classList.remove('hidden');
+        }
+
+        // Filter Logic
+        document.getElementById('node-filter').addEventListener('input', (e) => {
+            const term = e.target.value.toLowerCase();
+            document.querySelectorAll('.node-item').forEach(item => {
+                const text = item.innerText.toLowerCase();
+                item.style.display = text.includes(term) ? 'flex' : 'none';
+            });
+        });
+    </script>
 </main>
 {% endblock %}

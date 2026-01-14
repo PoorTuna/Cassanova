@@ -79,9 +79,9 @@
                                 <button class="table-options-btn" title="Actions">
                                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                         stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <circle cx="12" cy="12" r="1"></circle>
-                                        <circle cx="12" cy="5" r="1"></circle>
-                                        <circle cx="12" cy="19" r="1"></circle>
+                                        <circle cx="12" cy="12" r="2"></circle>
+                                        <circle cx="12" cy="5" r="2"></circle>
+                                        <circle cx="12" cy="19" r="2"></circle>
                                     </svg>
                                 </button>
                                 <div class="dropdown-menu hidden">
@@ -167,7 +167,7 @@
                         <h4>Table Options</h4>
                         <div class="options-grid">
                             {% for opt, val in table.options.items() %}
-                            <div class="option-item">
+                            <div class="option-item copyable" title="Click to copy">
                                 <span class="opt-key">{{ opt }}</span>
                                 <span class="opt-val">
                                     {% if val is mapping %}

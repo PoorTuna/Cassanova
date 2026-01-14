@@ -344,6 +344,22 @@
     border-color: var(--glass-border);
 }
 
+.option-item.copyable {
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.option-item.copyable:hover {
+    background: var(--bg-hover);
+    border-color: var(--color-primary-light);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-sm);
+}
+
+.option-item.copyable:active {
+    transform: translateY(0);
+}
+
 .opt-key {
     color: var(--text-muted);
 }
