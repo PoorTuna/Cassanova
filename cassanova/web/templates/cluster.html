@@ -3,7 +3,7 @@
 {% block title %}Cluster: {{ cluster.metrics.name }}{% endblock %}
 
 {% block head_extra %}
-<link href="/static/scripts/vendor/vis/vis-network.min.css" rel="stylesheet"/>
+<link href="/static/scripts/vendor/vis/vis-network.min.css" rel="stylesheet" />
 <script src="/static/scripts/vendor/vis/vis-network.min.js" defer></script>
 <script src="/static/scripts/app/keyspace-controls.js" defer></script>
 <script src="/static/scripts/app/topology-graph.js" defer></script>
@@ -20,35 +20,43 @@
     <section class="cluster-overview status-{{ cluster.metrics.status.lower() | default('unknown') }}">
         <h2>Cluster Overview</h2>
         <ul>
-            <li><strong>Name</strong><span>{{ cluster.metrics.name }}</span></li>
-            <li><strong>Version</strong><span>{{ cluster.metrics.version }}</span></li>
-            <li><strong>Technology</strong><span>{{ cluster.metrics.technology | capitalize }}</span></li>
-            <li><strong>Partitioner</strong><span>{{ cluster.metrics.partitioner }}</span></li>
-            <li><strong>Snitch</strong><span>{{ cluster.metrics.snitch }}</span></li>
-            <li><strong>Status</strong><span>{{ cluster.metrics.status }}</span></li>
-            <li><strong>Nodes Same Version</strong><span>{{ cluster.metrics.is_fully_upgraded }}</span></li>
-            <li><strong>Total Nodes</strong><span>{{ cluster.metrics.total_nodes }}</span></li>
-            <li><strong>Nodes Up</strong><span>{{ cluster.metrics.up_nodes }}</span></li>
-            <li><strong>Nodes Down</strong><span>{{ cluster.metrics.down_nodes }}</span></li>
-            <li><strong>Datacenters</strong><span>{{ cluster.metrics.dc_count }}</span></li>
-            <li><strong>Racks</strong><span>{{ cluster.metrics.rack_count }}</span></li>
+            <li class="copyable" title="Click to copy"><strong>Name</strong><span>{{ cluster.metrics.name }}</span></li>
+            <li class="copyable" title="Click to copy"><strong>Version</strong><span>{{ cluster.metrics.version
+                    }}</span></li>
+            <li class="copyable" title="Click to copy"><strong>Technology</strong><span>{{ cluster.metrics.technology |
+                    capitalize }}</span></li>
+            <li class="copyable" title="Click to copy"><strong>Partitioner</strong><span>{{ cluster.metrics.partitioner
+                    }}</span></li>
+            <li class="copyable" title="Click to copy"><strong>Snitch</strong><span>{{ cluster.metrics.snitch }}</span>
+            </li>
+            <li class="copyable" title="Click to copy"><strong>Status</strong><span>{{ cluster.metrics.status }}</span>
+            </li>
+            <li class="copyable" title="Click to copy"><strong>Nodes Same Version</strong><span>{{
+                    cluster.metrics.is_fully_upgraded }}</span></li>
+            <li class="copyable" title="Click to copy"><strong>Total Nodes</strong><span>{{ cluster.metrics.total_nodes
+                    }}</span></li>
+            <li class="copyable" title="Click to copy"><strong>Nodes Up</strong><span>{{ cluster.metrics.up_nodes
+                    }}</span></li>
+            <li class="copyable" title="Click to copy"><strong>Nodes Down</strong><span>{{ cluster.metrics.down_nodes
+                    }}</span></li>
+            <li class="copyable" title="Click to copy"><strong>Datacenters</strong><span>{{ cluster.metrics.dc_count
+                    }}</span></li>
+            <li class="copyable" title="Click to copy"><strong>Racks</strong><span>{{ cluster.metrics.rack_count
+                    }}</span></li>
         </ul>
     </section>
 
     <section class="fade-in">
         <h2>Keyspaces</h2>
-        <input type="search" id="keyspace-filter" placeholder="Filter keyspaces..." autocomplete="off"/>
+        <input type="search" id="keyspace-filter" placeholder="Filter keyspaces..." autocomplete="off" />
 
         <div class="keyspaces-container">
             <!-- Sidebar List -->
             <div id="keyspace-list">
                 {% for ks in cluster.keyspaces %}
-                <div class="keyspace-item"
-                     data-name="{{ ks.name }}"
-                     data-replication="{{ ks.replication }}"
-                     data-tablecount="{{ ks.table_count }}"
-                     data-durable="{{ ks.durable_writes }}"
-                     data-virtual="{{ ks.virtual }}">
+                <div class="keyspace-item" data-name="{{ ks.name }}" data-replication="{{ ks.replication }}"
+                    data-tablecount="{{ ks.table_count }}" data-durable="{{ ks.durable_writes }}"
+                    data-virtual="{{ ks.virtual }}">
                     <strong>{{ ks.name }}</strong>
                     <div class="keyspace-meta">Tables: {{ ks.table_count }}</div>
                 </div>
@@ -66,7 +74,8 @@
     <!-- Topology Graph -->
     <section class="fade-in">
         <h2>Data Layout</h2>
-        <div id="topology-graph"></div>
+        <div id="topology-graph"
+            style="width: 100%; height: 400px; border: 1px solid var(--glass-border); border-radius: 16px;"></div>
     </section>
 
     <footer>

@@ -1,110 +1,104 @@
+/* --- Overview Cards --- */
+.keyspace-overview {
+    margin-bottom: 2rem;
+}
+
+.keyspace-overview h2 {
+    font-size: 1.5rem;
+    color: var(--color-primary);
+    margin-bottom: 1rem;
+}
+
 .keyspace-overview ul {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-    gap: 0.75rem 1.25rem;
-    max-width: 65%;
-    margin: 0 auto;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1rem;
     padding: 0;
     list-style: none;
+    margin: 0;
 }
 
 .keyspace-overview ul li {
-    border: 1px solid var(--bg-hover);
-    border-radius: 8px;
-    padding: 10px 14px;
-    box-shadow: 0 1px 3px var(--shadow-light);
+    background: var(--glass-surface);
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
+    padding: 1rem;
     display: flex;
     flex-direction: column;
+    transition: all 0.2s;
+}
+
+.keyspace-overview ul li:hover {
+    background: var(--glass-surface-hover);
+    border-color: var(--color-primary-light);
 }
 
 .keyspace-overview ul li strong {
-    font-weight: 600;
-    color: var(--color-primary);
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
     margin-bottom: 4px;
-    font-size: 0.95rem;
 }
 
 .keyspace-overview ul li span {
-    font-weight: 500;
-    font-size: 0.9rem;
-    line-height: 1.3;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: block;
-    max-width: 100%;
-    position: relative;
-    color: var(--text-secondary);
-}
-
-/* Tooltip on hover */
-.keyspace-overview ul li span:hover::after {
-    content: attr(title);
-    position: absolute;
-    left: 0;
-    bottom: 100%;
-    color: var(--text-primary);
-    padding: 4px 7px;
-    border-radius: 4px;
-    white-space: normal;
-    max-width: 280px;
-    z-index: 10;
-    opacity: 1;
-    transition: opacity 0.2s ease-in-out;
-    pointer-events: none;
-    transform: translateY(-6px);
-}
-
-.keyspace-overview ul li span::after {
-    content: '';
-    opacity: 0;
-    transition: opacity 0.2s ease-in-out;
-    pointer-events: none;
-}
-
-#keyspace-filter {
-    padding: .5rem 1rem;
-    border-radius: 8px;
-    border: none;
-    background: var(--bg-sidebar);
-    color: var(--text-primary);
-    width: 100%;
+    font-family: var(--font-mono);
     font-size: 1rem;
-    transition: box-shadow 0.2s ease, border-color 0.2s ease;
-    margin: 0.6rem auto;
+    color: var(--text-primary);
 }
 
-#keyspace-filter:focus {
-    outline: none;
-    border: 1px solid var(--color-primary);
-    box-shadow: 0 0 5px var(--color-primary);
-}
-
+/* --- Layout --- */
 .keyspaces-container {
-    flex: 1;
     display: flex;
-    gap: 1rem;
-    overflow: hidden;
+    gap: 1.5rem;
+    height: 600px;
+    /* Fixed height for dashboard feel */
+    min-height: 60vh;
 }
 
-/* === Sidebar List === */
-#keyspace-list {
-    flex: 0 0 250px;
-    background: var(--bg-detail);
-    border-radius: 8px;
+/* --- Search Filter --- */
+#keyspace-filter,
+#table-filter {
+    width: 100%;
+    padding: 1rem 1.5rem;
+    background: var(--glass-surface);
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
+    color: var(--text-primary);
+    font-family: var(--font-body);
+    font-size: 1rem;
+    margin-bottom: 1rem;
+    transition: all 0.3s ease;
+    backdrop-filter: var(--backdrop-blur);
+}
+
+#keyspace-filter:focus,
+#table-filter:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 15px rgba(0, 229, 255, 0.2);
+    background: rgba(22, 22, 28, 0.8);
+}
+
+/* --- Sidebar List (Keyspaces/Tables) --- */
+#keyspace-list,
+#table-list {
+    flex: 0 0 280px;
+    background: rgba(10, 10, 14, 0.3);
+    border: 1px solid var(--glass-border);
+    border-radius: 16px;
+    padding: 0.5rem;
     overflow-y: auto;
-    padding: .5rem;
-    max-height: calc(50vh);
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
 }
 
 .keyspace-item {
-    padding: .6rem .8rem;
-    border-radius: 6px;
-    margin-bottom: .4rem;
+    padding: 12px 16px;
+    border-radius: 10px;
     cursor: pointer;
-    transition: background 0.2s, transform 0.15s;
-    overflow: hidden;
-    color: var(--color-primary);
+    transition: all 0.2s ease;
+    border: 1px solid transparent;
 }
 
 .keyspace-item:hover {
@@ -114,183 +108,182 @@
 
 .keyspace-item.active {
     background: var(--bg-hover-active);
-    border-left: 4px solid var(--color-primary);
+    border-color: var(--color-primary-light);
+    box-shadow: var(--shadow-sm);
 }
 
-.keyspace-meta {
-    font-size: .8rem;
-    color: var(--text-meta);
-}
-
-.no-keyspaces {
-    color: var(--text-meta);
-    padding: 0.5rem;
-}
-
-/* === Detail Panel === */
-#keyspace-detail {
-    flex: 1;
-    background: var(--bg-detail);
-    border-radius: 12px;
-    padding: 1.5rem;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: flex-start;
+.keyspace-item strong {
+    display: block;
+    font-size: 0.95rem;
     color: var(--text-primary);
+    margin-bottom: 2px;
+}
+
+.keyspace-item .keyspace-meta {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+/* --- Detail Panel --- */
+#keyspace-detail,
+#table-detail {
+    flex: 1;
+    background: var(--glass-surface);
+    backdrop-filter: var(--backdrop-blur);
+    border: 1px solid var(--glass-border);
+    border-radius: 16px;
+    padding: 2rem;
     overflow-y: auto;
-    box-shadow: 0 4px 12px var(--shadow-medium);
-    transition: background 0.3s, transform 0.2s;
-}
-
-#keyspace-detail h3 {
-    font-size: 1.5rem;
-    margin-bottom: 0.75rem;
-    color: var(--color-primary);
-    font-weight: 600;
-}
-
-#keyspace-detail p {
-    margin: 0.4rem 0;
-    font-size: 1rem;
-    line-height: 1.5;
-}
-
-/* === Keyspace Drilldown Button === */
-#keyspace-detail a.button {
-    background-color: var(--bg-hover);
-    color: var(--color-primary);
-    font-weight: 600;
-    border: 1.5px solid var(--color-primary);
-    padding: 10px 14px;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease;
-    font-size: 0.9rem;
-    box-shadow: none;
-    text-decoration: none;
-    display: inline-block;
-    margin: 0.4rem 0;
-}
-
-#keyspace-detail a.button:hover,
-#keyspace-detail a.button:focus {
-    background-color: var(--bg-hover);
-    color: var(--color-primary);
-    border-color: var(--color-primary);
-    box-shadow: 0 0 10px var(--shadow-primary-hover);
-    outline: none;
-}
-
-/* === Graph Box === */
-#topology-graph {
-    width: 100%;
-    height: 400px;
-    border: 1px solid var(--bg-hover);
-    border-radius: 8px;
-}
-
-/* === Dropdown === */
-.dropdown-wrapper {
     position: relative;
-    display: inline-block;
+    box-shadow: var(--shadow-lg);
+}
+
+#table-detail p {
+    color: var(--text-secondary);
+    margin-bottom: 1rem;
+}
+
+#table-detail h3 {
+    font-size: 1.8rem;
+    color: var(--color-primary);
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+/* --- Tables within Detail --- */
+#table-detail table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin-top: 1rem;
+}
+
+#table-detail th {
+    text-align: left;
+    padding: 1rem;
+    border-bottom: 1px solid var(--glass-border);
+    color: var(--color-secondary);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-size: 0.8rem;
+}
+
+#table-detail td {
+    padding: 1rem;
+    border-bottom: 1px solid var(--glass-border);
+    color: var(--text-secondary);
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+}
+
+#table-detail tr:hover td {
+    background: var(--bg-hover);
+}
+
+/* --- Action Buttons & Dropdowns --- */
+.table-options-btn {
+    background: transparent;
+    border: 1px solid var(--glass-border);
+    color: var(--text-primary);
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.table-options-btn:hover {
+    background: var(--color-primary);
+    color: #000;
+    box-shadow: 0 0 10px var(--color-primary);
 }
 
 .dropdown-menu {
     position: absolute;
     right: 0;
     top: 100%;
-    background-color: var(--bg-hover);
-    border: 1px solid var(--bg-hover-active);
-    border-radius: 6px;
-    box-shadow: 0 4px 10px var(--shadow-medium);
-    padding: 6px 0;
-    z-index: 10;
+    background: var(--bg-surface);
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
+    padding: 0.5rem;
+    min-width: 180px;
     display: flex;
     flex-direction: column;
-    min-width: 160px;
+    gap: 2px;
+    box-shadow: var(--shadow-xl);
+    z-index: 50;
+    transform-origin: top right;
+    animation: fadeIn 0.2s ease;
 }
 
 .dropdown-menu button {
-    background: none;
+    background: transparent;
     border: none;
-    color: var(--text-primary);
-    padding: 10px 16px;
+    color: var(--text-secondary);
+    padding: 10px 12px;
     text-align: left;
-    font-size: 0.95rem;
-    width: 100%;
-    cursor: pointer;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    transition: all 0.2s;
 }
 
 .dropdown-menu button:hover {
-    background-color: var(--bg-hover-active);
-}
-
-.hidden {
-    display: none !important;
-}
-
-/* === Modal === */
-.modal-content {
-    background-color: var(--bg-panel-alt);
-    padding: 24px 32px;
-    border-radius: 12px;
-    width: 90%;
-    box-shadow: 0 0 20px var(--shadow-strong);
+    background: var(--bg-hover);
     color: var(--text-primary);
-    position: relative;
-    font-size: 1rem;
-    max-width: 700px;
-    max-height: 80vh;
-    overflow-y: auto;
 }
 
+.dropdown-menu button[data-action="delete"],
+.dropdown-menu button[data-action="truncate"] {
+    color: var(--color-danger);
+}
+
+.dropdown-menu button[data-action="delete"]:hover {
+    background: rgba(255, 23, 68, 0.1);
+}
+
+/* --- Modals (Glass Style) --- */
 .modal {
-    position: fixed;
-    inset: 0;
-    background-color: rgba(18, 18, 18, 0.9);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(8px);
 }
 
-.modal.hidden {
-    display: none !important;
+.modal-content {
+    background: #121215;
+    border: 1px solid var(--glass-border-light);
+    border-radius: 20px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    padding: 2.5rem;
 }
 
-.modal-close {
-    position: absolute;
-    top: 12px;
-    right: 14px;
-    font-size: 1.8rem;
-    cursor: pointer;
-    color: var(--color-primary-hover);
-    user-select: none;
-    font-weight: 700;
+.modal-content pre {
+    background: #000;
+    padding: 1rem;
+    border-radius: 8px;
+    border: 1px solid var(--glass-border);
+    color: #a5d6ff;
 }
 
-.modal-content button {
-    margin-top: 12px;
-    padding: 8px 14px;
-    border-radius: 6px;
-    background-color: var(--color-primary);
-    border: none;
-    color: #000;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
+#confirm-action-btn {
+    background: var(--color-danger);
+    color: white;
+    box-shadow: 0 0 15px rgba(255, 23, 68, 0.3);
 }
 
-.modal-content button:hover {
-    background-color: var(--color-primary-hover);
+#confirm-action-btn:hover {
+    background: #ff5280;
 }
 
-.modal-content button:last-child {
-    background-color: var(--color-error);
-    color: #fff;
-}
-
-.modal-content button:last-child:hover {
-    background-color: var(--color-error-light);
+/* --- Vis Network Graph --- */
+#topology-graph,
+#schema-graph {
+    border: 1px solid var(--glass-border);
+    border-radius: 16px;
+    background: radial-gradient(circle at center, rgba(30, 30, 40, 0.3), rgba(10, 10, 14, 0.6));
+    backdrop-filter: blur(5px);
 }

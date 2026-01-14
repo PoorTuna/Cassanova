@@ -1,42 +1,67 @@
 .orokin-light-theme {
-  /* === Primary / Accent Colors === */
-  --color-primary: #e6c76e;        /* Bright Orokin gold */
-  --color-primary-hover: #f0d891;  /* Lighter, glowing gold */
-  --color-primary-active: #c4a94d; /* Antique/darker gold */
-  --color-primary-light: #fff4d6;  /* Subtle pale gold highlight */
-  --color-primary-strong: #d4af37; /* Classic rich gold */
+    /* --- Typography --- */
+    --font-display: 'Outfit', sans-serif;
+    --font-body: 'Inter', sans-serif;
+    --font-mono: 'Fira Code', monospace;
 
-  /* === Backgrounds / Lights === */
-  --bg-main: #fdfdfd;              /* Clean marble white */
-  --bg-main-rgb: 253, 253, 253;    /* RGB for transparency */
-  --bg-terminal: #f7f7f5;          /* Slightly off-white for terminals */
-  --bg-panel: #ffffff;             /* Bright white panels */
-  --bg-xterm: #f8f8f6;             /* Light ivory wrapper */
-  --bg-sidebar: #f4f4f2;           /* Subtle contrast ivory */
-  --bg-detail: #ffffff;            /* Details remain crisp */
-  --bg-panel-alt: #f1f1ef;         /* Alternate panels with soft gray */
-  --bg-hover: #eceae4;             /* Gentle hover ivory-gray */
-  --bg-hover-active: #e4decf;      /* Active hover (marble tone) */
+    /* --- Core Palette --- */
+    --color-primary: #D4AF37;
+    /* Gold */
+    --color-primary-rgb: 212, 175, 55;
+    --color-secondary: #5FD6C4;
+    /* Teal */
+    --color-success: #00Bfa5;
+    --color-warning: #FFAB00;
+    --color-danger: #D32F2F;
 
-  /* === Text / Grays === */
-  --text-primary: #1f1f1f;         /* Strong contrast black */
-  --text-secondary: #474747;       /* Softer gray */
-  --text-meta: #6a6a6a;            /* Helper text gray */
-  --text-placeholder: #a1a1a1;     /* Placeholder */
-  --text-disabled: #c5c5c5;        /* Disabled text */
+    /* --- Backgrounds --- */
+    --bg-html: #F9FAFB;
+    /* Light background for HTML root */
+    --bg-app: #F9FAFB;
+    --bg-surface: #FFFFFF;
+    --bg-sidebar: rgba(255, 255, 255, 0.9);
 
-  /* === Teal / Orokin Glow Accents === */
-  --color-accent: #5fd6c4;         /* Orokin teal glow */
-  --color-accent-hover: #7fe7d8;   /* Brighter teal hover */
+    /* --- Glassmorphism Tokens --- */
+    --glass-surface: rgba(255, 255, 255, 0.7);
+    --glass-surface-hover: rgba(255, 255, 255, 0.9);
+    --glass-border: rgba(212, 175, 55, 0.2);
+    --glass-border-light: rgba(212, 175, 55, 0.4);
+    --glass-shine: rgba(212, 175, 55, 0.1);
+    --backdrop-blur: blur(12px);
+    --backdrop-blur-heavy: blur(20px);
 
-  /* === Reds / Error / Alerts === */
-  --color-error: #b44242;          /* Muted red */
-  --color-error-light: #e38585;    /* Lighter red for alerts */
+    /* --- Text Colors --- */
+    --text-primary: #1A1D1F;
+    --text-secondary: #5F6B7C;
+    --text-muted: #94A3B8;
 
-  /* === Shadows / Overlays === */
-  --shadow-light: rgba(0, 0, 0, 0.04);
-  --shadow-medium: rgba(0, 0, 0, 0.12);
-  --shadow-strong: rgba(0, 0, 0, 0.22);
-  --shadow-primary-hover: rgba(230, 199, 110, 0.35); /* golden glow */
-  --hover-highlight: rgba(95, 214, 196, 0.08);       /* subtle teal aura */
+    /* --- Legacy Compat --- */
+    --bg-main: var(--bg-app);
+    --bg-main-rgb: 249, 250, 251;
+    --bg-panel: var(--glass-surface);
+    --bg-panel-alt: rgba(0, 0, 0, 0.03);
+    --bg-terminal: #FFFFFF;
+    --bg-xterm: #F1F3F5;
+
+    --bg-detail: transparent;
+    --bg-hover: rgba(212, 175, 55, 0.08);
+    /* Gold hint hover */
+    --bg-hover-active: rgba(212, 175, 55, 0.15);
+
+    --color-primary-hover: #E5C35E;
+    --color-primary-active: #B49225;
+    --color-primary-light: rgba(212, 175, 55, 0.15);
+    --color-primary-strong: #D4AF37;
+
+    --color-error: var(--color-danger);
+    --color-error-light: #EF5350;
+
+    /* --- Shadows & Glows --- */
+    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 6px 12px rgba(0, 0, 0, 0.08);
+    --shadow-lg: 0 12px 24px rgba(0, 0, 0, 0.12);
+
+    --glow-primary: 0 0 15px rgba(212, 175, 55, 0.15);
+    /* Soft Gold Glow */
+    --glow-text: none;
 }

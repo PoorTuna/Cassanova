@@ -1,38 +1,67 @@
 .kibana-dark-theme {
-    /* === Primary / Accent Colors (Kibana Palette) === */
-    --color-primary: #00B3A4;        /* Main UI accents, sidebar titles, key highlights */
-    --color-primary-hover: #36A2EF;  /* Hover effects on buttons, modals */
-    --color-primary-active: #DB1374; /* Main headings, cluster down titles */
-    --color-primary-light: #F68DFF;  /* Cluster down diagnostics */
-    --color-primary-strong: #490092; /* Cluster card headings */
+    /* --- Typography --- */
+    --font-display: 'Outfit', sans-serif;
+    --font-body: 'Inter', sans-serif;
+    --font-mono: 'Fira Code', monospace;
 
-    /* === Backgrounds / Darks === */
-    --bg-main: #1D1E24;        /* Main page background */
-    --bg-main-rgb: 29, 30, 36; /* RGB for semi-transparent elements */
-    --bg-terminal: #2A2B31;    /* Terminal & upload backgrounds */
-    --bg-panel: #2B2D33;       /* General panel backgrounds */
-    --bg-xterm: #1F2026;       /* xterm wrapper */
-    --bg-sidebar: #25262C;     /* Sidebar, keyspace filter */
-    --bg-detail: #2F3036;      /* Keyspace detail, theme dropdown */
-    --bg-panel-alt: #32333A;   /* Panels, result panels */
-    --bg-hover: #3A3B42;       /* Hover backgrounds, dot wrapper */
-    --bg-hover-active: #45464E; /* Hover background for active items */
+    /* --- Core Palette (Kibana Cyan & Pink) --- */
+    --color-primary: #00B3A4;
+    /* Kibana Teal */
+    --color-primary-rgb: 0, 179, 164;
+    --color-secondary: #DB1374;
+    /* Hot Pink */
+    --color-success: #00B3A4;
+    --color-warning: #F98510;
+    --color-danger: #FF4E4E;
+    --color-info: #36A2EF;
 
-    /* === Text / Grays === */
-    --text-primary: #ECECEC;   /* Primary text */
-    --text-secondary: #C7C7C7; /* Secondary text, terminal text */
-    --text-meta: #9A9A9A;      /* Meta / helper text */
-    --text-placeholder: #7A7A7A; /* Placeholders */
-    --text-disabled: #5A5A5A;  /* Null / disabled text */
+    /* --- Backgrounds (Elastic Dark) --- */
+    --bg-html: #1D1E24;
+    --bg-app: #1D1E24;
+    --bg-surface: #25262C;
+    --bg-sidebar: rgba(37, 38, 44, 0.85);
 
-    /* === Reds / Error / Alerts === */
-    --color-error: #FF4E4E;     /* Modal cancel button / hover */
-    --color-error-light: #FF7B7B; /* Disconnect link */
+    /* --- Glassmorphism Tokens --- */
+    --glass-surface: rgba(45, 46, 52, 0.6);
+    --glass-surface-hover: rgba(60, 61, 68, 0.7);
+    --glass-border: rgba(255, 255, 255, 0.08);
+    --glass-border-light: rgba(255, 255, 255, 0.15);
+    --glass-shine: rgba(255, 255, 255, 0.03);
+    --backdrop-blur: blur(12px);
+    --backdrop-blur-heavy: blur(20px);
 
-    /* === Shadows / Overlays === */
-    --shadow-light: rgba(0, 0, 0, 0.25);
-    --shadow-medium: rgba(0, 0, 0, 0.4);
-    --shadow-strong: rgba(0, 0, 0, 0.6);
-    --shadow-primary-hover: rgba(0, 179, 164, 0.5);
-    --hover-highlight: rgba(0, 179, 164, 0.08);
+    /* --- Text Colors --- */
+    --text-primary: #ECECEC;
+    --text-secondary: #9A9A9A;
+    --text-muted: #5A5A5A;
+    --text-on-primary: #FFFFFF;
+
+    /* --- Legacy Compat --- */
+    --bg-main: var(--bg-app);
+    --bg-main-rgb: 29, 30, 36;
+    --bg-panel: var(--glass-surface);
+    --bg-panel-alt: rgba(255, 255, 255, 0.03);
+    --bg-terminal: #2A2B31;
+    --bg-xterm: #1F2026;
+
+    --bg-detail: transparent;
+    --bg-hover: rgba(255, 255, 255, 0.05);
+    --bg-hover-active: rgba(0, 179, 164, 0.15);
+
+    --color-primary-hover: #36A2EF;
+    --color-primary-active: #DB1374;
+    --color-primary-light: rgba(0, 179, 164, 0.2);
+    --color-primary-strong: #00B3A4;
+
+    --color-error: var(--color-danger);
+    --color-error-light: #FF7B7B;
+
+    /* --- Shadows & Glows --- */
+    --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.4);
+    --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+
+    --glow-primary: 0 0 15px rgba(0, 179, 164, 0.25);
+    /* Teal Glow */
+    --glow-text: none;
 }
