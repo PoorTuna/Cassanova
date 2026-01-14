@@ -1,6 +1,5 @@
 from cassandra import ConsistencyLevel
 from cassandra.cluster import Cluster, Session, SimpleStatement
-from cassandra.cluster import Cluster, Session, SimpleStatement
 from packaging.version import parse as parse_version
 
 

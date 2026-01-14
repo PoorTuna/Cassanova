@@ -28,7 +28,7 @@ To run Cassanova using Docker:
 #### 1. Pull the image:
 
 ```bash
-docker pull poortuna/cassanova:v1.2.0
+docker pull poortuna/cassanova:v1.2.1
 ```
 
 #### 2. Create a configuration file:
