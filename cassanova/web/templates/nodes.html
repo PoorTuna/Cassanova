@@ -23,7 +23,6 @@
             {% for node in nodes %}
             <div class="node-item {% if loop.first %}active{% endif %}" data-address="{{ node.broadcast_address }}"
                 onclick="selectNode(this, '{{ node.broadcast_address }}')">
-                <div class="status-dot {% if node.is_up %}on{% else %}off{% endif %}"></div>
                 <strong>{{ node.broadcast_address }}</strong>
                 <div class="node-meta">{{ node.data_center }}</div>
             </div>
