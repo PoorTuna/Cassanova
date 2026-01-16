@@ -328,6 +328,8 @@
                         <option value="AUTHORIZE">AUTHORIZE</option>
                         <option value="DESCRIBE">DESCRIBE</option>
                         <option value="EXECUTE">EXECUTE</option>
+                        <option value="UNMASK">UNMASK</option>
+                        <option value="SELECT_MASKED">SELECT_MASKED</option>
                         <option value="ALL">ALL</option>
                     </select>
                 </div>
@@ -495,7 +497,7 @@
     function loadPerms(role) {
         const list = document.getElementById('perm-list');
         list.innerHTML = '<div style="padding:20px; text-align:center;">Loading...</div>';
-        fetch(`/api/v1/cluster/${clusterName}/auth/permissions/${role}`)
+        fetch(`/api/v1/cluster/${clusterName}/auth/permissions/${encodeURIComponent(role)}`)
             .then(res => res.json())
             .then(perms => {
                 if (perms.detail) return list.innerHTML = `<div style="padding:10px; color:#ff5252;">${perms.detail}</div>`;

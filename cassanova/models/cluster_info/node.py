@@ -13,7 +13,7 @@ class NodeInfo(BaseModel):
         Optional[str | UUID],
         BeforeValidator(lambda v: str(v) if v else None),
     ] = None
-    tokens: Annotated[list[int], BeforeValidator(lambda v: v or [])]
+    tokens: Annotated[list[int], BeforeValidator(lambda v: list(v) if v else [])]
     broadcast_address: Optional[str] = Field(default=None, alias="peer")
     broadcast_port: Optional[int] = Field(default=None, alias="peer_port")
     listen_address: Optional[str] = None

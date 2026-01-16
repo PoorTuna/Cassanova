@@ -42,7 +42,10 @@
                 <!-- Header -->
                 <header class="detail-header">
                     <div class="title-group">
-                        <h3>{{ node.broadcast_address }}</h3>
+                        <h3>{{ node.broadcast_address or node.rpc_address }}</h3>
+                        {% if node.key == 'local' %}<span class="badge"
+                            style="background: rgba(0, 229, 255, 0.15); color: var(--color-primary);">Local
+                            Node</span>{% endif %}
                     </div>
                 </header>
 
@@ -64,6 +67,12 @@
                         <span class="label">Cassandra Version</span>
                         <span class="value">{{ node.release_version }}</span>
                     </div>
+                    {% if node.cluster_name %}
+                    <div class="detail-card">
+                        <span class="label">Cluster Name</span>
+                        <span class="value">{{ node.cluster_name }}</span>
+                    </div>
+                    {% endif %}
                 </div>
 
                 <!-- Network & Protocol -->
@@ -71,25 +80,44 @@
                     <h4>Networking & Protocol</h4>
                     <div class="options-grid">
                         <div class="option-item">
-                            <span class="opt-key">Native Transport</span>
-                            <span class="opt-val">{{ node.rpc_address }}:{{ node.rpc_port }}</span>
+                            <span class="opt-key">Broadcast Address</span>
+                            <span class="opt-val">{{ node.broadcast_address or 'N/A' }}{% if node.broadcast_port %}:{{
+                                node.broadcast_port }}{% endif %}</span>
                         </div>
                         <div class="option-item">
-                            <span class="opt-key">Listen Address</span>
-                            <span class="opt-val">{{ node.listen_address }}:{{ node.listen_port }}</span>
+                            <span class="opt-key">Native Transport</span>
+                            <span class="opt-val">{{ node.rpc_address or 'N/A' }}{% if node.rpc_port %}:{{ node.rpc_port
+                                }}{% endif %}</span>
                         </div>
+                        {% if node.listen_address %}
+                        <div class="option-item">
+                            <span class="opt-key">Listen Address</span>
+                            <span class="opt-val">{{ node.listen_address }}{% if node.listen_port %}:{{ node.listen_port
+                                }}{% endif %}</span>
+                        </div>
+                        {% endif %}
+                        {% if node.native_protocol_version %}
                         <div class="option-item">
                             <span class="opt-key">Protocol Version</span>
                             <span class="opt-val">{{ node.native_protocol_version }}</span>
                         </div>
+                        {% endif %}
+                        {% if node.cql_version %}
+                        <div class="option-item">
+                            <span class="opt-key">CQL Version</span>
+                            <span class="opt-val">{{ node.cql_version }}</span>
+                        </div>
+                        {% endif %}
+                        {% if node.partitioner %}
                         <div class="option-item">
                             <span class="opt-key">Partitioner</span>
                             <span class="opt-val">{{ node.partitioner.split('.')[-1] }}</span>
                         </div>
+                        {% endif %}
                     </div>
                 </div>
 
-                <!-- Tokens -->
+                    <!-- Tokens -->
                 <div class="detail-section">
                     <h4>Tokens ({{ node.tokens | length }})</h4>
                     <div class="token-box code">
@@ -104,6 +132,17 @@
                         {{ node.schema_version }}
                     </div>
                 </div>
+
+                {% if node.bootstrapped %}
+                <!-- Bootstrap Status (Local Node Only) -->
+                <div class="detail-section">
+                    <h4>Bootstrap Status</h4>
+                    <div class="option-item">
+                        <span class="opt-key">Status</span>
+                        <span class="opt-val">{{ node.bootstrapped }}</span>
+                    </div>
+                </div>
+                {% endif %}
 
             </div>
             {% endfor %}

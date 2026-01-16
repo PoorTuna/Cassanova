@@ -142,6 +142,15 @@
     overflow-y: auto;
     position: relative;
     box-shadow: var(--shadow-lg);
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+}
+
+.table-detail {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
 }
 
 /* --- Empty State --- */
@@ -168,12 +177,17 @@
     margin-bottom: 2rem;
     padding-bottom: 1rem;
     border-bottom: 1px solid var(--glass-border);
+    flex-wrap: wrap;
+    gap: 1rem;
 }
 
 .title-group {
     display: flex;
     align-items: center;
     gap: 1rem;
+    flex: 1;
+    flex-wrap: wrap;
+    min-width: 0;
 }
 
 .detail-header h3 {
@@ -181,6 +195,13 @@
     margin: 0;
     color: var(--color-primary);
     text-shadow: var(--glow-text);
+    flex-shrink: 0;
+}
+
+.controls-group {
+    display: flex;
+    gap: 0.5rem;
+    flex-shrink: 0;
 }
 
 .badge {
@@ -191,6 +212,8 @@
     border-radius: 4px;
     background: var(--bg-hover);
     color: var(--text-secondary);
+    white-space: nowrap;
+    flex-shrink: 0;
 }
 
 .badge.virtual {
@@ -326,7 +349,8 @@
 /* --- Options Grid --- */
 .options-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    /* auto-fit allows expansion */
     gap: 0.75rem;
 }
 
@@ -375,6 +399,11 @@
 }
 
 /* --- Action Buttons & Dropdowns --- */
+.dropdown-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
 .table-options-btn {
     background: transparent;
     border: 1px solid var(--glass-border);
@@ -387,6 +416,16 @@
     justify-content: center;
     cursor: pointer;
     transition: all 0.2s;
+    padding: 0;
+    /* Clear padding for precise SVG centering */
+}
+
+.table-options-btn svg {
+    display: block;
+    pointer-events: none;
+    fill: currentColor;
+    color: inherit;
+    transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .table-options-btn:hover {
@@ -399,6 +438,7 @@
     position: absolute;
     right: 0;
     top: 100%;
+    margin-top: 4px;
     background: var(--bg-surface);
     border: 1px solid var(--glass-border);
     border-radius: 12px;

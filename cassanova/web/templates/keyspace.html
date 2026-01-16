@@ -76,14 +76,15 @@
                         </div>
                         <div class="controls-group">
                             <div class="dropdown-wrapper">
-                                <button class="table-options-btn" title="Actions">
-                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <circle cx="12" cy="12" r="2"></circle>
-                                        <circle cx="12" cy="5" r="2"></circle>
-                                        <circle cx="12" cy="19" r="2"></circle>
+                                <button class="table-options-btn" title="Actions" {% if table.virtual
+                                    %}style="visibility: hidden; pointer-events: none;" {% endif %}>
+                                    <svg width="20" height="20" viewBox="0 0 24 24">
+                                        <circle cx="12" cy="5" r="2.5"></circle>
+                                        <circle cx="12" cy="12" r="2.5"></circle>
+                                        <circle cx="12" cy="19" r="2.5"></circle>
                                     </svg>
                                 </button>
+                                {% if not table.virtual %}
                                 <div class="dropdown-menu hidden">
                                     <button data-action="description" data-table="{{ table.name }}">Show
                                         Description</button>
@@ -92,6 +93,7 @@
                                     <button data-action="delete" data-table="{{ table.name }}" class="danger">Delete
                                         Table</button>
                                 </div>
+                                {% endif %}
                             </div>
                         </div>
                     </header>
@@ -193,11 +195,16 @@
     {% if keyspace.indexes %}
     <section class="fade-in">
         <h2>Indexes</h2>
-        <ul>
-            {% for index in keyspace.indexes %}
-            <li>{{ index }}</li>
-            {% endfor %}
-        </ul>
+        <div class="detail-section">
+            <div class="options-grid">
+                {% for index in keyspace.indexes %}
+                <div class="option-item copyable" title="Click to copy">
+                    <span class="opt-key">{{ index.name if index is mapping else 'Index ' ~ loop.index }}</span>
+                    <span class="opt-val">{{ index.kind_name if index is mapping else index }}</span>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
     </section>
     {% endif %}
 
