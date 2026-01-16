@@ -83,7 +83,7 @@
 #keyspace-list,
 #table-list {
     flex: 0 0 280px;
-    background: rgba(10, 10, 14, 0.3);
+    background: var(--bg-glass-tint, rgba(10, 10, 14, 0.3));
     border: 1px solid var(--glass-border);
     border-radius: 16px;
     padding: 0.5rem;

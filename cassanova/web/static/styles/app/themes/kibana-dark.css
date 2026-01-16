@@ -64,4 +64,14 @@
     --glow-primary: 0 0 15px rgba(0, 179, 164, 0.25);
     /* Teal Glow */
     --glow-text: none;
+
+    /* --- Syntax Highlighting --- */
+    --syntax-key: #36A2EF;
+    --syntax-string: #00B3A4;
+    --syntax-number: #F98510;
+    --syntax-boolean: #FF4E4E;
+    --syntax-null: #5A5A5A;
+
+    /* --- Panel Tints --- */
+    --bg-glass-tint: rgba(0, 0, 0, 0.2);
 }

@@ -130,24 +130,25 @@ main.with-sidebar {
 
 /* Syntax Highlighting */
 .syntax-key {
-    color: var(--color-primary) !important;
+    color: var(--syntax-key, var(--color-primary)) !important;
 }
 
 .syntax-string {
-    color: #a5d6ff !important;
+    color: var(--syntax-string, #a5d6ff) !important;
 }
 
 .syntax-number {
-    color: var(--color-warning) !important;
+    color: var(--syntax-number, var(--color-warning)) !important;
 }
 
 .syntax-boolean {
-    color: var(--color-danger) !important;
+    color: var(--syntax-boolean, var(--color-danger)) !important;
 }
 
 .syntax-null {
-    color: var(--text-muted) !important;
+    color: var(--syntax-null, var(--text-muted)) !important;
 }
+
 
 /* --- Footer --- */
 footer {
