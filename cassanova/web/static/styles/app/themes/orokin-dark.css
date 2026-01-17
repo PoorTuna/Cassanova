@@ -66,4 +66,14 @@
     --glow-primary: 0 0 15px rgba(212, 175, 55, 0.25);
     /* Gold Glow */
     --glow-text: 0 0 5px rgba(212, 175, 55, 0.1);
+
+    /* --- Syntax Highlighting --- */
+    --syntax-key: #D4AF37;
+    --syntax-string: #5FD6C4;
+    --syntax-number: #FFD700;
+    --syntax-boolean: #D16464;
+    --syntax-null: #888888;
+
+    /* --- Panel Tints --- */
+    --bg-glass-tint: rgba(0, 0, 0, 0.3);
 }

@@ -1,3 +1,5 @@
+from re import match
+
 from fastapi import APIRouter, HTTPException
 
 from cassanova.api.dependencies.db_session import get_session
@@ -20,6 +22,8 @@ def get_roles(cluster_name: str):
             for row in rows
         ]
     except Exception as e:
+        if "Table 'system_auth.roles' not found" in str(e) or "unauthorized" in str(e).lower():
+            return []
         raise HTTPException(status_code=500, detail=f"Failed to fetch roles: {e}")
 
 
@@ -27,8 +31,8 @@ def get_roles(cluster_name: str):
 def create_role(cluster_name: str, request: CreateRoleRequest):
     session = get_session(cluster_name)
     try:
-        if not request.username.isalnum() and not '_' in request.username:
-            raise ValueError("Username contains invalid characters")
+        if not match(r"^[a-zA-Z0-9_\-]+$", request.username):
+            raise ValueError("Username contains invalid characters (only alphanumeric, _ and - allowed)")
 
         options = [
             f"LOGIN = {str(request.login).lower()}",
@@ -39,14 +43,14 @@ def create_role(cluster_name: str, request: CreateRoleRequest):
             options.append("PASSWORD = %s")
             cql_params.append(request.password)
 
-        final_cql = f"CREATE ROLE IF NOT EXISTS {request.username} WITH {' AND '.join(options)}"
+        final_cql = f'CREATE ROLE IF NOT EXISTS "{request.username}" WITH {" AND ".join(options)}'
 
         try:
             session.execute(final_cql, tuple(cql_params))
         except Exception as db_err:
             if "doesn't support PASSWORD" in str(db_err) and request.password:
                 fallback_opts = [o for o in options if "PASSWORD" not in o]
-                fallback_cql = f"CREATE ROLE IF NOT EXISTS {request.username} WITH {(' AND '.join(fallback_opts))}"
+                fallback_cql = f'CREATE ROLE IF NOT EXISTS "{request.username}" WITH {(" AND ".join(fallback_opts))}'
                 session.execute(fallback_cql)
                 return {"message": f"Role {request.username} created (Password ignored by server setting)"}
             raise db_err
@@ -60,7 +64,7 @@ def create_role(cluster_name: str, request: CreateRoleRequest):
 def edit_role(cluster_name: str, role_name: str, request: EditRoleRequest):
     session = get_session(cluster_name)
     try:
-        if not role_name.isalnum() and not '_' in role_name:
+        if not match(r"^[a-zA-Z0-9_\-]+$", role_name):
             raise ValueError("Invalid role name")
 
         changes = []
@@ -79,7 +83,7 @@ def edit_role(cluster_name: str, role_name: str, request: EditRoleRequest):
         if not changes:
             return {"message": "No changes requested"}
 
-        cql = f"ALTER ROLE {role_name} WITH {(' AND '.join(changes))}"
+        cql = f'ALTER ROLE "{role_name}" WITH {(" AND ".join(changes))}'
         session.execute(cql, tuple(params))
         return {"message": f"Role {role_name} updated"}
     except Exception as e:
@@ -90,10 +94,10 @@ def edit_role(cluster_name: str, role_name: str, request: EditRoleRequest):
 def delete_role(cluster_name: str, role_name: str):
     session = get_session(cluster_name)
     try:
-        if not role_name.isalnum() and not '_' in role_name:
+        if not match(r"^[a-zA-Z0-9_\-]+$", role_name):
             raise ValueError("Invalid role name")
 
-        session.execute(f"DROP ROLE IF EXISTS {role_name}")
+        session.execute(f'DROP ROLE IF EXISTS "{role_name}"')
         return {"message": f"Role {role_name} deleted"}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
@@ -103,7 +107,7 @@ def delete_role(cluster_name: str, role_name: str):
 def get_permissions(cluster_name: str, role_name: str):
     session = get_session(cluster_name)
     try:
-        rows = session.execute(f"LIST ALL PERMISSIONS OF {role_name}")
+        rows = session.execute(f'LIST ALL PERMISSIONS OF "{role_name}"')
         return [{"resource": row.resource, "permission": row.permission} for row in rows]
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
@@ -113,9 +117,9 @@ def get_permissions(cluster_name: str, role_name: str):
 def grant_permission(cluster_name: str, request: PermissionRequest):
     session = get_session(cluster_name)
     try:
-        cql = f"GRANT {request.permission} ON {request.resource} TO {request.role}"
+        cql = f'GRANT {request.permission} ON {request.resource} TO "{request.role}"'
         session.execute(cql)
-        return {"message": f"Granted {request.permission} on {request.resource}"}
+        return {"message": f"Granted {request.permission} on {request.resource} to {request.role}"}
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
@@ -124,8 +128,8 @@ def grant_permission(cluster_name: str, request: PermissionRequest):
 def revoke_permission(cluster_name: str, request: PermissionRequest):
     session = get_session(cluster_name)
     try:
-        cql = f"REVOKE {request.permission} ON {request.resource} FROM {request.role}"
+        cql = f'REVOKE {request.permission} ON {request.resource} FROM "{request.role}"'
         session.execute(cql)
-        return {"message": f"Revoked {request.permission} on {request.resource}"}
+        return {"message": f"Revoked {request.permission} on {request.resource} from {request.role}"}
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))

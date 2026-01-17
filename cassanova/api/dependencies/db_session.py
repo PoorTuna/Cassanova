@@ -7,9 +7,11 @@ from cassanova.config.cluster_config import generate_cluster_connection
 clusters_config = get_clusters_config()
 
 
+from cassanova.core.db.session_manager import session_manager
+
+
 def get_session(cluster_name: str) -> Session:
     cluster_config = clusters_config.clusters.get(cluster_name)
     if not cluster_config:
         raise HTTPException(status_code=404, detail="Cluster not found")
-    cluster = generate_cluster_connection(cluster_config)
-    return cluster.connect()
+    return session_manager.get_session(cluster_name, cluster_config)

@@ -8,6 +8,9 @@
     <title>{% block title %}Cassanova{% endblock %}</title>
 
     <link rel="stylesheet" href="/static/styles/app/main.css" />
+    <link rel="stylesheet" href="/static/styles/app/toast.css" />
+    <script src="/static/scripts/app/toast.js" defer></script>
+    <script src="/static/scripts/app/modal-utils.js" defer></script>
     <script src="/static/scripts/app/sidebar.js" defer></script>
     <script src="/static/scripts/app/copy-utils.js" defer></script>
     <script src="/static/scripts/app/syntax.js" defer></script>
@@ -22,6 +25,10 @@
     {% endif %}
     {% block content %}
     {% endblock %}
+
+    <footer>
+        <p>&copy; {{ current_year }} Oren Kessler - Cassanova</p>
+    </footer>
 </body>
 
 </html>

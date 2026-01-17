@@ -13,7 +13,27 @@ document.addEventListener("DOMContentLoaded", () => {
         if (!textToCopy) return;
 
         try {
-            await navigator.clipboard.writeText(textToCopy.trim());
+            // Try modern clipboard API first
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                await navigator.clipboard.writeText(textToCopy.trim());
+            } else {
+                // Fallback for air-gapped/older browsers
+                const textArea = document.createElement('textarea');
+                textArea.value = textToCopy.trim();
+                textArea.style.position = 'fixed';
+                textArea.style.left = '-999999px';
+                textArea.style.top = '-999999px';
+                document.body.appendChild(textArea);
+                textArea.focus();
+                textArea.select();
+                try {
+                    document.execCommand('copy');
+                } catch (err) {
+                    console.error('Fallback copy failed:', err);
+                    throw err;
+                }
+                document.body.removeChild(textArea);
+            }
             showCopiedFeedback(target);
         } catch (err) {
             console.error('Failed to copy text: ', err);

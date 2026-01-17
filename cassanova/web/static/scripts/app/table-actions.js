@@ -11,25 +11,33 @@ async function performTableAction(cluster, keyspace, table, path = '', method = 
 function deleteTable(cluster, keyspace, table) {
     return performTableAction(cluster, keyspace, table, '', 'DELETE')
         .then(() => window.location.reload())
-        .catch(err => alert(`Delete failed: ${err.message}`));
+        .catch(err => {
+            Toast.error(`Delete failed: ${err.message}`);
+        });
 }
 
 function truncateTable(cluster, keyspace, table) {
     return performTableAction(cluster, keyspace, table, '/truncate', 'DELETE')
         .then(() => window.location.reload())
-        .catch(err => alert(`Truncate failed: ${err.message}`));
+        .catch(err => {
+            Toast.error(`Truncate failed: ${err.message}`);
+        });
 }
 
 function showTableDescription(cluster, keyspace, table) {
     return performTableAction(cluster, keyspace, table, '/description')
         .then(showModal)
-        .catch(err => alert(`Show description failed: ${err.message}`));
+        .catch(err => {
+            Toast.error(`Show description failed: ${err.message}`);
+        });
 }
 
 function showTableSchema(cluster, keyspace, table) {
     return performTableAction(cluster, keyspace, table, '/schema')
         .then(showModal)
-        .catch(err => alert(`Show schema failed: ${err.message}`));
+        .catch(err => {
+            Toast.error(`Show schema failed: ${err.message}`);
+        });
 }
 
 /* ------------------- Modals ------------------- */
@@ -44,26 +52,9 @@ function hideModal() {
     document.getElementById('json-modal').classList.add('hidden');
 }
 
-let confirmCallback = null;
-
-function openConfirmModal(message, onConfirm) {
-    document.getElementById('confirm-message').textContent = message;
-    document.getElementById('confirm-modal').classList.remove('hidden');
-    confirmCallback = onConfirm;
-}
-
-function closeConfirmModal() {
-    document.getElementById('confirm-modal').classList.add('hidden');
-    confirmCallback = null;
-}
 
 /* ------------------- Init ------------------- */
 document.addEventListener('DOMContentLoaded', () => {
-    /* Confirm Modal */
-    document.getElementById('confirm-action-btn').addEventListener('click', () => {
-        if (confirmCallback) confirmCallback();
-        closeConfirmModal();
-    });
     document.getElementById('modal-close').addEventListener('click', hideModal);
     document.getElementById('json-modal').addEventListener('click', e => {
         if (e.target === e.currentTarget) hideModal();
@@ -79,6 +70,21 @@ document.addEventListener('DOMContentLoaded', () => {
                 const name = item.getAttribute("data-name").toLowerCase();
                 item.style.display = name.includes(q) ? "" : "none";
             });
+
+            // Synchronize with Schema Graph if available
+            if (typeof schemaData !== 'undefined' && typeof renderSchemaGraph === 'function') {
+                const container = document.getElementById('schema-graph');
+                if (container) {
+                    const filteredTables = schemaData.tables.filter(table =>
+                        table.name.toLowerCase().includes(q)
+                    );
+                    const filteredData = {
+                        ...schemaData,
+                        tables: filteredTables
+                    };
+                    renderSchemaGraph(container, filteredData);
+                }
+            }
         });
     }
 
@@ -135,12 +141,20 @@ document.addEventListener('DOMContentLoaded', () => {
             } else if (action === 'schema') {
                 showTableSchema(clusterName, keyspaceName, table);
             } else if (action === 'delete') {
-                openConfirmModal(`Are you sure you want to delete table "${table}"? This cannot be undone.`, () => {
-                    deleteTable(clusterName, keyspaceName, table);
+                ConfirmModal.show({
+                    title: 'Delete Table',
+                    body: `Are you sure you want to permanently delete table <strong>${table}</strong>? All data will be lost.`,
+                    confirmText: 'Delete Table',
+                    confirmClass: 'btn-danger',
+                    onConfirm: () => deleteTable(clusterName, keyspaceName, table)
                 });
             } else if (action === 'truncate') {
-                openConfirmModal(`Are you sure you want to truncate table "${table}"? This will remove all data.`, () => {
-                    truncateTable(clusterName, keyspaceName, table);
+                ConfirmModal.show({
+                    title: 'Truncate Table',
+                    body: `Are you sure you want to truncate table <strong>${table}</strong>? This will remove all records but keep the schema.`,
+                    confirmText: 'Truncate Table',
+                    confirmClass: 'btn-danger',
+                    onConfirm: () => truncateTable(clusterName, keyspaceName, table)
                 });
             }
         });

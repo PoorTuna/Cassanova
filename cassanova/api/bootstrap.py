@@ -15,6 +15,11 @@ def bootstrap_app(app: FastAPI, app_config: APPConfig):
     __add_routers(app, app_config.routers)
     __add_exception_handlers(app)
 
+    @app.on_event("shutdown")
+    def shutdown_event():
+        from cassanova.core.db.session_manager import session_manager
+        session_manager.shutdown_all()
+
 
 def __add_routers(app: FastAPI, routers: list[str]):
     for router in routers:
