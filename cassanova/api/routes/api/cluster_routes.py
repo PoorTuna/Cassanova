@@ -1,6 +1,10 @@
+from binascii import unhexlify
+from json import loads
 from typing import Any
 
+from cassandra.query import SimpleStatement
 from fastapi import APIRouter, HTTPException
+from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
 
 from cassanova.api.dependencies.db_session import get_session
@@ -152,3 +156,160 @@ def truncate_table(cluster_name: str, keyspace_name: str, table_name: str):
     session = get_session(cluster_name)
     truncate_table_cql(session, keyspace_name, table_name)
     return {"detail": f"Table {keyspace_name}.{table_name} truncated successfully"}
+
+
+@cluster_router.get("/cluster/{cluster_name}/keyspace/{keyspace_name}/table/{table_name}/data")
+def get_table_data(cluster_name: str, keyspace_name: str, table_name: str, limit: int = 100,
+                   filter_json: str = None,
+                   allow_filtering: bool = False, paging_state: str = None):
+    session = get_session(cluster_name)
+
+    where_clause = ""
+    conditions = []
+
+    if filter_json:
+        try:
+            filters = loads(filter_json)
+            for f in filters:
+                col = f.get('col')
+                op = f.get('op', '=')
+                val = f.get('val', '')
+
+                if isinstance(val, str) and val.lower() in ('true', 'false'):
+                    cql_val = val.lower()
+                elif isinstance(val, str) and (val.replace('.', '', 1).isdigit() or (
+                        val.startswith('-') and val[1:].replace('.', '', 1).isdigit())):
+                    cql_val = val
+                elif op.upper() == 'IN':
+                    items = [i.strip() for i in val.split(',')]
+                    formatted_items = []
+                    for item in items:
+                        if item.replace('.', '', 1).isdigit() or (
+                                item.startswith('-') and item[1:].replace('.', '', 1).isdigit()):
+                            formatted_items.append(item)
+                        else:
+                            formatted_items.append(f"'{item}'")
+                    cql_val = f"({', '.join(formatted_items)})"
+                elif op.upper() == 'LIKE':
+                    search_term = val
+                    if '%' not in search_term:
+                        search_term = f"%{search_term}%"
+                    cql_val = f"'{search_term}'"
+                else:
+                    cql_val = f"'{val}'"
+
+                conditions.append(f"{col} {op} {cql_val}")
+        except Exception as e:
+            pass
+
+    if conditions:
+        where_clause = " WHERE " + " AND ".join(conditions)
+
+    query = f"SELECT * FROM {keyspace_name}.{table_name}{where_clause}"
+    if allow_filtering:
+        query += " ALLOW FILTERING"
+
+    try:
+        statement = SimpleStatement(query, fetch_size=limit)
+
+        actual_paging_state = None
+        if paging_state and paging_state != "null":
+            actual_paging_state = unhexlify(paging_state)
+
+        rows = session.execute(statement, paging_state=actual_paging_state)
+
+        next_paging_state = hexlify(rows.paging_state).decode() if rows.paging_state else None
+
+        result = {
+            "rows": [dict(row._asdict()) for row in rows.current_rows],
+            "next_paging_state": next_paging_state
+        }
+        return jsonable_encoder(result, custom_encoder={bytes: lambda var: var.hex()})
+    except Exception as e:
+        error_msg = str(e)
+        if "ALLOW FILTERING" in error_msg:
+            raise HTTPException(status_code=400,
+                                detail="This query requires ALLOW FILTERING. Please enable it in the filter settings.")
+        raise HTTPException(status_code=500, detail=f"Failed to fetch data: {error_msg}")
+
+
+@cluster_router.get("/cluster/{cluster_name}/keyspace/{keyspace_name}/table/{table_name}/cell-metadata")
+def get_cell_metadata(cluster_name: str, keyspace_name: str, table_name: str, pk: str, column: str):
+    session = get_session(cluster_name)
+    try:
+        pk_data = loads(pk)
+        where_clause = " AND ".join([f"{col} = %s" for col in pk_data.keys()])
+        values = list(pk_data.values())
+
+        query = f"SELECT TTL({column}), WRITETIME({column}) FROM {keyspace_name}.{table_name} WHERE {where_clause}"
+        rows = list(session.execute(query, values))
+
+        if not rows:
+            return {"ttl": None, "writetime": None}
+
+        row = rows[0]
+        return {
+            "ttl": row[0],
+            "writetime": row[1]
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to fetch cell metadata: {e}")
+
+
+@cluster_router.put("/cluster/{cluster_name}/keyspace/{keyspace_name}/table/{table_name}/row")
+def update_table_row(cluster_name: str, keyspace_name: str, table_name: str, update_data: dict[str, Any]):
+    session = get_session(cluster_name)
+    pk_data = update_data.get("pk", {})
+    updates = update_data.get("updates", {})
+
+    if not pk_data or not updates:
+        raise HTTPException(status_code=400, detail="Missing PK or update data")
+
+    set_clause = ", ".join([f"{col} = %s" for col in updates.keys()])
+    where_clause = " AND ".join([f"{col} = %s" for col in pk_data.keys()])
+
+    values = list(updates.values()) + list(pk_data.values())
+    query = f"UPDATE {keyspace_name}.{table_name} SET {set_clause} WHERE {where_clause}"
+
+    try:
+        session.execute(query, values)
+        return {"detail": "Row updated successfully"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to update row: {e}")
+
+
+@cluster_router.delete("/cluster/{cluster_name}/keyspace/{keyspace_name}/table/{table_name}/row")
+def delete_table_row(cluster_name: str, keyspace_name: str, table_name: str, pk_data: dict[str, Any]):
+    session = get_session(cluster_name)
+    if not pk_data:
+        raise HTTPException(status_code=400, detail="Missing PK data for deletion")
+
+    where_clause = " AND ".join([f"{col} = %s" for col in pk_data.keys()])
+    values = list(pk_data.values())
+    query = f"DELETE FROM {keyspace_name}.{table_name} WHERE {where_clause}"
+
+    try:
+        session.execute(query, values)
+        return {"detail": "Row deleted successfully"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to delete row: {e}")
+
+
+@cluster_router.post("/cluster/{cluster_name}/keyspace/{keyspace_name}/table/{table_name}/row")
+def insert_table_row(cluster_name: str, keyspace_name: str, table_name: str, row_data: dict[str, Any]):
+    session = get_session(cluster_name)
+    if not row_data:
+        raise HTTPException(status_code=400, detail="Missing row data for insertion")
+
+    columns = list(row_data.keys())
+    placeholders = ", ".join(["%s"] * len(columns))
+    cols_clause = ", ".join(columns)
+    values = list(row_data.values())
+
+    query = f"INSERT INTO {keyspace_name}.{table_name} ({cols_clause}) VALUES ({placeholders})"
+
+    try:
+        session.execute(query, values)
+        return {"detail": "Row inserted successfully"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to insert row: {e}")

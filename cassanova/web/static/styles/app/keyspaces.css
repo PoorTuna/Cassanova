@@ -453,7 +453,8 @@
     animation: fadeIn 0.2s ease;
 }
 
-.dropdown-menu button {
+.dropdown-menu button,
+.dropdown-menu a {
     background: transparent;
     border: none;
     color: var(--text-secondary);
@@ -462,9 +463,12 @@
     border-radius: 8px;
     font-size: 0.9rem;
     transition: all 0.2s;
+    text-decoration: none;
+    display: block;
 }
 
-.dropdown-menu button:hover {
+.dropdown-menu button:hover,
+.dropdown-menu a:hover {
     background: var(--bg-hover);
     color: var(--text-primary);
 }

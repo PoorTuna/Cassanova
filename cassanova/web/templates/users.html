@@ -4,203 +4,6 @@
 
 {% block head_extra %}
 <link href="/static/styles/app/users.css" rel="stylesheet" />
-<style>
-    /* Toast Styles */
-    #toast-container {
-        position: fixed;
-        bottom: 2rem;
-        right: 2rem;
-        z-index: 10000;
-        display: flex;
-        flex-direction: column;
-        gap: 0.5rem;
-    }
-
-    .toast {
-        background: rgba(10, 10, 14, 0.9);
-        backdrop-filter: blur(10px);
-        border: 1px solid var(--glass-border);
-        border-left: 4px solid var(--color-primary);
-        color: white;
-        padding: 1rem;
-        border-radius: 4px;
-        min-width: 300px;
-        max-width: 450px;
-        display: flex;
-        align-items: flex-start;
-        gap: 12px;
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-        transform: translateX(120%);
-        transition: transform 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28);
-    }
-
-    .toast.show {
-        transform: translateX(0);
-    }
-
-    .toast-success {
-        border-left-color: var(--color-success);
-    }
-
-    .toast-error {
-        border-left-color: var(--color-danger);
-    }
-
-    .toast-icon {
-        font-weight: bold;
-        font-size: 1.2rem;
-    }
-
-    .toast-message {
-        flex: 1;
-        font-size: 0.9rem;
-        line-height: 1.4;
-        word-break: break-word;
-    }
-
-    .toast-close {
-        cursor: pointer;
-        opacity: 0.7;
-        font-size: 1.2rem;
-        line-height: 1;
-    }
-
-    .toast-close:hover {
-        opacity: 1;
-    }
-
-    /* Permission Extras */
-    .perm-list {
-        max-height: 300px;
-        overflow-y: auto;
-        border: 1px solid var(--glass-border);
-        border-radius: 8px;
-        background: rgba(0, 0, 0, 0.2);
-        margin-bottom: 1.5rem;
-    }
-
-    .perm-item {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 10px 14px;
-        border-bottom: 1px solid var(--glass-border);
-    }
-
-    .perm-item:last-child {
-        border-bottom: none;
-    }
-
-    .perm-text {
-        font-family: var(--font-mono);
-        font-size: 0.9rem;
-    }
-
-    .perm-revoke {
-
-        /* Permission Modal Extras */
-        .perm-table-header {
-            display: flex;
-            padding: 0 10px 8px 10px;
-            border-bottom: 1px solid var(--glass-border);
-            color: var(--text-muted);
-            font-size: 0.75rem;
-            font-weight: 600;
-            letter-spacing: 0.05em;
-        }
-
-        .col-perm {
-            flex: 0 0 120px;
-        }
-
-        .col-res {
-            flex: 1;
-        }
-
-        .col-action {
-            flex: 0 0 80px;
-            text-align: right;
-        }
-
-        .perm-list {
-            max-height: 300px;
-            overflow-y: auto;
-            border: 1px solid var(--glass-border);
-            border-radius: 8px;
-            background: rgba(0, 0, 0, 0.2);
-            margin-bottom: 1.5rem;
-        }
-
-        .perm-item {
-            display: flex;
-            align-items: center;
-            padding: 12px 14px;
-            border-bottom: 1px solid var(--glass-border);
-            font-size: 0.9rem;
-        }
-
-        .perm-item:last-child {
-            border-bottom: none;
-        }
-
-        .perm-name {
-            flex: 0 0 120px;
-            font-weight: 600;
-            color: var(--color-primary);
-        }
-
-        .perm-res {
-            flex: 1;
-            font-family: var(--font-mono);
-            color: var(--text-primary);
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-
-        .perm-actions {
-            flex: 0 0 80px;
-            text-align: right;
-        }
-
-        .perm-revoke {
-            color: var(--color-danger);
-            cursor: pointer;
-            font-size: 0.75rem;
-            background: rgba(255, 23, 68, 0.1);
-            border: 1px solid rgba(255, 23, 68, 0.3);
-            padding: 4px 8px;
-            border-radius: 4px;
-            transition: all 0.2s;
-        }
-
-        .perm-revoke:hover {
-            background: var(--color-danger);
-            color: white;
-        }
-
-        .add-perm-form-container {
-            border-top: 1px solid var(--glass-border);
-            padding-top: 1rem;
-        }
-
-        .add-perm-form-container h4 {
-            margin: 0 0 10px 0;
-            font-size: 0.9rem;
-            color: var(--text-muted);
-        }
-
-        .add-perm-form {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-        }
-
-        .add-perm-form .form-group {
-            margin-bottom: 0;
-        }
-</style>
-<script src="/static/scripts/app/toast.js"></script>
 {% endblock %}
 
 {% block content %}
@@ -232,33 +35,38 @@
 <!-- Create Role Modal -->
 <div id="create-modal" class="modal hidden">
     <div class="modal-content glass-panel">
-        <span class="modal-close" data-modal="create-modal">&times;</span>
-        <h3>Create New Role</h3>
+        <div class="modal-header">
+            <h3>Create New Role</h3>
+            <span class="modal-close" data-modal="create-modal">&times;</span>
+        </div>
         <form id="create-form">
-            <div class="form-group">
-                <label for="new-role-name">Role Name</label>
-                <input type="text" id="new-role-name" name="username" required placeholder="e.g. app_user"
-                    autocomplete="off">
+            <div class="modal-body">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="new-role-name">Role Name</label>
+                        <input type="text" id="new-role-name" name="username" required placeholder="e.g. app_user"
+                            autocomplete="off">
+                    </div>
+                    <div class="form-group">
+                        <label for="new-role-pass">Password (Optional)</label>
+                        <input type="password" id="new-role-pass" name="password"
+                            placeholder="Leave empty if not enabled">
+                    </div>
+                    <div class="form-group">
+                        <label class="checkbox-container">
+                            <input type="checkbox" name="superuser">
+                            <span class="label-text">Superuser (Admin)</span>
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label class="checkbox-container">
+                            <input type="checkbox" name="login" checked>
+                            <span class="label-text">Can Login</span>
+                        </label>
+                    </div>
+                </div>
             </div>
-            <div class="form-group">
-                <label for="new-role-pass">Password (Optional)</label>
-                <input type="password" id="new-role-pass" name="password" placeholder="Leave empty if not enabled">
-            </div>
-            <div class="form-group checkbox-group">
-                <label class="checkbox-container">
-                    <input type="checkbox" name="superuser">
-                    <span class="checkmark"></span>
-                    <span class="label-text">Superuser (Admin)</span>
-                </label>
-            </div>
-            <div class="form-group checkbox-group">
-                <label class="checkbox-container">
-                    <input type="checkbox" name="login" checked>
-                    <span class="checkmark"></span>
-                    <span class="label-text">Can Login</span>
-                </label>
-            </div>
-            <div class="modal-actions">
+            <div class="modal-footer">
                 <button type="button" class="btn-secondary close-modal" data-modal="create-modal">Cancel</button>
                 <button type="submit" class="btn-primary" id="btn-create">Create Role</button>
             </div>
@@ -269,29 +77,34 @@
 <!-- Edit Role Modal -->
 <div id="edit-modal" class="modal hidden">
     <div class="modal-content glass-panel">
-        <span class="modal-close" data-modal="edit-modal">&times;</span>
-        <h3>Edit Role: <span id="edit-role-name-display" class="accent"></span></h3>
+        <div class="modal-header">
+            <h3>Edit Role: <span id="edit-role-name-display" class="accent"></span></h3>
+            <span class="modal-close" data-modal="edit-modal">&times;</span>
+        </div>
         <form id="edit-form">
             <input type="hidden" id="edit-role-name" name="username">
-            <div class="form-group">
-                <label for="edit-role-pass">New Password (Optional)</label>
-                <input type="password" id="edit-role-pass" name="password" placeholder="Enter to change password">
+            <div class="modal-body">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="edit-role-pass">New Password (Optional)</label>
+                        <input type="password" id="edit-role-pass" name="password"
+                            placeholder="Enter to change password">
+                    </div>
+                    <div class="form-group">
+                        <label class="checkbox-container">
+                            <input type="checkbox" id="edit-superuser" name="superuser">
+                            <span class="label-text">Superuser</span>
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label class="checkbox-container">
+                            <input type="checkbox" id="edit-login" name="login">
+                            <span class="label-text">Can Login</span>
+                        </label>
+                    </div>
+                </div>
             </div>
-            <div class="form-group checkbox-group">
-                <label class="checkbox-container">
-                    <input type="checkbox" id="edit-superuser" name="superuser">
-                    <span class="checkmark"></span>
-                    <span class="label-text">Superuser</span>
-                </label>
-            </div>
-            <div class="form-group checkbox-group">
-                <label class="checkbox-container">
-                    <input type="checkbox" id="edit-login" name="login">
-                    <span class="checkmark"></span>
-                    <span class="label-text">Can Login</span>
-                </label>
-            </div>
-            <div class="modal-actions">
+            <div class="modal-footer">
                 <button type="button" class="btn-secondary close-modal" data-modal="edit-modal">Cancel</button>
                 <button type="submit" class="btn-primary" id="btn-edit">Save Changes</button>
             </div>
@@ -302,42 +115,47 @@
 <!-- Permissions Modal -->
 <div id="perm-modal" class="modal hidden">
     <div class="modal-content glass-panel" style="max-width: 700px;">
-        <span class="modal-close" data-modal="perm-modal">&times;</span>
-        <h3>Permissions: <span id="perm-role-name-display" class="accent"></span></h3>
-
-        <div class="perm-table-header">
-            <span class="col-perm">PERMISSION</span>
-            <span class="col-res">RESOURCE</span>
-            <span class="col-action">ACTION</span>
+        <div class="modal-header">
+            <h3>Permissions: <span id="perm-role-name-display" class="accent"></span></h3>
+            <span class="modal-close" data-modal="perm-modal">&times;</span>
         </div>
+        <div class="modal-body">
+            <div class="perm-table-header">
+                <span class="col-perm">PERMISSION</span>
+                <span class="col-res">RESOURCE</span>
+                <span class="col-action">ACTION</span>
+            </div>
 
-        <div class="perm-list" id="perm-list">
-            <div class="loading-state">Loading permissions...</div>
-        </div>
+            <div class="perm-list" id="perm-list">
+                <div class="loading-state">Loading permissions...</div>
+            </div>
 
-        <div class="add-perm-form-container">
-            <h4>Grant New Permission</h4>
-            <div class="add-perm-form">
-                <div class="form-group" style="flex: 0 0 150px;">
-                    <select id="perm-type">
-                        <option value="SELECT">SELECT</option>
-                        <option value="MODIFY">MODIFY</option>
-                        <option value="ALTER">ALTER</option>
-                        <option value="DROP">DROP</option>
-                        <option value="CREATE">CREATE</option>
-                        <option value="AUTHORIZE">AUTHORIZE</option>
-                        <option value="DESCRIBE">DESCRIBE</option>
-                        <option value="EXECUTE">EXECUTE</option>
-                        <option value="UNMASK">UNMASK</option>
-                        <option value="SELECT_MASKED">SELECT_MASKED</option>
-                        <option value="ALL">ALL</option>
-                    </select>
+            <div class="add-perm-form-container">
+                <h4>Grant New Permission</h4>
+                <div class="add-perm-form">
+                    <div class="form-group" style="flex: 0 0 150px;">
+                        <select id="perm-type">
+                            <option value="SELECT">SELECT</option>
+                            <option value="MODIFY">MODIFY</option>
+                            <option value="ALTER">ALTER</option>
+                            <option value="DROP">DROP</option>
+                            <option value="CREATE">CREATE</option>
+                            <option value="AUTHORIZE">AUTHORIZE</option>
+                            <option value="DESCRIBE">DESCRIBE</option>
+                            <option value="EXECUTE">EXECUTE</option>
+                            <option value="UNMASK">UNMASK</option>
+                            <option value="SELECT_MASKED">SELECT_MASKED</option>
+                            <option value="ALL">ALL</option>
+                        </select>
+                    </div>
+                    <div class="form-group"
+                        style="flex: 1; display:flex; flex-direction:row; align-items:center; gap:8px;">
+                        <span style="color:var(--text-muted); font-size:0.9rem; margin-bottom:0;">ON</span>
+                        <input type="text" id="perm-resource" placeholder="e.g. ALL KEYSPACES or keyspace.table"
+                            style="padding: 0.75rem 1rem;">
+                    </div>
+                    <button class="btn-primary" id="grant-btn" style="padding: 0.75rem 1.5rem;">Grant</button>
                 </div>
-                <div class="form-group" style="flex: 1; display:flex; align-items:center; gap:8px;">
-                    <span style="color:var(--text-muted); font-size:0.9rem;">ON</span>
-                    <input type="text" id="perm-resource" placeholder="e.g. ALL KEYSPACES or keyspace.table">
-                </div>
-                <button class="btn-primary" id="grant-btn">Grant</button>
             </div>
         </div>
     </div>

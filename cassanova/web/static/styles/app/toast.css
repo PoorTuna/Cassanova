@@ -1,0 +1,93 @@
+/* Professional Toast Notifications for Cassanova */
+#toast-container {
+    position: fixed;
+    top: 24px;
+    right: 24px;
+    z-index: 10000;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    pointer-events: none;
+}
+
+.toast {
+    pointer-events: auto;
+    min-width: 320px;
+    max-width: 450px;
+    background: var(--glass-surface-heavy, rgba(20, 20, 25, 0.85));
+    backdrop-filter: blur(12px) saturate(180%);
+    -webkit-backdrop-filter: blur(12px) saturate(180%);
+    border: 1px solid var(--glass-border, rgba(255, 255, 255, 0.1));
+    border-radius: 12px;
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    transform: translateX(120%);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    color: var(--text-primary, #ffffff);
+}
+
+.toast.show {
+    transform: translateX(0);
+}
+
+.toast-icon {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    font-size: 14px;
+    font-weight: bold;
+    flex-shrink: 0;
+}
+
+.toast-message {
+    flex-grow: 1;
+    font-size: 0.95rem;
+    font-weight: 500;
+    line-height: 1.4;
+}
+
+.toast-close {
+    cursor: pointer;
+    font-size: 20px;
+    opacity: 0.5;
+    transition: opacity 0.2s;
+    line-height: 1;
+}
+
+.toast-close:hover {
+    opacity: 1;
+}
+
+/* Types */
+.toast-success {
+    border-left: 4px solid var(--color-success, #00e676);
+}
+
+.toast-success .toast-icon {
+    background: rgba(0, 230, 118, 0.2);
+    color: #00e676;
+}
+
+.toast-error {
+    border-left: 4px solid var(--color-danger, #ff5252);
+}
+
+.toast-error .toast-icon {
+    background: rgba(255, 82, 82, 0.2);
+    color: #ff5252;
+}
+
+.toast-info {
+    border-left: 4px solid var(--color-primary, #00e5ff);
+}
+
+.toast-info .toast-icon {
+    background: rgba(0, 229, 255, 0.2);
+    color: #00e5ff;
+}

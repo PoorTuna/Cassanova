@@ -3,7 +3,7 @@ from shutil import rmtree
 from typing import List, Optional, Literal
 
 from fastapi import APIRouter
-from fastapi import UploadFile, File, Form, HTTPException
+from fastapi import UploadFile, File, Form
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
 
@@ -22,12 +22,8 @@ query_router = APIRouter()
 @query_router.post("/cluster/{cluster_name}/operations/cqlsh")
 def run_cqlsh(cluster_name: str, query: CQLQuery):
     session = get_session(cluster_name)
-    try:
-        result = execute_query_cql(session, query)
-        encoded = jsonable_encoder(result, custom_encoder={bytes: lambda var: var.hex()})
-    finally:
-        session.shutdown()
-    return encoded
+    result = execute_query_cql(session, query)
+    return jsonable_encoder(result, custom_encoder={bytes: lambda var: var.hex()})
 
 
 @query_router.get("/tool/list")

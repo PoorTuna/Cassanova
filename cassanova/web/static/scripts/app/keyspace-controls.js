@@ -6,6 +6,19 @@ function filterKeyspaces() {
         const name = item.dataset.name.toLowerCase();
         item.style.display = name.includes(filterValue) ? '' : 'none';
     });
+
+    // Also filter the graph if clusterData is available
+    if (typeof clusterData !== 'undefined' && typeof renderTopologyGraph === 'function') {
+        const filteredKeyspaces = clusterData.keyspaces.filter(ks =>
+            ks.name.toLowerCase().includes(filterValue)
+        );
+        const filteredData = {
+            ...clusterData,
+            metrics: { ...clusterData.metrics },
+            keyspaces: filteredKeyspaces
+        };
+        renderTopologyGraph(filteredData);
+    }
 }
 
 function showKeyspaceDetail(item) {

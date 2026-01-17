@@ -86,6 +86,8 @@
                                 </button>
                                 {% if not table.virtual %}
                                 <div class="dropdown-menu hidden">
+                                    <a href="/cluster/{{ cluster_config_entry }}/keyspace/{{ keyspace.name }}/table/{{ table.name }}/explore"
+                                        class="btn-link">Browse Table</a>
                                     <button data-action="description" data-table="{{ table.name }}">Show
                                         Description</button>
                                     <button data-action="schema" data-table="{{ table.name }}">Show Schema</button>

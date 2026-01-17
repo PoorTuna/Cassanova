@@ -11,25 +11,33 @@ async function performTableAction(cluster, keyspace, table, path = '', method = 
 function deleteTable(cluster, keyspace, table) {
     return performTableAction(cluster, keyspace, table, '', 'DELETE')
         .then(() => window.location.reload())
-        .catch(err => alert(`Delete failed: ${err.message}`));
+        .catch(err => {
+            Toast.error(`Delete failed: ${err.message}`);
+        });
 }
 
 function truncateTable(cluster, keyspace, table) {
     return performTableAction(cluster, keyspace, table, '/truncate', 'DELETE')
         .then(() => window.location.reload())
-        .catch(err => alert(`Truncate failed: ${err.message}`));
+        .catch(err => {
+            Toast.error(`Truncate failed: ${err.message}`);
+        });
 }
 
 function showTableDescription(cluster, keyspace, table) {
     return performTableAction(cluster, keyspace, table, '/description')
         .then(showModal)
-        .catch(err => alert(`Show description failed: ${err.message}`));
+        .catch(err => {
+            Toast.error(`Show description failed: ${err.message}`);
+        });
 }
 
 function showTableSchema(cluster, keyspace, table) {
     return performTableAction(cluster, keyspace, table, '/schema')
         .then(showModal)
-        .catch(err => alert(`Show schema failed: ${err.message}`));
+        .catch(err => {
+            Toast.error(`Show schema failed: ${err.message}`);
+        });
 }
 
 /* ------------------- Modals ------------------- */
@@ -79,6 +87,21 @@ document.addEventListener('DOMContentLoaded', () => {
                 const name = item.getAttribute("data-name").toLowerCase();
                 item.style.display = name.includes(q) ? "" : "none";
             });
+
+            // Synchronize with Schema Graph if available
+            if (typeof schemaData !== 'undefined' && typeof renderSchemaGraph === 'function') {
+                const container = document.getElementById('schema-graph');
+                if (container) {
+                    const filteredTables = schemaData.tables.filter(table =>
+                        table.name.toLowerCase().includes(q)
+                    );
+                    const filteredData = {
+                        ...schemaData,
+                        tables: filteredTables
+                    };
+                    renderSchemaGraph(container, filteredData);
+                }
+            }
         });
     }
 
