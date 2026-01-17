@@ -45,7 +45,7 @@
 .sidebar-logo {
     width: 36px;
     height: 36px;
-    filter: drop-shadow(0 0 8px rgba(0, 229, 255, 0.3));
+    filter: drop-shadow(0 0 8px var(--color-primary-light));
     transition: all 0.3s ease;
 }
 
@@ -107,7 +107,7 @@
 }
 
 .sidebar-link.active {
-    background: linear-gradient(90deg, rgba(0, 229, 255, 0.1), transparent);
+    background: linear-gradient(90deg, var(--color-primary-light), transparent);
     color: var(--color-primary);
     border-left: 3px solid var(--color-primary);
     box-shadow: var(--glow-primary);
