@@ -23,10 +23,10 @@ RUN pip install uv
 
 COPY ./requirements.txt /opt/cassanova
 
-RUN uv pip install --no-cache-dir -r requirements.txt
-RUN find /opt/cassanova/cassanova/external_tools/cassandra-5-0-4/bin -type f -exec chmod +x {} \;
+RUN uv pip install --no-cache-dir --system -r requirements.txt
 
 COPY --chown=cassanova:cassanova . /opt/cassanova
+RUN find /opt/cassanova/cassanova/external_tools/cassandra-5-0-4/bin -type f -exec chmod +x {} \;
 
 USER cassanova
 WORKDIR /opt/cassanova/cassanova

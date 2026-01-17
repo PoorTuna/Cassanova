@@ -37,6 +37,9 @@ async def get_current_user(
     if not config.auth.enabled:
         return WebUser(username="anonymous", password="none", roles=["admin"])
 
+    if not isinstance(token, str):
+        token = None
+
     if not token:
         auth_header = request.headers.get("Authorization")
         if auth_header and auth_header.startswith("Bearer "):

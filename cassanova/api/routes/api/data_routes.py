@@ -84,14 +84,39 @@ def update_table_row(cluster_name: str, keyspace_name: str, table_name: str, upd
     if not pk_data or not updates:
         raise HTTPException(status_code=400, detail="Missing PK or update data")
 
-    set_clause = ", ".join([f"{col} = %s" for col in updates.keys()])
-    where_clause = " AND ".join([f"{col} = %s" for col in pk_data.keys()])
-
-    values = list(updates.values()) + list(pk_data.values())
-    query = f"UPDATE {keyspace_name}.{table_name} SET {set_clause} WHERE {where_clause}"
+    cluster = session.cluster
+    keyspace_metadata = cluster.metadata.keyspaces.get(keyspace_name)
+    if not keyspace_metadata:
+        raise HTTPException(status_code=404, detail="Keyspace not found")
+    table_metadata = keyspace_metadata.tables.get(table_name)
+    if not table_metadata:
+        raise HTTPException(status_code=404, detail="Table not found")
 
     try:
-        session.execute(query, values)
+        converted_values = []
+        set_parts = []
+        
+        for col, val in updates.items():
+            col_meta = table_metadata.columns.get(col)
+            if not col_meta:
+                raise ValueError(f"Unknown column: {col}")
+            converted_values.append(convert_value_for_cql(val, str(col_meta.cql_type)))
+            set_parts.append(f"{col} = %s")
+
+        where_parts = []
+        for col, val in pk_data.items():
+            col_meta = table_metadata.columns.get(col)
+            if not col_meta:
+                raise ValueError(f"Unknown PK column: {col}")
+            converted_values.append(convert_value_for_cql(val, str(col_meta.cql_type)))
+            where_parts.append(f"{col} = %s")
+
+        set_clause = ", ".join(set_parts)
+        where_clause = " AND ".join(where_parts)
+
+        query = f"UPDATE {keyspace_name}.{table_name} SET {set_clause} WHERE {where_clause}"
+
+        session.execute(query, converted_values)
         return {"detail": "Row updated successfully"}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to update row: {e}")
@@ -103,12 +128,31 @@ def delete_table_row(cluster_name: str, keyspace_name: str, table_name: str, pk_
     if not pk_data:
         raise HTTPException(status_code=400, detail="Missing PK data for deletion")
 
-    where_clause = " AND ".join([f"{col} = %s" for col in pk_data.keys()])
-    values = list(pk_data.values())
-    query = f"DELETE FROM {keyspace_name}.{table_name} WHERE {where_clause}"
+    cluster = session.cluster
+    keyspace_metadata = cluster.metadata.keyspaces.get(keyspace_name)
+    if not keyspace_metadata:
+        raise HTTPException(status_code=404, detail="Keyspace not found")
+    table_metadata = keyspace_metadata.tables.get(table_name)
+    if not table_metadata:
+        raise HTTPException(status_code=404, detail="Table not found")
+
+    where_clause_parts = []
+    converted_values = []
 
     try:
-        session.execute(query, values)
+        for col_name, value in pk_data.items():
+            col_meta = table_metadata.columns.get(col_name)
+            if not col_meta:
+                 raise ValueError(f"Unknown column: {col_name}")
+            
+            converted_val = convert_value_for_cql(value, str(col_meta.cql_type))
+            converted_values.append(converted_val)
+            where_clause_parts.append(f"{col_name} = %s")
+
+        where_clause = " AND ".join(where_clause_parts)
+        query = f"DELETE FROM {keyspace_name}.{table_name} WHERE {where_clause}"
+
+        session.execute(query, converted_values)
         return {"detail": "Row deleted successfully"}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to delete row: {e}")
