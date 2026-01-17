@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Cassanova Home{% endblock %}
+{% block title %}Cassanova | Unified Cassandra Management{% endblock %}
 
 {% block head_extra %}
 <script src="/static/scripts/app/index.js" defer></script>
@@ -10,29 +10,57 @@
 <main class="home-container">
     <canvas id="bg-particles"></canvas>
 
-    <section class="cluster-card">
-        <div class="card-header">
-            <img src="/static/icons/logo/cassanova-logo.png" class="card-logo" alt="Cassanova Logo">
-            <h2>Cassanova Clusters</h2>
+    <header class="hero-header">
+        <div class="brand-group">
+            <img src="/static/icons/logo/cassanova-logo.png" class="hero-logo" alt="Cassanova Logo">
+            <h1>Cassanova</h1>
         </div>
+        <p class="hero-subtitle">Unified Operations Hub for Apache Cassandra</p>
 
-        <input type="text" id="cluster-filter" placeholder="Filter clusters..." aria-label="Filter clusters by name" />
+        <div class="search-wrapper">
+            <input type="text" id="cluster-filter" placeholder="Locate your cluster..." aria-label="Filter clusters" />
+            <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+        </div>
+    </header>
 
-        <div id="cluster-list">
-            {% for cluster in clusters.keys() %}
-            <div class="cluster-row" data-name="{{ cluster | lower }}"
-                onclick="window.location.href='/cluster/{{ cluster }}'">
-                <div class="name">{{ cluster }}</div>
-                <div style="width: 1rem; height: 1rem;">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="#4fc3f7" stroke-width="2" stroke-linecap="round"
-                        stroke-linejoin="round">
+    <div id="cluster-grid">
+        {% for name, config in clusters.items() %}
+        <div class="cluster-hero-card cluster-row" data-name="{{ name | lower }}"
+            onclick="window.location.href='/cluster/{{ name }}'">
+
+            <div class="card-main">
+                <div class="cluster-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
+                    </svg>
+                </div>
+                <h3>{{ name }}</h3>
+                <div class="cluster-meta">
+                    <div class="meta-item">
+                        <span class="meta-label">Contact Pts</span>
+                        <span class="meta-val">{{ config.contact_points | length }}</span>
+                    </div>
+                    <div class="meta-item">
+                        <span class="meta-label">Port</span>
+                        <span class="meta-val">{{ config.port }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-footer">
+                <span class="contact-points">{{ config.contact_points[0] }}{% if config.contact_points | length > 1 %},
+                    ...{% endif %}</span>
+                <div class="arrow-btn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <polyline points="9 6 15 12 9 18" />
                     </svg>
                 </div>
             </div>
-            {% endfor %}
         </div>
-    </section>
+        {% endfor %}
+    </div>
 </main>
-
 {% endblock %}
