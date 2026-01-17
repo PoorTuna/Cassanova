@@ -38,6 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let tableSchema = null;
     let deletingRowIndex = -1;
     let isFetching = false;
+    let editingFilterIndex = -1;
 
     async function fetchData(dir = 'next') {
         if (isFetching && dir === 'next' && !nextPagingState) return;
@@ -490,6 +491,109 @@ document.addEventListener('DOMContentLoaded', () => {
         fetchData();
     });
 
+    document.getElementById('export-csv-btn').addEventListener('click', () => {
+        const url = new URL(`/api/v1/cluster/${cluster}/keyspace/${keyspace}/table/${table}/export`, window.location.origin);
+        if (activeFilters.length > 0) {
+            url.searchParams.set('filter_json', JSON.stringify(activeFilters));
+        }
+        if (explicitAllowFiltering) {
+            url.searchParams.set('allow_filtering', 'true');
+        }
+        window.location.href = url.toString();
+        Toast.info("Preparing CSV export...");
+    });
+
+    const importBtn = document.getElementById('import-csv-btn');
+    const importModal = document.getElementById('import-csv-modal');
+    const fileInput = document.getElementById('csv-file-input');
+    const dropZone = document.getElementById('import-drop-zone');
+    const confirmImportBtn = document.getElementById('confirm-import-btn');
+    const importStatus = document.getElementById('import-status');
+    const importProgress = document.getElementById('import-progress-bar');
+    const importStatusText = document.getElementById('import-status-text');
+
+    importBtn.addEventListener('click', () => {
+        importModal.classList.remove('hidden');
+        resetImportUI();
+    });
+
+    dropZone.addEventListener('click', () => fileInput.click());
+
+    fileInput.addEventListener('change', (e) => {
+        if (e.target.files.length > 0) handleFileSelection(e.target.files[0]);
+    });
+
+    dropZone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        dropZone.classList.add('active');
+    });
+
+    dropZone.addEventListener('dragleave', () => dropZone.classList.remove('active'));
+
+    dropZone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dropZone.classList.remove('active');
+        if (e.dataTransfer.files.length > 0) handleFileSelection(e.dataTransfer.files[0]);
+    });
+
+    function handleFileSelection(file) {
+        if (!file.name.endsWith('.csv')) {
+            Toast.error("Please select a CSV file.");
+            return;
+        }
+        confirmImportBtn.disabled = false;
+        dropZone.querySelector('p').textContent = `Selected: ${file.name}`;
+    }
+
+    function resetImportUI() {
+        confirmImportBtn.disabled = true;
+        confirmImportBtn.textContent = 'Start Import';
+        importStatus.classList.add('hidden');
+        importProgress.style.width = '0%';
+        dropZone.querySelector('p').textContent = `Click to select or drag & drop CSV file`;
+        fileInput.value = '';
+    }
+
+    confirmImportBtn.addEventListener('click', async () => {
+        const file = fileInput.files[0];
+        if (!file) return;
+
+        const formData = new FormData();
+        formData.append('file', file);
+
+        confirmImportBtn.disabled = true;
+        confirmImportBtn.textContent = 'Importing...';
+        importStatus.classList.remove('hidden');
+        importStatusText.textContent = 'Processing file...';
+        importProgress.style.width = '50%';
+
+        try {
+            const res = await fetch(`/api/v1/cluster/${cluster}/keyspace/${keyspace}/table/${table}/import`, {
+                method: 'POST',
+                body: formData
+            });
+            const data = await res.json();
+
+            if (res.ok) {
+                importProgress.style.width = '100%';
+                importStatusText.textContent = `Success! Imported ${data.success} rows.`;
+                Toast.success(`Successfully imported ${data.success} rows.`);
+                if (data.failed > 0) {
+                    Toast.warning(`${data.failed} rows failed to import.`);
+                }
+                setTimeout(() => {
+                    importModal.classList.add('hidden');
+                    refreshAndFetch();
+                }, 2000);
+            } else {
+                throw new Error(data.detail || 'Import failed');
+            }
+        } catch (err) {
+            Toast.error(err.message);
+            resetImportUI();
+        }
+    });
+
     nextPageBtn.addEventListener('click', () => fetchData('next'));
     prevPageBtn.addEventListener('click', () => fetchData('prev'));
 
@@ -499,9 +603,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     document.querySelectorAll('.close-modal').forEach(btn => {
-        btn.addEventListener('click', () => {
-            closeModal(insertRowModal);
-            closeModal(deleteConfirmModal);
+        btn.addEventListener('click', (e) => {
+            const modal = e.target.closest('.modal');
+            if (modal) closeModal(modal);
         });
     });
 

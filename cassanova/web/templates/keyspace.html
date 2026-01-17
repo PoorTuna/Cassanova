@@ -33,7 +33,18 @@
     </section>
 
     <section id="keyspace-tables-section" class="fade-in">
-        <h2>Tables</h2>
+        <div class="section-header-row">
+            <h2>Tables</h2>
+            <div class="actions">
+                <a href="/cluster/{{ cluster_config_entry }}/keyspace/{{ keyspace.name }}/builder"
+                    class="btn-primary-sm">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 5v14M5 12h14"></path>
+                    </svg>
+                    Create New Table
+                </a>
+            </div>
+        </div>
         <input type="search" id="table-filter" placeholder="Filter tables..." autocomplete="off"
             aria-label="Filter tables" />
 
@@ -272,16 +283,6 @@
     <div class="modal-content">
         <span id="modal-close" class="modal-close">&times;</span>
         <pre id="modal-pre" style="white-space: pre-wrap; max-height: 70vh; overflow-y: auto;"></pre>
-    </div>
-</div>
-<div id="confirm-modal" class="modal hidden">
-    <div class="modal-content">
-        <span class="modal-close" onclick="closeConfirmModal()">&times;</span>
-        <p id="confirm-message"></p>
-        <div style="margin-top: 16px; display: flex; justify-content: flex-end; gap: 10px;">
-            <button onclick="closeConfirmModal()">Cancel</button>
-            <button id="confirm-action-btn">Confirm</button>
-        </div>
     </div>
 </div>
 {% endblock %}

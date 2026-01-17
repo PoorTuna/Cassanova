@@ -250,8 +250,9 @@
 .btn-outline {
     background: transparent;
     border: 1px solid var(--glass-border);
-    border-radius: 8px;
-    padding: 0.5rem 1rem;
+    border-radius: 12px;
+    padding: 0 1.25rem;
+    height: 42px;
     color: var(--text-secondary);
     display: flex;
     align-items: center;
@@ -332,20 +333,30 @@
     display: flex;
     gap: 0.75rem;
     align-items: center;
+    flex-shrink: 0;
 }
 
 .view-controls button {
     background: rgba(255, 255, 255, 0.03);
     border: 1px solid rgba(255, 255, 255, 0.1);
     color: var(--text-secondary);
-    padding: 0;
-    width: 38px;
-    height: 38px;
-    border-radius: 10px;
+    padding: 0 1.25rem;
+    height: 42px;
+    border-radius: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
+    gap: 8px;
     transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.view-controls button.btn-icon-only {
+    width: 42px;
+    padding: 0;
 }
 
 .view-controls button:hover {
@@ -355,21 +366,6 @@
     transform: translateY(-1px);
 }
 
-#insert-row-btn.btn-primary-sm {
-    width: auto;
-    padding: 0 1.25rem;
-    background: var(--color-primary);
-    color: #000;
-    border: none;
-    font-weight: 700;
-    font-size: 0.9rem;
-    gap: 0.5rem;
-}
-
-#insert-row-btn.btn-primary-sm:hover {
-    background: var(--color-primary-hover);
-    box-shadow: 0 8px 20px rgba(0, 229, 255, 0.3);
-}
 
 .pagination {
     display: flex;
@@ -840,4 +836,51 @@
     align-items: center;
     gap: 0.75rem;
     font-size: 0.9rem;
+}
+
+/* Import Styles */
+.import-drop-zone {
+    border: 2px dashed rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    padding: 3rem 2rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s;
+    background: rgba(255, 255, 255, 0.02);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    margin: 1.5rem 0;
+}
+
+.import-drop-zone:hover,
+.import-drop-zone.active {
+    border-color: var(--color-primary);
+    background: rgba(0, 229, 255, 0.05);
+}
+
+.import-drop-zone svg {
+    color: var(--color-primary);
+    opacity: 0.7;
+}
+
+.import-drop-zone p {
+    margin: 0;
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+}
+
+.progress-container {
+    height: 8px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.progress-bar {
+    height: 100%;
+    background: var(--color-primary);
+    box-shadow: 0 0 10px var(--color-primary);
+    transition: width 0.3s ease;
 }

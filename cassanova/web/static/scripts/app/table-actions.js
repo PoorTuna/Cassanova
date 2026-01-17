@@ -52,26 +52,9 @@ function hideModal() {
     document.getElementById('json-modal').classList.add('hidden');
 }
 
-let confirmCallback = null;
-
-function openConfirmModal(message, onConfirm) {
-    document.getElementById('confirm-message').textContent = message;
-    document.getElementById('confirm-modal').classList.remove('hidden');
-    confirmCallback = onConfirm;
-}
-
-function closeConfirmModal() {
-    document.getElementById('confirm-modal').classList.add('hidden');
-    confirmCallback = null;
-}
 
 /* ------------------- Init ------------------- */
 document.addEventListener('DOMContentLoaded', () => {
-    /* Confirm Modal */
-    document.getElementById('confirm-action-btn').addEventListener('click', () => {
-        if (confirmCallback) confirmCallback();
-        closeConfirmModal();
-    });
     document.getElementById('modal-close').addEventListener('click', hideModal);
     document.getElementById('json-modal').addEventListener('click', e => {
         if (e.target === e.currentTarget) hideModal();
@@ -158,12 +141,20 @@ document.addEventListener('DOMContentLoaded', () => {
             } else if (action === 'schema') {
                 showTableSchema(clusterName, keyspaceName, table);
             } else if (action === 'delete') {
-                openConfirmModal(`Are you sure you want to delete table "${table}"? This cannot be undone.`, () => {
-                    deleteTable(clusterName, keyspaceName, table);
+                ConfirmModal.show({
+                    title: 'Delete Table',
+                    body: `Are you sure you want to permanently delete table <strong>${table}</strong>? All data will be lost.`,
+                    confirmText: 'Delete Table',
+                    confirmClass: 'btn-danger',
+                    onConfirm: () => deleteTable(clusterName, keyspaceName, table)
                 });
             } else if (action === 'truncate') {
-                openConfirmModal(`Are you sure you want to truncate table "${table}"? This will remove all data.`, () => {
-                    truncateTable(clusterName, keyspaceName, table);
+                ConfirmModal.show({
+                    title: 'Truncate Table',
+                    body: `Are you sure you want to truncate table <strong>${table}</strong>? This will remove all records but keep the schema.`,
+                    confirmText: 'Truncate Table',
+                    confirmClass: 'btn-danger',
+                    onConfirm: () => truncateTable(clusterName, keyspaceName, table)
                 });
             }
         });

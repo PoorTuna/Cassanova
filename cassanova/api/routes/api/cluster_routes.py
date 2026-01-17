@@ -1,11 +1,13 @@
-from binascii import unhexlify
+from binascii import unhexlify, hexlify
+from csv import DictReader, writer
+from io import StringIO
 from json import loads
 from typing import Any
 
 from cassandra.query import SimpleStatement
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, UploadFile, File
 from fastapi.encoders import jsonable_encoder
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, StreamingResponse
 
 from cassanova.api.dependencies.db_session import get_session
 from cassanova.config.cassanova_config import get_clusters_config
@@ -313,3 +315,80 @@ def insert_table_row(cluster_name: str, keyspace_name: str, table_name: str, row
         return {"detail": "Row inserted successfully"}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to insert row: {e}")
+
+
+@cluster_router.get("/cluster/{cluster_name}/keyspace/{keyspace_name}/table/{table_name}/export")
+def export_table_data(cluster_name: str, keyspace_name: str, table_name: str,
+                      filter_json: str = None, allow_filtering: bool = False):
+    session = get_session(cluster_name)
+    query = f"SELECT * FROM {keyspace_name}.{table_name}"
+    if filter_json:
+        filters = loads(filter_json)
+        where_clauses = []
+        for f in filters:
+            col = f['col']
+            op = f['op']
+            val = f['val']
+            if isinstance(val, str):
+                val_str = f"'{val}'"
+            else:
+                val_str = str(val)
+            where_clauses.append(f"{col} {op} {val_str}")
+
+        query += " WHERE " + " AND ".join(where_clauses)
+
+    if allow_filtering:
+        query += " ALLOW FILTERING"
+
+    def generate_csv():
+        rows = session.execute(query)
+        output = StringIO()
+        csv_writer = writer(output)
+        headers = rows.column_names
+        csv_writer.writerow(headers)
+        yield output.getvalue()
+        output.truncate(0)
+        output.seek(0)
+        for row in rows:
+            csv_writer.writerow([getattr(row, h) for h in headers])
+            yield output.getvalue()
+            output.truncate(0)
+            output.seek(0)
+
+    return StreamingResponse(
+        generate_csv(),
+        media_type="text/csv",
+        headers={"Content-Disposition": f"attachment; filename={table_name}_export.csv"}
+    )
+
+
+@cluster_router.post("/cluster/{cluster_name}/keyspace/{keyspace_name}/table/{table_name}/import")
+def import_table_data(cluster_name: str, keyspace_name: str, table_name: str, file: UploadFile = File(...)):
+    session = get_session(cluster_name)
+    content = file.file.read()
+    decoded = content.decode('utf-8')
+    reader = DictReader(StringIO(decoded))
+    success_count = 0
+    errors = []
+    for row in reader:
+        try:
+            cols = ", ".join(row.keys())
+            vals_list = []
+            for v in row.values():
+                if v is None or v == '':
+                    vals_list.append("NULL")
+                else:
+                    vals_list.append(f"'{v}'" if not v.replace('.', '', 1).isdigit() else v)
+            vals = ", ".join(vals_list)
+            query = f"INSERT INTO {keyspace_name}.{table_name} ({cols}) VALUES ({vals})"
+            session.execute(query)
+            success_count += 1
+        except Exception as e:
+            errors.append(str(e))
+            if len(errors) > 50: break
+
+    return {
+        "success": success_count,
+        "failed": len(errors),
+        "errors": errors[:10]
+    }

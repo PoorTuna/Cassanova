@@ -72,6 +72,51 @@ document.addEventListener('mousemove', (e) => {
     }
 });
 
+const tabBtns = document.querySelectorAll('.tab-btn');
+const tabContents = document.querySelectorAll('.tab-content');
+
+tabBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+        const target = btn.dataset.tab;
+        tabBtns.forEach(b => b.classList.remove('active'));
+        tabContents.forEach(c => c.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById(target).classList.add('active');
+    });
+});
+
+function renderTrace(trace) {
+    const traceEl = document.getElementById('trace-result');
+    if (!trace) {
+        traceEl.innerHTML = '<em>No trace info available.</em>';
+        return;
+    }
+
+    const eventsHtml = trace.events.map(event => `
+        <div class="trace-item">
+            <div class="trace-header">
+                <span class="trace-desc">${event.description}</span>
+                <span class="trace-duration">${(event.duration * 1000).toFixed(2)} ms</span>
+            </div>
+            <div class="trace-source">Source: ${event.source}</div>
+        </div>
+    `).join('');
+
+    traceEl.innerHTML = `
+        <div class="trace-summary" style="margin-bottom: 20px; padding: 15px; background: rgba(var(--color-primary-rgb), 0.1); border-radius: 8px;">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                <strong>Coordinator:</strong> <span>${trace.coordinator}</span>
+            </div>
+            <div style="display: flex; justify-content: space-between;">
+                <strong>Total Duration:</strong> <span style="color: var(--color-warning); font-weight: 700;">${trace.duration} ms</span>
+            </div>
+        </div>
+        <div class="trace-container">
+            ${eventsHtml}
+        </div>
+    `;
+}
+
 runBtn.addEventListener('click', () => {
     if (!window.editorInstance) return;
 
@@ -100,6 +145,10 @@ runBtn.addEventListener('click', () => {
 
     runBtn.disabled = true;
     resultEl.innerHTML = '<span class="loading">Running query...</span>';
+    document.getElementById('trace-result').innerHTML = '<em>Waiting for trace...</em>';
+
+    // Switch to results tab on new run
+    tabBtns[0].click();
 
     fetch(`/api/v1/cluster/${encodeURIComponent(clusterName)}/operations/cqlsh`, {
         method: 'POST',
@@ -113,12 +162,7 @@ runBtn.addEventListener('click', () => {
                 try {
                     const errorJson = JSON.parse(errorText);
                     errorText = errorJson.detail || JSON.stringify(errorJson);
-                } catch {
-                    // ignore JSON parse error
-                }
-                if (typeof errorText !== 'string') {
-                    errorText = JSON.stringify(errorText);
-                }
+                } catch { }
                 throw new Error(errorText || res.statusText);
             }
             return res.json();
@@ -126,38 +170,49 @@ runBtn.addEventListener('click', () => {
         .then((data) => {
             if (!queryHistory.includes(cql)) {
                 queryHistory.unshift(cql);
-                if (queryHistory.length > 30) queryHistory.pop(); // max 30 entries
+                if (queryHistory.length > 30) queryHistory.pop();
                 localStorage.setItem('cqlshHistory', JSON.stringify(queryHistory));
-
-                const entry = document.createElement('li');
-                entry.textContent = cql.slice(0, 100);
-                entry.title = cql;
-                entry.onclick = () => {
-                    window.editorInstance.setValue(cql);
-                };
-                historyList.prepend(entry);
-                if (historyList.children.length > 30) {
-                    historyList.removeChild(historyList.lastChild);
-                }
+                updateHistoryUI();
             }
+
+            const actualData = data.result || data;
+            const traceData = data.trace || (data.result && data.result.trace);
 
             try {
                 if (window.syntaxHighlight) {
-                    resultEl.innerHTML = window.syntaxHighlight(data);
+                    resultEl.innerHTML = window.syntaxHighlight(actualData.result || actualData);
                 } else {
-                    // Fallback formatting if library missing
-                    resultEl.textContent = JSON.stringify(data, null, 2);
+                    resultEl.textContent = JSON.stringify(actualData, null, 2);
                 }
             } catch (e) {
-                console.error("Highlighting failed:", e);
-                resultEl.textContent = JSON.stringify(data, null, 2);
+                resultEl.textContent = JSON.stringify(actualData, null, 2);
+            }
+
+            if (traceData) {
+                renderTrace(traceData);
+                // Optionally auto-switch to trace if it's a long execution or requested
+                // For now, just show a badge on the tab if possible
+            } else {
+                document.getElementById('trace-result').innerHTML = '<em>No trace info available (Tracing was not enabled for this run).</em>';
             }
         })
         .catch((err) => {
             resultEl.innerHTML = `<span class="error">Error: ${err.toString()}</span>`;
         });
-
 });
+
+function updateHistoryUI() {
+    historyList.innerHTML = '';
+    queryHistory.forEach((cql, idx) => {
+        const entry = document.createElement('li');
+        entry.textContent = cql.slice(0, 100);
+        entry.title = cql;
+        entry.onclick = () => {
+            window.editorInstance.setValue(cql);
+        };
+        historyList.appendChild(entry);
+    });
+}
 
 document.getElementById('export-btn').addEventListener('click', () => {
     const content = resultEl.textContent;

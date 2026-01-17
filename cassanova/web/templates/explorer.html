@@ -80,13 +80,25 @@
                 </div>
             </div>
             <div class="view-controls">
+                <button id="export-csv-btn" class="btn-outline" title="Export to CSV">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"></path>
+                    </svg>
+                    Export CSV
+                </button>
+                <button id="import-csv-btn" class="btn-outline" title="Import from CSV">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"></path>
+                    </svg>
+                    Import CSV
+                </button>
                 <button id="insert-row-btn" class="btn-primary-sm" title="Insert New Row">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M12 5v14M5 12h14"></path>
                     </svg>
                     Insert Row
                 </button>
-                <button id="refresh-data" title="Refresh">
+                <button id="refresh-data" class="btn-icon-only" title="Refresh">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M23 4v6h-6M1 20v-6h6M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15">
                         </path>
@@ -205,6 +217,43 @@
                     </div>
                 </li>
             </ul>
+        </div>
+        <!-- Import CSV Modal -->
+        <div id="import-csv-modal" class="modal hidden">
+            <div class="modal-content glass-panel">
+                <div class="modal-header">
+                    <h3>Import Data from CSV</h3>
+                    <span class="modal-close close-modal">&times;</span>
+                </div>
+                <div class="modal-body">
+                    <p>Select a CSV file to import into <strong>{{ table_name }}</strong>. Ensure headers match column
+                        names exactly.</p>
+                    <div class="import-drop-zone" id="import-drop-zone">
+                        <input type="file" id="csv-file-input" accept=".csv" class="hidden">
+                        <div class="drop-zone-content">
+                            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"></path>
+                            </svg>
+                            <p>Click to select or drag & drop CSV file</p>
+                        </div>
+                    </div>
+                    <div id="import-status" class="hidden" style="margin-top: 20px;">
+                        <div class="progress-container"
+                            style="height: 10px; background: rgba(255,255,255,0.1); border-radius: 5px; overflow: hidden; margin-bottom: 10px;">
+                            <div id="import-progress-bar" class="progress-bar"
+                                style="height: 100%; width: 0%; background: var(--color-primary); transition: width 0.3s;">
+                            </div>
+                        </div>
+                        <p id="import-status-text" style="font-size: 0.9rem; color: var(--text-secondary);">Uploading...
+                        </p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn-secondary close-modal">Cancel</button>
+                    <button id="confirm-import-btn" class="btn-primary" disabled>Start Import</button>
+                </div>
+            </div>
         </div>
 </main>
 {% endblock %}

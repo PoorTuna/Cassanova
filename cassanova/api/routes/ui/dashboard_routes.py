@@ -111,3 +111,15 @@ def table_explorer_dashboard(request: Request, cluster_name: str, keyspace_name:
         "table_name": table_name,
         "primary_key": [col.name for col in table_metadata.primary_key]
     })
+
+
+@cassanova_ui_dashboard_router.get("/cluster/{cluster_name}/keyspace/{keyspace_name}/builder")
+def table_builder_dashboard(request: Request, cluster_name: str, keyspace_name: str):
+    session = get_session(cluster_name)
+    cluster = session.cluster
+    return templates.TemplateResponse("builder.html", {
+        "request": request,
+        "cluster_name": cluster.metadata.cluster_name,
+        "cluster_config_entry": cluster_name,
+        "keyspace_name": keyspace_name
+    })

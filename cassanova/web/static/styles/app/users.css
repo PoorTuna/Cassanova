@@ -152,17 +152,24 @@
 }
 
 .card-actions .btn-icon.delete {
-    flex: 0 0 40px;
+    flex: 0 0 42px;
+    height: 38px;
     display: flex;
     align-items: center;
     justify-content: center;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
     color: var(--text-muted);
-    transition: all 0.2s;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    padding: 0;
 }
 
 .card-actions .btn-icon.delete:hover {
-    color: var(--color-danger);
-    background: rgba(255, 82, 82, 0.1);
+    color: #ff4444;
+    background: rgba(255, 68, 68, 0.15);
+    border-color: rgba(255, 68, 68, 0.2);
+    transform: translateY(-1px);
 }
 
 /* --- Premium Modals --- */
@@ -362,6 +369,15 @@
 .btn-secondary:hover {
     background: rgba(255, 255, 255, 0.1);
     color: var(--text-primary);
+}
+
+.btn-sm {
+    padding: 0.5rem 0.75rem !important;
+    font-size: 0.8rem !important;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 /* --- Permissions Modal Extras --- */

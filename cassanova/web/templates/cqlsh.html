@@ -32,7 +32,16 @@
     </div>
     <div id="resizer" class="resizer" aria-label="Resize editor panel" role="separator" tabindex="0"></div>
     <div id="result" class="result-panel">
-        <div id="query-result"><em>Results will appear here...</em></div>
+        <div class="result-tabs">
+            <button class="tab-btn active" data-tab="data-panel">Results</button>
+            <button class="tab-btn" id="trace-tab-btn" data-tab="trace-panel">Execution Trace</button>
+        </div>
+        <div id="data-panel" class="tab-content active">
+            <div id="query-result"><em>Results will appear here...</em></div>
+        </div>
+        <div id="trace-panel" class="tab-content">
+            <div id="trace-result"><em>Run a query with tracing enabled to see details...</em></div>
+        </div>
         <div class="result-toolbar">
             <button id="export-btn" class="btn">Export Result</button>
             <button id="clear-history-btn" class="btn">Clear History</button>
