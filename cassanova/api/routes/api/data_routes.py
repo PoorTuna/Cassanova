@@ -1,5 +1,3 @@
-from csv import DictReader, writer
-from io import StringIO
 from json import loads
 from typing import Any
 
@@ -8,6 +6,7 @@ from fastapi import APIRouter, HTTPException, UploadFile, File
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import StreamingResponse
 
+from cassanova.api.dependencies.csv_handler import generate_csv_stream, load_csv_data
 from cassanova.api.dependencies.db_session import get_session
 from cassanova.core.cql.converters import convert_value_for_cql
 from cassanova.core.cql.query_builder import build_where_clause, build_insert_query
@@ -167,29 +166,8 @@ def export_table_data(cluster_name: str, keyspace_name: str, table_name: str,
     if allow_filtering:
         query += " ALLOW FILTERING"
 
-    def generate_csv():
-        rows = session.execute(query)
-        output = StringIO()
-        csv_writer = writer(output)
-        headers = rows.column_names
-        csv_writer.writerow(headers)
-        yield output.getvalue()
-        output.truncate(0)
-        output.seek(0)
-        for row in rows:
-            clean_row = []
-            for h in headers:
-                val = getattr(row, h)
-                if hasattr(val, 'isoformat'):
-                    val = val.isoformat()
-                clean_row.append(val)
-            csv_writer.writerow(clean_row)
-            yield output.getvalue()
-            output.truncate(0)
-            output.seek(0)
-
     return StreamingResponse(
-        generate_csv(),
+        generate_csv_stream(session, query),
         media_type="text/csv",
         headers={"Content-Disposition": f"attachment; filename={table_name}_export.csv"}
     )
@@ -209,38 +187,4 @@ def import_table_data(cluster_name: str, keyspace_name: str, table_name: str, fi
         raise HTTPException(status_code=404, detail="Table not found")
 
     content = file.file.read()
-    decoded = content.decode('utf-8')
-    reader = DictReader(StringIO(decoded))
-    success_count = 0
-    errors = []
-
-    for row in reader:
-        try:
-            converted_values = []
-            columns = []
-
-            for col_name, value in row.items():
-                if not col_name:
-                    continue
-
-                columns.append(col_name)
-                col_meta = table_metadata.columns.get(col_name)
-                if not col_meta:
-                    raise ValueError(f"Unknown column: {col_name}")
-
-                converted_values.append(convert_value_for_cql(value, str(col_meta.cql_type)))
-
-            query = build_insert_query(keyspace_name, table_name, columns)
-            session.execute(query, converted_values)
-            success_count += 1
-
-        except Exception as e:
-            errors.append(str(e))
-            if len(errors) > 50:
-                break
-
-    return {
-        "success": success_count,
-        "failed": len(errors),
-        "errors": errors[:10]
-    }
+    return load_csv_data(content, keyspace_name, table_name, table_metadata, session)

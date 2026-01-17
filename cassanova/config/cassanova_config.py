@@ -1,10 +1,9 @@
 import os
 from functools import cache
-from json import dump
 from logging import getLogger
 from pathlib import Path
 
-from pydantic_settings import BaseSettings, PydanticBaseSettingsSource, JsonConfigSettingsSource
+from pydantic_settings import BaseSettings, PydanticBaseSettingsSource, JsonConfigSettingsSource, SettingsConfigDict
 
 from cassanova.config.app_config import APPConfig
 from cassanova.config.auth_config import AuthConfig
@@ -13,9 +12,11 @@ from cassanova.config.cluster_config import ClusterConnectionConfig
 logger = getLogger(__name__)
 
 
-# todo: add support for env vars injection + env files as an alternative to the file loading
 class CassanovaConfig(BaseSettings):
-    clusters: dict[str, ClusterConnectionConfig]
+    model_config = SettingsConfigDict(env_nested_delimiter='__', env_file='.env', env_file_encoding='utf-8',
+                                      extra='ignore')
+
+    clusters: dict[str, ClusterConnectionConfig] = {}
     auth: AuthConfig = AuthConfig()
     app_config: APPConfig = APPConfig()
 
@@ -28,16 +29,13 @@ class CassanovaConfig(BaseSettings):
             dotenv_settings: PydanticBaseSettingsSource,
             file_secret_settings: PydanticBaseSettingsSource,
     ) -> tuple[PydanticBaseSettingsSource, ...]:
+        sources = [init_settings, env_settings, dotenv_settings]
+
         config_path = os.getenv("CASSANOVA_CONFIG_PATH")
-        if not config_path:
-            raise ValueError("CASSANOVA_CONFIG_PATH environment variable is not set.")
-        return (JsonConfigSettingsSource(settings_cls, json_file=config_path),)
+        if config_path and Path(config_path).exists():
+            sources.append(JsonConfigSettingsSource(settings_cls, json_file=config_path))
 
-
-def save_settings_to_file(settings: CassanovaConfig, path: str | Path = os.getenv("CASSANOVA_CONFIG_PATH")) -> None:
-    path = Path(path)
-    with path.open("w", encoding="utf-8") as f:
-        dump(settings.model_dump(), f, indent=4)
+        return tuple(sources)
 
 
 @cache
