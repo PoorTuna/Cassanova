@@ -19,7 +19,9 @@ class Toast {
         const toast = document.createElement('div');
         toast.className = `toast toast-${type}`;
 
-        const icon = type === 'success' ? '✓' : type === 'error' ? '✕' : 'ℹ';
+        const icon = type === 'success' ? '✓' :
+            type === 'error' ? '✕' :
+                type === 'warning' ? '⚠' : 'ℹ';
 
         toast.innerHTML = `
             <div class="toast-icon">${icon}</div>
@@ -50,6 +52,7 @@ class Toast {
     static success(msg) { this.show(msg, 'success'); }
     static error(msg) { this.show(msg, 'error'); }
     static info(msg) { this.show(msg, 'info'); }
+    static warning(msg) { this.show(msg, 'warning'); }
 }
 
 // Initialize on load

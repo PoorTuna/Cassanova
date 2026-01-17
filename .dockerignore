@@ -1,0 +1,42 @@
+# Version control
+.git
+.gitignore
+.github
+
+# IDEs and Editors
+.idea
+.vscode
+*.swp
+*.swo
+*.iml
+
+# Python
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Configuration & Secrets
+.env
+cassanova.json
+cassanova.json.reference
+
+# Docker
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+# Logs and Databases
+*.log
+*.sqlite
+
+# Documentation (Optional, saves space)
+ROLES.md
+CODE_OF_CONDUCT.md
+LICENSE
+README.md

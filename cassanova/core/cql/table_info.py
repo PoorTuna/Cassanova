@@ -25,8 +25,14 @@ def show_table_description_cql(session: Session, keyspace: str, table: str,
     keyspace = sanitize_identifier(keyspace)
     table = sanitize_identifier(table)
 
-    statement = SimpleStatement(f"DESCRIBE TABLE {keyspace}.{table};",
-                                consistency_level=cl, keyspace=keyspace)
-    return [
-        row._asdict() for row in session.execute(statement)
-    ]
+    try:
+        statement = SimpleStatement(f'DESCRIBE TABLE "{keyspace}"."{table}";',
+                                    consistency_level=cl, keyspace=keyspace)
+        result = [row._asdict() for row in session.execute(statement)]
+        
+        if result:
+            return result
+    except Exception:
+        pass
+    
+    return show_table_schema_cql(session, keyspace, table, cl)

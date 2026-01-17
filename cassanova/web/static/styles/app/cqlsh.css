@@ -1,7 +1,5 @@
 /* Global box-sizing handles by base.css now */
 
-/* Removed redundant .main-content override to let base.css handle it */
-
 /* Container adjustment for sidebar */
 .cql-devtools #container {
     display: flex;
@@ -185,6 +183,7 @@
     display: flex;
     align-items: center;
     gap: 1.5rem;
+    -webkit-backdrop-filter: blur(10px);
     backdrop-filter: blur(10px);
 }
 
@@ -271,6 +270,7 @@
     padding: 1rem 1.5rem;
     display: flex;
     gap: 0.75rem;
+    -webkit-backdrop-filter: blur(10px);
     backdrop-filter: blur(10px);
 }
 

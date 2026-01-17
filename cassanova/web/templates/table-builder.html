@@ -3,8 +3,8 @@
 {% block title %}Schema Designer: {{ keyspace_name }} - Cassanova{% endblock %}
 
 {% block head_extra %}
-<link rel="stylesheet" href="/static/styles/app/builder.css">
-<script src="/static/scripts/app/builder.js" defer></script>
+<link rel="stylesheet" href="/static/styles/app/table-builder.css">
+<script src="/static/scripts/app/table-builder.js" defer></script>
 {% endblock %}
 
 {% block content %}
@@ -15,7 +15,7 @@
             <span class="separator">/</span>
             <a href="/cluster/{{ cluster_config_entry }}/keyspace/{{ keyspace_name }}">{{ keyspace_name }}</a>
             <span class="separator">/</span>
-            <span class="active">Schema Designer</span>
+            <span class="active">Table Designer</span>
         </div>
         <h1>New Table Designer</h1>
         <div class="header-actions">

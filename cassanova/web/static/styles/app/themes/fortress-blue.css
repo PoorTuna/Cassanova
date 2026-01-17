@@ -1,0 +1,76 @@
+.fortress-blue-theme {
+    /* --- Brand & Typography --- */
+    --font-display: 'Outfit', sans-serif;
+    --font-body: 'Inter', sans-serif;
+    --font-mono: 'Fira Code', monospace;
+
+    /* --- Core Palette (Builders League United) --- */
+    --color-primary: #5b7a8c;
+    /* Team Blue */
+    --color-primary-rgb: 91, 122, 140;
+    --color-secondary: #D67822;
+    /* Industrial Orange */
+
+    --color-success: #6D9E3F;
+    --color-warning: #CF7336;
+    --color-danger: #B8383B;
+    /* Red Spy! */
+    --color-info: #5b7a8c;
+
+    /* --- Backgrounds (Industrial) --- */
+    --bg-app: #242220;
+    /* Dark Industrial Warm Grey */
+    --bg-surface: #302E2C;
+    --bg-sidebar: #1C1B1A;
+
+    /* --- Glassmorphism --- */
+    --glass-surface: rgba(48, 46, 44, 0.9);
+    --glass-surface-hover: rgba(60, 58, 56, 1.0);
+    --glass-border: rgba(255, 255, 255, 0.1);
+    --glass-border-light: rgba(91, 122, 140, 0.3);
+    --glass-shine: rgba(255, 255, 255, 0.02);
+    --backdrop-blur: blur(5px);
+    /* Less blur, more solid */
+
+    /* --- Text Colors --- */
+    --text-primary: #ECECEC;
+    --text-secondary: #A6A3A0;
+    --text-muted: #6B6865;
+    --text-on-primary: #FFFFFF;
+
+    /* --- Legacy --- */
+    --bg-main: var(--bg-app);
+    --bg-panel: var(--glass-surface);
+    --bg-panel-alt: rgba(255, 255, 255, 0.03);
+    --bg-terminal: #161514;
+    --bg-xterm: #0a0a0a;
+
+    --bg-detail: transparent;
+    --bg-hover: rgba(91, 122, 140, 0.15);
+    --bg-hover-active: rgba(91, 122, 140, 0.3);
+
+    --color-primary-hover: #7092A6;
+    --color-primary-active: #4A6372;
+    --color-primary-light: rgba(91, 122, 140, 0.2);
+    --color-primary-strong: #5b7a8c;
+
+    --color-error: var(--color-danger);
+    --color-error-light: #D15558;
+
+    /* --- Shadows --- */
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4);
+    --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.5);
+
+    --glow-primary: none;
+    --glow-text: none;
+
+    /* --- Syntax --- */
+    --syntax-key: #5b7a8c;
+    --syntax-string: #6D9E3F;
+    --syntax-number: #CF7336;
+    --syntax-boolean: #B8383B;
+    --syntax-null: #6B6865;
+
+    --bg-glass-tint: rgba(0, 0, 0, 0.2);
+}

@@ -36,7 +36,7 @@
         <div class="section-header-row">
             <h2>Tables</h2>
             <div class="actions">
-                <a href="/cluster/{{ cluster_config_entry }}/keyspace/{{ keyspace.name }}/builder"
+                <a href="/cluster/{{ cluster_config_entry }}/keyspace/{{ keyspace.name }}/builder/table"
                     class="btn-primary-sm">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M12 5v14M5 12h14"></path>
@@ -280,9 +280,15 @@
 </main>
 
 <div id="json-modal" class="modal hidden">
-    <div class="modal-content">
-        <span id="modal-close" class="modal-close">&times;</span>
-        <pre id="modal-pre" style="white-space: pre-wrap; max-height: 70vh; overflow-y: auto;"></pre>
+    <div class="modal-content glass-panel" style="max-width: 800px;">
+        <div class="modal-header">
+            <h3 id="modal-title">Schema Details</h3>
+            <span id="modal-close" class="modal-close">&times;</span>
+        </div>
+        <div class="modal-body">
+            <pre id="modal-pre"
+                style="white-space: pre-wrap; max-height: 60vh; overflow-y: auto; background: var(--bg-code); padding: 1.5rem; border-radius: 12px; margin: 0; font-size: 0.9rem; line-height: 1.6;"></pre>
+        </div>
     </div>
 </div>
 {% endblock %}

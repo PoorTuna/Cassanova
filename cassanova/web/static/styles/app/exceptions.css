@@ -1,4 +1,5 @@
-html, body {
+html,
+body {
     margin: 0;
     padding: 0;
     background: var(--bg-main);
@@ -65,7 +66,8 @@ html, body {
     margin-left: -200px;
     margin-top: -200px;
     pointer-events: none;
-    z-index: 10; /* Above message */
+    z-index: 10;
+    /* Above message */
     filter: drop-shadow(0 0 10px var(--color-primary-strong)55);
 }
 
@@ -88,7 +90,8 @@ html, body {
     max-width: 420px;
     margin: 4rem auto;
     padding: 2rem 2.5rem;
-    background-color: rgba(var(--bg-main-rgb), 0.85); /* added RGB variable for transparency */
+    background-color: rgba(var(--bg-main-rgb), 0.85);
+    /* added RGB variable for transparency */
     border-radius: 12px;
     box-shadow: 0 0 30px var(--color-primary-strong)66;
     text-align: center;
@@ -111,16 +114,22 @@ html, body {
 }
 
 .diagnostic {
-    font-size: 1rem;
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
     margin-top: 2rem;
-    padding: 1.25rem 2rem;
-    background-color: var(--bg-panel);
-    border: 1px solid var(--color-primary-strong)55;
-    border-radius: 8px;
-    color: var(--color-primary-light);
-    box-shadow: 0 0 12px var(--color-primary-light)33;
-    white-space: pre-line;
+    padding: 1.5rem;
+    background-color: rgba(var(--bg-app-rgb, 0, 0, 0), 0.4);
+    backdrop-filter: blur(8px);
+    border: 1px solid var(--glass-border-light);
+    border-radius: 12px;
+    color: var(--syntax-key);
+    /* High-contrast cyan */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    white-space: pre-wrap;
+    word-break: break-all;
     user-select: text;
+    line-height: 1.5;
+    text-align: left;
 }
 
 .logo {
@@ -143,4 +152,15 @@ html, body {
     .subtitle {
         font-size: 1rem;
     }
+}
+
+/* Footer override for exceptions pages */
+footer {
+    position: absolute;
+    bottom: 1.5rem;
+    width: 100%;
+    text-align: center;
+    z-index: 20;
+    pointer-events: none;
+    opacity: 0.6;
 }

@@ -4,7 +4,6 @@
     "port": 8080,
     "routers": ["cassanova_ui_router", "cassanova_api_router"]
   },
-  "monitoring_url": "https://localboast:8080", // Optional
   "clusters": {
     "orencluster": {
       "contact_points": [ // The cluster connection uri

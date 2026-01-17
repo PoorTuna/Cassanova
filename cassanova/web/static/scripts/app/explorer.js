@@ -579,7 +579,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 importStatusText.textContent = `Success! Imported ${data.success} rows.`;
                 Toast.success(`Successfully imported ${data.success} rows.`);
                 if (data.failed > 0) {
-                    Toast.warning(`${data.failed} rows failed to import.`);
+                    const errorDetails = data.errors && data.errors.length > 0
+                        ? `<br><div style="font-size:0.85em; margin-top:4px;">Reason: ${data.errors[0]}</div>`
+                        : '';
+                    Toast.show(`${data.failed} rows failed to import.${errorDetails}`, 'warning', 10000);
                 }
                 setTimeout(() => {
                     importModal.classList.add('hidden');

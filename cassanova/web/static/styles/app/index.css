@@ -76,6 +76,7 @@
     width: 100%;
     padding: 1.25rem 2rem 1.25rem 3.5rem;
     background: var(--glass-surface);
+    -webkit-backdrop-filter: var(--backdrop-blur);
     backdrop-filter: var(--backdrop-blur);
     border: 1px solid var(--glass-border);
     border-radius: 20px;
@@ -116,6 +117,7 @@
 
 .cluster-hero-card {
     background: var(--glass-surface);
+    -webkit-backdrop-filter: var(--backdrop-blur);
     backdrop-filter: var(--backdrop-blur);
     border: 1px solid var(--glass-border);
     border-radius: 28px;

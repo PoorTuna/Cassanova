@@ -121,6 +121,7 @@ main.with-sidebar {
 /* --- Glass Elements --- */
 .glass-panel {
     background: var(--glass-surface);
+    -webkit-backdrop-filter: var(--backdrop-blur);
     backdrop-filter: var(--backdrop-blur);
     border: 1px solid var(--glass-border);
     border-radius: 16px;

@@ -4,6 +4,11 @@
 @import url('orokin-light.css');
 @import url('kibana-dark.css');
 @import url('kibana-light.css');
+@import url('cubic.css');
+@import url('neon-punk.css');
+@import url('fortress-blue.css');
+@import url('fortress-red.css');
+@import url('dracula.css');
 
 .theme-preview.light {
     background: #ffffff;
@@ -21,11 +26,30 @@
     background: #ffe066;
 }
 
-
 .theme-preview.kibana-light {
     background: #00b3a4;
 }
 
 .theme-preview.kibana-dark {
     background: #DB1374;
+}
+
+.theme-preview.cubic {
+    background: #52AA3F;
+}
+
+.theme-preview.neon-punk {
+    background: #FF007F;
+}
+
+.theme-preview.fortress-blue {
+    background: #5b7a8c;
+}
+
+.theme-preview.fortress-red {
+    background: #B8383B;
+}
+
+.theme-preview.dracula {
+    background: #bd93f9;
 }

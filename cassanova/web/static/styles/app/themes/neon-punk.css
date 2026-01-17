@@ -1,0 +1,78 @@
+.neon-punk-theme {
+    /* --- Brand & Typography --- */
+    --font-display: 'Outfit', sans-serif;
+    --font-body: 'Inter', sans-serif;
+    --font-mono: 'Fira Code', monospace;
+
+    /* --- Core Palette (Cyber High Contrast) --- */
+    --color-primary: #FF007F;
+    /* Cyber Pink */
+    --color-primary-rgb: 255, 0, 127;
+    --color-secondary: #00E5FF;
+    /* Cyan */
+
+    --color-success: #00FF9D;
+    /* Neon Green */
+    --color-warning: #FFE600;
+    /* Neon Yellow */
+    --color-danger: #FF2A6D;
+    /* Neon Red */
+    --color-info: #05D9E8;
+
+    /* --- Backgrounds (Void Black) --- */
+    --bg-app: #030305;
+    --bg-surface: #08080C;
+    --bg-sidebar: rgba(5, 5, 8, 0.95);
+
+    /* --- Glassmorphism --- */
+    --glass-surface: rgba(20, 20, 30, 0.7);
+    --glass-surface-hover: rgba(40, 40, 60, 0.8);
+    --glass-border: rgba(255, 0, 127, 0.5);
+    /* Pink Borders */
+    --glass-border-light: rgba(0, 229, 255, 0.5);
+    /* Cyan Edges */
+    --glass-shine: rgba(255, 255, 255, 0.05);
+    --backdrop-blur: blur(20px);
+
+    /* --- Text Colors --- */
+    --text-primary: #FFFFFF;
+    --text-secondary: #E0E0E0;
+    --text-muted: #808090;
+    --text-on-primary: #FFFFFF;
+
+    /* --- Legacy --- */
+    --bg-main: var(--bg-app);
+    --bg-panel: var(--glass-surface);
+    --bg-panel-alt: rgba(255, 0, 127, 0.05);
+    --bg-terminal: #020202;
+    --bg-xterm: #000000;
+
+    --bg-detail: transparent;
+    --bg-hover: rgba(255, 0, 127, 0.1);
+    --bg-hover-active: rgba(255, 0, 127, 0.25);
+
+    --color-primary-hover: #FF409F;
+    --color-primary-active: #D6006A;
+    --color-primary-light: rgba(255, 0, 127, 0.2);
+    --color-primary-strong: #FF007F;
+
+    --color-error: var(--color-danger);
+    --color-error-light: #FF5C8D;
+
+    /* --- Shadows & Glows --- */
+    --shadow-sm: 0 0 10px rgba(255, 0, 127, 0.2);
+    --shadow-md: 0 0 20px rgba(255, 0, 127, 0.3);
+    --shadow-lg: 0 0 40px rgba(255, 0, 127, 0.4);
+
+    --glow-primary: 0 0 15px #FF007F;
+    --glow-text: 0 0 5px rgba(255, 255, 255, 0.5);
+
+    /* --- Syntax --- */
+    --syntax-key: #00E5FF;
+    --syntax-string: #00FF9D;
+    --syntax-number: #FFE600;
+    --syntax-boolean: #FF2A6D;
+    --syntax-null: #808090;
+
+    --bg-glass-tint: rgba(10, 0, 10, 0.5);
+}
