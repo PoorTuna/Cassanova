@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Users & Roles — {{ cluster_name }}{% endblock %}
+{% block title %}User Management — {{ cluster_name }}{% endblock %}
 
 {% block head_extra %}
 <link href="/static/styles/app/users.css" rel="stylesheet" />
@@ -11,17 +11,30 @@
     <section class="page-header">
         <div class="header-content">
             <h2>User Management</h2>
-            <p class="subtitle">Manage roles, credentials, and permissions</p>
+            <p class="subtitle">Roles, permissions and access control overview</p>
         </div>
-        <button id="add-user-btn" class="btn-primary">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                <circle cx="8.5" cy="7" r="4"></circle>
-                <line x1="20" y1="8" x2="20" y2="14"></line>
-                <line x1="23" y1="11" x2="17" y2="11"></line>
-            </svg>
-            Create Role
-        </button>
+        <div class="header-actions">
+            <button id="add-user-btn" class="btn-primary">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="8.5" cy="7" r="4"></circle>
+                    <line x1="20" y1="8" x2="20" y2="14"></line>
+                    <line x1="23" y1="11" x2="17" y2="11"></line>
+                </svg>
+                Create Role
+            </button>
+        </div>
+    </section>
+
+    <section class="guard-overview-stats">
+        <div class="stat-card">
+            <div class="stat-label">TOTAL ROLES</div>
+            <div class="stat-value" id="total-roles-count">--</div>
+        </div>
+        <div class="stat-card superuser">
+            <div class="stat-label">SUPERUSERS</div>
+            <div class="stat-value" id="superuser-count">--</div>
+        </div>
     </section>
 
     <div id="users-grid" class="users-grid">
@@ -114,20 +127,48 @@
 
 <!-- Permissions Modal -->
 <div id="perm-modal" class="modal hidden">
-    <div class="modal-content glass-panel" style="max-width: 700px;">
+    <div class="modal-content glass-panel large-modal">
         <div class="modal-header">
-            <h3>Permissions: <span id="perm-role-name-display" class="accent"></span></h3>
+            <div class="title-group">
+                <h3>Access Overview: <span id="perm-role-name-display" class="accent"></span></h3>
+                <p class="subtitle">Resource coverage and permission map</p>
+            </div>
             <span class="modal-close" data-modal="perm-modal">&times;</span>
         </div>
+        <div class="modal-tabs">
+            <button class="modal-tab-btn active" data-perm-tab="visualizer">Access Map</button>
+            <button class="modal-tab-btn" data-perm-tab="list">Grant List</button>
+        </div>
         <div class="modal-body">
-            <div class="perm-table-header">
-                <span class="col-perm">PERMISSION</span>
-                <span class="col-res">RESOURCE</span>
-                <span class="col-action">ACTION</span>
+            <!-- Visualizer Tab -->
+            <div id="perm-tab-visualizer" class="perm-tab-content active">
+                <div id="security-visualizer-grid" class="security-visualizer-grid">
+                    <!-- Dynamic visual categories -->
+                    <div class="vis-category" id="vis-ks">
+                        <div class="vis-cat-header">KEYSPACE LEVEL</div>
+                        <div class="vis-nodes" id="vis-nodes-ks"></div>
+                    </div>
+                    <div class="vis-category" id="vis-tb">
+                        <div class="vis-cat-header">TABLE LEVEL</div>
+                        <div class="vis-nodes" id="vis-nodes-tb"></div>
+                    </div>
+                    <div class="vis-category" id="vis-auth">
+                        <div class="vis-cat-header">IDENTITY & AUTH</div>
+                        <div class="vis-nodes" id="vis-nodes-auth"></div>
+                    </div>
+                </div>
             </div>
 
-            <div class="perm-list" id="perm-list">
-                <div class="loading-state">Loading permissions...</div>
+            <!-- List Tab -->
+            <div id="perm-tab-list" class="perm-tab-content">
+                <div class="perm-table-header">
+                    <span class="col-perm">PERMISSION</span>
+                    <span class="col-res">RESOURCE</span>
+                    <span class="col-action">ACTION</span>
+                </div>
+                <div class="perm-list" id="perm-list">
+                    <div class="loading-state">Syncing security nodes...</div>
+                </div>
             </div>
 
             <div class="add-perm-form-container">
@@ -173,31 +214,47 @@
     // --- Roles Grid ---
     function fetchRoles() {
         const grid = document.getElementById('users-grid');
+        const rolesCountEl = document.getElementById('total-roles-count');
+        const superCountEl = document.getElementById('superuser-count');
+
         fetch(`/api/v1/cluster/${clusterName}/auth/roles`)
             .then(res => res.json())
             .then(roles => {
                 grid.innerHTML = '';
                 if (roles.error || roles.detail) return Toast.error(roles.detail || 'Failed to load roles');
-                if (roles.length === 0) return grid.innerHTML = '<div class="empty-state">No roles found.</div>';
+
+                // Update Stats
+                rolesCountEl.textContent = roles.length;
+                const superCount = roles.filter(r => r.is_superuser).length;
+                superCountEl.textContent = superCount;
+
+                if (roles.length === 0) return grid.innerHTML = '<div class="empty-state">No roles found in the security registry.</div>';
 
                 roles.forEach(role => {
                     const card = document.createElement('div');
-                    card.className = 'user-card glass-panel';
+                    card.className = `user-card glass-panel ${role.is_superuser ? 'superuser-card' : ''}`;
                     card.innerHTML = `
                         <div class="card-header">
                             <div class="avatar ${role.is_superuser ? 'superuser' : ''}">${role.role.charAt(0).toUpperCase()}</div>
                             <div class="role-info">
                                 <h4>${role.role}</h4>
-                                <span class="badge ${role.is_superuser ? 'admin' : 'user'}">${role.is_superuser ? 'Superuser' : 'Standard'}</span>
+                                <span class="badge ${role.is_superuser ? 'admin' : 'user'}">${role.is_superuser ? 'PRIVILEGED ACCESS' : 'RESTRICTED ACCESS'}</span>
                             </div>
                         </div>
                         <div class="card-body">
-                            <div class="prop"><span class="label">Can Login:</span><span class="value ${role.can_login ? 'yes' : 'no'}">${role.can_login ? 'Yes' : 'No'}</span></div>
+                            <div class="prop">
+                                <span class="label">LOGIN PERMISSION</span>
+                                <span class="value ${role.can_login ? 'yes' : 'no'}">${role.can_login ? 'ENABLED' : 'DISABLED'}</span>
+                            </div>
+                            <div class="prop">
+                                <span class="label">ROLE ASSIGNMENT</span>
+                                <span class="value code">${role.is_superuser ? 'SUPERUSER' : 'STANDARD_ROLE'}</span>
+                            </div>
                         </div>
                         <div class="card-actions">
-                            <button class="btn-secondary btn-sm" onclick='openEdit("${role.role}", ${role.is_superuser}, ${role.can_login})'>Edit</button>
-                            <button class="btn-secondary btn-sm" onclick='openPerms("${role.role}")'>Permissions</button>
-                            <button class="btn-icon delete" onclick='deleteRole("${role.role}")' title="Delete">
+                            <button class="btn-secondary btn-sm" onclick='openEdit("${role.role}", ${role.is_superuser}, ${role.can_login})'>MODIFY</button>
+                            <button class="btn-secondary btn-sm" onclick='openPerms("${role.role}")'>PERMISSIONS</button>
+                            <button class="btn-icon delete" onclick='deleteRole("${role.role}")' title="Revoke Role">
                                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                     <polyline points="3 6 5 6 21 6"></polyline>
                                     <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
@@ -243,10 +300,22 @@
             document.getElementById('create-modal').classList.remove('hidden');
             document.getElementById('new-role-name').focus();
         };
+
+        // Tab Switching in Perm Modal
+        document.querySelectorAll('[data-perm-tab]').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const target = btn.dataset.permTab;
+                document.querySelectorAll('.modal-tab-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.perm-tab-content').forEach(c => c.classList.remove('active'));
+                btn.classList.add('active');
+                document.getElementById(`perm-tab-${target}`).classList.add('active');
+            });
+        });
+
         document.getElementById('create-form').onsubmit = async (e) => {
             e.preventDefault();
             const btn = document.getElementById('btn-create');
-            btn.textContent = 'Creating...'; btn.disabled = true;
+            btn.textContent = 'PROVISIONING...'; btn.disabled = true;
 
             const data = Object.fromEntries(new FormData(e.target));
             data.superuser = !!data.superuser;
@@ -258,7 +327,7 @@
                     body: JSON.stringify(data)
                 });
                 if (res.ok) {
-                    Toast.success('Role Created');
+                    Toast.success('Role Provisioned');
                     document.getElementById('create-modal').classList.add('hidden');
                     e.target.reset();
                     fetchRoles();
@@ -266,7 +335,7 @@
                     const err = await res.json(); Toast.error(err.detail);
                 }
             } catch (er) { Toast.error(er.message); }
-            btn.textContent = 'Create Role'; btn.disabled = false;
+            btn.textContent = 'Provision Role'; btn.disabled = false;
         };
 
         // Edit
@@ -311,13 +380,18 @@
             currentPermRole = role;
             document.getElementById('perm-role-name-display').textContent = role;
             document.getElementById('perm-modal').classList.remove('hidden');
+
+            // Reset to visualizer tab
+            const firstTab = document.querySelectorAll('[data-perm-tab]')[0];
+            if (firstTab) firstTab.click();
+
             loadPerms(role);
         };
 
         document.getElementById('grant-btn').onclick = () => {
             const res = document.getElementById('perm-resource').value;
             const type = document.getElementById('perm-type').value;
-            if (!res) return Toast.error('Resource required');
+            if (!res) return Toast.error('Resource descriptor required');
 
             callPerm('grant', { role: currentPermRole, resource: res, permission: type })
                 .then(ok => { if (ok) { document.getElementById('perm-resource').value = ''; loadPerms(currentPermRole); } });
@@ -326,23 +400,33 @@
 
     function loadPerms(role) {
         const list = document.getElementById('perm-list');
-        list.innerHTML = '<div style="padding:20px; text-align:center;">Loading...</div>';
+        const ksArea = document.getElementById('vis-nodes-ks');
+        const tbArea = document.getElementById('vis-nodes-tb');
+        const authArea = document.getElementById('vis-nodes-auth');
+
+        list.innerHTML = '<div style="padding:20px; text-align:center;">Loading permissions...</div>';
+        ksArea.innerHTML = ''; tbArea.innerHTML = ''; authArea.innerHTML = '';
+
         fetch(`/api/v1/cluster/${clusterName}/auth/permissions/${encodeURIComponent(role)}`)
             .then(res => res.json())
             .then(perms => {
                 if (perms.detail) return list.innerHTML = `<div style="padding:10px; color:#ff5252;">${perms.detail}</div>`;
-                if (!perms.length) return list.innerHTML = '<div style="padding:20px; width:100%; text-align:center; color:#888;">No explicit permissions found.</div>';
+
+                if (!perms.length) {
+                    list.innerHTML = '<div style="padding:20px; width:100%; text-align:center; color:#888;">No explicit permissions found.</div>';
+                    const msg = '<div class="vis-empty">NONE</div>';
+                    ksArea.innerHTML = msg; tbArea.innerHTML = msg; authArea.innerHTML = msg;
+                    return;
+                }
 
                 list.innerHTML = '';
                 perms.sort((a, b) => a.resource.localeCompare(b.resource));
 
                 perms.forEach(p => {
+                    // Populate List view
                     const div = document.createElement('div');
                     div.className = 'perm-item';
-
-                    // Escape HTML in resource to prevent browser hiding <tags>
                     const safeRes = p.resource.replace(/</g, "&lt;").replace(/>/g, "&gt;");
-                    // Use italics for <all keyspaces> etc.
                     const displayRes = safeRes.startsWith("&lt;") ?
                         `<span style="opacity:0.7; font-style:italic;">${safeRes}</span>` : safeRes;
 
@@ -354,7 +438,26 @@
                          </div>
                     `;
                     list.appendChild(div);
+
+                    // Populate Visualizer
+                    const node = document.createElement('div');
+                    node.className = 'vis-node';
+                    node.innerHTML = `<span class="p-type">${p.permission}</span><span class="p-res">${safeRes}</span>`;
+
+                    const resLower = p.resource.toLowerCase();
+                    if (resLower.includes('keyspace') && !resLower.includes('.')) {
+                        ksArea.appendChild(node);
+                    } else if (resLower.includes('.') || resLower.includes('table')) {
+                        tbArea.appendChild(node);
+                    } else {
+                        authArea.appendChild(node);
+                    }
                 });
+
+                // Add "Safe" status if empty
+                if (!ksArea.innerHTML) ksArea.innerHTML = '<div class="vis-empty">NONE</div>';
+                if (!tbArea.innerHTML) tbArea.innerHTML = '<div class="vis-empty">NONE</div>';
+                if (!authArea.innerHTML) authArea.innerHTML = '<div class="vis-empty">NONE</div>';
             })
             .catch(e => {
                 list.innerHTML = '<div style="padding:10px; color:#ff5252;">Failed to load permissions.</div>';

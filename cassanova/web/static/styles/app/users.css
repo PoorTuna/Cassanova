@@ -1,40 +1,72 @@
-/* User Management Dashboard */
-.page-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 2rem;
+/* Cassanova Guard - SOC Aesthetic */
+.guard-page {
+    padding-bottom: 5rem;
 }
 
-.header-content h2 {
-    margin: 0;
-    font-size: 1.8rem;
-    color: var(--text-primary);
+/* User Management - Professional Aesthetic */
+.guard-overview-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 3rem;
 }
 
-.header-content .subtitle {
-    margin: 5px 0 0 0;
+.stat-card {
+    background: var(--glass-surface);
+    border: 1px solid var(--glass-border);
+    border-radius: 16px;
+    padding: 1.5rem;
+    position: relative;
+    overflow: hidden;
+    backdrop-filter: var(--backdrop-blur);
+}
+
+.stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: var(--color-primary);
+}
+
+.stat-card.superuser::before {
+    background: #ff4081;
+}
+
+.stat-label {
+    font-size: 0.75rem;
+    font-weight: 700;
     color: var(--text-muted);
-    font-size: 0.95rem;
+    letter-spacing: 0.1em;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+}
+
+.stat-value {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: var(--text-primary);
 }
 
 .users-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
     gap: 1.5rem;
-    margin-top: 2rem;
 }
 
 .user-card {
     display: flex;
     flex-direction: column;
-    padding: 1.5rem;
-    position: relative;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    padding: 2rem;
     background: var(--glass-surface);
     backdrop-filter: var(--backdrop-blur);
     border: 1px solid var(--glass-border);
-    border-radius: 16px;
+    border-radius: 20px;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
 }
 
 .user-card:hover {
@@ -457,6 +489,127 @@
     color: white;
 }
 
+.large-modal {
+    max-width: 900px !important;
+}
+
+.modal-tabs {
+    display: flex;
+    padding: 0 2.5rem;
+    gap: 2rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.modal-tab-btn {
+    background: none;
+    border: none;
+    padding: 1rem 0;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    position: relative;
+    transition: color 0.2s;
+}
+
+.modal-tab-btn.active {
+    color: var(--color-primary);
+}
+
+.modal-tab-btn.active::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: var(--color-primary);
+    box-shadow: 0 0 10px rgba(0, 229, 255, 0.5);
+}
+
+.perm-tab-content {
+    display: none;
+}
+
+.perm-tab-content.active {
+    display: block;
+    animation: fadeIn 0.3s ease-out;
+}
+
+.security-visualizer-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    min-height: 300px;
+}
+
+.vis-category {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.03);
+    border-radius: 12px;
+    padding: 1.25rem;
+}
+
+.vis-cat-header {
+    font-size: 0.7rem;
+    font-weight: 800;
+    color: var(--text-muted);
+    letter-spacing: 0.15em;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.vis-nodes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.vis-node {
+    background: rgba(var(--color-primary-rgb), 0.05);
+    border: 1px solid rgba(var(--color-primary-rgb), 0.15);
+    border-radius: 6px;
+    padding: 6px 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 120px;
+    max-width: 100%;
+}
+
+.vis-node .p-type {
+    font-size: 0.65rem;
+    font-weight: 800;
+    color: var(--color-primary);
+}
+
+.vis-node .p-res {
+    font-size: 0.75rem;
+    color: var(--text-primary);
+    font-family: var(--font-mono);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.vis-empty {
+    width: 100%;
+    padding: 2rem 1rem;
+    text-align: center;
+    color: rgba(255, 255, 255, 0.05);
+    font-weight: 800;
+    letter-spacing: 0.2em;
+    font-size: 0.8rem;
+}
+
 .add-perm-form-container {
     border-top: 1px solid var(--glass-border);
     padding-top: 1.5rem;
@@ -479,11 +632,11 @@
 @keyframes fadeIn {
     from {
         opacity: 0;
-        transform: scale(0.98);
+        transform: translateY(10px);
     }
 
     to {
         opacity: 1;
-        transform: scale(1);
+        transform: translateY(0);
     }
 }
