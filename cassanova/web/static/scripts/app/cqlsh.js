@@ -12,6 +12,7 @@ require(['vs/editor/editor.main'], function () {
         fontSize: 14,
         tabSize: 2,
         lineNumbers: 'on',
+        padding: { top: 16 },
     });
 });
 
@@ -96,7 +97,7 @@ function renderTrace(trace) {
         <div class="trace-item">
             <div class="trace-header">
                 <span class="trace-desc">${event.description}</span>
-                <span class="trace-duration">${(event.duration * 1000).toFixed(2)} ms</span>
+                <span class="trace-duration">${event.elapsed_ms.toFixed(3)} ms</span>
             </div>
             <div class="trace-source">Source: ${event.source}</div>
         </div>
@@ -108,7 +109,7 @@ function renderTrace(trace) {
                 <strong>Coordinator:</strong> <span>${trace.coordinator}</span>
             </div>
             <div style="display: flex; justify-content: space-between;">
-                <strong>Total Duration:</strong> <span style="color: var(--color-warning); font-weight: 700;">${trace.duration} ms</span>
+                <strong>Total Duration:</strong> <span style="color: var(--color-warning); font-weight: 700;">${trace.duration_ms.toFixed(3)} ms</span>
             </div>
         </div>
         <div class="trace-container">

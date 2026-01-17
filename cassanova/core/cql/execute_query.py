@@ -24,13 +24,26 @@ def execute_query_cql(session: Session, query: CQLQuery) -> list[dict[str, Any]]
 
 def get_trace_info(result_set: ResultSet) -> dict[str, Any]:
     trace = result_set.get_query_trace()
-    trace_info = {
+    
+    if isinstance(trace.duration, int):
+        duration_ms = trace.duration / 1000.0
+    elif trace.duration:
+        duration_ms = trace.duration.total_seconds() * 1000.0
+    else:
+        duration_ms = 0.0
+
+    events = []
+    for e in trace.events:
+        ms = e.source_elapsed.total_seconds() * 1000.0
+        events.append({'description': e.description, 'source': e.source, 'elapsed_ms': ms})
+
+    if duration_ms == 0 and events:
+        duration_ms = max(e['elapsed_ms'] for e in events)
+
+    return {
         'request_type': trace.request_type,
-        'duration': trace.duration,
+        'duration_ms': duration_ms,
         'coordinator': trace.coordinator,
         'parameters': trace.parameters,
-        'events': [{'description': e.description, 'source': e.source, 'duration': e.source_elapsed.total_seconds()} for
-                   e in
-                   trace.events]
+        'events': events
     }
-    return trace_info

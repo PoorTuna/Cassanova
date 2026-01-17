@@ -115,6 +115,7 @@ main.with-sidebar {
     margin-left: 260px;
     /* Matched to sidebar width */
     max-width: calc(100vw - 260px);
+    padding: 2rem;
 }
 
 /* --- Glass Elements --- */
