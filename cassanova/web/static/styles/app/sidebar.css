@@ -310,3 +310,94 @@ body:has(.sidebar.collapsed) main.with-sidebar,
     top: 0;
     width: 160px;
 }
+
+
+/* === User Profile Section === */
+.user-profile-section {
+    border-top: 1px solid var(--glass-border);
+    padding: 1rem 0.5rem 0 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.user-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark, #0056b3));
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 1.1rem;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    flex-shrink: 0;
+}
+
+.user-info {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    flex-grow: 1;
+}
+
+.user-name {
+    font-family: var(--font-display);
+    font-weight: 600;
+    color: var(--text-primary);
+    font-size: 0.95rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.user-role {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.logout-btn-mini {
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    padding: 6px;
+    border-radius: 6px;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.logout-btn-mini:hover {
+    color: var(--color-danger);
+    background: rgba(255, 68, 68, 0.1);
+}
+
+/* Collapsed State for User Profile */
+.sidebar.collapsed .user-profile-section {
+    flex-direction: column;
+    padding: 1rem 0 0 0;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.sidebar.collapsed .user-info {
+    display: none;
+}
+
+.sidebar.collapsed .logout-btn-mini {
+    display: flex;
+    /* Ensure it remains visible */
+    margin-top: 0.25rem;
+}
+
+.sidebar.collapsed .user-avatar {
+    width: 32px;
+    height: 32px;
+    font-size: 0.9rem;
+}

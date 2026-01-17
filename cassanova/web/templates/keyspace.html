@@ -280,9 +280,15 @@
 </main>
 
 <div id="json-modal" class="modal hidden">
-    <div class="modal-content">
-        <span id="modal-close" class="modal-close">&times;</span>
-        <pre id="modal-pre" style="white-space: pre-wrap; max-height: 70vh; overflow-y: auto;"></pre>
+    <div class="modal-content glass-panel" style="max-width: 800px;">
+        <div class="modal-header">
+            <h3 id="modal-title">Schema Details</h3>
+            <span id="modal-close" class="modal-close">&times;</span>
+        </div>
+        <div class="modal-body">
+            <pre id="modal-pre"
+                style="white-space: pre-wrap; max-height: 60vh; overflow-y: auto; background: var(--bg-code); padding: 1.5rem; border-radius: 12px; margin: 0; font-size: 0.9rem; line-height: 1.6;"></pre>
+        </div>
     </div>
 </div>
 {% endblock %}

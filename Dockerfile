@@ -17,10 +17,16 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 RUN useradd -m cassanova
 
 WORKDIR /opt/cassanova
-COPY --chown=cassanova:cassanova . /opt/cassanova
 
-RUN pip install --no-cache-dir -r requirements.txt
+
+RUN pip install uv
+
+COPY ./requirements.txt /opt/cassanova
+
+RUN uv pip install --no-cache-dir -r requirements.txt
 RUN find /opt/cassanova/cassanova/external_tools/cassandra-5-0-4/bin -type f -exec chmod +x {} \;
+
+COPY --chown=cassanova:cassanova . /opt/cassanova
 
 USER cassanova
 WORKDIR /opt/cassanova/cassanova

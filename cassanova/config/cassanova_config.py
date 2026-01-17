@@ -3,11 +3,11 @@ from functools import cache
 from json import dump
 from logging import getLogger
 from pathlib import Path
-from typing import Optional
 
 from pydantic_settings import BaseSettings, PydanticBaseSettingsSource, JsonConfigSettingsSource
 
 from cassanova.config.app_config import APPConfig
+from cassanova.config.auth_config import AuthConfig
 from cassanova.config.cluster_config import ClusterConnectionConfig
 
 logger = getLogger(__name__)
@@ -16,7 +16,7 @@ logger = getLogger(__name__)
 # todo: add support for env vars injection + env files as an alternative to the file loading
 class CassanovaConfig(BaseSettings):
     clusters: dict[str, ClusterConnectionConfig]
-    monitoring_url: Optional[str] = None
+    auth: AuthConfig = AuthConfig()
     app_config: APPConfig = APPConfig()
 
     @classmethod
