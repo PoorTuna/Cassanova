@@ -2,11 +2,12 @@ from http import HTTPStatus
 from shutil import rmtree
 from typing import List, Optional, Literal
 
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 from fastapi import UploadFile, File, Form
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
 
+from cassanova.api.dependencies.auth import require_permissions
 from cassanova.api.dependencies.db_session import get_session
 from cassanova.consts.cass_tools import CassTools
 from cassanova.core.cql.execute_query import execute_query_cql
@@ -20,7 +21,7 @@ tools_router = APIRouter()
 
 
 @tools_router.post("/cluster/{cluster_name}/operations/cqlsh")
-def run_cqlsh(cluster_name: str, query: CQLQuery):
+def run_cqlsh(cluster_name: str, query: CQLQuery, _user=Depends(require_permissions("cluster:admin"))):
     session = get_session(cluster_name)
     result = execute_query_cql(session, query)
     return jsonable_encoder(result, custom_encoder={bytes: lambda var: var.hex()})
@@ -33,6 +34,7 @@ def get_available_tools():
 
 @tools_router.post("/tool/run")
 async def run_tool(
+        _user=Depends(require_permissions("cluster:admin")),
         tool: Literal[*CassTools.ALLOWED_TOOLS] = Form(...),
         args: Optional[str] = Form(None),
         namespace: Optional[str] = Form(None),

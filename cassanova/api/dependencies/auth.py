@@ -118,3 +118,6 @@ def require_permission(perm: str):
         return user
 
     return dep
+
+
+require_permissions = require_permission

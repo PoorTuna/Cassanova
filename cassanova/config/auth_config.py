@@ -1,9 +1,17 @@
 from typing import Optional, Annotated
 
-from passlib.context import CryptContext
-from pydantic import BaseModel, Field, AfterValidator
+import bcrypt
+from pydantic import BaseModel, Field, BeforeValidator
 
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
+def hash_password(v: str) -> str:
+    if isinstance(v, str) and not (v.startswith("$2b$") or v.startswith("$2a$")):
+        return bcrypt.hashpw(v.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
+    return v
+
+
+def verify_password(plain_password: str, hashed_password: str) -> bool:
+    return bcrypt.checkpw(plain_password.encode('utf-8'), hashed_password.encode('utf-8'))
 
 
 class WebRole(BaseModel):
@@ -14,10 +22,7 @@ class WebRole(BaseModel):
 
 class WebUser(BaseModel):
     username: str
-    password: Annotated[
-        str,
-        AfterValidator(lambda v: v if v.startswith("$2b$") or v.startswith("$2a$") else pwd_context.hash(v))
-    ]
+    password: Annotated[str, BeforeValidator(hash_password)]
     roles: list[str] = Field(default_factory=list)
     full_name: Optional[str] = None
 

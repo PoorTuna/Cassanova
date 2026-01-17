@@ -2,10 +2,11 @@ from json import loads
 from typing import Any
 
 from cassandra.query import SimpleStatement
-from fastapi import APIRouter, HTTPException, UploadFile, File
+from fastapi import APIRouter, HTTPException, UploadFile, File, Depends
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import StreamingResponse
 
+from cassanova.api.dependencies.auth import require_permissions
 from cassanova.api.dependencies.csv_handler import generate_csv_stream, load_csv_data
 from cassanova.api.dependencies.db_session import get_session
 from cassanova.core.cql.converters import convert_value_for_cql
@@ -76,7 +77,8 @@ def get_cell_metadata(cluster_name: str, keyspace_name: str, table_name: str, pk
 
 
 @data_router.put("/cluster/{cluster_name}/keyspace/{keyspace_name}/table/{table_name}/row")
-def update_table_row(cluster_name: str, keyspace_name: str, table_name: str, update_data: dict[str, Any]):
+def update_table_row(cluster_name: str, keyspace_name: str, table_name: str, update_data: dict[str, Any],
+                     _user=Depends(require_permissions("cluster:write"))):
     session = get_session(cluster_name)
     pk_data = update_data.get("pk", {})
     updates = update_data.get("updates", {})
@@ -123,7 +125,8 @@ def update_table_row(cluster_name: str, keyspace_name: str, table_name: str, upd
 
 
 @data_router.delete("/cluster/{cluster_name}/keyspace/{keyspace_name}/table/{table_name}/row")
-def delete_table_row(cluster_name: str, keyspace_name: str, table_name: str, pk_data: dict[str, Any]):
+def delete_table_row(cluster_name: str, keyspace_name: str, table_name: str, pk_data: dict[str, Any],
+                     _user=Depends(require_permissions("cluster:write"))):
     session = get_session(cluster_name)
     if not pk_data:
         raise HTTPException(status_code=400, detail="Missing PK data for deletion")
@@ -159,7 +162,8 @@ def delete_table_row(cluster_name: str, keyspace_name: str, table_name: str, pk_
 
 
 @data_router.post("/cluster/{cluster_name}/keyspace/{keyspace_name}/table/{table_name}/row")
-def insert_table_row(cluster_name: str, keyspace_name: str, table_name: str, row_data: dict[str, Any]):
+def insert_table_row(cluster_name: str, keyspace_name: str, table_name: str, row_data: dict[str, Any],
+                     _user=Depends(require_permissions("cluster:write"))):
     session = get_session(cluster_name)
     if not row_data:
         raise HTTPException(status_code=400, detail="Missing row data for insertion")
@@ -218,7 +222,8 @@ def export_table_data(cluster_name: str, keyspace_name: str, table_name: str,
 
 
 @data_router.post("/cluster/{cluster_name}/keyspace/{keyspace_name}/table/{table_name}/import")
-def import_table_data(cluster_name: str, keyspace_name: str, table_name: str, file: UploadFile = File(...)):
+def import_table_data(cluster_name: str, keyspace_name: str, table_name: str, file: UploadFile = File(...),
+                      _user=Depends(require_permissions("cluster:write"))):
     session = get_session(cluster_name)
 
     cluster = session.cluster
