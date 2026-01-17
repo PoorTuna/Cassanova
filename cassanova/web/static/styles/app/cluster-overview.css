@@ -59,6 +59,11 @@
     font-weight: 700;
     color: var(--text-primary);
     letter-spacing: -0.01em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    display: block;
+    max-width: 100%;
 }
 
 /* Specific Value Coloring */
