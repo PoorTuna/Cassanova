@@ -362,6 +362,25 @@ def export_table_data(cluster_name: str, keyspace_name: str, table_name: str,
     )
 
 
+@cluster_router.get("/cluster/{cluster_name}/schema-map")
+def get_cluster_schema_map(cluster_name: str):
+    session = get_session(cluster_name)
+    metadata = session.cluster.metadata
+    
+    schema_map = {}
+    for ks_name, ks_meta in metadata.keyspaces.items():
+        tables = {}
+        for table_name, table_meta in ks_meta.tables.items():
+            tables[table_name] = [col.name for col in table_meta.columns.values()]
+        
+        for view_name, view_meta in ks_meta.views.items():
+            tables[view_name] = [col.name for col in view_meta.columns.values()]
+            
+        schema_map[ks_name] = tables
+        
+    return schema_map
+
+
 @cluster_router.post("/cluster/{cluster_name}/keyspace/{keyspace_name}/table/{table_name}/import")
 def import_table_data(cluster_name: str, keyspace_name: str, table_name: str, file: UploadFile = File(...)):
     session = get_session(cluster_name)

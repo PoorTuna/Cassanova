@@ -1,19 +1,158 @@
 require.config({ paths: { vs: '/static/scripts/vendor/monaco' } });
-
 window.editorInstance = null;
+let clusterSchema = null;
+
+const CQL_KEYWORDS = [
+    'SELECT', 'INSERT', 'UPDATE', 'DELETE', 'TRUNCATE', 'FROM', 'INTO', 'WHERE',
+    'SET', 'VALUES', 'AND', 'OR', 'LIMIT', 'ALLOW FILTERING', 'ORDER BY', 'ASC', 'DESC',
+    'CREATE', 'KEYSPACE', 'TABLE', 'INDEX', 'DROP', 'PRIMARY KEY', 'IF NOT EXISTS',
+    'BEGIN', 'BATCH', 'APPLY', 'USING', 'TTL', 'TIMESTAMP', 'WRITETIME', 'JSON', 'DISTINCT'
+];
+
+async function fetchSchema() {
+    try {
+        const response = await fetch(`/api/v1/cluster/${encodeURIComponent(clusterName)}/schema-map`);
+        if (response.ok) {
+            clusterSchema = await response.json();
+            console.log("Cassanova: Schema Map Loaded for IntelliSense");
+        }
+    } catch (e) {
+        console.error("Cassanova: Failed to fetch schema:", e);
+    }
+}
 
 require(['vs/editor/editor.main'], function () {
+    // Basic context parser to see what we should suggest
+    function getContext(model, position) {
+        const line = model.getLineContent(position.lineNumber);
+        const textBefore = line.substring(0, position.column - 1).toUpperCase();
+        const words = textBefore.split(/\s+/).filter(x => x);
+        const lastWord = words[words.length - 1] || "";
+
+        if (lastWord === "FROM" || lastWord === "INTO" || lastWord === "TABLE" || lastWord === "UPDATE") {
+            return "SOURCE";
+        }
+
+        // Handle dotted path: keyspace.table or keyspace.
+        if (lastWord.includes('.')) {
+            const parts = lastWord.split('.');
+            const ks = parts[0].toLowerCase();
+            if (clusterSchema && clusterSchema[ks]) {
+                return { type: "TABLE_IN_KS", ks: ks };
+            }
+        }
+
+        // Only suggest keywords if at start of line or after whitespace
+        if (words.length === 0 || words.length === 1 && !line.includes(' ')) {
+            return "GENERAL";
+        }
+
+        const fullText = model.getValue().toUpperCase();
+        const fromMatch = fullText.match(/FROM\s+([a-zA-Z0-9_.]+)/);
+        if (fromMatch) {
+            const source = fromMatch[1].split('.');
+            let ks = null;
+            let tb = null;
+            if (source.length === 2) { [ks, tb] = source; } else { tb = source[0]; }
+            return { type: "COLUMN", ks: ks?.toLowerCase(), tb: tb.toLowerCase() };
+        }
+
+        return "GENERAL";
+    }
+
+    monaco.languages.registerCompletionItemProvider('sql', {
+        triggerCharacters: ['.'],
+        provideCompletionItems: (model, position) => {
+            const word = model.getWordUntilPosition(position);
+            const range = {
+                startLineNumber: position.lineNumber,
+                endLineNumber: position.lineNumber,
+                startColumn: word.startColumn,
+                endColumn: word.endColumn
+            };
+
+            const suggestions = [];
+            const context = getContext(model, position);
+
+            // 1. Suggest Keywords
+            if (context === "GENERAL") {
+                CQL_KEYWORDS.forEach(k => {
+                    suggestions.push({
+                        label: k,
+                        kind: monaco.languages.CompletionItemKind.Keyword,
+                        insertText: k,
+                        range: range
+                    });
+                });
+            }
+
+            if (!clusterSchema) return { suggestions: suggestions };
+
+            // 2. Suggest Keyspaces
+            if (context === "SOURCE" || context === "GENERAL") {
+                Object.keys(clusterSchema).forEach(ks => {
+                    suggestions.push({
+                        label: ks,
+                        kind: monaco.languages.CompletionItemKind.Module,
+                        insertText: ks,
+                        detail: 'Keyspace',
+                        range: range
+                    });
+                });
+            }
+
+            // 3. Suggest Tables
+            if (context.type === "TABLE_IN_KS") {
+                const tables = clusterSchema[context.ks];
+                Object.keys(tables).forEach(tb => {
+                    suggestions.push({
+                        label: tb,
+                        kind: monaco.languages.CompletionItemKind.Class,
+                        insertText: tb,
+                        detail: `Table in ${context.ks}`,
+                        range: range
+                    });
+                });
+            } else if (context.type === "COLUMN") {
+                let columns = [];
+                if (context.ks) {
+                    columns = clusterSchema[context.ks]?.[context.tb] || [];
+                } else {
+                    for (const ks in clusterSchema) {
+                        if (clusterSchema[ks][context.tb]) {
+                            columns = clusterSchema[ks][context.tb];
+                            break;
+                        }
+                    }
+                }
+                columns.forEach(col => {
+                    suggestions.push({
+                        label: col,
+                        kind: monaco.languages.CompletionItemKind.Field,
+                        insertText: col,
+                        detail: `Column in ${context.tb}`,
+                        range: range
+                    });
+                });
+            }
+
+            return { suggestions: suggestions };
+        }
+    });
+
     window.editorInstance = monaco.editor.create(document.getElementById('monaco-editor'), {
         value: "-- Write your CQL query here\n-- Use mouse selection if there are multiple queries\nSELECT * FROM system_schema.keyspaces;",
-        language: 'sql', // closest for CQL
+        language: 'sql',
         theme: 'vs-dark',
-        automaticLayout: false, // manual layout control for better resizing
+        automaticLayout: false,
         minimap: { enabled: false },
         fontSize: 14,
         tabSize: 2,
         lineNumbers: 'on',
         padding: { top: 16 },
     });
+
+    fetchSchema();
 });
 
 const container = document.getElementById('container');
