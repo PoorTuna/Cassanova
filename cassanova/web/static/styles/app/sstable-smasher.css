@@ -1,0 +1,189 @@
+/* SSTable Smasher - Developer Aesthetic */
+#game-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    background: rgba(0, 0, 0, 0.95);
+    backdrop-filter: blur(20px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+#game-modal.hidden {
+    display: none !important;
+}
+
+.game-container {
+    position: relative;
+    width: 600px;
+    height: 600px;
+    background: #09090b;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 0 100px rgba(0, 0, 0, 1),
+        inset 0 0 50px rgba(0, 229, 255, 0.05);
+}
+
+#game-canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.game-overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    pointer-events: none;
+    z-index: 10;
+}
+
+.game-overlay.hidden {
+    display: none;
+}
+
+.game-title {
+    font-family: 'JetBrains Mono', 'Roboto Mono', monospace;
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: #fff;
+    letter-spacing: -0.05em;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+}
+
+.game-subtitle {
+    font-family: inherit;
+    font-size: 0.9rem;
+    color: var(--color-primary);
+    margin-bottom: 2rem;
+    letter-spacing: 0.2em;
+}
+
+.game-instructions {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    line-height: 1.6;
+}
+
+.game-stats {
+    position: absolute;
+    top: 2rem;
+    left: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    z-index: 5;
+}
+
+.game-help-trigger {
+    position: absolute;
+    top: 2rem;
+    left: 17rem;
+    /* Shifted from stats */
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all 0.2s;
+    z-index: 20;
+    opacity: 0.6;
+}
+
+.game-help-trigger:hover {
+    color: var(--color-primary);
+    opacity: 1;
+    transform: scale(1.1);
+}
+
+.manual-content {
+    max-width: 400px;
+    padding: 2.5rem;
+    text-align: left;
+    pointer-events: auto;
+}
+
+.manual-content h3 {
+    font-family: var(--font-mono);
+    font-size: 1.25rem;
+    color: #fff;
+    margin-bottom: 1.5rem;
+    letter-spacing: 0.1em;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 0.5rem;
+}
+
+.manual-section {
+    margin-bottom: 1.5rem;
+}
+
+.manual-section h4 {
+    font-size: 0.75rem;
+    color: var(--color-primary);
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+    letter-spacing: 0.05em;
+}
+
+.manual-section p {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    line-height: 1.5;
+}
+
+.manual-content .btn-primary {
+    width: 100%;
+    margin-top: 1rem;
+}
+
+.stat-item {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    letter-spacing: 0.05em;
+}
+
+.stat-item span {
+    color: #fff;
+    font-weight: 700;
+}
+
+.close-game {
+    position: absolute;
+    top: 2rem;
+    right: 2rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #fff;
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.close-game:hover {
+    background: #ff4444;
+    border-color: #ff4444;
+}
+
+/* Keyframe for merge glow */
+@keyframes mergeGlow {
+    0% {
+        filter: brightness(1) blur(0px);
+    }
+
+    50% {
+        filter: brightness(2) blur(10px);
+    }
+
+    100% {
+        filter: brightness(1) blur(0px);
+    }
+}
