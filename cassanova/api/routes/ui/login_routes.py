@@ -29,7 +29,7 @@ async def login_page(request: Request):
 
 
 @login_router.post("/login")
-async def login_web(request: Request, username: str = Form(...), password: str = Form(...)):
+async def login_web(username: str = Form(...), password: str = Form(...)):
     user = authenticate_user(username, password)
     config = get_clusters_config()
     if not user:
@@ -62,7 +62,7 @@ async def login_api(form_data: OAuth2PasswordRequestForm = Depends()):
 
 
 @login_router.get("/logout")
-async def logout(request: Request):
+async def logout():
     response = RedirectResponse(url="/login", status_code=302)
     response.delete_cookie("access_token")
     return response
