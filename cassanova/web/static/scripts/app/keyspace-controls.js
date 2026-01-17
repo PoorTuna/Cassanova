@@ -21,10 +21,32 @@ function filterKeyspaces() {
     }
 }
 
+function formatReplication(replicationStr) {
+    try {
+        // Try to parse if it's a JSON-like string from python repr
+        let clean = replicationStr.replace(/'/g, '"');
+        let obj = JSON.parse(clean);
+        let strategy = obj.class || 'Unknown';
+        if (strategy.includes('.')) {
+            strategy = strategy.split('.').pop();
+        }
+
+        let details = [];
+        for (let key in obj) {
+            if (key !== 'class') {
+                details.push(`${key}: ${obj[key]}`);
+            }
+        }
+        return details.length > 0 ? `${strategy} (${details.join(', ')})` : strategy;
+    } catch (e) {
+        return replicationStr;
+    }
+}
+
 function showKeyspaceDetail(item) {
     const detail = document.getElementById('keyspace-detail');
     const name = item.dataset.name;
-    const replication = item.dataset.replication;
+    const replication = formatReplication(item.dataset.replication);
     const tables = item.dataset.tablecount;
     const durable = item.dataset.durable;
     const isVirtual = item.dataset.virtual;
@@ -33,11 +55,28 @@ function showKeyspaceDetail(item) {
     item.classList.add('active');
 
     detail.innerHTML = `
-        <h3>${name}</h3>
-        <p><strong>Replication:</strong> ${replication}</p>
-        <p><strong>Tables:</strong> ${tables}</p>
-        <p><strong>Durable Writes:</strong> ${durable}</p>
-        <p><strong>Virtual:</strong> ${isVirtual}</p>
+        <div class="detail-header">
+            <div class="title-group">
+                <h3>${name}</h3>
+                ${isVirtual === 'True' ? '<span class="badge virtual">Virtual</span>' : ''}
+            </div>
+            <a href="/cluster/${clusterConfigName}/keyspace/${name}" class="btn-primary">View Details</a>
+        </div>
+        
+        <div class="detail-grid">
+            <div class="detail-card">
+                <span class="label">Replication Strategy</span>
+                <span class="value code">${replication}</span>
+            </div>
+            <div class="detail-card">
+                <span class="label">Tables</span>
+                <span class="value accent">${tables}</span>
+            </div>
+            <div class="detail-card">
+                <span class="label">Durable Writes</span>
+                <span class="value">${durable === 'True' ? 'Enabled' : 'Disabled'}</span>
+            </div>
+        </div>
     `;
 }
 
@@ -46,31 +85,13 @@ document.addEventListener('DOMContentLoaded', () => {
         renderTopologyGraph(clusterData);
     }
 
-    document.getElementById('keyspace-filter')
-        .addEventListener('input', filterKeyspaces);
+    const filterInput = document.getElementById('keyspace-filter');
+    if (filterInput) {
+        filterInput.addEventListener('input', filterKeyspaces);
+    }
 
     document.querySelectorAll('.keyspace-item').forEach(item => {
         item.addEventListener('click', () => showKeyspaceDetail(item));
-    });
-
-    document.querySelectorAll('.keyspace-item').forEach(item => {
-        item.addEventListener('click', () => {
-            const name = item.dataset.name;
-            const replication = item.dataset.replication;
-            const tableCount = item.dataset.tablecount;
-            const durable = item.dataset.durable;
-            const isVirtual = item.dataset.virtual;
-
-            const detail = document.getElementById('keyspace-detail');
-            detail.innerHTML = `
-            <h3>${name}</h3>
-            <p>Replication: ${replication}</p>
-            <p>Tables: ${tableCount}</p>
-            <p>Durable Writes: ${durable}</p>
-            <p>Virtual: ${isVirtual}</p>
-            <a href="/cluster/${clusterConfigName}/keyspace/${name}" class="button">View Details</a>
-        `;
-        });
     });
 });
 

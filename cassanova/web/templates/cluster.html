@@ -4,6 +4,7 @@
 
 {% block head_extra %}
 <link href="/static/scripts/vendor/vis/vis-network.min.css" rel="stylesheet" />
+<link href="/static/styles/app/keyspaces.css" rel="stylesheet" />
 <script src="/static/scripts/vendor/vis/vis-network.min.js" defer></script>
 <script src="/static/scripts/app/keyspace-controls.js" defer></script>
 <script src="/static/scripts/app/topology-graph.js" defer></script>
@@ -66,7 +67,17 @@
             </div>
 
             <div id="keyspace-detail">
-                <p>Select a keyspace to view details.</p>
+                <div class="empty-state">
+                    <div class="icon-layer">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="1.5">
+                            <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path>
+                            <path d="M3 5c0 1.66 4 3 9 3s9-1.34 9-3"></path>
+                            <path d="M21 5v14c0 1.66-4 3-9 3s-9-1.34-9-3V5"></path>
+                        </svg>
+                    </div>
+                    <p>Select a keyspace to view details</p>
+                </div>
             </div>
         </div>
     </section>
