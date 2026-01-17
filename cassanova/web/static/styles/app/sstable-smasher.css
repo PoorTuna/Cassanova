@@ -100,43 +100,60 @@
 }
 
 .manual-content {
-    max-width: 400px;
+    width: 480px;
+    max-height: 85vh;
     padding: 2.5rem;
     text-align: left;
     pointer-events: auto;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+}
+
+/* Custom scrollbar for Manual */
+.manual-content::-webkit-scrollbar {
+    width: 4px;
+}
+
+.manual-content::-webkit-scrollbar-thumb {
+    background: rgba(0, 229, 255, 0.2);
+    border-radius: 2px;
 }
 
 .manual-content h3 {
     font-family: var(--font-mono);
     font-size: 1.25rem;
     color: #fff;
-    margin-bottom: 1.5rem;
+    margin-bottom: 2rem;
     letter-spacing: 0.1em;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     padding-bottom: 0.5rem;
+    flex-shrink: 0;
 }
 
 .manual-section {
-    margin-bottom: 1.5rem;
+    margin-bottom: 1.75rem;
 }
 
 .manual-section h4 {
     font-size: 0.75rem;
     color: var(--color-primary);
     text-transform: uppercase;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.6rem;
     letter-spacing: 0.05em;
+    font-weight: 800;
 }
 
 .manual-section p {
     font-size: 0.85rem;
     color: var(--text-muted);
-    line-height: 1.5;
+    line-height: 1.6;
 }
 
 .manual-content .btn-primary {
     width: 100%;
     margin-top: 1rem;
+    flex-shrink: 0;
 }
 
 .stat-item {
@@ -186,4 +203,36 @@
     100% {
         filter: brightness(1) blur(0px);
     }
+}
+
+/* Gameplay Trigger */
+#game-trigger {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    width: 50px;
+    height: 50px;
+    background: var(--glass-surface);
+    backdrop-filter: var(--backdrop-blur);
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 100;
+}
+
+#game-trigger:hover {
+    color: var(--color-primary);
+    border-color: var(--color-primary);
+    box-shadow: 0 0 20px rgba(0, 229, 255, 0.2);
+    transform: scale(1.1);
+}
+
+.accent {
+    color: var(--color-primary);
+    font-weight: 800;
 }

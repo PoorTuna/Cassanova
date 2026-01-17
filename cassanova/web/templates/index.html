@@ -143,38 +143,6 @@
         </div>
     </div>
 
-    <style>
-        #game-trigger {
-            position: fixed;
-            bottom: 2rem;
-            right: 2rem;
-            width: 50px;
-            height: 50px;
-            background: var(--glass-surface);
-            backdrop-filter: var(--backdrop-blur);
-            border: 1px solid var(--glass-border);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--text-muted);
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            z-index: 100;
-        }
-
-        #game-trigger:hover {
-            color: var(--color-primary);
-            border-color: var(--color-primary);
-            box-shadow: 0 0 20px rgba(0, 229, 255, 0.2);
-            transform: scale(1.1);
-        }
-
-        .accent {
-            color: var(--color-primary);
-            font-weight: 800;
-        }
-    </style>
 
     <script>
         function openSSTableSmasher() {
@@ -193,8 +161,11 @@
         function toggleGameManual() {
             const man = document.getElementById('game-manual-overlay');
             const startOverlay = document.getElementById('game-start-overlay');
+            const helpTrigger = document.querySelector('.game-help-trigger');
             const isClosing = !man.classList.contains('hidden');
+
             man.classList.toggle('hidden');
+            if (helpTrigger) helpTrigger.classList.toggle('hidden');
 
             if (window.gameInstance) {
                 // Only "resume" if the game has actually been started (start overlay is gone)
