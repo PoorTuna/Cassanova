@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+
+{% block title %}Login - Cassanova{% endblock %}
+
+{% block head_extra %}
+<link rel="stylesheet" href="/static/styles/app/login.css">
+{% endblock %}
+
+{% block body_class %}login-page{% endblock %}
+
+{% block content %}
+<div class="login-container">
+    <div class="login-header">
+        <div class="logo-circle">
+            <img src="/static/icons/logo/cassanova-logo.png" alt="Cassanova" />
+        </div>
+        <h1>Welcome to Cassanova</h1>
+    </div>
+
+    <div class="login-card">
+        <form id="login-form">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" placeholder="Enter your username" required autofocus>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <div class="password-wrapper">
+                    <input type="password" id="password" name="password" required>
+                    <button type="button" id="toggle-password" tabindex="-1">
+                        <svg class="eye-icon" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2">
+                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                            <circle cx="12" cy="12" r="3"></circle>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <div id="error-msg" class="error-msg hidden"></div>
+
+            <button type="submit" class="btn-login" id="login-btn">Log in</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    document.getElementById('toggle-password').addEventListener('click', function () {
+        const input = document.getElementById('password');
+        const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
+        input.setAttribute('type', type);
+        this.classList.toggle('visible');
+    });
+
+    document.getElementById('login-form').addEventListener('submit', async function (e) {
+        e.preventDefault();
+        const btn = document.getElementById('login-btn');
+        const errorBox = document.getElementById('error-msg');
+
+        btn.disabled = true;
+        btn.textContent = 'Verifying...';
+        errorBox.classList.add('hidden');
+
+        const formData = new FormData(this);
+
+        try {
+            const response = await fetch('/login', {
+                method: 'POST',
+                body: formData
+            });
+
+            if (response.ok) {
+                window.location.href = '/';
+            } else {
+                const data = await response.json();
+                errorBox.textContent = data.detail || 'Login failed';
+                errorBox.classList.remove('hidden');
+                btn.disabled = false;
+                btn.textContent = 'Log in';
+            }
+        } catch (err) {
+            errorBox.textContent = 'Connection error';
+            errorBox.classList.remove('hidden');
+            btn.disabled = false;
+            btn.textContent = 'Log in';
+        }
+    });
+</script>
+{% endblock %}

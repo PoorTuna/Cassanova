@@ -1,0 +1,82 @@
+.dracula-theme {
+    /* --- Brand & Typography --- */
+    --font-display: 'Outfit', sans-serif;
+    --font-body: 'Inter', sans-serif;
+    --font-mono: 'Fira Code', monospace;
+
+    /* --- Core Palette (Dracula Official) --- */
+    --color-primary: #bd93f9;
+    /* Purple */
+    --color-primary-rgb: 189, 147, 249;
+    --color-secondary: #ff79c6;
+    /* Pink */
+
+    --color-success: #50fa7b;
+    /* Green */
+    --color-warning: #f1fa8c;
+    /* Yellow */
+    --color-danger: #ff5555;
+    /* Red */
+    --color-info: #8be9fd;
+    /* Cyan */
+
+    /* --- Backgrounds (Dracula Official) --- */
+    --bg-app: #282a36;
+    /* Background */
+    --bg-surface: #363849;
+    /* Current Line */
+    --bg-sidebar: rgba(40, 42, 54, 0.95);
+
+    /* --- Glassmorphism --- */
+    --glass-surface: rgba(68, 71, 90, 0.7);
+    --glass-surface-hover: rgba(80, 83, 102, 0.8);
+    --glass-border: rgba(189, 147, 249, 0.3);
+    --glass-border-light: rgba(255, 121, 198, 0.3);
+    --glass-shine: rgba(255, 255, 255, 0.05);
+    --backdrop-blur: blur(12px);
+
+    /* --- Text Colors --- */
+    --text-primary: #f8f8f2;
+    /* Foreground */
+    --text-secondary: #bfbfbf;
+    /* Comment */
+    --text-muted: #6272a4;
+    /* Comment (Official) */
+    --text-on-primary: #282a36;
+
+    /* --- Legacy --- */
+    --bg-main: var(--bg-app);
+    --bg-panel: var(--glass-surface);
+    --bg-panel-alt: rgba(189, 147, 249, 0.05);
+    --bg-terminal: #1e1f29;
+    --bg-xterm: #191a21;
+
+    --bg-detail: transparent;
+    --bg-hover: rgba(189, 147, 249, 0.1);
+    --bg-hover-active: rgba(189, 147, 249, 0.2);
+
+    --color-primary-hover: #d0aef9;
+    --color-primary-active: #9d6fdd;
+    --color-primary-light: rgba(189, 147, 249, 0.2);
+    --color-primary-strong: #bd93f9;
+
+    --color-error: var(--color-danger);
+    --color-error-light: #ff6e6e;
+
+    /* --- Shadows & Glows --- */
+    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.5);
+    --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.6);
+    --shadow-lg: 0 12px 24px rgba(0, 0, 0, 0.7);
+
+    --glow-primary: 0 0 10px rgba(189, 147, 249, 0.3);
+    --glow-text: 0 0 5px rgba(248, 248, 242, 0.1);
+
+    /* --- Syntax (Dracula Official) --- */
+    --syntax-key: #ff79c6;
+    --syntax-string: #f1fa8c;
+    --syntax-number: #bd93f9;
+    --syntax-boolean: #ff5555;
+    --syntax-null: #6272a4;
+
+    --bg-glass-tint: rgba(40, 42, 54, 0.4);
+}

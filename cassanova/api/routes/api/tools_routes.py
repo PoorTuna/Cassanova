@@ -2,11 +2,12 @@ from http import HTTPStatus
 from shutil import rmtree
 from typing import List, Optional, Literal
 
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 from fastapi import UploadFile, File, Form
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
 
+from cassanova.api.dependencies.auth import require_permissions
 from cassanova.api.dependencies.db_session import get_session
 from cassanova.consts.cass_tools import CassTools
 from cassanova.core.cql.execute_query import execute_query_cql
@@ -16,23 +17,24 @@ from cassanova.core.tools.tool_validation import is_tool_allowed, get_tool_path
 from cassanova.core.tools.user_workspace import save_uploaded_files, get_namespace_dir
 from cassanova.models.cql_query import CQLQuery
 
-query_router = APIRouter()
+tools_router = APIRouter()
 
 
-@query_router.post("/cluster/{cluster_name}/operations/cqlsh")
-def run_cqlsh(cluster_name: str, query: CQLQuery):
+@tools_router.post("/cluster/{cluster_name}/operations/cqlsh")
+def run_cqlsh(cluster_name: str, query: CQLQuery, _user=Depends(require_permissions("cluster:admin"))):
     session = get_session(cluster_name)
     result = execute_query_cql(session, query)
     return jsonable_encoder(result, custom_encoder={bytes: lambda var: var.hex()})
 
 
-@query_router.get("/tool/list")
+@tools_router.get("/tool/list")
 def get_available_tools():
     return JSONResponse({'tools': CassTools.ALLOWED_TOOLS})
 
 
-@query_router.post("/tool/run")
+@tools_router.post("/tool/run")
 async def run_tool(
+        _user=Depends(require_permissions("cluster:admin")),
         tool: Literal[*CassTools.ALLOWED_TOOLS] = Form(...),
         args: Optional[str] = Form(None),
         namespace: Optional[str] = Form(None),

@@ -7,8 +7,9 @@ from cassanova.models.cluster_info.table import TableInfo
 
 
 def generate_tables_info(tables_metadata: list[TableMetadata]) -> list[TableInfo]:
+    actual_tables = [t for t in tables_metadata if not t.virtual]
     return [TableInfo(**serialize_to_primitive(_serialize_table_metadata(table_meta))) for table_meta in
-            tables_metadata]
+            actual_tables]
 
 
 def _serialize_table_metadata(table: TableMetadata) -> dict[str, Any]:

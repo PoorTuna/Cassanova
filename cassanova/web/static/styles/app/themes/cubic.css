@@ -1,0 +1,81 @@
+.cubic-theme {
+    /* --- Brand & Typography --- */
+    --font-display: 'Fira Code', monospace;
+    /* Pixel-y feel */
+    --font-body: 'Inter', sans-serif;
+    --font-mono: 'Fira Code', monospace;
+
+    /* --- Core Palette (Blocky Green) --- */
+    --color-primary: #52AA3F;
+    /* Creeper Green */
+    --color-primary-rgb: 82, 170, 63;
+    --color-secondary: #8B593E;
+    /* Dirt/Wood Brown */
+
+    --color-success: #52AA3F;
+    --color-warning: #FFAA00;
+    /* Gold Block */
+    --color-danger: #AA0000;
+    /* Redstone */
+    --color-info: #3F88AA;
+    /* Diamond */
+
+    /* --- Backgrounds (Stone & Bedrock) --- */
+    --bg-app: #1D1D1D;
+    --bg-surface: #2E2E2E;
+    /* Smooth Stone */
+    --bg-sidebar: rgba(29, 29, 29, 0.95);
+
+    /* --- Glassmorphism --- */
+    --glass-surface: rgba(46, 46, 46, 0.8);
+    --glass-surface-hover: rgba(60, 60, 60, 0.9);
+    --glass-border: rgba(255, 255, 255, 0.15);
+    /* Stronger edges */
+    --glass-border-light: rgba(255, 255, 255, 0.25);
+    --glass-shine: rgba(255, 255, 255, 0.05);
+    --backdrop-blur: blur(0px);
+    /* Crisper, less blur */
+
+    /* --- Text Colors --- */
+    --text-primary: #FFFFFF;
+    --text-secondary: #B0B0B0;
+    --text-muted: #707070;
+    --text-on-primary: #FFFFFF;
+
+    /* --- Legacy --- */
+    --bg-main: var(--bg-app);
+    --bg-panel: var(--glass-surface);
+    --bg-panel-alt: rgba(255, 255, 255, 0.05);
+    --bg-terminal: #111111;
+    --bg-xterm: #000000;
+
+    --bg-detail: transparent;
+    --bg-hover: rgba(255, 255, 255, 0.08);
+    --bg-hover-active: rgba(82, 170, 63, 0.2);
+
+    --color-primary-hover: #6BCF55;
+    --color-primary-active: #3E852F;
+    --color-primary-light: rgba(82, 170, 63, 0.2);
+    --color-primary-strong: #52AA3F;
+
+    --color-error: var(--color-danger);
+    --color-error-light: #FF5555;
+
+    /* --- Shadows --- */
+    --shadow-sm: 4px 4px 0px rgba(0, 0, 0, 0.5);
+    /* Retro block shadow */
+    --shadow-md: 6px 6px 0px rgba(0, 0, 0, 0.5);
+    --shadow-lg: 8px 8px 0px rgba(0, 0, 0, 0.5);
+
+    --glow-primary: none;
+    --glow-text: none;
+
+    /* --- Syntax --- */
+    --syntax-key: #52AA3F;
+    --syntax-string: #FFAA00;
+    --syntax-number: #3F88AA;
+    --syntax-boolean: #AA0000;
+    --syntax-null: #808080;
+
+    --bg-glass-tint: rgba(0, 0, 0, 0.3);
+}

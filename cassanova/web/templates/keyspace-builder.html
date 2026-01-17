@@ -1,0 +1,167 @@
+{% extends "base.html" %}
+
+{% block title %}Keyspace Builder - Cassanova{% endblock %}
+
+{% block head_extra %}
+<link rel="stylesheet" href="/static/styles/app/table-builder.css">
+<style>
+    /* Specific adjustments for Keyspace Builder */
+    .datacenter-row {
+        display: grid;
+        grid-template-columns: 1fr 120px 42px;
+        gap: 0.75rem;
+        align-items: center;
+        background: rgba(255, 255, 255, 0.02);
+        padding: 0.75rem;
+        border-radius: 14px;
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        margin-bottom: 0.75rem;
+    }
+
+    .strategy-description {
+        font-size: 0.8rem;
+        color: var(--text-muted);
+        margin-top: 0.5rem;
+        line-height: 1.4;
+    }
+</style>
+<script src="/static/scripts/app/keyspace-builder.js" defer></script>
+{% endblock %}
+
+{% block content %}
+<main class="with-sidebar builder-page" data-cluster="{{ cluster_config_entry }}">
+    <header class="builder-header">
+        <div class="breadcrumb">
+            <a href="/cluster/{{ cluster_config_entry }}">{{ cluster_name }}</a>
+            <span class="separator">/</span>
+            <span class="active">Keyspace Builder</span>
+        </div>
+        <h1>Keyspace Builder</h1>
+        <div class="header-actions">
+            <button id="create-keyspace-btn" class="btn-primary" disabled>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M5 12h14M12 5l7 7-7 7"></path>
+                </svg>
+                Deploy Keyspace
+            </button>
+        </div>
+    </header>
+
+    <div class="builder-layout">
+        <div class="builder-form">
+            <!-- Basic Identity -->
+            <section class="form-section">
+                <h3>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path>
+                        <path d="M3 5c0 1.66 4 3 9 3s9-1.34 9-3"></path>
+                        <path d="M21 5v14c0 1.66-4 3-9 3s-9-1.34-9-3V5"></path>
+                    </svg>
+                    Keyspace Identity
+                </h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Keyspace Name</label>
+                        <input type="text" id="keyspace-name" placeholder="e.g. production_metrics" autocomplete="off"
+                            required>
+                    </div>
+                    <div class="form-group">
+                        <label>Durable Writes</label>
+                        <select id="durable-writes">
+                            <option value="true">Enabled (Default)</option>
+                            <option value="false">Disabled</option>
+                        </select>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Replication Strategy -->
+            <section class="form-section">
+                <h3>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                    </svg>
+                    Replication Strategy
+                </h3>
+                <div class="form-grid" style="margin-bottom: 1.5rem;">
+                    <div class="form-group">
+                        <label>Strategy Class</label>
+                        <select id="replication-strategy">
+                            <option value="SimpleStrategy">SimpleStrategy (Single DC)</option>
+                            <option value="NetworkTopologyStrategy">NetworkTopologyStrategy (Multi-DC)</option>
+                        </select>
+                        <div id="strategy-info" class="strategy-description">
+                            Use SimpleStrategy for small development clusters or single-DC setups.
+                        </div>
+                    </div>
+                </div>
+
+                <div id="simple-strategy-options" class="strategy-options">
+                    <div class="form-group">
+                        <label>Replication Factor</label>
+                        <input type="number" id="replication-factor" value="3" min="1" max="10">
+                    </div>
+                </div>
+
+                <div id="network-topology-options" class="strategy-options hidden">
+                    <label
+                        style="font-size: 0.75rem; font-weight: 700; color: var(--text-secondary); text-transform: uppercase;">Datacenter
+                        Assignments</label>
+                    <div id="dc-list" style="margin-top: 1rem;">
+                        <!-- DC rows injected by JS or added manually -->
+                    </div>
+                    <button id="add-dc-btn" class="btn-outline" style="width: 100%; margin-top: 0.5rem;">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M12 5v14M5 12h14"></path>
+                        </svg>
+                        Add Datacenter
+                    </button>
+                </div>
+            </section>
+        </div>
+
+        <!-- Preview Panel -->
+        <div class="preview-panel">
+            <div class="safety-analyzer">
+                <div class="safety-header">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="12" y1="16" x2="12" y2="12"></line>
+                        <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                    </svg>
+                    Topology Advisor
+                </div>
+                <div id="safety-report" class="safety-message">
+                    A replication factor of 3 is recommended for production high availability.
+                </div>
+            </div>
+
+            <div class="cql-preview-box">
+                <div class="preview-label">Live CQL Preview</div>
+                <pre id="cql-preview">-- Automated DDL will appear here</pre>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- Confirmation Modal -->
+<div id="execute-modal" class="modal hidden">
+    <div class="modal-content glass-panel">
+        <div class="modal-header">
+            <h3>Confirm Deployment</h3>
+            <button class="btn-close-x close-modal">&times;</button>
+        </div>
+        <div class="modal-body">
+            <p>You are about to deploy a new keyspace. This operation will be logged.</p>
+            <div class="details-box">
+                <pre id="final-cql-confirm" style="font-size: 0.8rem; white-space: pre-wrap;"></pre>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-text close-modal">Cancel</button>
+            <button id="confirm-execute-btn" class="btn-primary">Confirm & Deploy</button>
+        </div>
+    </div>
+</div>
+{% endblock %}
