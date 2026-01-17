@@ -22,12 +22,12 @@ document.addEventListener("DOMContentLoaded", () => {
     resize();
     window.addEventListener("resize", resize);
 
-    const particles = Array.from({ length: 60 }, () => ({
+    const particles = Array.from({ length: 120 }, () => ({
         x: Math.random() * canvas.width,
         y: Math.random() * canvas.height,
-        r: Math.random() * 1.2 + 0.5,
-        dx: Math.random() * 0.2 - 0.1,
-        dy: Math.random() * 0.2 - 0.1
+        r: Math.random() * 2 + 0.5,
+        dx: Math.random() * 0.4 - 0.2,
+        dy: Math.random() * 0.4 - 0.2
     }));
 
     function animate() {
@@ -38,11 +38,26 @@ document.addEventListener("DOMContentLoaded", () => {
         const primaryColor = computedStyle.getPropertyValue('--color-primary').trim() || '#4fc3f7';
 
         ctx.fillStyle = primaryColor;
-        ctx.globalAlpha = 0.35;
-        particles.forEach(p => {
+        ctx.strokeStyle = primaryColor;
+
+        particles.forEach((p, i) => {
+            ctx.globalAlpha = 0.4;
             ctx.beginPath();
             ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
             ctx.fill();
+
+            // Connections
+            for (let j = i + 1; j < particles.length; j++) {
+                const p2 = particles[j];
+                const dist = Math.sqrt((p.x - p2.x) ** 2 + (p.y - p2.y) ** 2);
+                if (dist < 120) {
+                    ctx.globalAlpha = (1 - dist / 120) * 0.15;
+                    ctx.beginPath();
+                    ctx.moveTo(p.x, p.y);
+                    ctx.lineTo(p2.x, p2.y);
+                    ctx.stroke();
+                }
+            }
 
             p.x += p.dx;
             p.y += p.dy;

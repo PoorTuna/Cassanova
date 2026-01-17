@@ -1,14 +1,14 @@
 from fastapi import HTTPException, APIRouter
 from fastapi.requests import Request
-from fastapi.templating import Jinja2Templates
 
 from cassanova.config.cassanova_config import get_clusters_config
 from cassanova.config.cluster_config import ClusterConnectionConfig, generate_cluster_connection
 from cassanova.consts.cass_tools import CassTools
+from cassanova.web.template_config import templates
 
 clusters_config = get_clusters_config()
-templates = Jinja2Templates(directory="web/templates")
 cassanova_ui_tools_router = APIRouter(tags=['UI'])
+
 
 @cassanova_ui_tools_router.get("/cluster/{cluster_name}/tools/cqlsh")
 def cqlsh_devtools(request: Request, cluster_name: str):
@@ -20,7 +20,6 @@ def cqlsh_devtools(request: Request, cluster_name: str):
 
     return templates.TemplateResponse("cqlsh.html", {
         "request": request,
-        "monitoring_url": clusters_config.monitoring_url,
         "cluster_config_entry": cluster_name,
         "cluster_name": cluster.metadata.cluster_name,
     })

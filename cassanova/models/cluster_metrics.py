@@ -7,7 +7,6 @@ class ClusterMetrics(BaseModel):
     partitioner: Optional[str] = None
     name: str = Field(alias='cluster')
     snitch: str
-    version: str
     rack_count: int
     dc_count: int
     total_nodes: int

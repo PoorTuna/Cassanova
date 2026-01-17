@@ -4,59 +4,81 @@
     --font-body: 'Inter', sans-serif;
     --font-mono: 'Fira Code', monospace;
 
-    /* --- Core Palette (Obsidian & Electric Accents) --- */
-    --color-primary: #00E5FF; /* Electric Cyan */
-    --color-primary-rgb: 0, 229, 255;
-    --color-secondary: #2979FF; /* Electric Blue */
-    --color-success: #00E676; /* Neon Green */
-    --color-warning: #FFAB00; /* Amber Glow */
-    --color-danger: #FF1744; /* Red Laser */
-    --color-info: #00B0FF;
+    /* --- Core Palette (Cassandra Inspired) --- */
+    --color-primary: #1287b1;
+    /* Cassandra Logo Blue */
+    --color-primary-rgb: 18, 135, 177;
+    --color-secondary: #de3b8f;
+    /* Cassandra Logo Magenta */
+    --color-secondary-rgb: 222, 59, 143;
 
-    /* --- Backgrounds (Deep Obsidian) --- */
-    --bg-app: #050507; /* Deepest void */
-    --bg-surface: #0E0E12; /* Card surface (fallback) */
-    --bg-sidebar: rgba(10, 10, 14, 0.7);
+    --color-success: #4caf50;
+    /* Muted Material Green */
+    --color-warning: #ffb300;
+    /* Muted Amber */
+    --color-danger: #f44336;
+    /* Muted Red */
+    --color-info: #00acc1;
+    /* Muted Cyan */
 
-    /* --- Glassmorphism Tokens --- */
-    --glass-surface: rgba(22, 22, 28, 0.65);
-    --glass-surface-hover: rgba(30, 30, 40, 0.75);
-    --glass-border: rgba(255, 255, 255, 0.08);
-    --glass-border-light: rgba(255, 255, 255, 0.15);
-    --glass-shine: rgba(255, 255, 255, 0.03);
+    /* --- Backgrounds (Neutral Obsidian - NOT Blue-y) --- */
+    --bg-app: #08080a;
+    /* Almost black obsidian */
+    --bg-surface: #121216;
+    /* Deep neutral grey surface */
+    --bg-sidebar: rgba(10, 10, 12, 0.9);
+
+    /* --- Glassmorphism Tokens (Lower Contrast) --- */
+    --glass-surface: rgba(22, 22, 26, 0.6);
+    --glass-surface-hover: rgba(30, 30, 36, 0.7);
+    --glass-border: rgba(255, 255, 255, 0.06);
+    --glass-border-light: rgba(255, 255, 255, 0.12);
+    --glass-shine: rgba(255, 255, 255, 0.01);
     --backdrop-blur: blur(16px);
     --backdrop-blur-heavy: blur(24px);
 
     /* --- Text Colors --- */
-    --text-primary: #ECEFF1;
-    --text-secondary: #B0BEC5;
-    --text-muted: #607D8B;
-    --text-on-primary: #000000;
+    --text-primary: #e1e1e6;
+    /* Soft white */
+    --text-secondary: #a1a1aa;
+    /* Cool grey */
+    --text-muted: #6b7280;
+    /* Muted grey */
+    --text-on-primary: #ffffff;
 
-    /* --- Legacy Compatibility (Mapping to new tokens) --- */
+    /* --- Mapping to legacy/component tokens --- */
     --bg-main: var(--bg-app);
-    --bg-main-rgb: 5, 5, 7;
     --bg-panel: var(--glass-surface);
     --bg-panel-alt: rgba(255, 255, 255, 0.02);
-    --bg-terminal: #09090b;
-    --bg-xterm: #0d1117;
+    --bg-terminal: #0a0a0c;
+    --bg-xterm: #050505;
 
     --bg-detail: transparent;
-    --bg-hover: rgba(255, 255, 255, 0.05);
-    --bg-hover-active: rgba(0, 229, 255, 0.1);
+    --bg-hover: rgba(255, 255, 255, 0.04);
+    --bg-hover-active: rgba(18, 135, 177, 0.1);
 
-    --color-primary-hover: #40C4FF;
-    --color-primary-active: #00B0FF;
-    --color-primary-light: rgba(0, 229, 255, 0.2);
-    --color-primary-strong: #00E5FF;
+    --color-primary-hover: #159cd0;
+    --color-primary-active: #0e6d8f;
+    --color-primary-light: rgba(18, 135, 177, 0.15);
+    --color-primary-strong: #1287b1;
 
     --color-error: var(--color-danger);
-    --color-error-light: #FF8A80;
+    --color-error-light: #ef5350;
 
     /* --- Shadows & Glows --- */
-    --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
-    --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.4);
-    --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
-    --glow-primary: 0 0 20px rgba(0, 229, 255, 0.15);
-    --glow-text: 0 0 10px rgba(255, 255, 255, 0.1);
+    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.4);
+    --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.5);
+    --shadow-lg: 0 12px 24px rgba(0, 0, 0, 0.6);
+    --glow-primary: 0 0 15px rgba(18, 135, 177, 0.08);
+    --glow-text: 0 0 8px rgba(255, 255, 255, 0.03);
+
+    /* --- Syntax Highlighting (Muted Professional) --- */
+    --syntax-key: #78dce8;
+    --syntax-string: #a9dc76;
+    --syntax-number: #ffd866;
+    --syntax-boolean: #ff6188;
+    --syntax-null: #939293;
+
+    /* --- Panel Tints --- */
+    --bg-glass-tint: rgba(10, 10, 13, 0.4);
 }

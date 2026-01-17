@@ -33,7 +33,7 @@
     /* --- Text Colors --- */
     --text-primary: #1A1D1F;
     --text-secondary: #5F6B7C;
-    --text-muted: #94A3B8;
+    --text-muted: #5F6B7C;
 
     /* --- Legacy Compat --- */
     --bg-main: var(--bg-app);
@@ -64,4 +64,14 @@
     --glow-primary: 0 0 15px rgba(212, 175, 55, 0.15);
     /* Soft Gold Glow */
     --glow-text: none;
+
+    /* --- Syntax Highlighting --- */
+    --syntax-key: #AF8E1E;
+    --syntax-string: #2E988A;
+    --syntax-number: #BF7100;
+    --syntax-boolean: #B71C1C;
+    --syntax-null: #708090;
+
+    /* --- Panel Tints --- */
+    --bg-glass-tint: rgba(212, 175, 55, 0.05);
 }

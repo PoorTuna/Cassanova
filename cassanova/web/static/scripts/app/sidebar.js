@@ -3,11 +3,38 @@ document.addEventListener("DOMContentLoaded", () => {
     const toggleBtn = document.querySelector(".sidebar-toggle");
     const sidebar = document.querySelector(".sidebar");
 
-    toggleBtn.addEventListener("click", () => {
-        sidebar.classList.toggle("collapsed");
-        const expanded = !sidebar.classList.contains("collapsed");
-        toggleBtn.setAttribute("aria-expanded", expanded);
-    });
+    if (toggleBtn && sidebar) {
+        const main = document.querySelector("main");
+
+        // Load sidebar state (default to expanded/not-collapsed if null)
+        const isCollapsed = localStorage.getItem("sidebarCollapsed") === "true";
+
+        // Temporarily disable transitions to prevent jump-animation on load
+        sidebar.style.transition = 'none';
+        if (main) main.style.transition = 'none';
+
+        if (isCollapsed) {
+            sidebar.classList.add("collapsed");
+            toggleBtn.setAttribute("aria-expanded", "false");
+        } else {
+            sidebar.classList.remove("collapsed");
+            toggleBtn.setAttribute("aria-expanded", "true");
+        }
+
+        // Force a reflow to apply state without transition
+        sidebar.offsetHeight;
+
+        // Re-enable transitions for future interactions
+        sidebar.style.transition = '';
+        if (main) main.style.transition = '';
+
+        toggleBtn.addEventListener("click", () => {
+            sidebar.classList.toggle("collapsed");
+            const currentlyCollapsed = sidebar.classList.contains("collapsed");
+            toggleBtn.setAttribute("aria-expanded", !currentlyCollapsed);
+            localStorage.setItem("sidebarCollapsed", currentlyCollapsed);
+        });
+    }
 
     // --- Highlight Active Link ---
     const links = document.querySelectorAll(".sidebar-link");
@@ -25,37 +52,39 @@ document.addEventListener("DOMContentLoaded", () => {
     const themeLabel = document.querySelector('.theme-label');
     const themeOptions = document.querySelectorAll('.theme-option');
 
-    // Load theme from localStorage
-    let savedTheme = localStorage.getItem('selectedTheme');
-    if (!savedTheme) {
-        savedTheme = 'dark'; // default theme
-        localStorage.setItem('selectedTheme', savedTheme);
-    }
-    applyTheme(savedTheme);
-
-    // Toggle dropdown
-    themeDotWrapper.addEventListener('click', () => {
-        themeDropdown.classList.toggle('hidden');
-    });
-
-    // Select a theme
-    themeOptions.forEach(option => {
-        option.addEventListener('click', () => {
-            const selectedTheme = option.dataset.theme;
-            applyTheme(selectedTheme);
-            themeDropdown.classList.add('hidden');
-
-            // Save to localStorage
-            localStorage.setItem('selectedTheme', selectedTheme);
-        });
-    });
-
-    // Click outside to close dropdown
-    document.addEventListener('click', e => {
-        if (!themeDotWrapper.contains(e.target) && !themeDropdown.contains(e.target)) {
-            themeDropdown.classList.add('hidden');
+    if (themeDotWrapper && themeDot && themeDropdown && themeLabel && themeOptions.length > 0) {
+        // Load theme from localStorage
+        let savedTheme = localStorage.getItem('selectedTheme');
+        if (!savedTheme) {
+            savedTheme = 'dark'; // default theme
+            localStorage.setItem('selectedTheme', savedTheme);
         }
-    });
+        applyTheme(savedTheme);
+
+        // Toggle dropdown
+        themeDotWrapper.addEventListener('click', () => {
+            themeDropdown.classList.toggle('hidden');
+        });
+
+        // Select a theme
+        themeOptions.forEach(option => {
+            option.addEventListener('click', () => {
+                const selectedTheme = option.dataset.theme;
+                applyTheme(selectedTheme);
+                themeDropdown.classList.add('hidden');
+
+                // Save to localStorage
+                localStorage.setItem('selectedTheme', selectedTheme);
+            });
+        });
+
+        // Click outside to close dropdown
+        document.addEventListener('click', e => {
+            if (!themeDotWrapper.contains(e.target) && !themeDropdown.contains(e.target)) {
+                themeDropdown.classList.add('hidden');
+            }
+        });
+    }
 
     // --- Apply Theme Function ---
     function applyTheme(theme) {
