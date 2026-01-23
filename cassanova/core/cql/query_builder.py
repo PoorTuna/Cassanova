@@ -13,7 +13,7 @@ def build_where_clause(filter_json: str = None) -> str:
             op = f.get('op', '=')
             val = f.get('val', '')
             cql_val = _format_cql_value(val, op)
-            conditions.append(f"{col} {op} {cql_val}")
+            conditions.append(f'"{col}" {op} {cql_val}')
     except Exception:
         pass
 
@@ -48,5 +48,5 @@ def _format_cql_value(val: Any, op: str) -> str:
 
 def build_insert_query(keyspace: str, table: str, columns: List[str]) -> str:
     placeholders = ", ".join(["%s"] * len(columns))
-    cols_clause = ", ".join(columns)
-    return f"INSERT INTO {keyspace}.{table} ({cols_clause}) VALUES ({placeholders})"
+    cols_clause = ", ".join([f'"{c}"' for c in columns])
+    return f'INSERT INTO "{keyspace}"."{table}" ({cols_clause}) VALUES ({placeholders})'

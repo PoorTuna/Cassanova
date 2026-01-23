@@ -5,7 +5,7 @@ from fastapi import Depends, HTTPException, Request, status
 from fastapi.security import OAuth2PasswordBearer
 from jose import JWTError, jwt
 
-from cassanova.config.auth_config import WebUser
+from cassanova.models.auth_models import WebUser
 from cassanova.config.cassanova_config import get_clusters_config, CassanovaConfig
 from cassanova.exceptions.auth_exceptions import LoginRequired
 

@@ -8,7 +8,9 @@
     position: relative;
     z-index: 10;
     overflow-y: auto;
-    background: radial-gradient(circle at top center, rgba(18, 135, 177, 0.1) 0%, transparent 80%);
+    background: var(--bg-app);
+    background: -webkit-radial-gradient(top, circle, rgba(var(--color-primary-rgb), 0.1) 0%, transparent 80%);
+    background: radial-gradient(circle at top center, rgba(var(--color-primary-rgb), 0.1) 0%, transparent 80%);
 }
 
 #bg-particles {
@@ -152,7 +154,7 @@
 .cluster-icon {
     width: 48px;
     height: 48px;
-    background: rgba(18, 135, 177, 0.1);
+    background: rgba(var(--color-primary-rgb), 0.1);
     border-radius: 14px;
     display: flex;
     align-items: center;

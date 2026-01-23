@@ -23,7 +23,7 @@ def get_table_data(cluster_name: str, keyspace_name: str, table_name: str, limit
 
     where_clause = build_where_clause(filter_json)
 
-    query = f"SELECT * FROM {keyspace_name}.{table_name}{where_clause}"
+    query = f'SELECT * FROM "{keyspace_name}"."{table_name}"{where_clause}'
     if allow_filtering:
         query += " ALLOW FILTERING"
 
@@ -61,7 +61,7 @@ def get_cell_metadata(cluster_name: str, keyspace_name: str, table_name: str, pk
         where_clause = " AND ".join([f"{col} = %s" for col in pk_data.keys()])
         values = list(pk_data.values())
 
-        query = f"SELECT TTL({column}), WRITETIME({column}) FROM {keyspace_name}.{table_name} WHERE {where_clause}"
+        query = f'SELECT TTL("{column}"), WRITETIME("{column}") FROM "{keyspace_name}"."{table_name}" WHERE {where_clause}'
         rows = list(session.execute(query, values))
 
         if not rows:
@@ -103,7 +103,7 @@ def update_table_row(cluster_name: str, keyspace_name: str, table_name: str, upd
             if not col_meta:
                 raise ValueError(f"Unknown column: {col}")
             converted_values.append(convert_value_for_cql(val, str(col_meta.cql_type)))
-            set_parts.append(f"{col} = %s")
+            set_parts.append(f'"{col}" = %s')
 
         where_parts = []
         for col, val in pk_data.items():
@@ -111,12 +111,12 @@ def update_table_row(cluster_name: str, keyspace_name: str, table_name: str, upd
             if not col_meta:
                 raise ValueError(f"Unknown PK column: {col}")
             converted_values.append(convert_value_for_cql(val, str(col_meta.cql_type)))
-            where_parts.append(f"{col} = %s")
+            where_parts.append(f'"{col}" = %s')
 
         set_clause = ", ".join(set_parts)
         where_clause = " AND ".join(where_parts)
 
-        query = f"UPDATE {keyspace_name}.{table_name} SET {set_clause} WHERE {where_clause}"
+        query = f'UPDATE "{keyspace_name}"."{table_name}" SET {set_clause} WHERE {where_clause}'
 
         session.execute(query, converted_values)
         return {"detail": "Row updated successfully"}
@@ -150,10 +150,10 @@ def delete_table_row(cluster_name: str, keyspace_name: str, table_name: str, pk_
             
             converted_val = convert_value_for_cql(value, str(col_meta.cql_type))
             converted_values.append(converted_val)
-            where_clause_parts.append(f"{col_name} = %s")
+            where_clause_parts.append(f'"{col_name}" = %s')
 
         where_clause = " AND ".join(where_clause_parts)
-        query = f"DELETE FROM {keyspace_name}.{table_name} WHERE {where_clause}"
+        query = f'DELETE FROM "{keyspace_name}"."{table_name}" WHERE {where_clause}'
 
         session.execute(query, converted_values)
         return {"detail": "Row deleted successfully"}
@@ -209,7 +209,7 @@ def export_table_data(cluster_name: str, keyspace_name: str, table_name: str,
     session = get_session(cluster_name)
 
     where_clause = build_where_clause(filter_json)
-    query = f"SELECT * FROM {keyspace_name}.{table_name}{where_clause}"
+    query = f'SELECT * FROM "{keyspace_name}"."{table_name}"{where_clause}'
 
     if allow_filtering:
         query += " ALLOW FILTERING"

@@ -1,7 +1,7 @@
 .modal {
     position: fixed;
     inset: 0;
-    background-color: rgba(0, 0, 0, 0.7);
+    background-color: var(--bg-glass-tint);
     backdrop-filter: blur(8px);
     display: flex;
     justify-content: center;

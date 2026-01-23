@@ -1,26 +1,72 @@
 {
-  "app_config": { // Optional
+  "app_config": {
     "host": "0.0.0.0",
     "port": 8080,
-    "routers": ["cassanova_ui_router", "cassanova_api_router"]
+    "routers": [
+      "cassanova_ui_router",
+      "cassanova_api_router"
+    ]
+  },
+  "auth": {
+    "enabled": true,
+    "secret_key": "CHANGE_THIS_TO_A_SECURE_SECRET",
+    "algorithm": "HS256",
+    "session_expire_minutes": 120,
+    "users": [
+      {
+        "username": "admin",
+        "password": "admin_password",
+        "roles": [
+          "admin"
+        ],
+        "full_name": "Administrator"
+      },
+      {
+        "username": "viewer",
+        "password": "viewer_password",
+        "roles": [
+          "viewer"
+        ]
+      }
+    ],
+    "roles": [
+      // Optional: Defaults are "admin" (*) and "viewer" (cluster:view, data:read).
+      // You only need to define this if you want custom roles.
+      {
+        "name": "custom_role",
+        "description": "A custom role example",
+        "permissions": [
+          "cluster:view"
+        ]
+      }
+    ]
   },
   "clusters": {
-    "orencluster": {
-      "contact_points": [ // The cluster connection uri
-        "localhost"
+    "my_production_cluster": {
+      "contact_points": [
+        "10.0.0.1",
+        "10.0.0.2"
       ],
-      "port": 9042, // Optional & Default is 9042
-      "credentials": { // Optional
+      "port": 9042,
+      "credentials": {
         "username": "cassandra",
-        "password": "cassandra"
+        "password": "cassandra_password"
       },
-      "jmx_credentials": { // Optional
-        "username": "jmx",
-        "password": "jmx"
+      "jmx_credentials": {
+        // Optional: For JMX operations if enabled
+        "username": "jmx_user",
+        "password": "jmx_password"
+      },
+      "additional_kwargs": {
+        // Optional: Injected directly into cassandra.cluster.Cluster()
+        "ssl_options": null,
+        "protocol_version": 4
       }
     },
-    "additional_kwargs": { // Optional
-      "ssl_options": null // Everything inside here is directly injected into the Cluster object instantiation.
+    "local_test_cluster": {
+      "contact_points": [
+        "127.0.0.1"
+      ]
     }
   }
 }
