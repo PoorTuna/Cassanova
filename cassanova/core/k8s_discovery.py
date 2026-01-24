@@ -19,25 +19,19 @@ def discover_k8s_clusters(
     namespace: Optional[str] = None,
     service_suffix: str = "-service"
 ) -> Dict[str, ClusterConnectionConfig]:
-    print(f"[K8s Discovery] Starting discovery with kubeconfig={kubeconfig_path}, namespace={namespace}, suffix={service_suffix}")
-    
     if not K8S_AVAILABLE:
-        print("[K8s Discovery] Kubernetes package not installed. Skipping.")
         logger.warning("Kubernetes package not installed. Skipping K8s discovery.")
         return {}
 
     try:
         if kubeconfig_path and os.path.exists(kubeconfig_path):
-            print(f"[K8s Discovery] Loading kubeconfig from {kubeconfig_path}")
             config.load_kube_config(config_file=kubeconfig_path)
         else:
-            print(f"[K8s Discovery] Kubeconfig path not found or not provided, trying fallback...")
             try:
                 config.load_incluster_config()
             except config.ConfigException:
                 config.load_kube_config()
     except Exception as e:
-        print(f"[K8s Discovery] Failed to load kubeconfig: {e}")
         logger.error(f"Failed to load kubeconfig: {e}")
         return {}
 
@@ -61,15 +55,12 @@ def discover_k8s_clusters(
             )
     except ApiException as e:
         if e.status == 404:
-            print("[K8s Discovery] No K8ssandraCluster CRDs found (404).")
             logger.info("No K8ssandraCluster CRDs found.")
         else:
-            print(f"[K8s Discovery] Error listing K8ssandraClusters: {e}")
             logger.error(f"Error listing K8ssandraClusters: {e}")
         return {}
 
     items = k8s_clusters.get("items", [])
-    print(f"[K8s Discovery] Found {len(items)} K8ssandraClusters.")
     logger.info(f"Found {len(items)} K8ssandraClusters.")
 
     for item in items:
@@ -126,11 +117,15 @@ def discover_k8s_clusters(
                             if ing.hostname:
                                 contact_points.append(ing.hostname)
                                 
-                    if svc_spec.external_ips:
-                        contact_points.extend(svc_spec.external_ips)
+                    if svc_spec.external_i_ps:
+                        contact_points.extend(svc_spec.external_i_ps)
                         
                     if not contact_points and svc_spec.cluster_ip and svc_spec.cluster_ip != "None":
-                         contact_points.append(svc_spec.cluster_ip)
+                        contact_points.append(svc_spec.cluster_ip)
+                    
+                    if not contact_points:
+                        svc_dns = f"{svc_name}.{cluster_namespace}.svc.cluster.local"
+                        contact_points.append(svc_dns)
 
                     if contact_points:
                         config_key = f"{cluster_name}"

@@ -499,7 +499,14 @@ document.addEventListener('DOMContentLoaded', () => {
         if (explicitAllowFiltering) {
             url.searchParams.set('allow_filtering', 'true');
         }
-        window.location.href = url.toString();
+
+        const link = document.createElement('a');
+        link.href = url.toString();
+        link.setAttribute('download', '');
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
         Toast.info("Preparing CSV export...");
     });
 

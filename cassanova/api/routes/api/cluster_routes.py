@@ -66,7 +66,11 @@ def get_tables(cluster_name: str, keyspace_name: str):
     keyspace_metadata = cluster.metadata.keyspaces.get(keyspace_name)
     if keyspace_metadata is None:
         raise HTTPException(status_code=404, detail="Keyspace not found")
-    return [table.model_dump() for table in generate_tables_info(list(keyspace_metadata.tables.values()))]
+
+    user_type_names = set(keyspace_metadata.user_types.keys())
+    tables = [t for t in list(keyspace_metadata.tables.values()) if t.name not in user_type_names]
+    
+    return [table.model_dump() for table in generate_tables_info(tables)]
 
 
 @cluster_router.get("/cluster/{cluster_name}/keyspace/{keyspace_name}/table/{table_name}")

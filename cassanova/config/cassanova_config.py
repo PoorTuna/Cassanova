@@ -10,6 +10,7 @@ from cassanova.config.app_config import APPConfig
 from cassanova.config.auth_config import AuthConfig
 from cassanova.config.cluster_config import ClusterConnectionConfig
 from cassanova.config.k8s_config import K8sDiscoveryConfig
+from cassanova.config.remediation_config import RemediationConfig
 
 logger = getLogger(__name__)
 
@@ -22,6 +23,7 @@ class CassanovaConfig(BaseSettings):
     auth: AuthConfig = AuthConfig()
     app_config: APPConfig = APPConfig()
     k8s: K8sDiscoveryConfig = K8sDiscoveryConfig()
+    remediation: RemediationConfig = RemediationConfig()
 
     @classmethod
     def settings_customise_sources(

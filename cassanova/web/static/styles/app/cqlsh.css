@@ -245,6 +245,11 @@
     background-color: rgba(255, 255, 255, 0.05);
 }
 
+#consistency-level option {
+    background-color: var(--bg-surface);
+    color: var(--text-primary);
+}
+
 /* Tracing label */
 .tracing-label {
     color: var(--text-secondary);

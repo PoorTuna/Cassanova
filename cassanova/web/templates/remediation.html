@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+
+{% block title %}Remediation Dashboard{% endblock %}
+
+{% block head_extra %}
+<link rel="stylesheet" href="/static/styles/app/remediation.css" />
+<script src="/static/scripts/app/remediation.js" defer></script>
+{% endblock %}
+
+{% block body_class %}remediation-dashboard{% endblock %}
+
+{% block content %}
+<main id="remediation-main">
+    <div class="remediation-header">
+        <div class="header-top">
+            <div class="header-titles">
+                <h1>Remediation Dashboard</h1>
+                <p class="subtitle">Monitor and approve node failure remediation operations</p>
+            </div>
+            <div class="header-controls">
+                <button class="btn btn-primary" id="scan-now-btn" onclick="triggerScan()">
+                    Scan Now
+                </button>
+            </div>
+        </div>
+        <div class="stat-cards">
+            <div class="stat-card pending">
+                <div class="stat-value" id="stat-pending">0</div>
+                <div class="stat-label">Pending Approval</div>
+            </div>
+            <div class="stat-card active">
+                <div class="stat-value" id="stat-active">0</div>
+                <div class="stat-label">In Progress</div>
+            </div>
+            <div class="stat-card completed">
+                <div class="stat-value" id="stat-completed">0</div>
+                <div class="stat-label">Completed</div>
+            </div>
+            <div class="stat-card failed">
+                <div class="stat-value" id="stat-failed">0</div>
+                <div class="stat-label">Failed</div>
+            </div>
+        </div>
+
+    </div>
+
+    <section class="remediation-section pending-section">
+        <h2>Pending Approval</h2>
+        <p class="section-desc">These remediations require your approval before proceeding.</p>
+        <div id="pending-list" class="remediation-list">
+            <div class="empty-state">No pending remediations</div>
+        </div>
+    </section>
+
+    <section class="remediation-section active-section">
+        <h2>Active Remediations</h2>
+        <div id="active-list" class="remediation-list">
+            <div class="empty-state">No active remediations</div>
+        </div>
+    </section>
+
+    <section class="remediation-section history-section">
+        <h2>History</h2>
+        <div id="history-list" class="remediation-list">
+            <div class="empty-state">No remediation history</div>
+        </div>
+    </section>
+</main>
+
+<div id="approve-modal" class="modal hidden">
+    <div class="modal-content">
+        <h2>Approve Remediation</h2>
+        <p>You are about to approve remediation for:</p>
+        <div class="modal-details">
+            <p><strong>Node:</strong> <span id="modal-node"></span></p>
+            <p><strong>Cluster:</strong> <span id="modal-cluster"></span></p>
+            <p><strong>Pod:</strong> <span id="modal-pod"></span></p>
+        </div>
+        <p class="warning">This will trigger the following actions:</p>
+        <ul>
+            <li>Remove PVC finalizers</li>
+            <li>Create K8ssandraTask for replacenode</li>
+        </ul>
+        <div class="modal-footer">
+            <button class="btn btn-cancel" onclick="closeApproveModal()">Cancel</button>
+            <button class="btn btn-danger" id="confirm-approve-btn">Approve</button>
+        </div>
+    </div>
+</div>
+
+<div id="cancel-modal" class="modal hidden">
+    <div class="modal-content">
+        <h2>Cancel Remediation</h2>
+        <p>Are you sure you want to cancel this remediation?</p>
+        <div class="modal-footer">
+            <button class="btn btn-cancel" onclick="closeCancelModal()">Keep it</button>
+            <button class="btn btn-danger" id="confirm-cancel-btn">Yes, Cancel</button>
+        </div>
+    </div>
+</div>
+{% endblock %}

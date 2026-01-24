@@ -13,6 +13,9 @@ def register_context_processors():
     
     # Add current_year to globals
     templates.env.globals["current_year"] = datetime.now().year
+    
+    # Feature flags
+    templates.env.globals["remediation_enabled"] = config.remediation.enabled
 
     # RBAC Helper
     templates.env.globals["check_permission"] = check_permission

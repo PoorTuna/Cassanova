@@ -4,6 +4,7 @@ from cassanova.api.dependencies.auth import require_web_user
 from cassanova.api.routes.ui.dashboard_routes import cassanova_ui_dashboard_router
 from cassanova.api.routes.ui.login_routes import login_router
 from cassanova.api.routes.ui.tools_routes import cassanova_ui_tools_router
+from cassanova.api.routes.ui.remediation_routes import remediation_ui_router
 
 
 def get_cassanova_ui_router() -> APIRouter:
@@ -15,6 +16,10 @@ def get_cassanova_ui_router() -> APIRouter:
     )
     cassanova_ui_router.include_router(
         cassanova_ui_tools_router,
+        dependencies=[Depends(require_web_user)]
+    )
+    cassanova_ui_router.include_router(
+        remediation_ui_router,
         dependencies=[Depends(require_web_user)]
     )
 

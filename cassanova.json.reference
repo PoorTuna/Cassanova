@@ -68,5 +68,18 @@
         "127.0.0.1"
       ]
     }
+  },
+  "k8s": {
+    "enabled": false,
+    "kubeconfig": null,
+    "namespace": null,
+    "suffix": "-service"
+  },
+  "remediation": {
+    "enabled": false,
+    "poll_interval_seconds": 30,
+    "max_concurrent_per_dc": 1,
+    "max_concurrent_per_rack": 1,
+    "auto_poll_enabled": true
   }
 }

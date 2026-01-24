@@ -138,6 +138,35 @@ export CASSANOVA_K8S__KUBECONFIG=/path/to/kubeconfig
 export CASSANOVA_K8S__SUFFIX=-metallb
 ```
 
+### 🚑 Automated Remediation
+
+Cassanova includes a **Remediation Dashboard** to handle Cassandra node failures in Kubernetes (e.g., OpenShift with LVMS).
+
+| Setting | Description | Default |
+|---------|-------------|---------|
+| `remediation.enabled` | Enable the remediation service | `false` |
+| `remediation.poll_interval_seconds` | How often to check for failures | `30` |
+| `remediation.max_concurrent_per_dc` | Max simultaneous recoveries per DC | `1` |
+| `remediation.max_concurrent_per_rack` | Max simultaneous recoveries per Rack | `1` |
+| `remediation.auto_poll_enabled` | Automatically poll pending pods (disable for manual-only) | `true` |
+
+**Recovery Workflow:**
+1. **Detect**: Periodically checks for `Pending` pods managed by K8ssandra that are unschedulable due to **Volume Node Affinity** (indicative of a lost local volume/node).
+2. **Review**: Administrator sees these pods in the **Remediation Dashboard** and clicks "Approve".
+3. **Recover**:
+   - Removes finalizers from PVCs and Pod to allow deletion.
+   - Triggers a `K8ssandraTask` (`replacenode`) to bootstrap a fresh pod on a new node.
+   - Monitors the replacement until completion.
+
+**Enable via Config:**
+```json
+"remediation": {
+  "enabled": true,
+  "poll_interval_seconds": 30,
+  "auto_poll_enabled": true
+}
+```
+
 ---
 
 ## 🛠️ Development
