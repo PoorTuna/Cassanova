@@ -82,6 +82,12 @@ Create a `cassanova.json` file. This now includes the new **Auth** section:
       "contact_points": ["10.0.0.1", "10.0.0.2"],
       "port": 9042
     }
+  },
+  "k8s": {
+    "enabled": true,
+    "kubeconfig": "/etc/cassanova/kubeconfig",
+    "namespace": "default",
+    "suffix": "-service"
   }
 }
 ```
@@ -107,6 +113,30 @@ Open [http://localhost:8080](http://localhost:8080). Log in with the credentials
 
 Cassanova is entirely config-driven via `CASSANOVA_CONFIG_PATH`.
 The configuration supports hot-reloading for most UI settings, though Auth changes currently require a restart.
+
+### 🐙 Kubernetes Service Discovery (K8ssandra)
+
+Cassanova can automatically discover `K8ssandraCluster` instances from a Kubernetes cluster.
+
+| Setting | Description | Default |
+|---------|-------------|---------|
+| `k8s.enabled` | Enable K8s discovery on startup | `false` |
+| `k8s.kubeconfig` | Path to kubeconfig file | `null` |
+| `k8s.namespace` | Namespace to scan (or all if null) | `null` |
+| `k8s.suffix` | Service name suffix (e.g., `-metallb`) | `-service` |
+
+**How it works:**
+1. On startup, if `k8s.enabled` is `true`, Cassanova scans for `K8ssandraCluster` CRs.
+2. For each cluster, it fetches credentials from the `<cluster>-superuser` Secret.
+3. It finds Services matching `<cluster>-<dc><suffix>` and extracts contact points (LoadBalancer IP, ExternalIP, or ClusterIP).
+4. Discovered clusters are merged into the `clusters` config.
+
+**Example (Environment Variables):**
+```bash
+export CASSANOVA_K8S__ENABLED=true
+export CASSANOVA_K8S__KUBECONFIG=/path/to/kubeconfig
+export CASSANOVA_K8S__SUFFIX=-metallb
+```
 
 ---
 
