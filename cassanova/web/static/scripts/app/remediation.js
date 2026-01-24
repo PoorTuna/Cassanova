@@ -103,21 +103,21 @@ function updateDashboard(data) {
     if (pendingJobs.length > 0) {
         pendingList.innerHTML = pendingJobs.map(j => renderRemediationCard(j)).join('');
     } else {
-        pendingList.innerHTML = '<div class="empty-state">No pending remediations</div>';
+        pendingList.innerHTML = '<div class="empty-state">No pending recoveries</div>';
     }
 
     const activeList = document.getElementById('active-list');
     if (activeJobs.length > 0) {
         activeList.innerHTML = activeJobs.map(j => renderRemediationCard(j)).join('');
     } else {
-        activeList.innerHTML = '<div class="empty-state">No active remediations</div>';
+        activeList.innerHTML = '<div class="empty-state">No active recoveries</div>';
     }
 
     const historyList = document.getElementById('history-list');
     if (historyJobs.length > 0) {
         historyList.innerHTML = historyJobs.map(j => renderRemediationCard(j, false)).join('');
     } else {
-        historyList.innerHTML = '<div class="empty-state">No remediation history</div>';
+        historyList.innerHTML = '<div class="empty-state">No recovery history</div>';
     }
 }
 
@@ -154,11 +154,11 @@ async function confirmApprove() {
 
         closeApproveModal();
         await refreshDashboard();
-        Toast.success('Remediation approved successfully');
+        Toast.success('Recovery approved successfully');
 
     } catch (error) {
         console.error('Error approving remediation:', error);
-        Toast.error('Failed to approve remediation: ' + error.message);
+        Toast.error('Failed to approve recovery: ' + error.message);
     }
 }
 
@@ -189,7 +189,7 @@ async function confirmCancel() {
 
         closeCancelModal();
         await refreshDashboard();
-        Toast.success('Remediation cancelled');
+        Toast.success('Recovery cancelled');
 
     } catch (error) {
         console.error('Error cancelling remediation:', error);
