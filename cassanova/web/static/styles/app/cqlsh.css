@@ -23,7 +23,7 @@
     flex: 0 1 50%;
     display: flex;
     flex-direction: column;
-    background: #0d0d0f;
+    background: var(--bg-surface);
     overflow: hidden;
 }
 
@@ -56,7 +56,7 @@
 /* Result panel */
 .cql-devtools #result {
     flex: 1 1 0;
-    background: #08080a;
+    background: var(--bg-app);
     color: var(--text-primary);
     display: flex;
     flex-direction: column;
@@ -189,8 +189,8 @@
 
 /* Run query button */
 .cql-devtools #run-btn {
-    background: linear-gradient(135deg, var(--color-primary) 0%, #00b8d4 100%);
-    color: #000;
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-info) 100%);
+    color: var(--text-on-primary, #000);
     border: none;
     padding: 0.65rem 1.5rem;
     border-radius: 10px;
@@ -200,12 +200,12 @@
     letter-spacing: 0.05em;
     cursor: pointer;
     transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-    box-shadow: 0 4px 12px rgba(0, 229, 255, 0.2);
+    box-shadow: 0 4px 12px rgba(var(--color-primary-rgb), 0.2);
 }
 
 .cql-devtools #run-btn:hover:not(:disabled) {
     transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(0, 229, 255, 0.4);
+    box-shadow: 0 8px 24px rgba(var(--color-primary-rgb), 0.4);
     filter: brightness(1.1);
 }
 
@@ -298,9 +298,9 @@
     right: 0;
     width: 400px;
     height: 100vh;
-    background: #08080a;
+    background: var(--bg-app);
     border-left: 1px solid var(--glass-border);
-    box-shadow: -20px 0 50px rgba(0, 0, 0, 0.8);
+    box-shadow: var(--shadow-2xl);
     z-index: 2000;
     transform: translateX(100%);
     transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
@@ -366,5 +366,5 @@
 }
 
 #close-history-btn:hover {
-    color: #ff4444;
+    color: var(--color-danger);
 }

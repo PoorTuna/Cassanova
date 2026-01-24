@@ -1,11 +1,9 @@
 section {
-    background: linear-gradient(
-        135deg,
-        var(--bg-panel-alt) 50%,
-        var(--bg-panel) 100%
-    );
+    background: linear-gradient(135deg,
+            var(--bg-panel-alt) 50%,
+            var(--bg-panel) 100%);
     border: 1px solid var(--bg-hover);
-    box-shadow: 0 2px 4px var(--shadow-medium);
+    box-shadow: var(--shadow-md);
     border-radius: 12px;
     padding: 1rem;
     margin-bottom: 2.5rem;
@@ -25,7 +23,7 @@ h3 {
 
 button {
     background-color: var(--color-primary);
-    color: var(--text-primary); /* optional: black text could also be a variable if needed */
+    color: var(--text-on-primary, var(--text-primary));
     border: none;
     padding: 0.6rem 1.2rem;
     border-radius: 6px;
