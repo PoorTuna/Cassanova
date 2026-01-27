@@ -1,52 +1,52 @@
 # Cassanova
 
-**Cassanova** is a modern, stateless, web-based operations hub for Apache Cassandra.  
-Built with Python (FastAPI), it provides real-time cluster introspection, powerful data exploration tools, and a secure, role-based management interface.
+**Cassanova** is a web-based management interface for Apache Cassandra.
+Built with Python (FastAPI), it provides cluster monitoring, data exploration, and configuration-driven role-based access control.
 
 [![Docker Pulls](https://img.shields.io/docker/pulls/poortuna/cassanova.svg)](https://hub.docker.com/r/poortuna/cassanova)
 
 ---
 
-## ✨ Features
+## Features
 
-### 🔐 Security & RBAC
-- **Stateless Authentication**: Fully configuration-driven JWT authentication. No database required.
-- **Granular Permissions**: Define roles with specific permissions (e.g., `cluster:view`, `tools:cqlsh`, `data:write`).
-- **Secure Access**: Protected API endpoints and role-aware UI elements (Sidebar, Dashboards).
-- **Audit Ready**: Centralized login flow with secure session handling.
+### Security & RBAC
+- **Stateless Authentication**: Configuration-driven JWT authentication requiring no database.
+- **Granular Permissions**: Role definitions with specific permissions (e.g., `cluster:view`, `tools:cqlsh`, `data:write`).
+- **Access Control**: Protected API endpoints and role-aware UI elements.
+- **Auditing**: Centralized login flow with secure session handling.
 
-### 📊 Advanced Data Explorer
-- **Smart Filtering**: Filter data by Partition Keys, Clustering Keys, or specific columns with an intuitive UI.
+### Data Explorer
+- **Filtering**: Filter data by Partition Keys, Clustering Keys, or specific columns.
 - **Cross-View Integration**: Filters persist across Data Layout graphs and List views.
-- **Data Management**: Insert new rows directly via a schema-aware form.
-- **Topology Visualization**: Interactive `vis.js` graphs showing Token Ring and Schema relationships.
+- **Data Management**: Form-based row insertion, aware of table schema.
+- **Topology Visualization**: Graphs showing Token Ring and Schema relationships.
 
-### 🛠️ Operational Tools
-- **Keyspace & Table Builders**: specialized UI for creating and modifying Keyspaces and Tables visually.
-- **Interactive CQL Console**: A rich web-based terminal with history, syntax highlighting, and auto-complete.
-- **Query Trace Visualization**: A visualized list for analyzing query performance and latency.
+### Operational Tools
+- **Schema Management**: UI for creating and modifying Keyspaces and Tables.
+- **CQL Console**: Web-based terminal with history and syntax highlighting.
+- **Query Tracing**: List view for analyzing query performance and latency.
 - **Process Management**: Web interfaces for `sstabledump`, `nodetool`, and `cassandra-stress`.
 
-### ⚡ Core Capabilities
-- **Cluster Introspection**: Real-time Node status, VNode distribution, and Token Range maps.
+### Core Capabilities
+- **Cluster Monitoring**: Node status, VNode distribution, and Token Range maps.
 - **Multi-Cluster Support**: Manage multiple Cassandra clusters from a single dashboard.
-- **Theme Support**: Includes Dark, Light, and custom themes (Orokin, Kibana, etc.).
+- **Theming**: Includes Dark and Light themes.
 
 ---
 
-## 🐳 Docker Installation
+## Docker Installation
 
 To run Cassanova using Docker:
 
 #### 1. Pull the image:
 
 ```bash
-docker pull poortuna/cassanova:v1.5.0
+docker pull poortuna/cassanova:v1.6.0
 ```
 
 #### 2. Create a configuration file:
 
-Create a `cassanova.json` file. This now includes the new **Auth** section:
+Create a `cassanova.json` file. This includes the `auth` section:
 
 ```json
 {
@@ -87,13 +87,14 @@ Create a `cassanova.json` file. This now includes the new **Auth** section:
     "enabled": true,
     "kubeconfig": "/etc/cassanova/kubeconfig",
     "namespace": "default",
-    "suffix": "-service"
+    "suffix": "-service",
+    "periodic_discovery_enabled": true,
+    "discovery_interval_seconds": 60
   }
 }
 ```
 
-> **Optional:** Enable TLS by adding `"tls": {"enabled": true, "cert_file": "/path/to/cert.crt", "key_file": "/path/to/key.key"}` under `app_config`. See TLS section below for details.
-
+> **Optional:** Enable TLS by adding `"tls": {"enabled": true, "cert_file": "/path/to/cert.crt", "key_file": "/path/to/key.key"}` under `app_config`.
 
 #### 3. Run Cassanova:
 
@@ -101,7 +102,7 @@ Create a `cassanova.json` file. This now includes the new **Auth** section:
 docker run -p 8080:8080 \
   -e CASSANOVA_CONFIG_PATH=/config/cassanova.json \
   -v $(pwd)/cassanova.json:/config/cassanova.json \
-  poortuna/cassanova:v1.5.0
+  poortuna/cassanova:v1.6.0
 ```
 
 > **Note**: Ensure your Cassandra nodes are reachable from within the container.
@@ -112,14 +113,14 @@ Open [http://localhost:8080](http://localhost:8080). Log in with the credentials
 
 ---
 
-## ⚙️ Configuration
+## Configuration
 
-Cassanova is entirely config-driven via `CASSANOVA_CONFIG_PATH`.
-The configuration supports hot-reloading for most UI settings, though Auth changes currently require a restart.
+Cassanova is configured via `CASSANOVA_CONFIG_PATH`.
+Most UI settings support hot-reloading. Auth changes require a restart.
 
-### 🐙 Kubernetes Service Discovery (K8ssandra)
+### Kubernetes Service Discovery (K8ssandra)
 
-Cassanova can automatically discover `K8ssandraCluster` instances from a Kubernetes cluster.
+Cassanova can discover `K8ssandraCluster` instances from a Kubernetes cluster.
 
 | Setting | Description | Default |
 |---------|-------------|---------|
@@ -127,23 +128,18 @@ Cassanova can automatically discover `K8ssandraCluster` instances from a Kuberne
 | `k8s.kubeconfig` | Path to kubeconfig file | `null` |
 | `k8s.namespace` | Namespace to scan (or all if null) | `null` |
 | `k8s.suffix` | Service name suffix (e.g., `-metallb`) | `-service` |
+| `k8s.periodic_discovery_enabled` | Enable periodic background scans | `false` |
+| `k8s.discovery_interval_seconds` | Interval for periodic scans in seconds | `60` |
 
-**How it works:**
-1. On startup, if `k8s.enabled` is `true`, Cassanova scans for `K8ssandraCluster` CRs.
-2. For each cluster, it fetches credentials from the `<cluster>-superuser` Secret.
-3. It finds Services matching `<cluster>-<dc><suffix>` and extracts contact points (LoadBalancer IP, ExternalIP, or ClusterIP).
-4. Discovered clusters are merged into the `clusters` config.
+**Mechanism:**
+1. Cassanova scans for `K8ssandraCluster` CRs.
+2. Fetches credentials from the `<cluster>-superuser` Secret.
+3. Identifies Services matching `<cluster>-<dc><suffix>` to extract contact points.
+4. Merges discovered clusters into the configuration.
 
-**Example (Environment Variables):**
-```bash
-export CASSANOVA_K8S__ENABLED=true
-export CASSANOVA_K8S__KUBECONFIG=/path/to/kubeconfig
-export CASSANOVA_K8S__SUFFIX=-metallb
-```
+### Node Recovery
 
-### 🚑 Node Recovery
-
-Cassanova includes a **Node Recovery Dashboard** to handle Cassandra node failures in Kubernetes (e.g., OpenShift with LVMS).
+Includes a dashboard to handle Cassandra node failures in Kubernetes (e.g., OpenShift with LVMS).
 
 | Setting | Description | Default |
 |---------|-------------|---------|
@@ -151,21 +147,12 @@ Cassanova includes a **Node Recovery Dashboard** to handle Cassandra node failur
 
 **Recovery Workflow:**
 1. **Detect**: Queries for `Pending` pods with **Volume Node Affinity** issues.
-2. **Review**: Administrator approves the recovery in the dashboard.
-3. **Recover**: Creates a `K8ssandraTask` (`replacenode`) to fix the pod. The task includes a TTL for auto-cleanup.
+2. **Review**: Administrator approves the recovery.
+3. **Recover**: Creates a `K8ssandraTask` (`replacenode`) to fix the pod.
 
-**Enable via Config:**
-```json
-"k8s": {
-  "node_recovery": {
-    "enabled": true
-  }
-}
-```
+### TLS/HTTPS Support
 
-### 🔒 TLS/HTTPS Support
-
-Cassanova supports production-grade TLS encryption with enterprise security features.
+Supports TLS encryption.
 
 | Setting | Description | Default |
 |---------|-------------|---------|
@@ -180,51 +167,55 @@ Cassanova supports production-grade TLS encryption with enterprise security feat
 | `app_config.tls.hsts_include_subdomains` | Apply HSTS to subdomains | `false` |
 
 **Security Features:**
-- ✅ **Strong Cipher Suites** - Only modern ECDHE/CHACHA20/AES-GCM ciphers
-- ✅ **TLS 1.2+ Enforcement** - Blocks insecure protocols
-- ✅ **HSTS Headers** - Prevents downgrade attacks
-- ✅ **Secure Cookies** - Session cookies marked `Secure` and `SameSite=Lax`
-- ✅ **Auto HTTP Redirect** - Forces HTTPS connections
+- **Cipher Suites** - ECDHE/CHACHA20/AES-GCM ciphers
+- **Protocols** - TLS 1.2+ enforcement
+- **HSTS** - Prevents downgrade attacks
+- **Secure Cookies** - Session cookies marked `Secure` and `SameSite=Lax`
+- **Redirects** - Forces HTTPS connections
 
-**Example Configuration:**
+### LDAP Integration
+
+Supports LDAP/AD integration for centralized user management.
+
+| Setting | Description | Default |
+|---------|-------------|---------|
+| `auth.ldap.enabled` | Enable LDAP auth | `false` |
+| `auth.ldap.server_uri` | LDAP URI (ldap:// or ldaps://) | `ldap://localhost:389` |
+| `auth.ldap.base_dn` | Base DN for user/group search | `dc=example,dc=com` |
+| `auth.ldap.bind_dn` | Service account DN (null for anonymous) | `null` |
+| `auth.ldap.role_mapping` | Map LDAP groups to Cassanova roles | `{}` |
+
+**Role Mapping Strategies:**
+1. **Group Name**: Matches the `cn` (or configured attribute) of the group. e.g., `"Domain Admins": ["admin"]`.
+2. **Exact DN**: Matches the full Distinguished Name of the group. e.g., `"cn=group,dc=com": ["admin"]`.
+3. **Branch/Suffix**: Matches any group located under a specific OU. e.g., `"ou=Admins,dc=com": ["admin"]`.
+
+**Example Config:**
 ```json
-{
-  "app_config": {
-    "host": "0.0.0.0",
-    "port": 443,
-    "tls": {
-      "enabled": true,
-      "cert_file": "/etc/cassanova/ssl/server.crt",
-      "key_file": "/etc/cassanova/ssl/server.key",
-      "min_tls_version": "TLSv1_3",
-      "enforce_https": true,
-      "hsts_enabled": true
+"auth": {
+  "enabled": true,
+  "ldap": {
+    "enabled": true,
+    "server_uri": "ldaps://ad.example.com:636",
+    "bind_dn": "cn=svc-cassanova,ou=Users,dc=example,dc=com",
+    "bind_password": "secret_password",
+    "base_dn": "dc=example,dc=com",
+    "user_search_filter": "(sAMAccountName={username})",
+    "group_search_base": "ou=Groups,dc=example,dc=com",
+    "group_search_filter": "(member={user_dn})",
+    "role_mapping": {
+      "Domain Admins": ["admin"],
+      "Developers": ["viewer"],
+      "cn=SpecificGroup,ou=Groups,dc=example,dc=com": ["admin"],
+      "ou=NuclearBranch,dc=example,dc=com": ["admin"]
     }
   }
 }
 ```
 
-**Docker Deployment with TLS:**
-```bash
-docker run -p 443:443 \
-  -e CASSANOVA_CONFIG_PATH=/config/cassanova.json \
-  -v $(pwd)/cassanova.json:/config/cassanova.json \
-  -v $(pwd)/ssl:/etc/cassanova/ssl:ro \
-  poortuna/cassanova:v1.5.0
-```
-
-**Generate Self-Signed Certificate (Testing Only):**
-```bash
-openssl req -x509 -newkey rsa:4096 \
-  -keyout server.key -out server.crt \
-  -days 365 -nodes \
-  -subj "/CN=localhost"
-```
-
-
 ---
 
-## 🛠️ Development
+## Development
 
 To run locally (Linux/WSL recommended):
 
@@ -244,6 +235,6 @@ python -m cassanova.run
 
 ---
 
-## 📄 License
+## License
 
 Cassanova is open source, licensed under the MIT License.

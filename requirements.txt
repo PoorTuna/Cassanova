@@ -13,3 +13,4 @@ python-jose[cryptography]==3.4.0
 python-multipart==0.0.19
 uvicorn==0.34.0
 kubernetes>=28.1.0
+python-ldap>=3.4.0
