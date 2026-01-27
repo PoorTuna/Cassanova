@@ -103,7 +103,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (pkCols.length === 0) return "-- Error: Missing Partition Key (PK)";
 
-        let cql = `CREATE TABLE ${keyspace}.${tableName} (\n`;
+        let cql = `CREATE TABLE "${keyspace}"."${tableName}" (\n`;
 
         // Definitions
         columns.forEach(col => {

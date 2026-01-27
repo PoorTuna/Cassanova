@@ -2,7 +2,7 @@ from cassandra.metadata import KeyspaceMetadata
 
 from cassanova.core.constructors.tables import generate_tables_info
 from cassanova.core.constructors.serialize_to_primitive import serialize_to_primitive
-from cassanova.models.cluster_info.keyspace import KeyspaceInfo
+from cassanova.models.keyspace import KeyspaceInfo
 
 
 def generate_keyspaces_info(keyspaces: list[tuple[str, KeyspaceMetadata]]) -> list[KeyspaceInfo]:

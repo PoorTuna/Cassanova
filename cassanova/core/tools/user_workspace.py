@@ -1,6 +1,6 @@
 import os
 from asyncio import gather
-from typing import Optional, List
+from typing import Optional
 from uuid import uuid4
 
 from fastapi import UploadFile
@@ -14,7 +14,7 @@ def get_namespace_dir(namespace: Optional[str] = None, base_dir: str = "/tmp/cas
     return path, namespace
 
 
-async def save_uploaded_files(files: Optional[List[UploadFile]], base_dir: str) -> List[str]:
+async def save_uploaded_files(files: Optional[list[UploadFile]], base_dir: str) -> list[str]:
     if not files:
         return []
 

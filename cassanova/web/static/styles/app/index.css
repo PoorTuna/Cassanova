@@ -8,7 +8,9 @@
     position: relative;
     z-index: 10;
     overflow-y: auto;
-    background: radial-gradient(circle at top center, rgba(18, 135, 177, 0.1) 0%, transparent 80%);
+    background: var(--bg-app);
+    background: -webkit-radial-gradient(top, circle, rgba(var(--color-primary-rgb), 0.1) 0%, transparent 80%);
+    background: radial-gradient(circle at top center, rgba(var(--color-primary-rgb), 0.1) 0%, transparent 80%);
 }
 
 #bg-particles {
@@ -40,14 +42,14 @@
 .hero-logo {
     width: 72px;
     height: 72px;
-    filter: drop-shadow(0 0 20px rgba(0, 229, 255, 0.3));
+    filter: drop-shadow(0 0 20px rgba(var(--color-primary-rgb), 0.3));
 }
 
 .hero-header h1 {
     font-size: 4.5rem;
     margin: 0;
     font-weight: 800;
-    background: linear-gradient(135deg, #fff 0%, var(--color-primary) 50%, #fff 100%);
+    background: linear-gradient(135deg, var(--text-primary) 0%, var(--color-primary) 50%, var(--text-primary) 100%);
     background-size: 200% auto;
     -webkit-background-clip: text;
     background-clip: text;
@@ -83,14 +85,15 @@
     color: var(--text-primary);
     font-size: 1.1rem;
     transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 10px 30px var(--shadow-sm);
+    box-shadow: var(--shadow-md);
 }
 
 #cluster-filter:focus {
     outline: none;
     border-color: var(--color-primary);
-    box-shadow: 0 0 30px rgba(0, 229, 255, 0.1);
-    background: rgba(255, 255, 255, 0.03);
+    box-shadow: 0 0 30px rgba(var(--color-primary-rgb), 0.1);
+    background: var(--bg-hover);
     transform: scale(1.02);
 }
 
@@ -139,20 +142,20 @@
     left: 0;
     right: 0;
     height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    background: linear-gradient(90deg, transparent, var(--glass-border), transparent);
 }
 
 .cluster-hero-card:hover {
     transform: translateY(-10px) scale(1.02);
     background: var(--glass-surface-hover);
     border-color: var(--color-primary-light);
-    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
+    box-shadow: var(--shadow-lg);
 }
 
 .cluster-icon {
     width: 48px;
     height: 48px;
-    background: rgba(18, 135, 177, 0.1);
+    background: rgba(var(--color-primary-rgb), 0.1);
     border-radius: 14px;
     display: flex;
     align-items: center;
@@ -164,7 +167,7 @@
 
 .cluster-hero-card:hover .cluster-icon {
     background: var(--color-primary);
-    color: #000;
+    color: var(--text-on-primary, #000);
     transform: rotate(10deg);
 }
 
@@ -220,7 +223,7 @@
     width: 36px;
     height: 36px;
     border-radius: 50%;
-    background: rgba(255, 255, 255, 0.05);
+    background: var(--bg-hover);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -229,7 +232,7 @@
 
 .cluster-hero-card:hover .arrow-btn {
     background: var(--color-primary);
-    color: #000;
+    color: var(--text-on-primary, #000);
     transform: translateX(5px);
 }
 

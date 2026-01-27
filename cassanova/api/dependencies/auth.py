@@ -1,13 +1,14 @@
 from datetime import datetime, timedelta
-from typing import Optional
+from typing import Optional, NoReturn
 
 from fastapi import Depends, HTTPException, Request, status
 from fastapi.security import OAuth2PasswordBearer
 from jose import JWTError, jwt
 
-from cassanova.config.auth_config import WebUser
 from cassanova.config.cassanova_config import get_clusters_config, CassanovaConfig
+from cassanova.core.auth_utils import verify_password
 from cassanova.exceptions.auth_exceptions import LoginRequired
+from cassanova.models.auth_models import WebUser
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/v1/login", auto_error=False)
 
@@ -16,7 +17,7 @@ def get_config() -> CassanovaConfig:
     return get_clusters_config()
 
 
-def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
+def create_access_token(data: dict, expires_delta: Optional[timedelta] = None) -> str:
     config = get_config()
     to_encode = data.copy()
     if expires_delta:
@@ -29,9 +30,7 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
 
 
 async def get_current_user(
-        request: Request,
-        token: Optional[str] = Depends(oauth2_scheme)
-) -> Optional[WebUser]:
+        request: Request, token: Optional[str] = Depends(oauth2_scheme)) -> Optional[WebUser]:
     config = get_config()
 
     if not config.auth.enabled:
@@ -63,7 +62,7 @@ async def get_current_user(
         return None
 
 
-async def require_user(user: Optional[WebUser] = Depends(get_current_user)):
+async def require_user(user: Optional[WebUser] = Depends(get_current_user)) -> WebUser | NoReturn:
     if not user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -73,7 +72,7 @@ async def require_user(user: Optional[WebUser] = Depends(get_current_user)):
     return user
 
 
-async def require_web_user(request: Request, user: Optional[WebUser] = Depends(get_current_user)):
+async def require_web_user(request: Request, user: Optional[WebUser] = Depends(get_current_user)) -> WebUser | NoReturn:
     if not user:
         raise LoginRequired()
     return user
@@ -87,10 +86,7 @@ def check_permission(user: Optional[WebUser], required_perm: str) -> bool:
     if user is None:
         return False
 
-    user_perms = set()
-    for role_name in user.roles:
-        perms = config.auth.get_role_permissions(role_name)
-        user_perms.update(perms)
+    user_perms = {perm for role in user.roles for perm in config.auth.get_role_permissions(role)}
 
     if "*" in user_perms:
         return True
@@ -108,8 +104,8 @@ def check_permission(user: Optional[WebUser], required_perm: str) -> bool:
     return False
 
 
-def require_permission(perm: str):
-    async def dep(user: WebUser = Depends(require_user)):
+def require_permission(perm: str) -> WebUser | NoReturn:
+    async def _check_permission_dependency(user: WebUser = Depends(require_user)):
         if not check_permission(user, perm):
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,
@@ -117,7 +113,12 @@ def require_permission(perm: str):
             )
         return user
 
-    return dep
+    return _check_permission_dependency
 
 
-require_permissions = require_permission
+def authenticate_user(username: str, password: str) -> Optional[WebUser]:
+    config = get_clusters_config()
+    user = config.auth.get_user(username)
+    if not user or not verify_password(password, user.password):
+        return None
+    return user

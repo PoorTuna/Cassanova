@@ -1,8 +1,8 @@
-import re
+from re import compile
 
 
 class NodeToolPatterns:
-    NODE_LINE_PATTERN = re.compile(
+    NODE_LINE_PATTERN = compile(
         r"^(?P<state>[UD][NLJM])\s+"
         r"(?P<address>\S+)\s+"
         r"(?P<load>\S+\s+\S+)\s+"

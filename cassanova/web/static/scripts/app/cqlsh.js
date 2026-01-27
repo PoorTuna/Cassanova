@@ -74,6 +74,13 @@ require(['vs/editor/editor.main'], function () {
             const suggestions = [];
             const context = getContext(model, position);
 
+            function maybeQuote(name) {
+                if (name !== name.toLowerCase() || /[^a-z0-9_]/.test(name)) {
+                    return `"${name}"`;
+                }
+                return name;
+            }
+
             // 1. Suggest Keywords
             if (context === "GENERAL") {
                 CQL_KEYWORDS.forEach(k => {
@@ -91,10 +98,11 @@ require(['vs/editor/editor.main'], function () {
             // 2. Suggest Keyspaces
             if (context === "SOURCE" || context === "GENERAL") {
                 Object.keys(clusterSchema).forEach(ks => {
+                    const quoted = maybeQuote(ks);
                     suggestions.push({
-                        label: ks,
+                        label: quoted,
                         kind: monaco.languages.CompletionItemKind.Module,
-                        insertText: ks,
+                        insertText: quoted,
                         detail: 'Keyspace',
                         range: range
                     });
@@ -104,15 +112,18 @@ require(['vs/editor/editor.main'], function () {
             // 3. Suggest Tables
             if (context.type === "TABLE_IN_KS") {
                 const tables = clusterSchema[context.ks];
-                Object.keys(tables).forEach(tb => {
-                    suggestions.push({
-                        label: tb,
-                        kind: monaco.languages.CompletionItemKind.Class,
-                        insertText: tb,
-                        detail: `Table in ${context.ks}`,
-                        range: range
+                if (tables) {
+                    Object.keys(tables).forEach(tb => {
+                        const quoted = maybeQuote(tb);
+                        suggestions.push({
+                            label: quoted,
+                            kind: monaco.languages.CompletionItemKind.Class,
+                            insertText: quoted,
+                            detail: `Table in ${context.ks}`,
+                            range: range
+                        });
                     });
-                });
+                }
             } else if (context.type === "COLUMN") {
                 let columns = [];
                 if (context.ks) {
@@ -126,10 +137,11 @@ require(['vs/editor/editor.main'], function () {
                     }
                 }
                 columns.forEach(col => {
+                    const quoted = maybeQuote(col);
                     suggestions.push({
-                        label: col,
+                        label: quoted,
                         kind: monaco.languages.CompletionItemKind.Field,
-                        insertText: col,
+                        insertText: quoted,
                         detail: `Column in ${context.tb}`,
                         range: range
                     });

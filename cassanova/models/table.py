@@ -2,7 +2,7 @@ from typing import Any, Annotated, Optional
 
 from pydantic import BaseModel, BeforeValidator, Field
 
-from cassanova.models.cluster_info.index import IndexInfo
+from cassanova.models.index_info import IndexInfo
 
 
 class TableColumnInfo(BaseModel):

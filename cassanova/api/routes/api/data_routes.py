@@ -6,7 +6,7 @@ from fastapi import APIRouter, HTTPException, UploadFile, File, Depends
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import StreamingResponse
 
-from cassanova.api.dependencies.auth import require_permissions
+from cassanova.api.dependencies.auth import require_permission
 from cassanova.api.dependencies.csv_handler import generate_csv_stream, load_csv_data
 from cassanova.api.dependencies.db_session import get_session
 from cassanova.core.cql.converters import convert_value_for_cql
@@ -23,7 +23,7 @@ def get_table_data(cluster_name: str, keyspace_name: str, table_name: str, limit
 
     where_clause = build_where_clause(filter_json)
 
-    query = f"SELECT * FROM {keyspace_name}.{table_name}{where_clause}"
+    query = f'SELECT * FROM "{keyspace_name}"."{table_name}"{where_clause}'
     if allow_filtering:
         query += " ALLOW FILTERING"
 
@@ -61,7 +61,7 @@ def get_cell_metadata(cluster_name: str, keyspace_name: str, table_name: str, pk
         where_clause = " AND ".join([f"{col} = %s" for col in pk_data.keys()])
         values = list(pk_data.values())
 
-        query = f"SELECT TTL({column}), WRITETIME({column}) FROM {keyspace_name}.{table_name} WHERE {where_clause}"
+        query = f'SELECT TTL("{column}"), WRITETIME("{column}") FROM "{keyspace_name}"."{table_name}" WHERE {where_clause}'
         rows = list(session.execute(query, values))
 
         if not rows:
@@ -78,7 +78,7 @@ def get_cell_metadata(cluster_name: str, keyspace_name: str, table_name: str, pk
 
 @data_router.put("/cluster/{cluster_name}/keyspace/{keyspace_name}/table/{table_name}/row")
 def update_table_row(cluster_name: str, keyspace_name: str, table_name: str, update_data: dict[str, Any],
-                     _user=Depends(require_permissions("cluster:write"))):
+                     _user=Depends(require_permission("cluster:write"))):
     session = get_session(cluster_name)
     pk_data = update_data.get("pk", {})
     updates = update_data.get("updates", {})
@@ -97,13 +97,13 @@ def update_table_row(cluster_name: str, keyspace_name: str, table_name: str, upd
     try:
         converted_values = []
         set_parts = []
-        
+
         for col, val in updates.items():
             col_meta = table_metadata.columns.get(col)
             if not col_meta:
                 raise ValueError(f"Unknown column: {col}")
             converted_values.append(convert_value_for_cql(val, str(col_meta.cql_type)))
-            set_parts.append(f"{col} = %s")
+            set_parts.append(f'"{col}" = %s')
 
         where_parts = []
         for col, val in pk_data.items():
@@ -111,12 +111,12 @@ def update_table_row(cluster_name: str, keyspace_name: str, table_name: str, upd
             if not col_meta:
                 raise ValueError(f"Unknown PK column: {col}")
             converted_values.append(convert_value_for_cql(val, str(col_meta.cql_type)))
-            where_parts.append(f"{col} = %s")
+            where_parts.append(f'"{col}" = %s')
 
         set_clause = ", ".join(set_parts)
         where_clause = " AND ".join(where_parts)
 
-        query = f"UPDATE {keyspace_name}.{table_name} SET {set_clause} WHERE {where_clause}"
+        query = f'UPDATE "{keyspace_name}"."{table_name}" SET {set_clause} WHERE {where_clause}'
 
         session.execute(query, converted_values)
         return {"detail": "Row updated successfully"}
@@ -126,7 +126,7 @@ def update_table_row(cluster_name: str, keyspace_name: str, table_name: str, upd
 
 @data_router.delete("/cluster/{cluster_name}/keyspace/{keyspace_name}/table/{table_name}/row")
 def delete_table_row(cluster_name: str, keyspace_name: str, table_name: str, pk_data: dict[str, Any],
-                     _user=Depends(require_permissions("cluster:write"))):
+                     _user=Depends(require_permission("cluster:write"))):
     session = get_session(cluster_name)
     if not pk_data:
         raise HTTPException(status_code=400, detail="Missing PK data for deletion")
@@ -146,14 +146,14 @@ def delete_table_row(cluster_name: str, keyspace_name: str, table_name: str, pk_
         for col_name, value in pk_data.items():
             col_meta = table_metadata.columns.get(col_name)
             if not col_meta:
-                 raise ValueError(f"Unknown column: {col_name}")
-            
+                raise ValueError(f"Unknown column: {col_name}")
+
             converted_val = convert_value_for_cql(value, str(col_meta.cql_type))
             converted_values.append(converted_val)
-            where_clause_parts.append(f"{col_name} = %s")
+            where_clause_parts.append(f'"{col_name}" = %s')
 
         where_clause = " AND ".join(where_clause_parts)
-        query = f"DELETE FROM {keyspace_name}.{table_name} WHERE {where_clause}"
+        query = f'DELETE FROM "{keyspace_name}"."{table_name}" WHERE {where_clause}'
 
         session.execute(query, converted_values)
         return {"detail": "Row deleted successfully"}
@@ -163,7 +163,7 @@ def delete_table_row(cluster_name: str, keyspace_name: str, table_name: str, pk_
 
 @data_router.post("/cluster/{cluster_name}/keyspace/{keyspace_name}/table/{table_name}/row")
 def insert_table_row(cluster_name: str, keyspace_name: str, table_name: str, row_data: dict[str, Any],
-                     _user=Depends(require_permissions("cluster:write"))):
+                     _user=Depends(require_permission("cluster:write"))):
     session = get_session(cluster_name)
     if not row_data:
         raise HTTPException(status_code=400, detail="Missing row data for insertion")
@@ -209,7 +209,7 @@ def export_table_data(cluster_name: str, keyspace_name: str, table_name: str,
     session = get_session(cluster_name)
 
     where_clause = build_where_clause(filter_json)
-    query = f"SELECT * FROM {keyspace_name}.{table_name}{where_clause}"
+    query = f'SELECT * FROM "{keyspace_name}"."{table_name}"{where_clause}'
 
     if allow_filtering:
         query += " ALLOW FILTERING"
@@ -223,7 +223,7 @@ def export_table_data(cluster_name: str, keyspace_name: str, table_name: str,
 
 @data_router.post("/cluster/{cluster_name}/keyspace/{keyspace_name}/table/{table_name}/import")
 def import_table_data(cluster_name: str, keyspace_name: str, table_name: str, file: UploadFile = File(...),
-                      _user=Depends(require_permissions("cluster:write"))):
+                      _user=Depends(require_permission("cluster:write"))):
     session = get_session(cluster_name)
 
     cluster = session.cluster

@@ -1,5 +1,5 @@
 html {
-    background-color: #050507;
+    background-color: var(--bg-app);
 }
 
 body {
@@ -32,14 +32,14 @@ body {
 .copy-tooltip-fixed {
     position: fixed;
     background: var(--color-primary);
-    color: #000;
+    color: var(--text-on-primary, #000);
     padding: 6px 12px;
     border-radius: 8px;
     font-size: 0.85rem;
     font-weight: 700;
     pointer-events: none;
     z-index: 10000;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 4px 12px var(--shadow-sm);
     transition: opacity 0.3s ease, transform 0.3s ease;
     opacity: 0;
     transform: translateY(10px);
@@ -93,12 +93,12 @@ a:hover {
 }
 
 ::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.1);
+    background: var(--bg-hover);
     border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: rgba(255, 255, 255, 0.2);
+    background: var(--bg-hover-active);
 }
 
 /* --- Layout --- */
@@ -136,7 +136,7 @@ main.with-sidebar {
 }
 
 .syntax-string {
-    color: var(--syntax-string, #a5d6ff) !important;
+    color: var(--syntax-string) !important;
 }
 
 .syntax-number {

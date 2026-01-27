@@ -2,22 +2,11 @@ from fastapi import APIRouter, Request, Depends, HTTPException, status, Form
 from fastapi.responses import HTMLResponse, RedirectResponse, JSONResponse
 from fastapi.security import OAuth2PasswordRequestForm
 
-from cassanova.api.dependencies.auth import create_access_token, get_current_user
-from cassanova.config.auth_config import verify_password
+from cassanova.api.dependencies.auth import create_access_token, get_current_user, authenticate_user
 from cassanova.config.cassanova_config import get_clusters_config
 from cassanova.web.template_config import templates
 
 login_router = APIRouter()
-
-
-def authenticate_user(username: str, password: str):
-    config = get_clusters_config()
-    user = config.auth.get_user(username)
-    if not user:
-        return None
-    if not verify_password(password, user.password):
-        return None
-    return user
 
 
 @login_router.get("/login", response_class=HTMLResponse)

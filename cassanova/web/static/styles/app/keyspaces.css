@@ -55,6 +55,8 @@
     font-size: 1.25rem;
     font-weight: 700;
     color: var(--color-primary);
+    word-break: break-all;
+    line-height: 1.4;
 }
 
 /* --- Layout --- */
@@ -350,15 +352,41 @@
 
 .dropdown-menu {
     border-radius: 16px;
-    background: #0d0d0f;
-    padding: 0.75rem;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+    background: var(--glass-surface);
+    backdrop-filter: blur(12px);
+    padding: 8px;
+    box-shadow: var(--shadow-xl), 0 0 0 1px var(--glass-border);
+    min-width: 200px;
+    border: 1px solid var(--glass-border);
 }
 
 .dropdown-menu button,
 .dropdown-menu a {
     padding: 12px 16px;
-    font-weight: 600;
+    font-weight: 500;
+    text-align: left;
+    border-radius: 8px;
+    color: var(--text-primary);
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    box-sizing: border-box;
+    font-size: 0.9rem;
+    white-space: nowrap;
+}
+
+.dropdown-menu button:hover,
+.dropdown-menu a:hover {
+    background: var(--glass-surface-hover);
+    color: var(--color-primary);
+    transform: translateX(2px);
+}
+
+.dropdown-menu button.danger:hover {
+    background: var(--bg-danger-soft, rgba(239, 68, 68, 0.1));
+    color: var(--color-danger, #ff4d4d);
 }
 
 /* --- Vis Network Graph --- */

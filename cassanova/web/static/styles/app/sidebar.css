@@ -215,9 +215,9 @@
 }
 
 .sidebar-link.disconnect:hover {
-    background: rgba(255, 23, 68, 0.1);
-    color: #ff5280;
-    box-shadow: 0 0 15px rgba(255, 23, 68, 0.2);
+    background: rgba(var(--color-danger-rgb), 0.1);
+    color: var(--color-danger);
+    box-shadow: 0 0 15px rgba(var(--color-danger-rgb), 0.2);
 }
 
 /* === Collapsed State === */
@@ -325,7 +325,7 @@ body:has(.sidebar.collapsed) main.with-sidebar,
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark, #0056b3));
+    background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark, var(--color-primary)));
     color: #fff;
     display: flex;
     align-items: center;
@@ -375,7 +375,7 @@ body:has(.sidebar.collapsed) main.with-sidebar,
 
 .logout-btn-mini:hover {
     color: var(--color-danger);
-    background: rgba(255, 68, 68, 0.1);
+    background: rgba(var(--color-danger-rgb), 0.1);
 }
 
 /* Collapsed State for User Profile */

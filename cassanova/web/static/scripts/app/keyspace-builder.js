@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const rf = simpleStrategyRF.value;
         const durable = durableWritesSelect.value;
 
-        let cql = `CREATE KEYSPACE IF NOT EXISTS ${name || 'keyspace_name'}\n`;
+        let cql = `CREATE KEYSPACE IF NOT EXISTS "${name || 'keyspace_name'}"\n`;
 
         if (strategy === 'SimpleStrategy') {
             cql += `WITH REPLICATION = {\n  'class': 'SimpleStrategy',\n  'replication_factor': ${rf || 1}\n}`;

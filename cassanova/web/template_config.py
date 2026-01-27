@@ -13,6 +13,9 @@ def register_context_processors():
     
     # Add current_year to globals
     templates.env.globals["current_year"] = datetime.now().year
+    
+    # Feature flags
+    templates.env.globals["node_recovery_enabled"] = config.k8s.node_recovery.enabled
 
     # RBAC Helper
     templates.env.globals["check_permission"] = check_permission

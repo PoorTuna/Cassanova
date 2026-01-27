@@ -49,7 +49,6 @@
             aria-label="Filter tables" />
 
         <div class="keyspaces-container">
-            <!-- Sidebar List -->
             <div id="table-list">
                 {% for table in keyspace.tables %}
                 <div class="keyspace-item" data-name="{{ table.name }}">
@@ -61,7 +60,6 @@
                 {% endfor %}
             </div>
 
-            <!-- Detail Panel -->
             <div id="table-detail">
                 <div class="empty-state">
                     <div class="icon-layer">
@@ -78,7 +76,6 @@
                 {% for table in keyspace.tables %}
                 <div class="table-detail hidden" id="table-{{ table.name }}">
 
-                    <!-- Header -->
                     <header class="detail-header">
                         <div class="title-group">
                             <h3>{{ table.name }}</h3>
@@ -111,7 +108,6 @@
                         </div>
                     </header>
 
-                    <!-- Stats Grid -->
                     <div class="detail-grid">
                         <div class="detail-card">
                             <span class="label">Partition Key</span>
@@ -137,7 +133,6 @@
                         </div>
                     </div>
 
-                    <!-- Columns Section -->
                     <div class="detail-section">
                         <h4>Columns Schema</h4>
                         <div class="table-frame">
@@ -176,7 +171,6 @@
                         </div>
                     </div>
 
-                    <!-- Additional Details (Collapsible/Tabs could be next, but stacking for now) -->
                     {% if table.options %}
                     <div class="detail-section">
                         <h4>Table Options</h4>
