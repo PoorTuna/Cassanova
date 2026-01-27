@@ -21,6 +21,7 @@ logger = getLogger(__name__)
 
 def bootstrap_app(app: FastAPI, app_config: APPConfig):
     __load_static_files(app)
+    __setup_tls_middleware(app, app_config.tls)
     app.add_middleware(AuthMiddleware)
     __add_routers(app, app_config.routers)
     __add_exception_handlers(app)
@@ -49,6 +50,31 @@ def __add_exception_handlers(app: FastAPI):
     add_auth_exception_handler(app)
 
 
+def __setup_tls_middleware(app: FastAPI, tls_config):
+    if not tls_config.enabled:
+        return
+    
+    from cassanova.middleware.tls_middleware import (
+        HTTPSRedirectMiddleware,
+        HSTSMiddleware,
+        SecureCookieMiddleware
+    )
+    
+    app.add_middleware(SecureCookieMiddleware)
+    
+    if tls_config.hsts_enabled:
+        app.add_middleware(
+            HSTSMiddleware,
+            max_age=tls_config.hsts_max_age,
+            include_subdomains=tls_config.hsts_include_subdomains
+        )
+    
+    if tls_config.enforce_https:
+        app.add_middleware(HTTPSRedirectMiddleware)
+    
+    logger.info(f"TLS middleware configured (HSTS: {tls_config.hsts_enabled}, Redirect: {tls_config.enforce_https})")
+
+
 def __setup_k8s_clients(app: FastAPI):
     config = get_clusters_config()
 
@@ -71,3 +97,4 @@ def __setup_k8s_clients(app: FastAPI):
 
         except Exception as e:
             logger.error(f"Failed to initialize K8s clients: {e}")
+

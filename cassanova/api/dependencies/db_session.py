@@ -5,7 +5,7 @@ from cassanova.config.cassanova_config import get_clusters_config
 
 clusters_config = get_clusters_config()
 
-from cassanova.core.db.session_manager import session_manager
+from cassanova.core.session_manager import session_manager
 
 
 def get_session(cluster_name: str) -> Session:

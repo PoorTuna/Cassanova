@@ -92,6 +92,9 @@ Create a `cassanova.json` file. This now includes the new **Auth** section:
 }
 ```
 
+> **Optional:** Enable TLS by adding `"tls": {"enabled": true, "cert_file": "/path/to/cert.crt", "key_file": "/path/to/key.key"}` under `app_config`. See TLS section below for details.
+
+
 #### 3. Run Cassanova:
 
 ```bash
@@ -159,6 +162,65 @@ Cassanova includes a **Node Recovery Dashboard** to handle Cassandra node failur
   }
 }
 ```
+
+### 🔒 TLS/HTTPS Support
+
+Cassanova supports production-grade TLS encryption with enterprise security features.
+
+| Setting | Description | Default |
+|---------|-------------|---------|
+| `app_config.tls.enabled` | Enable HTTPS/TLS | `false` |
+| `app_config.tls.cert_file` | Path to SSL certificate (.crt/.pem) | Required if enabled |
+| `app_config.tls.key_file` | Path to private key (.key/.pem) | Required if enabled |
+| `app_config.tls.ca_bundle` | Optional CA certificate chain | `null` |
+| `app_config.tls.min_tls_version` | Minimum TLS version (`TLSv1_2` or `TLSv1_3`) | `TLSv1_2` |
+| `app_config.tls.enforce_https` | Redirect HTTP → HTTPS (301) | `true` |
+| `app_config.tls.hsts_enabled` | Enable HSTS security headers | `true` |
+| `app_config.tls.hsts_max_age` | HSTS max-age in seconds | `31536000` (1 year) |
+| `app_config.tls.hsts_include_subdomains` | Apply HSTS to subdomains | `false` |
+
+**Security Features:**
+- ✅ **Strong Cipher Suites** - Only modern ECDHE/CHACHA20/AES-GCM ciphers
+- ✅ **TLS 1.2+ Enforcement** - Blocks insecure protocols
+- ✅ **HSTS Headers** - Prevents downgrade attacks
+- ✅ **Secure Cookies** - Session cookies marked `Secure` and `SameSite=Lax`
+- ✅ **Auto HTTP Redirect** - Forces HTTPS connections
+
+**Example Configuration:**
+```json
+{
+  "app_config": {
+    "host": "0.0.0.0",
+    "port": 443,
+    "tls": {
+      "enabled": true,
+      "cert_file": "/etc/cassanova/ssl/server.crt",
+      "key_file": "/etc/cassanova/ssl/server.key",
+      "min_tls_version": "TLSv1_3",
+      "enforce_https": true,
+      "hsts_enabled": true
+    }
+  }
+}
+```
+
+**Docker Deployment with TLS:**
+```bash
+docker run -p 443:443 \
+  -e CASSANOVA_CONFIG_PATH=/config/cassanova.json \
+  -v $(pwd)/cassanova.json:/config/cassanova.json \
+  -v $(pwd)/ssl:/etc/cassanova/ssl:ro \
+  poortuna/cassanova:v1.5.0
+```
+
+**Generate Self-Signed Certificate (Testing Only):**
+```bash
+openssl req -x509 -newkey rsa:4096 \
+  -keyout server.key -out server.crt \
+  -days 365 -nodes \
+  -subj "/CN=localhost"
+```
+
 
 ---
 

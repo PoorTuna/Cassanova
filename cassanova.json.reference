@@ -5,7 +5,18 @@
     "routers": [
       "cassanova_ui_router",
       "cassanova_api_router"
-    ]
+    ],
+    "tls": {
+      "enabled": false,
+      "cert_file": "/path/to/certificate.crt",
+      "key_file": "/path/to/private.key",
+      "ca_bundle": null,
+      "min_tls_version": "TLSv1_2",
+      "enforce_https": true,
+      "hsts_enabled": true,
+      "hsts_max_age": 31536000,
+      "hsts_include_subdomains": false
+    }
   },
   "auth": {
     "enabled": true,
