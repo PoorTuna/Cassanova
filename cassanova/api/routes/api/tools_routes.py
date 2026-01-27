@@ -88,7 +88,6 @@ async def run_tool(
     finally:
         try:
             rmtree(workdir)
-            return None
         except Exception as e:
             return JSONResponse(
                 status_code=HTTPStatus.INTERNAL_SERVER_ERROR,

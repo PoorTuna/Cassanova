@@ -2,8 +2,8 @@ from typing import Annotated, Optional, Any
 
 from pydantic import BaseModel, BeforeValidator, Field, computed_field
 
-from cassanova.models.cluster_info.index import IndexInfo
-from cassanova.models.cluster_info.table import TableInfo
+from cassanova.models.index_info import IndexInfo
+from cassanova.models.table import TableInfo
 
 
 class KeyspaceInfo(BaseModel):

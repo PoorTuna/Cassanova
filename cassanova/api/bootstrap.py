@@ -7,12 +7,12 @@ from starlette.staticfiles import StaticFiles
 from cassanova.config.app_config import APPConfig
 from cassanova.config.cassanova_config import get_clusters_config
 from cassanova.consts.app_routers import APPConsts
-from cassanova.core.db.session_manager import session_manager
-from cassanova.exceptions.route_handlers.auth_handler import add_auth_exception_handler
-from cassanova.exceptions.route_handlers.cluster_unavailable_handler import add_cluster_unavailable_exceptions
-from cassanova.exceptions.route_handlers.default_handler import add_default_exceptions
-from cassanova.exceptions.route_handlers.not_found_handler import add_notfound_exceptions
-from cassanova.exceptions.route_handlers.system_views_unavailable_handler import \
+from cassanova.core.session_manager import session_manager
+from cassanova.api.exception_handlers.auth_handler import add_auth_exception_handler
+from cassanova.api.exception_handlers.cluster_unavailable_handler import add_cluster_unavailable_exceptions
+from cassanova.api.exception_handlers.default_handler import add_default_exceptions
+from cassanova.api.exception_handlers.not_found_handler import add_notfound_exceptions
+from cassanova.api.exception_handlers.system_views_unavailable_handler import \
     add_system_views_unavailable_exception_handler
 from cassanova.middleware.auth_middleware import AuthMiddleware
 

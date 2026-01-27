@@ -3,7 +3,7 @@ from typing import Any
 from cassandra.metadata import TableMetadata
 
 from cassanova.core.constructors.serialize_to_primitive import serialize_to_primitive
-from cassanova.models.cluster_info.table import TableInfo
+from cassanova.models.table import TableInfo
 
 
 def generate_tables_info(tables_metadata: list[TableMetadata]) -> list[TableInfo]:

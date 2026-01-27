@@ -2,7 +2,7 @@ from typing import NoReturn
 
 from cassandra.cluster import Session
 
-from cassanova.models.cluster_info.node import NodeInfo
+from cassanova.models.node import NodeInfo
 
 
 def generate_nodes_info(session: Session) -> list[NodeInfo] | NoReturn:
