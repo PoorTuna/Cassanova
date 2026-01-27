@@ -2,10 +2,8 @@ from cassandra.cluster import Session
 from fastapi import HTTPException
 
 from cassanova.config.cassanova_config import get_clusters_config
-from cassanova.config.cluster_config import generate_cluster_connection
 
 clusters_config = get_clusters_config()
-
 
 from cassanova.core.db.session_manager import session_manager
 

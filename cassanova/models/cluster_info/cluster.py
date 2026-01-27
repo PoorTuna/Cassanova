@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import Optional
 
 from pydantic import BaseModel, Field
 
@@ -8,6 +8,6 @@ from cassanova.models.cluster_metrics import ClusterMetrics
 
 
 class ClusterInfo(BaseModel):
-    nodes: Optional[List[NodeInfo]] = Field(default_factory=NodeInfo)
-    keyspaces: Optional[List[KeyspaceInfo]] = Field(default_factory=list)
+    nodes: Optional[list[NodeInfo]] = Field(default_factory=NodeInfo)
+    keyspaces: Optional[list[KeyspaceInfo]] = Field(default_factory=list)
     metrics: ClusterMetrics

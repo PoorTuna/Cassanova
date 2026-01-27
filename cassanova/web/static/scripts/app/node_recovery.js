@@ -1,19 +1,19 @@
-const STATES = ['pending-approval', 'approved', 'tainted', 'finalizers-removed', 'k8ssandra-task-scheduled', 'completed'];
-const ACTIVE_STATES = ['approved', 'tainted', 'finalizers-removed', 'k8ssandra-task-scheduled'];
-const HISTORY_STATES = ['completed', 'failed', 'cancelled'];
+const STATES = ['pending-approval', 'active', 'completed'];
+const ACTIVE_STATES = ['active'];
+const HISTORY_STATES = ['completed', 'failed'];
 
 let currentUser = 'admin';
-let selectedRemediationId = null;
+let selectedRecoveryId = null;
 
-async function fetchRemediationStatus() {
+async function fetchRecoveryStatus() {
     try {
-        const response = await fetch('/api/v1/remediation/status');
+        const response = await fetch('/api/v1/node-recovery/status');
         if (!response.ok) {
-            throw new Error('Failed to fetch remediation status');
+            throw new Error('Failed to fetch node recovery status');
         }
         return await response.json();
     } catch (error) {
-        console.error('Error fetching remediation status:', error);
+        console.error('Error fetching node recovery status:', error);
         return { jobs: [], pending_approval: 0, active: 0, completed: 0, failed: 0 };
     }
 }
@@ -30,16 +30,16 @@ function formatTime(isoString) {
     return date.toLocaleString();
 }
 
-function renderRemediationCard(job, showActions = true) {
+function renderRecoveryCard(job, showActions = true) {
     const progress = getProgress(job.state);
 
     return `
-        <div class="remediation-card" data-id="${job.id}">
-            <div class="remediation-card-header">
-                <span class="remediation-id">${job.id}</span>
-                <span class="remediation-state ${job.state}">${job.state.replace(/-/g, ' ')}</span>
+        <div class="node-recovery-card" data-id="${job.id}">
+            <div class="node-recovery-card-header">
+                <span class="node-recovery-id">${job.id}</span>
+                <span class="node-recovery-state ${job.state}">${job.state.replace(/-/g, ' ')}</span>
             </div>
-            <div class="remediation-info">
+            <div class="node-recovery-info">
                 <div class="info-item">
                     <span class="info-label">Node</span>
                     <span class="info-value">${job.node_name}</span>
@@ -68,21 +68,21 @@ function renderRemediationCard(job, showActions = true) {
                 ` : ''}
             </div>
             ${ACTIVE_STATES.includes(job.state) ? `
-            <div class="remediation-progress">
+            <div class="node-recovery-progress">
                 <div class="progress-bar">
                     <div class="progress-fill" style="width: ${progress}%"></div>
                 </div>
             </div>
             ` : ''}
             ${showActions && job.state === 'pending-approval' ? `
-            <div class="remediation-actions">
+            <div class="node-recovery-actions">
                 <button class="btn btn-approve" onclick="openApproveModal('${job.id}', '${job.node_name}', '${job.cluster_name}', '${job.pod_name}')">Approve</button>
-                <button class="btn btn-cancel" onclick="cancelRemediation('${job.id}')">Dismiss</button>
+                <button class="btn btn-cancel" onclick="cancelRecovery('${job.id}')">Dismiss</button>
             </div>
             ` : ''}
             ${showActions && ACTIVE_STATES.includes(job.state) ? `
-            <div class="remediation-actions">
-                <button class="btn btn-cancel" onclick="cancelRemediation('${job.id}')">Cancel</button>
+            <div class="node-recovery-actions">
+                <button class="btn btn-cancel" onclick="cancelRecovery('${job.id}')">Cancel</button>
             </div>
             ` : ''}
         </div>
@@ -101,28 +101,28 @@ function updateDashboard(data) {
 
     const pendingList = document.getElementById('pending-list');
     if (pendingJobs.length > 0) {
-        pendingList.innerHTML = pendingJobs.map(j => renderRemediationCard(j)).join('');
+        pendingList.innerHTML = pendingJobs.map(j => renderRecoveryCard(j)).join('');
     } else {
         pendingList.innerHTML = '<div class="empty-state">No pending recoveries</div>';
     }
 
     const activeList = document.getElementById('active-list');
     if (activeJobs.length > 0) {
-        activeList.innerHTML = activeJobs.map(j => renderRemediationCard(j)).join('');
+        activeList.innerHTML = activeJobs.map(j => renderRecoveryCard(j)).join('');
     } else {
         activeList.innerHTML = '<div class="empty-state">No active recoveries</div>';
     }
 
     const historyList = document.getElementById('history-list');
     if (historyJobs.length > 0) {
-        historyList.innerHTML = historyJobs.map(j => renderRemediationCard(j, false)).join('');
+        historyList.innerHTML = historyJobs.map(j => renderRecoveryCard(j, false)).join('');
     } else {
         historyList.innerHTML = '<div class="empty-state">No recovery history</div>';
     }
 }
 
 function openApproveModal(id, nodeName, clusterName, podName) {
-    selectedRemediationId = id;
+    selectedRecoveryId = id;
     document.getElementById('modal-node').textContent = nodeName;
     document.getElementById('modal-cluster').textContent = clusterName || '-';
     document.getElementById('modal-pod').textContent = podName;
@@ -130,19 +130,19 @@ function openApproveModal(id, nodeName, clusterName, podName) {
 }
 
 function closeApproveModal() {
-    selectedRemediationId = null;
+    selectedRecoveryId = null;
     document.getElementById('approve-modal').classList.add('hidden');
 }
 
 async function confirmApprove() {
-    if (!selectedRemediationId) return;
+    if (!selectedRecoveryId) return;
 
     try {
-        const response = await fetch('/api/v1/remediation/approve', {
+        const response = await fetch('/api/v1/node-recovery/approve', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                remediation_id: selectedRemediationId,
+                recovery_id: selectedRecoveryId,
                 approved_by: currentUser
             })
         });
@@ -157,28 +157,28 @@ async function confirmApprove() {
         Toast.success('Recovery approved successfully');
 
     } catch (error) {
-        console.error('Error approving remediation:', error);
+        console.error('Error approving recovery:', error);
         Toast.error('Failed to approve recovery: ' + error.message);
     }
 }
 
 function openCancelModal(id) {
-    selectedRemediationId = id;
+    selectedRecoveryId = id;
     document.getElementById('cancel-modal').classList.remove('hidden');
 }
 
 function closeCancelModal() {
-    selectedRemediationId = null;
+    selectedRecoveryId = null;
     document.getElementById('cancel-modal').classList.add('hidden');
 }
 
-const cancelRemediation = openCancelModal;
+const cancelRecovery = openCancelModal;
 
 async function confirmCancel() {
-    if (!selectedRemediationId) return;
+    if (!selectedRecoveryId) return;
 
     try {
-        const response = await fetch(`/api/v1/remediation/cancel/${selectedRemediationId}`, {
+        const response = await fetch(`/api/v1/node-recovery/cancel/${selectedRecoveryId}`, {
             method: 'POST'
         });
 
@@ -192,32 +192,22 @@ async function confirmCancel() {
         Toast.success('Recovery cancelled');
 
     } catch (error) {
-        console.error('Error cancelling remediation:', error);
+        console.error('Error cancelling recovery:', error);
         Toast.error('Failed to cancel: ' + error.message);
     }
 }
 
-async function triggerScan() {
-    const btn = document.getElementById('scan-now-btn');
+async function triggerRefresh() {
+    const btn = document.getElementById('refresh-btn');
     btn.disabled = true;
     const originalHtml = btn.innerHTML;
 
     try {
-        const response = await fetch('/api/v1/remediation/scan', {
-            method: 'POST'
-        });
-
-        if (!response.ok) {
-            const error = await response.json();
-            throw new Error(error.detail || 'Scan failed');
-        }
-
         await refreshDashboard();
-        Toast.success('Scan completed successfully');
-
+        Toast.success('Dashboard refreshed');
     } catch (error) {
-        console.error('Error triggering scan:', error);
-        Toast.error('Failed to trigger scan: ' + error.message);
+        console.error('Error refreshing dashboard:', error);
+        Toast.error('Failed to refresh: ' + error.message);
     } finally {
         btn.disabled = false;
         btn.innerHTML = originalHtml;
@@ -227,7 +217,7 @@ async function triggerScan() {
 
 
 async function refreshDashboard() {
-    const data = await fetchRemediationStatus();
+    const data = await fetchRecoveryStatus();
     updateDashboard(data);
 }
 

@@ -15,7 +15,7 @@ def register_context_processors():
     templates.env.globals["current_year"] = datetime.now().year
     
     # Feature flags
-    templates.env.globals["remediation_enabled"] = config.remediation.enabled
+    templates.env.globals["node_recovery_enabled"] = config.k8s.node_recovery.enabled
 
     # RBAC Helper
     templates.env.globals["check_permission"] = check_permission

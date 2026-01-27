@@ -9,8 +9,8 @@ from pydantic_settings import BaseSettings, PydanticBaseSettingsSource, JsonConf
 from cassanova.config.app_config import APPConfig
 from cassanova.config.auth_config import AuthConfig
 from cassanova.config.cluster_config import ClusterConnectionConfig
-from cassanova.config.k8s_config import K8sDiscoveryConfig
-from cassanova.config.remediation_config import RemediationConfig
+from cassanova.config.cluster_config import ClusterConnectionConfig
+from cassanova.config.k8s_config import K8sConfig
 
 logger = getLogger(__name__)
 
@@ -22,8 +22,7 @@ class CassanovaConfig(BaseSettings):
     clusters: dict[str, ClusterConnectionConfig] = {}
     auth: AuthConfig = AuthConfig()
     app_config: APPConfig = APPConfig()
-    k8s: K8sDiscoveryConfig = K8sDiscoveryConfig()
-    remediation: RemediationConfig = RemediationConfig()
+    k8s: K8sConfig = K8sConfig()
 
     @classmethod
     def settings_customise_sources(

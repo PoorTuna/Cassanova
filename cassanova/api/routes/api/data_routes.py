@@ -6,7 +6,7 @@ from fastapi import APIRouter, HTTPException, UploadFile, File, Depends
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import StreamingResponse
 
-from cassanova.api.dependencies.auth import require_permissions
+from cassanova.api.dependencies.auth import require_permission
 from cassanova.api.dependencies.csv_handler import generate_csv_stream, load_csv_data
 from cassanova.api.dependencies.db_session import get_session
 from cassanova.core.cql.converters import convert_value_for_cql
@@ -78,7 +78,7 @@ def get_cell_metadata(cluster_name: str, keyspace_name: str, table_name: str, pk
 
 @data_router.put("/cluster/{cluster_name}/keyspace/{keyspace_name}/table/{table_name}/row")
 def update_table_row(cluster_name: str, keyspace_name: str, table_name: str, update_data: dict[str, Any],
-                     _user=Depends(require_permissions("cluster:write"))):
+                     _user=Depends(require_permission("cluster:write"))):
     session = get_session(cluster_name)
     pk_data = update_data.get("pk", {})
     updates = update_data.get("updates", {})
@@ -97,7 +97,7 @@ def update_table_row(cluster_name: str, keyspace_name: str, table_name: str, upd
     try:
         converted_values = []
         set_parts = []
-        
+
         for col, val in updates.items():
             col_meta = table_metadata.columns.get(col)
             if not col_meta:
@@ -126,7 +126,7 @@ def update_table_row(cluster_name: str, keyspace_name: str, table_name: str, upd
 
 @data_router.delete("/cluster/{cluster_name}/keyspace/{keyspace_name}/table/{table_name}/row")
 def delete_table_row(cluster_name: str, keyspace_name: str, table_name: str, pk_data: dict[str, Any],
-                     _user=Depends(require_permissions("cluster:write"))):
+                     _user=Depends(require_permission("cluster:write"))):
     session = get_session(cluster_name)
     if not pk_data:
         raise HTTPException(status_code=400, detail="Missing PK data for deletion")
@@ -146,8 +146,8 @@ def delete_table_row(cluster_name: str, keyspace_name: str, table_name: str, pk_
         for col_name, value in pk_data.items():
             col_meta = table_metadata.columns.get(col_name)
             if not col_meta:
-                 raise ValueError(f"Unknown column: {col_name}")
-            
+                raise ValueError(f"Unknown column: {col_name}")
+
             converted_val = convert_value_for_cql(value, str(col_meta.cql_type))
             converted_values.append(converted_val)
             where_clause_parts.append(f'"{col_name}" = %s')
@@ -163,7 +163,7 @@ def delete_table_row(cluster_name: str, keyspace_name: str, table_name: str, pk_
 
 @data_router.post("/cluster/{cluster_name}/keyspace/{keyspace_name}/table/{table_name}/row")
 def insert_table_row(cluster_name: str, keyspace_name: str, table_name: str, row_data: dict[str, Any],
-                     _user=Depends(require_permissions("cluster:write"))):
+                     _user=Depends(require_permission("cluster:write"))):
     session = get_session(cluster_name)
     if not row_data:
         raise HTTPException(status_code=400, detail="Missing row data for insertion")
@@ -223,7 +223,7 @@ def export_table_data(cluster_name: str, keyspace_name: str, table_name: str,
 
 @data_router.post("/cluster/{cluster_name}/keyspace/{keyspace_name}/table/{table_name}/import")
 def import_table_data(cluster_name: str, keyspace_name: str, table_name: str, file: UploadFile = File(...),
-                      _user=Depends(require_permissions("cluster:write"))):
+                      _user=Depends(require_permission("cluster:write"))):
     session = get_session(cluster_name)
 
     cluster = session.cluster

@@ -3,23 +3,23 @@
 {% block title %}Node Recovery Dashboard{% endblock %}
 
 {% block head_extra %}
-<link rel="stylesheet" href="/static/styles/app/remediation.css" />
-<script src="/static/scripts/app/remediation.js" defer></script>
+<link rel="stylesheet" href="/static/styles/app/node_recovery.css" />
+<script src="/static/scripts/app/node_recovery.js" defer></script>
 {% endblock %}
 
-{% block body_class %}remediation-dashboard{% endblock %}
+{% block body_class %}node-recovery-dashboard{% endblock %}
 
 {% block content %}
-<main id="remediation-main">
-    <div class="remediation-header">
+<main id="node-recovery-main">
+    <div class="node-recovery-header">
         <div class="header-top">
             <div class="header-titles">
                 <h1>Node Recovery</h1>
                 <p class="subtitle">Monitor and approve node recovery operations</p>
             </div>
             <div class="header-controls">
-                <button class="btn btn-primary" id="scan-now-btn" onclick="triggerScan()">
-                    Scan Now
+                <button class="btn btn-primary" id="refresh-btn" onclick="triggerRefresh()">
+                    Refresh
                 </button>
             </div>
         </div>
@@ -44,25 +44,25 @@
 
     </div>
 
-    <section class="remediation-section pending-section">
+    <section class="node-recovery-section pending-section">
         <h2>Pending Approval</h2>
-        <p class="section-desc">These remediations require your approval before proceeding.</p>
-        <div id="pending-list" class="remediation-list">
-            <div class="empty-state">No pending remediations</div>
+        <p class="section-desc">These recoveries require your approval before proceeding.</p>
+        <div id="pending-list" class="node-recovery-list">
+            <div class="empty-state">No pending recoveries</div>
         </div>
     </section>
 
-    <section class="remediation-section active-section">
-        <h2>Active Remediations</h2>
-        <div id="active-list" class="remediation-list">
-            <div class="empty-state">No active remediations</div>
+    <section class="node-recovery-section active-section">
+        <h2>Active Recoveries</h2>
+        <div id="active-list" class="node-recovery-list">
+            <div class="empty-state">No active recoveries</div>
         </div>
     </section>
 
-    <section class="remediation-section history-section">
+    <section class="node-recovery-section history-section">
         <h2>History</h2>
-        <div id="history-list" class="remediation-list">
-            <div class="empty-state">No remediation history</div>
+        <div id="history-list" class="node-recovery-list">
+            <div class="empty-state">No recovery history</div>
         </div>
     </section>
 </main>
@@ -78,7 +78,6 @@
         </div>
         <p class="warning">This will trigger the following actions:</p>
         <ul>
-            <li>Remove PVC finalizers</li>
             <li>Create K8ssandraTask for replacenode</li>
         </ul>
         <div class="modal-footer">

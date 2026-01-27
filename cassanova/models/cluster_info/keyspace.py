@@ -1,4 +1,4 @@
-from typing import Annotated, Optional, Any, List
+from typing import Annotated, Optional, Any
 
 from pydantic import BaseModel, BeforeValidator, Field, computed_field
 
@@ -20,7 +20,7 @@ class KeyspaceInfo(BaseModel):
         Optional[bool],
         BeforeValidator(lambda v: False if v is None else v)
     ] = Field(default=False)
-    tables: List[TableInfo]
+    tables: list[TableInfo]
     indexes: list[IndexInfo] = Field(default_factory=dict)
     user_types: dict[str, Any] = Field(default_factory=dict)
     functions: dict[str, Any] = Field(default_factory=dict)

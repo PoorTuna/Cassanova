@@ -35,9 +35,9 @@
                 <span class="label">Tools</span>
             </a>
 
-            {% if request.state.user and remediation_enabled and check_permission(request.state.user, 'cluster:admin')
+            {% if request.state.user and node_recovery_enabled and check_permission(request.state.user, 'cluster:admin')
             %}
-            <a href="/remediation" class="sidebar-link">
+            <a href="/node-recovery" class="sidebar-link">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                     stroke="currentColor" class="icon">
                     <path stroke-linecap="round" stroke-linejoin="round"
