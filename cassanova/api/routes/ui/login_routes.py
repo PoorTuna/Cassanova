@@ -19,12 +19,12 @@ async def login_page(request: Request):
 
 @login_router.post("/login")
 async def login_web(username: str = Form(...), password: str = Form(...)):
-    user = authenticate_user(username, password)
+    user = await authenticate_user(username, password)
     config = get_clusters_config()
     if not user:
         raise HTTPException(status_code=400, detail="Invalid username or password")
 
-    access_token = create_access_token(data={"sub": user.username})
+    access_token = create_access_token(data={"sub": user.username, "roles": user.roles})
     response = JSONResponse(content={"message": "Login successful"})
     response.set_cookie(
         key="access_token",
@@ -40,13 +40,13 @@ async def login_web(username: str = Form(...), password: str = Form(...)):
 
 @login_router.post("/api/v1/login")
 async def login_api(form_data: OAuth2PasswordRequestForm = Depends()):
-    user = authenticate_user(form_data.username, form_data.password)
+    user = await authenticate_user(form_data.username, form_data.password)
     if not user:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Incorrect username or password"
         )
-    access_token = create_access_token(data={"sub": user.username})
+    access_token = create_access_token(data={"sub": user.username, "roles": user.roles})
     return {"access_token": access_token, "token_type": "bearer"}
 
 

@@ -1,20 +1,23 @@
+from asyncio import create_task, sleep, to_thread
 from logging import getLogger
 
 from fastapi import FastAPI
 from kubernetes import client, config as k8s_config
 from starlette.staticfiles import StaticFiles
 
-from cassanova.config.app_config import APPConfig
-from cassanova.config.cassanova_config import get_clusters_config
-from cassanova.consts.app_routers import APPConsts
-from cassanova.core.session_manager import session_manager
 from cassanova.api.exception_handlers.auth_handler import add_auth_exception_handler
 from cassanova.api.exception_handlers.cluster_unavailable_handler import add_cluster_unavailable_exceptions
 from cassanova.api.exception_handlers.default_handler import add_default_exceptions
 from cassanova.api.exception_handlers.not_found_handler import add_notfound_exceptions
 from cassanova.api.exception_handlers.system_views_unavailable_handler import \
     add_system_views_unavailable_exception_handler
+from cassanova.config.app_config import APPConfig
+from cassanova.config.cassanova_config import get_clusters_config
+from cassanova.consts.app_routers import APPConsts
+from cassanova.core.k8s_discovery import discover_k8s_clusters
+from cassanova.core.session_manager import session_manager
 from cassanova.middleware.auth_middleware import AuthMiddleware
+from cassanova.middleware.tls_middleware import HTTPSRedirectMiddleware, HSTSMiddleware, SecureCookieMiddleware
 
 logger = getLogger(__name__)
 
@@ -53,25 +56,19 @@ def __add_exception_handlers(app: FastAPI):
 def __setup_tls_middleware(app: FastAPI, tls_config):
     if not tls_config.enabled:
         return
-    
-    from cassanova.middleware.tls_middleware import (
-        HTTPSRedirectMiddleware,
-        HSTSMiddleware,
-        SecureCookieMiddleware
-    )
-    
+
     app.add_middleware(SecureCookieMiddleware)
-    
+
     if tls_config.hsts_enabled:
         app.add_middleware(
             HSTSMiddleware,
             max_age=tls_config.hsts_max_age,
             include_subdomains=tls_config.hsts_include_subdomains
         )
-    
+
     if tls_config.enforce_https:
         app.add_middleware(HTTPSRedirectMiddleware)
-    
+
     logger.info(f"TLS middleware configured (HSTS: {tls_config.hsts_enabled}, Redirect: {tls_config.enforce_https})")
 
 
@@ -95,6 +92,33 @@ def __setup_k8s_clients(app: FastAPI):
             app.state.k8s_core = client.CoreV1Api()
             app.state.k8s_custom = client.CustomObjectsApi()
 
+            if config.k8s.periodic_discovery_enabled:
+                create_task(run_periodic_discovery(config))
+
         except Exception as e:
             logger.error(f"Failed to initialize K8s clients: {e}")
 
+
+async def run_periodic_discovery(config):
+    logger.info(f"Starting periodic K8s discovery every {config.k8s.discovery_interval_seconds} seconds")
+    while True:
+        try:
+            await sleep(config.k8s.discovery_interval_seconds)
+            discovered = await to_thread(
+                discover_k8s_clusters,
+                config.k8s.kubeconfig,
+                config.k8s.namespace,
+                config.k8s.suffix
+            )
+
+            if discovered:
+                logger.debug(f"Periodic scan found {len(discovered)} clusters")
+                for name, cluster_config in discovered.items():
+                    if name not in config.clusters:
+                        logger.info(f"New cluster discovered: {name}")
+                        config.clusters[name] = cluster_config
+                    else:
+                        pass
+
+        except Exception as e:
+            logger.error(f"Error in periodic K8s discovery: {e}")

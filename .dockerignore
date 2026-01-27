@@ -40,3 +40,17 @@ ROLES.md
 CODE_OF_CONDUCT.md
 LICENSE
 README.md
+
+# External Tools Bloat
+cassanova/external_tools/cassandra-5-0-4/doc/
+cassanova/external_tools/cassandra-5-0-4/javadoc/
+cassanova/external_tools/cassandra-5-0-4/lib/sigar-bin/*freebsd*
+cassanova/external_tools/cassandra-5-0-4/lib/sigar-bin/*solaris*
+cassanova/external_tools/cassandra-5-0-4/lib/sigar-bin/*hpux*
+cassanova/external_tools/cassandra-5-0-4/lib/sigar-bin/*macosx*
+cassanova/external_tools/cassandra-5-0-4/lib/sigar-bin/*aix*
+cassanova/external_tools/cassandra-5-0-4/lib/aarch64/
+cassanova/external_tools/cassandra-5-0-4/lib/*.zip
+cassanova/external_tools/cassandra-5-0-4/*.txt
+cassanova/external_tools/cassandra-5-0-4/conf/*.sample
+
