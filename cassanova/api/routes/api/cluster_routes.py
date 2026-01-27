@@ -3,7 +3,7 @@ from typing import Any
 from fastapi import APIRouter, HTTPException, Depends
 from fastapi.responses import JSONResponse
 
-from cassanova.api.dependencies.auth import require_permissions
+from cassanova.api.dependencies.auth import require_permission
 from cassanova.api.dependencies.db_session import get_session
 from cassanova.config.cassanova_config import get_clusters_config
 from cassanova.core.constructors.cluster_info import generate_cluster_info
@@ -66,7 +66,11 @@ def get_tables(cluster_name: str, keyspace_name: str):
     keyspace_metadata = cluster.metadata.keyspaces.get(keyspace_name)
     if keyspace_metadata is None:
         raise HTTPException(status_code=404, detail="Keyspace not found")
-    return [table.model_dump() for table in generate_tables_info(list(keyspace_metadata.tables.values()))]
+
+    user_type_names = set(keyspace_metadata.user_types.keys())
+    tables = [t for t in list(keyspace_metadata.tables.values()) if t.name not in user_type_names]
+    
+    return [table.model_dump() for table in generate_tables_info(tables)]
 
 
 @cluster_router.get("/cluster/{cluster_name}/keyspace/{keyspace_name}/table/{table_name}")
@@ -146,14 +150,14 @@ def get_cluster_vnodes(cluster_name: str) -> dict[str, list[dict[str, Any]]]:
 
 
 @cluster_router.delete("/cluster/{cluster_name}/keyspace/{keyspace_name}/table/{table_name}")
-def delete_table(cluster_name: str, keyspace_name: str, table_name: str, _user=Depends(require_permissions("cluster:admin"))):
+def delete_table(cluster_name: str, keyspace_name: str, table_name: str, _user=Depends(require_permission("cluster:admin"))):
     session = get_session(cluster_name)
     drop_table_cql(session, keyspace_name, table_name)
     return JSONResponse({"detail": f"Table {keyspace_name}.{table_name} deleted successfully"})
 
 
 @cluster_router.delete("/cluster/{cluster_name}/keyspace/{keyspace_name}/table/{table_name}/truncate")
-def truncate_table(cluster_name: str, keyspace_name: str, table_name: str, _user=Depends(require_permissions("cluster:admin"))):
+def truncate_table(cluster_name: str, keyspace_name: str, table_name: str, _user=Depends(require_permission("cluster:admin"))):
     session = get_session(cluster_name)
     truncate_table_cql(session, keyspace_name, table_name)
     return {"detail": f"Table {keyspace_name}.{table_name} truncated successfully"}

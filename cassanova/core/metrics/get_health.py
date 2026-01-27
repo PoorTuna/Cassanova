@@ -1,7 +1,7 @@
 from cassandra.cluster import Cluster
 
 
-def get_cluster_health(cluster: Cluster):
+def get_cluster_health(cluster: Cluster) -> dict[str, int | str]:
     hosts = cluster.metadata.all_hosts()
     total = len(hosts)
     up = sum(1 for host in hosts if host.is_up)

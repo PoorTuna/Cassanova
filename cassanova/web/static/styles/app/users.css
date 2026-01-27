@@ -32,7 +32,7 @@
 }
 
 .stat-card.superuser::before {
-    background: #ff4081;
+    background: var(--color-danger);
 }
 
 .stat-label {
@@ -100,10 +100,10 @@
 }
 
 .avatar.superuser {
-    background: linear-gradient(135deg, rgba(233, 30, 99, 0.1) 0%, rgba(156, 39, 176, 0.1) 100%);
-    border-color: rgba(255, 64, 129, 0.5);
-    color: #ff4081;
-    text-shadow: 0 0 10px rgba(255, 64, 129, 0.4);
+    background: linear-gradient(135deg, rgba(var(--color-danger-rgb), 0.1) 0%, rgba(var(--color-primary-rgb), 0.1) 100%);
+    border-color: rgba(var(--color-danger-rgb), 0.5);
+    color: var(--color-danger);
+    text-shadow: 0 0 10px rgba(var(--color-danger-rgb), 0.4);
 }
 
 .role-info h4 {
@@ -125,9 +125,9 @@
 }
 
 .badge.admin {
-    background: rgba(255, 64, 129, 0.1);
-    color: #ff4081;
-    border: 1px solid rgba(255, 64, 129, 0.2);
+    background: rgba(var(--color-danger-rgb), 0.1);
+    color: var(--color-danger);
+    border: 1px solid rgba(var(--color-danger-rgb), 0.2);
 }
 
 .badge.user {
@@ -198,7 +198,7 @@
 }
 
 .card-actions .btn-icon.delete:hover {
-    color: #ff4444;
+    color: var(--color-danger);
     background: rgba(255, 68, 68, 0.15);
     border-color: rgba(255, 68, 68, 0.2);
     transform: translateY(-1px);
@@ -231,7 +231,7 @@
     padding: 0 !important;
     overflow: hidden;
     box-shadow: 0 50px 100px rgba(0, 0, 0, 0.9);
-    background: #0c0c0e !important;
+    background: var(--bg-surface) !important;
     border: 1px solid rgba(255, 255, 255, 0.08) !important;
     border-radius: 24px !important;
     position: relative;
@@ -258,7 +258,7 @@
     padding: 2.5rem;
     overflow-y: auto;
     font-size: 0.95rem;
-    color: #ceced2;
+    color: var(--text-secondary);
     line-height: 1.6;
 }
 
@@ -288,9 +288,9 @@
 }
 
 .modal-close:hover {
-    background: rgba(255, 68, 68, 0.15);
-    color: #ff4444;
-    border-color: rgba(255, 68, 68, 0.2);
+    background: rgba(var(--color-danger-rgb), 0.15);
+    color: var(--color-danger);
+    border-color: rgba(var(--color-danger-rgb), 0.2);
     transform: rotate(90deg);
 }
 
@@ -442,7 +442,7 @@
     overflow-y: auto;
     border: 1px solid var(--glass-border);
     border-radius: 12px;
-    background: rgba(0, 0, 0, 0.2);
+    background: var(--bg-hover);
     margin-bottom: 1.5rem;
 }
 
@@ -475,8 +475,8 @@
 
 .perm-revoke {
     color: var(--color-danger);
-    background: rgba(255, 23, 68, 0.1);
-    border: 1px solid rgba(255, 23, 68, 0.2);
+    background: rgba(var(--color-danger-rgb), 0.1);
+    border: 1px solid rgba(var(--color-danger-rgb), 0.2);
     padding: 4px 10px;
     border-radius: 6px;
     font-size: 0.75rem;
@@ -485,7 +485,7 @@
 }
 
 .perm-revoke:hover {
-    background: #ff1744;
+    background: var(--color-danger);
     color: white;
 }
 
@@ -550,7 +550,8 @@
     flex-direction: column;
     gap: 1rem;
     background: rgba(0, 0, 0, 0.2);
-    border: 1px solid rgba(255, 255, 255, 0.03);
+    background: var(--bg-hover);
+    border: 1px solid var(--glass-border-light);
     border-radius: 12px;
     padding: 1.25rem;
 }
@@ -604,7 +605,7 @@
     width: 100%;
     padding: 2rem 1rem;
     text-align: center;
-    color: rgba(255, 255, 255, 0.05);
+    color: var(--glass-border);
     font-weight: 800;
     letter-spacing: 0.2em;
     font-size: 0.8rem;

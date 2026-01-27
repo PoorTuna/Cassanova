@@ -14,6 +14,11 @@
             <p class="subtitle">Roles, permissions and access control overview</p>
         </div>
         <div class="header-actions">
+            <label class="checkbox-container"
+                style="background:var(--glass-surface); border:1px solid var(--glass-border); padding:0.5rem 1rem; margin-right:1rem;">
+                <input type="checkbox" id="show-only-users" checked>
+                <span class="label-text" style="font-size:0.85rem; font-weight:600;">USERS ONLY</span>
+            </label>
             <button id="add-user-btn" class="btn-primary">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
@@ -209,6 +214,8 @@
     document.addEventListener('DOMContentLoaded', () => {
         fetchRoles();
         setupModals();
+
+        document.getElementById('show-only-users').addEventListener('change', fetchRoles);
     });
 
     // --- Roles Grid ---
@@ -223,14 +230,22 @@
                 grid.innerHTML = '';
                 if (roles.error || roles.detail) return Toast.error(roles.detail || 'Failed to load roles');
 
-                // Update Stats
+                // Filter?
+                const showOnlyUsers = document.getElementById('show-only-users').checked;
+                let displayRoles = roles;
+
+                // Keep stats on ALL roles
                 rolesCountEl.textContent = roles.length;
                 const superCount = roles.filter(r => r.is_superuser).length;
                 superCountEl.textContent = superCount;
 
-                if (roles.length === 0) return grid.innerHTML = '<div class="empty-state">No roles found in the security registry.</div>';
+                if (showOnlyUsers) {
+                    displayRoles = roles.filter(r => r.can_login);
+                }
 
-                roles.forEach(role => {
+                if (displayRoles.length === 0) return grid.innerHTML = '<div class="empty-state">No matching roles found.</div>';
+
+                displayRoles.forEach(role => {
                     const card = document.createElement('div');
                     card.className = `user-card glass-panel ${role.is_superuser ? 'superuser-card' : ''}`;
                     card.innerHTML = `

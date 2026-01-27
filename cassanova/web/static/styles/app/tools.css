@@ -1,6 +1,6 @@
 /* Terminal Wrapper */
 #xterm-wrapper {
-    background: rgba(13, 17, 23, 0.85);
+    background: var(--bg-terminal);
     /* Dark opaque for readability */
     backdrop-filter: blur(10px);
     border: 1px solid var(--glass-border);
@@ -38,7 +38,7 @@
 }
 
 #xterm-upload input[type="file"] {
-    background: rgba(0, 0, 0, 0.3);
+    background: var(--bg-hover);
     border: 1px dashed var(--glass-border);
     padding: 1rem;
     border-radius: 8px;
@@ -49,7 +49,7 @@
 }
 
 #xterm-upload input[type="file"]:hover {
-    background: rgba(0, 229, 255, 0.05);
+    background: rgba(var(--color-primary-rgb), 0.05);
     border-color: var(--color-primary);
 }
 

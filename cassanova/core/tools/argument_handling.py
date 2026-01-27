@@ -1,13 +1,13 @@
 import os
 from shlex import split
-from typing import Optional, List
+from typing import Optional
 
 
-def parse_args(arg_string: Optional[str]) -> List[str]:
+def parse_args(arg_string: Optional[str]) -> list[str]:
     return split(arg_string) if arg_string else []
 
 
-def resolve_args(args: List[str], workdir: str) -> List[str]:
+def resolve_args(args: list[str], workdir: str) -> list[str]:
     resolved = []
     for arg in args:
         abs_path = os.path.abspath(os.path.join(workdir, arg))

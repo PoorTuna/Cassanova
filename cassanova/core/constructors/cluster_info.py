@@ -2,11 +2,11 @@ from cassandra.cluster import Session, Cluster
 
 from cassanova.core.constructors.keyspaces import generate_keyspaces_info
 from cassanova.core.constructors.nodes import generate_nodes_info
-from cassanova.core.metrics.cluster.get_description import get_cluster_description, get_cluster_version
-from cassanova.core.metrics.cluster.get_health import get_cluster_health
-from cassanova.core.metrics.cluster.get_technology_type import detect_database_technology
-from cassanova.core.metrics.topology.get_dc_rack_distribution import get_dc_rack_distribution
-from cassanova.models.cluster_info.cluster import ClusterInfo
+from cassanova.core.metrics.get_description import get_cluster_description, get_cluster_version
+from cassanova.core.metrics.get_health import get_cluster_health
+from cassanova.core.metrics.get_technology_type import detect_database_technology
+from cassanova.core.metrics.get_dc_rack_distribution import get_dc_rack_distribution
+from cassanova.models.cluster import ClusterInfo
 from cassanova.models.cluster_metrics import ClusterMetrics
 
 
