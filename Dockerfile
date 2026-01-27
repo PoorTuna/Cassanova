@@ -1,7 +1,7 @@
 FROM python:3.12-slim
 
 RUN apt-get update && \
-    apt-get install -y curl procps && \
+    apt-get install -y curl procps build-essential libsasl2-dev python3-dev libldap2-dev libssl-dev && \
     curl -fSL -o /tmp/openjdk.tar.gz \
         https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.8+7/OpenJDK17U-jre_x64_linux_hotspot_17.0.8_7.tar.gz && \
     tar -xzf /tmp/openjdk.tar.gz -C /opt && \

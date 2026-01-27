@@ -3,7 +3,7 @@
 {% block title %}Cassanova | Unified Cassandra Management{% endblock %}
 
 {% block head_extra %}
-<link href="/static/styles/app/sstable-smasher.css" rel="stylesheet" />
+<link href="/static/styles/app/sstable-smasher.css" rel="stylesheet"/>
 <script src="/static/scripts/app/index.js" defer></script>
 <script src="/static/scripts/app/sstable-smasher.js" defer></script>
 {% endblock %}
@@ -17,10 +17,9 @@
             <img src="/static/icons/logo/cassanova-logo.png" class="hero-logo" alt="Cassanova Logo">
             <h1>Cassanova</h1>
         </div>
-        <p class="hero-subtitle">Unified Operations Hub for Apache Cassandra</p>
 
         <div class="search-wrapper">
-            <input type="text" id="cluster-filter" placeholder="Locate your cluster..." aria-label="Filter clusters" />
+            <input type="text" id="cluster-filter" placeholder="Cluster Filter" aria-label="Filter clusters"/>
             <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <circle cx="11" cy="11" r="8"></circle>
                 <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
@@ -31,7 +30,7 @@
     <div id="cluster-grid">
         {% for name, config in clusters.items() %}
         <div class="cluster-hero-card cluster-row" data-name="{{ name | lower }}"
-            onclick="window.location.href='/cluster/{{ name }}'">
+             onclick="window.location.href='/cluster/{{ name }}'">
 
             <div class="card-main">
                 <div class="cluster-icon">
@@ -57,7 +56,7 @@
                     ...{% endif %}</span>
                 <div class="arrow-btn">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <polyline points="9 6 15 12 9 18" />
+                        <polyline points="9 6 15 12 9 18"/>
                     </svg>
                 </div>
             </div>
@@ -88,7 +87,7 @@
             <div class="game-stats">
                 <div class="stat-item">COMPACTION SCORE: <span id="game-score-val">0</span></div>
                 <div class="stat-item">READ LATENCY (P99): <span id="latency-val"
-                        style="color: var(--color-success)">0ms</span></div>
+                                                                 style="color: var(--color-success)">0ms</span></div>
                 <div class="stat-item">DISK STATUS: <span style="color: var(--color-success)">NOMINAL</span></div>
             </div>
 
@@ -152,12 +151,14 @@
                 window.gameInstance.draw(); // Initial draw
             }
         }
+
         function closeSSTableSmasher() {
             document.getElementById('game-modal').classList.add('hidden');
             if (window.gameInstance) {
                 window.gameInstance.isPaused = true;
             }
         }
+
         function toggleGameManual() {
             const man = document.getElementById('game-manual-overlay');
             const startOverlay = document.getElementById('game-start-overlay');

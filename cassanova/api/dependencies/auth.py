@@ -2,11 +2,13 @@ from datetime import datetime, timedelta
 from typing import Optional, NoReturn
 
 from fastapi import Depends, HTTPException, Request, status
+from fastapi.concurrency import run_in_threadpool
 from fastapi.security import OAuth2PasswordBearer
 from jose import JWTError, jwt
 
 from cassanova.config.cassanova_config import get_clusters_config, CassanovaConfig
 from cassanova.core.auth_utils import verify_password
+from cassanova.core.ldap_manager import LDAPManager
 from cassanova.exceptions.auth_exceptions import LoginRequired
 from cassanova.models.auth_models import WebUser
 
@@ -57,7 +59,14 @@ async def get_current_user(
             return None
 
         user = config.auth.get_user(username)
-        return user
+        if user:
+            return user
+
+        roles = payload.get("roles")
+        if roles:
+            return WebUser(username=username, password="", roles=roles)
+
+        return None
     except JWTError:
         return None
 
@@ -116,9 +125,21 @@ def require_permission(perm: str) -> WebUser | NoReturn:
     return _check_permission_dependency
 
 
-def authenticate_user(username: str, password: str) -> Optional[WebUser]:
+async def authenticate_user(username: str, password: str) -> Optional[WebUser]:
     config = get_clusters_config()
+
     user = config.auth.get_user(username)
-    if not user or not verify_password(password, user.password):
+    if user:
+        if verify_password(password, user.password):
+            return user
         return None
-    return user
+
+    if config.auth.ldap and config.auth.ldap.enabled:
+        return await run_in_threadpool(_ldap_authenticate, config.auth.ldap, username, password)
+
+    return None
+
+
+def _ldap_authenticate(ldap_config, username, password) -> Optional[WebUser]:
+    manager = LDAPManager(ldap_config)
+    return manager.authenticate(username, password)
