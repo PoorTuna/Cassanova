@@ -18,6 +18,9 @@ class LDAPConfig(BaseModel):
     group_search_filter: str = Field("(member={user_dn})",
                                      description="Filter to find groups for a user. {user_dn} and {username} placeholders available.")
     group_name_attribute: str = Field("cn", description="Attribute of the group object that contains the group name")
+    memberof_attribute: Optional[str] = Field("memberOf",
+                                              description="Attribute on the User object containing group memberships (e.g. 'memberOf'). If set, this is preferred over group_search.")
+
     role_mapping: dict[str, list[str]] = Field(default_factory=dict,
                                                description="Map LDAP group names to Cassanova roles. Key is LDAP group name, Value is list of Cassanova roles.")
     default_roles: list[str] = Field(default_factory=list,
