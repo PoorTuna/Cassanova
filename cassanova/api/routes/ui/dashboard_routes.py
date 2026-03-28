@@ -109,7 +109,8 @@ def table_explorer_dashboard(request: Request, cluster_name: str, keyspace_name:
         "cluster_config_entry": cluster_name,
         "keyspace_name": keyspace_name,
         "table_name": table_name,
-        "primary_key": [col.name for col in table_metadata.primary_key]
+        "primary_key": [col.name for col in table_metadata.primary_key],
+        "columns": list(table_metadata.columns.keys()),
     })
 
 

@@ -10,7 +10,8 @@
 {% block content %}
 <main class="main-content explorer-page with-sidebar" data-cluster="{{ cluster_config_entry }}"
     data-keyspace="{{ keyspace_name }}" data-table="{{ table_name }}"
-    data-pk="{{ primary_key | tojson | forceescape }}">
+    data-pk="{{ primary_key | tojson | forceescape }}"
+    data-columns="{{ columns | tojson | forceescape }}">
 
     <header class="explorer-header">
         <div class="breadcrumb">

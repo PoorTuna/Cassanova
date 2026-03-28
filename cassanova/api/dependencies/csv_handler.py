@@ -1,12 +1,18 @@
 from csv import DictReader, writer
 from io import StringIO
+from logging import getLogger
 from typing import Generator, Any
 
 from cassandra.cluster import Session
 from cassandra.metadata import TableMetadata
+from cassandra.query import BatchStatement, BatchType, SimpleStatement
 
 from cassanova.core.cql.converters import convert_value_for_cql
 from cassanova.core.cql.query_builder import build_insert_query
+
+logger = getLogger(__name__)
+
+_BATCH_SIZE = 50
 
 
 def generate_csv_stream(session: Session, query: str) -> Generator[str, None, None]:
@@ -27,14 +33,44 @@ def load_csv_data(content: bytes, keyspace_name: str, table_name: str, table_met
     success_count = 0
     errors = []
 
+    batch = BatchStatement(batch_type=BatchType.UNLOGGED)
+    batch_rows = 0
+    insert_query = None
+
     for row in reader:
         try:
-            _insert_csv_row(row, keyspace_name, table_name, table_metadata, session)
-            success_count += 1
+            columns, values = _prepare_insert_data(row, table_metadata)
+            if insert_query is None:
+                insert_query = build_insert_query(keyspace_name, table_name, columns)
+
+            batch.add(SimpleStatement(insert_query), values)
+            batch_rows += 1
+
+            if batch_rows >= _BATCH_SIZE:
+                session.execute(batch)
+                success_count += batch_rows
+                batch = BatchStatement(batch_type=BatchType.UNLOGGED)
+                batch_rows = 0
+
         except Exception as e:
+            if batch_rows > 0:
+                try:
+                    session.execute(batch)
+                    success_count += batch_rows
+                except Exception as batch_err:
+                    errors.append(str(batch_err))
+                batch = BatchStatement(batch_type=BatchType.UNLOGGED)
+                batch_rows = 0
             errors.append(str(e))
             if len(errors) > 50:
                 break
+
+    if batch_rows > 0:
+        try:
+            session.execute(batch)
+            success_count += batch_rows
+        except Exception as e:
+            errors.append(str(e))
 
     return {
         "success": success_count,

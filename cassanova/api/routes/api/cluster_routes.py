@@ -1,3 +1,4 @@
+from time import time
 from typing import Any
 
 from fastapi import APIRouter, HTTPException, Depends
@@ -16,6 +17,8 @@ from cassanova.exceptions.system_views_unavailable import SystemViewsUnavailable
 
 cluster_router = APIRouter()
 clusters_config = get_clusters_config()
+
+_schema_map_cache: dict[str, tuple[float, dict]] = {}
 
 
 @cluster_router.get("/clusters")
@@ -163,8 +166,16 @@ def truncate_table(cluster_name: str, keyspace_name: str, table_name: str, _user
     return {"detail": f"Table {keyspace_name}.{table_name} truncated successfully"}
 
 
+_SCHEMA_MAP_TTL_SECONDS = 60
+
+
 @cluster_router.get("/cluster/{cluster_name}/schema-map")
 def get_cluster_schema_map(cluster_name: str):
+    now = time()
+    cached = _schema_map_cache.get(cluster_name)
+    if cached and (now - cached[0]) < _SCHEMA_MAP_TTL_SECONDS:
+        return cached[1]
+
     session = get_session(cluster_name)
     metadata = session.cluster.metadata
 
@@ -179,4 +190,5 @@ def get_cluster_schema_map(cluster_name: str):
 
         schema_map[ks_name] = tables
 
+    _schema_map_cache[cluster_name] = (now, schema_map)
     return schema_map
