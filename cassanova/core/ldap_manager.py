@@ -15,6 +15,16 @@ from cassanova.models.auth_models import WebUser
 logger = getLogger(__name__)
 
 
+def _ldap_escape(value: str) -> str:
+    """Escape special characters per RFC 4515 to prevent LDAP injection."""
+    return (value
+            .replace('\\', '\\5c')
+            .replace('*', '\\2a')
+            .replace('(', '\\28')
+            .replace(')', '\\29')
+            .replace('\x00', '\\00'))
+
+
 class LDAPManager:
     def __init__(self, config: LDAPConfig):
         if not LDAP_AVAILABLE:
@@ -90,7 +100,7 @@ class LDAPManager:
         return False
 
     def _find_user(self, conn, username: str) -> tuple[Optional[str], Optional[dict]]:
-        search_filter = self.config.user_search_filter.replace("{username}", username)
+        search_filter = self.config.user_search_filter.replace("{username}", _ldap_escape(username))
 
         attrs = ['1.1']
         if self.config.memberof_attribute:
@@ -167,7 +177,9 @@ class LDAPManager:
         return list(found_roles)
 
     def _search_groups(self, conn, user_dn: str, username: str) -> list[tuple[str, dict[str, Any]]]:
-        group_filter = self.config.group_search_filter.replace("{user_dn}", user_dn).replace("{username}", username)
+        group_filter = self.config.group_search_filter.replace(
+            "{user_dn}", _ldap_escape(user_dn)
+        ).replace("{username}", _ldap_escape(username))
         try:
             return conn.search_s(
                 self.config.group_search_base,

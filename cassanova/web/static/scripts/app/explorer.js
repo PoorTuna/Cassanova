@@ -4,6 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const keyspace = explorer.dataset.keyspace;
     const table = explorer.dataset.table;
     const pkCols = JSON.parse(explorer.dataset.pk);
+    const preloadedColumns = JSON.parse(explorer.dataset.columns || '[]');
 
     const tableHead = document.getElementById('table-head-row');
     const tableBody = document.getElementById('table-body');
@@ -83,11 +84,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
                 renderTable(data.rows);
 
-                // Populate column selector if empty
-                if (colSelect.options.length <= 1) {
-                    populateColumnSelector(Object.keys(data.rows[0]));
-                }
-
                 // Only show expensive query warning if ALLOW FILTERING is explicitly enabled
                 if (explicitAllowFiltering) {
                     showExpensiveQueryWarning();
@@ -111,7 +107,7 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error('Error fetching data:', error);
             tableBody.innerHTML = `<tr><td colspan="100" style="text-align:center; padding: 40px;">
                 <div style="color: var(--color-danger); font-weight: 600; margin-bottom: 8px;">Failed to Load Data</div>
-                <div style="color: var(--text-muted); font-size: 0.9rem;">${error.message}</div>
+                <div style="color: var(--text-muted); font-size: 0.9rem;">${escapeHtml(error.message)}</div>
             </td></tr>`;
         } finally {
             loadingOverlay.classList.add('hidden');
@@ -131,7 +127,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function renderChips() {
         chipsContainer.innerHTML = activeFilters.map((f, i) => `
             <div class="filter-chip" title="Double-click to edit">
-                <strong>${f.col}</strong> <span class="op">${f.op}</span> ${f.val}
+                <strong>${escapeHtml(f.col)}</strong> <span class="op">${escapeHtml(f.op)}</span> ${escapeHtml(f.val)}
                 <span class="remove-filter" data-index="${i}">×</span>
             </div>
         `).join('');
@@ -285,7 +281,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 ${cols.map(col => {
             const isPK = pkCols.includes(col);
             return `
-                    <td data-col="${col}" class="${isPK ? 'pk-col read-only' : 'editable-cell'}" title="${isPK ? 'Primary Key (Read-only)' : row[col]}">
+                    <td data-col="${col}" class="${isPK ? 'pk-col read-only' : 'editable-cell'}" title="${isPK ? 'Primary Key (Read-only)' : escapeHtml(row[col])}">
                         ${formatCell(row[col])}
                         ${!isPK ? '<span class="edit-hint">✎</span>' : ''}
                     </td>
@@ -306,8 +302,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function formatCell(val) {
         if (val === null) return '<span class="syntax-null">null</span>';
-        if (typeof val === 'object') return JSON.stringify(val);
-        return val;
+        if (typeof val === 'object') return escapeHtml(JSON.stringify(val));
+        return escapeHtml(String(val));
     }
 
     function attachCellEvents() {
@@ -481,6 +477,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // Populate filter columns immediately from server-provided list
+    if (preloadedColumns.length > 0) {
+        populateColumnSelector(preloadedColumns);
+    }
+
     // Initial load
     fetchData();
 
@@ -587,7 +588,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 Toast.success(`Successfully imported ${data.success} rows.`);
                 if (data.failed > 0) {
                     const errorDetails = data.errors && data.errors.length > 0
-                        ? `<br><div style="font-size:0.85em; margin-top:4px;">Reason: ${data.errors[0]}</div>`
+                        ? `<br><div style="font-size:0.85em; margin-top:4px;">Reason: ${escapeHtml(data.errors[0])}</div>`
                         : '';
                     Toast.show(`${data.failed} rows failed to import.${errorDetails}`, 'warning', 10000);
                 }
@@ -606,6 +607,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     nextPageBtn.addEventListener('click', () => fetchData('next'));
     prevPageBtn.addEventListener('click', () => fetchData('prev'));
+
+    // Register for auto-refresh widget
+    window.cassanovaRefresh = () => refreshAndFetch();
 
     // Modal Helpers
     function closeModal(modal) {
@@ -633,7 +637,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         let detailsHtml = '<ul>';
         pkCols.forEach(col => {
-            detailsHtml += `<li><strong>${col}:</strong> ${rowData[col]}</li>`;
+            detailsHtml += `<li><strong>${escapeHtml(col)}:</strong> ${escapeHtml(rowData[col])}</li>`;
         });
         detailsHtml += '</ul>';
 

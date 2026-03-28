@@ -29,6 +29,7 @@ def bootstrap_app(app: FastAPI, app_config: APPConfig):
     __add_routers(app, app_config.routers)
     __add_exception_handlers(app)
     __setup_k8s_clients(app)
+    __warn_insecure_secret()
 
     @app.on_event("shutdown")
     def shutdown_event():
@@ -72,6 +73,15 @@ def __setup_tls_middleware(app: FastAPI, tls_config):
     logger.info(f"TLS middleware configured (HSTS: {tls_config.hsts_enabled}, Redirect: {tls_config.enforce_https})")
 
 
+def __warn_insecure_secret():
+    config = get_clusters_config()
+    if config.auth.enabled and config.auth.secret_key == "insecure_default_secret_change_me":
+        logger.warning(
+            "AUTH SECRET KEY IS SET TO THE DEFAULT INSECURE VALUE. "
+            "Change 'secret_key' in your auth configuration before deploying to production."
+        )
+
+
 def __setup_k8s_clients(app: FastAPI):
     config = get_clusters_config()
 
@@ -113,12 +123,12 @@ async def run_periodic_discovery(config):
 
             if discovered:
                 logger.debug(f"Periodic scan found {len(discovered)} clusters")
+                new_clusters = dict(config.clusters)
                 for name, cluster_config in discovered.items():
-                    if name not in config.clusters:
+                    if name not in new_clusters:
                         logger.info(f"New cluster discovered: {name}")
-                        config.clusters[name] = cluster_config
-                    else:
-                        pass
+                        new_clusters[name] = cluster_config
+                config.clusters = new_clusters
 
         except Exception as e:
             logger.error(f"Error in periodic K8s discovery: {e}")

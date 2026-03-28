@@ -1,24 +1,44 @@
 from json import loads
+from logging import getLogger
 from typing import Any
+
+from cassanova.core.cql.sanitize_input import sanitize_identifier
+
+logger = getLogger(__name__)
+
+_ALLOWED_OPERATORS = frozenset({
+    '=', '!=', '<', '>', '<=', '>=',
+    'IN', 'LIKE', 'CONTAINS', 'CONTAINS KEY',
+})
 
 
 def build_where_clause(filter_json: str = None) -> str:
     if not filter_json:
         return ""
 
+    filters = loads(filter_json)
     conditions = []
-    try:
-        filters = loads(filter_json)
-        for f in filters:
-            col = f.get('col')
-            op = f.get('op', '=')
-            val = f.get('val', '')
-            cql_val = _format_cql_value(val, op)
-            conditions.append(f'"{col}" {op} {cql_val}')
-    except Exception:
-        pass
+    for f in filters:
+        col = f.get('col')
+        op = f.get('op', '=')
+        val = f.get('val', '')
+
+        sanitize_identifier(col)
+        _validate_operator(op)
+
+        cql_val = _format_cql_value(val, op)
+        conditions.append(f'"{col}" {op} {cql_val}')
 
     return " WHERE " + " AND ".join(conditions) if conditions else ""
+
+
+def _validate_operator(op: str) -> None:
+    if op.upper() not in _ALLOWED_OPERATORS:
+        raise ValueError(f"Invalid CQL operator: {op}")
+
+
+def _escape_cql_string(val: str) -> str:
+    return val.replace("'", "''")
 
 
 def _format_cql_value(val: Any, op: str) -> str:
@@ -37,16 +57,16 @@ def _format_cql_value(val: Any, op: str) -> str:
                     item.startswith('-') and item[1:].replace('.', '', 1).isdigit()):
                 formatted_items.append(item)
             else:
-                formatted_items.append(f"'{item}'")
+                formatted_items.append(f"'{_escape_cql_string(item)}'")
         return f"({', '.join(formatted_items)})"
 
     if op.upper() == 'LIKE':
         search_term = val
         if '%' not in search_term:
             search_term = f"%{search_term}%"
-        return f"'{search_term}'"
+        return f"'{_escape_cql_string(search_term)}'"
 
-    return f"'{val}'"
+    return f"'{_escape_cql_string(val)}'"
 
 
 def build_insert_query(keyspace: str, table: str, columns: list[str]) -> str:

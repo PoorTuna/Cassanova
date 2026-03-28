@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta
+from logging import getLogger
 from typing import Optional, NoReturn
 
 from fastapi import Depends, HTTPException, Request, status
@@ -11,6 +12,8 @@ from cassanova.core.auth_utils import verify_password
 from cassanova.core.ldap_manager import LDAPManager
 from cassanova.exceptions.auth_exceptions import LoginRequired
 from cassanova.models.auth_models import WebUser
+
+logger = getLogger(__name__)
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/v1/login", auto_error=False)
 
@@ -64,7 +67,13 @@ async def get_current_user(
 
         roles = payload.get("roles")
         if roles:
-            return WebUser(username=username, password="", roles=roles)
+            known_role_names = {r.name for r in config.auth.roles}
+            validated_roles = [r for r in roles if r in known_role_names]
+            if len(validated_roles) != len(roles):
+                dropped = set(roles) - known_role_names
+                logger.warning(f"JWT for '{username}' claimed unknown roles: {dropped}")
+            if validated_roles:
+                return WebUser(username=username, password="", roles=validated_roles)
 
         return None
     except JWTError:

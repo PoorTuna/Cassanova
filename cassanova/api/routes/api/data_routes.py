@@ -21,7 +21,10 @@ def get_table_data(cluster_name: str, keyspace_name: str, table_name: str, limit
                    allow_filtering: bool = False, paging_state: str = None):
     session = get_session(cluster_name)
 
-    where_clause = build_where_clause(filter_json)
+    try:
+        where_clause = build_where_clause(filter_json)
+    except (ValueError, Exception) as e:
+        raise HTTPException(status_code=400, detail=f"Invalid filter: {e}")
 
     query = f'SELECT * FROM "{keyspace_name}"."{table_name}"{where_clause}'
     if allow_filtering:
@@ -208,7 +211,11 @@ def export_table_data(cluster_name: str, keyspace_name: str, table_name: str,
                       filter_json: str = None, allow_filtering: bool = False):
     session = get_session(cluster_name)
 
-    where_clause = build_where_clause(filter_json)
+    try:
+        where_clause = build_where_clause(filter_json)
+    except (ValueError, Exception) as e:
+        raise HTTPException(status_code=400, detail=f"Invalid filter: {e}")
+
     query = f'SELECT * FROM "{keyspace_name}"."{table_name}"{where_clause}'
 
     if allow_filtering:
