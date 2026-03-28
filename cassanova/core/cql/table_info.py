@@ -1,3 +1,4 @@
+from logging import getLogger
 from typing import Any
 
 from cassandra import ConsistencyLevel
@@ -5,6 +6,8 @@ from cassandra.cluster import Session
 from cassandra.query import SimpleStatement
 
 from cassanova.core.cql.sanitize_input import sanitize_identifier
+
+logger = getLogger(__name__)
 
 
 def show_table_schema_cql(session: Session, keyspace: str, table: str,
@@ -32,7 +35,7 @@ def show_table_description_cql(session: Session, keyspace: str, table: str,
         
         if result:
             return result
-    except Exception:
-        pass
-    
+    except Exception as e:
+        logger.debug(f"DESCRIBE TABLE failed for {keyspace}.{table}, falling back to schema query: {e}")
+
     return show_table_schema_cql(session, keyspace, table, cl)
