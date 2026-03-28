@@ -42,6 +42,10 @@ async function fetchSchema() {
     }
 }
 
+// Start schema fetch immediately — don't wait for Monaco to load
+loadCachedSchema();
+fetchSchema();
+
 require(['vs/editor/editor.main'], function () {
     // Basic context parser to see what we should suggest
     function getContext(model, position) {
@@ -185,9 +189,6 @@ require(['vs/editor/editor.main'], function () {
         padding: { top: 16 },
     });
 
-    // Load cached schema immediately for instant autocomplete, then refresh in background
-    loadCachedSchema();
-    fetchSchema();
 });
 
 const container = document.getElementById('container');
