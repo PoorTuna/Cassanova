@@ -216,6 +216,9 @@
         setupModals();
 
         document.getElementById('show-only-users').addEventListener('change', fetchRoles);
+
+        // Register for auto-refresh widget
+        window.cassanovaRefresh = () => fetchRoles();
     });
 
     // --- Roles Grid ---
