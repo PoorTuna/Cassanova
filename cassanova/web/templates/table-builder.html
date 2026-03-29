@@ -8,7 +8,11 @@
 {% endblock %}
 
 {% block content %}
-<main class="with-sidebar builder-page" data-cluster="{{ cluster_config_entry }}" data-keyspace="{{ keyspace_name }}">
+<main class="with-sidebar builder-page"
+    data-cluster="{{ cluster_config_entry }}"
+    data-keyspace="{{ keyspace_name }}"
+    data-mode="{{ mode | default('create') }}"
+    {% if existing_schema %}data-existing-schema='{{ existing_schema | tojson }}'{% endif %}>
     <header class="builder-header">
         <div class="breadcrumb">
             <a href="/cluster/{{ cluster_config_entry }}">{{ cluster_name }}</a>
@@ -17,13 +21,13 @@
             <span class="separator">/</span>
             <span class="active">Table Designer</span>
         </div>
-        <h1>New Table Designer</h1>
+        <h1>{% if mode == 'alter' %}Edit Table: {{ table_name }}{% else %}New Table Designer{% endif %}</h1>
         <div class="header-actions">
             <button id="create-table-btn" class="btn-primary" disabled>
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M5 12h14M12 5l7 7-7 7"></path>
                 </svg>
-                Execute DDL
+                {% if mode == 'alter' %}Apply Changes{% else %}Execute DDL{% endif %}
             </button>
         </div>
     </header>
@@ -44,7 +48,16 @@
                 <div class="form-grid">
                     <div class="form-group">
                         <label>Table Name</label>
-                        <input type="text" id="table-name" placeholder="e.g. user_events" autocomplete="off" required>
+                        <input type="text" id="table-name"
+                            placeholder="e.g. user_events" autocomplete="off" required
+                            value="{{ table_name | default('') }}"
+                            {% if mode == 'alter' %}readonly{% endif %}>
+                    </div>
+                    <div class="form-group">
+                        <label class="inline-toggle-label">
+                            <input type="checkbox" id="if-not-exists-toggle" checked>
+                            <span>IF NOT EXISTS</span>
+                        </label>
                     </div>
                 </div>
             </section>
@@ -95,6 +108,61 @@
                         <input type="number" id="default-ttl" placeholder="0 (No TTL)" min="0">
                     </div>
                 </div>
+
+                <!-- Advanced Options -->
+                <div class="advanced-options-section">
+                    <button id="advanced-options-toggle" class="advanced-toggle-btn" type="button">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M6 9l6 6 6-6"></path>
+                        </svg>
+                        Advanced Options
+                    </button>
+                    <div id="advanced-options-body" class="advanced-options-body hidden">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>Compression</label>
+                                <select id="compression">
+                                    <option value="LZ4Compressor">LZ4Compressor</option>
+                                    <option value="DeflateCompressor">DeflateCompressor</option>
+                                    <option value="SnappyCompressor">SnappyCompressor</option>
+                                    <option value="ZstdCompressor">ZstdCompressor</option>
+                                    <option value="none">(None)</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>GC Grace Seconds</label>
+                                <input type="number" id="gc-grace-seconds" placeholder="864000 (default)" min="0">
+                            </div>
+                            <div class="form-group">
+                                <label>Bloom Filter FP Chance</label>
+                                <input type="number" id="bloom-filter-fp" placeholder="default" min="0" max="1" step="0.01">
+                            </div>
+                            <div class="form-group">
+                                <label>Caching</label>
+                                <select id="caching">
+                                    <option value="ALL">ALL</option>
+                                    <option value="KEYS_ONLY">KEYS_ONLY</option>
+                                    <option value="ROWS_ONLY">ROWS_ONLY</option>
+                                    <option value="NONE">NONE</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Comment</label>
+                                <input type="text" id="table-comment" placeholder="Optional table comment">
+                            </div>
+                            <div class="form-group">
+                                <label>Speculative Retry</label>
+                                <input type="text" id="speculative-retry" placeholder="e.g. 99PERCENTILE">
+                            </div>
+                            <div class="form-group">
+                                <label class="inline-toggle-label">
+                                    <input type="checkbox" id="cdc-toggle">
+                                    <span>Enable CDC (Change Data Capture)</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </section>
         </div>
 
@@ -130,14 +198,16 @@
             <button class="btn-close-x close-modal">&times;</button>
         </div>
         <div class="modal-body">
-            <p>You are about to create a new table in <strong>{{ keyspace_name }}</strong>.</p>
+            <p>You are about to {% if mode == 'alter' %}alter a table{% else %}create a new table{% endif %} in <strong>{{ keyspace_name }}</strong>.</p>
             <div class="details-box">
                 <pre id="final-cql-confirm" style="font-size: 0.8rem; white-space: pre-wrap;"></pre>
             </div>
         </div>
         <div class="modal-footer">
             <button class="btn-text close-modal">Cancel</button>
-            <button id="confirm-execute-btn" class="btn-primary">Confirm & Create</button>
+            <button id="confirm-execute-btn" class="btn-primary">
+                {% if mode == 'alter' %}Confirm & Apply{% else %}Confirm & Create{% endif %}
+            </button>
         </div>
     </div>
 </div>
