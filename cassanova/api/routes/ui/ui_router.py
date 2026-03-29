@@ -11,16 +11,13 @@ def get_cassanova_ui_router() -> APIRouter:
     cassanova_ui_router = APIRouter(tags=["UI"])
     cassanova_ui_router.include_router(login_router)
     cassanova_ui_router.include_router(
-        cassanova_ui_dashboard_router,
-        dependencies=[Depends(require_web_user)]
+        cassanova_ui_dashboard_router, dependencies=[Depends(require_web_user)]
     )
     cassanova_ui_router.include_router(
-        cassanova_ui_tools_router,
-        dependencies=[Depends(require_web_user)]
+        cassanova_ui_tools_router, dependencies=[Depends(require_web_user)]
     )
     cassanova_ui_router.include_router(
-        node_recovery_ui_router,
-        dependencies=[Depends(require_web_user)]
+        node_recovery_ui_router, dependencies=[Depends(require_web_user)]
     )
 
     return cassanova_ui_router

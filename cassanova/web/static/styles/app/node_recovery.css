@@ -245,9 +245,12 @@
 
 .btn {
     padding: 0.5rem 1rem;
+    background: var(--glass-surface);
     border: none;
     border-radius: 6px;
     font-weight: 600;
+    color: var(--text-primary);
+    font-family: inherit;
     cursor: pointer;
     transition: background 0.2s, transform 0.1s;
 }
@@ -285,22 +288,9 @@
     border-radius: 12px;
 }
 
-/* Modal */
+/* Node Recovery Modal Overrides */
 .modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
     background: rgba(0, 0, 0, 0.7);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 1000;
-}
-
-.modal.hidden {
-    display: none;
 }
 
 .modal-content {
@@ -340,7 +330,5 @@
 }
 
 .modal-footer {
-    display: flex;
-    justify-content: flex-end;
     gap: 1rem;
 }

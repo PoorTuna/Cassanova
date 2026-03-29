@@ -10,12 +10,12 @@ RUN apt-get update && \
     libldap2-dev \
     libssl-dev
 
-COPY requirements.txt .
+COPY pyproject.toml .
 
 RUN pip install uv && \
     uv venv /opt/venv && \
     . /opt/venv/bin/activate && \
-    uv pip install --no-cache-dir -r requirements.txt
+    uv pip install --no-cache-dir .
 
 FROM python:3.12-slim
 
@@ -37,7 +37,7 @@ RUN apt-get update && \
     rm /tmp/openjdk.tar.gz && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
-    
+
 ENV JAVA_HOME=/opt/jdk-17.0.8+7-jre
 
 RUN useradd -m cassanova

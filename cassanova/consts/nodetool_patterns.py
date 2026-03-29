@@ -18,5 +18,5 @@ class NodeToolPatterns:
         "N": "Normal",
         "L": "Leaving",
         "J": "Joining",
-        "M": "Moving"
+        "M": "Moving",
     }

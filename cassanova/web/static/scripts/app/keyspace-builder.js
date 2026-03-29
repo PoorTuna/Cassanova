@@ -1,9 +1,14 @@
 document.addEventListener('DOMContentLoaded', () => {
     const main = document.querySelector('.builder-page');
     const clusterName = main.dataset.cluster;
+    const mode = main.dataset.mode || 'create';
+    const existingKeyspace = main.dataset.existingKeyspace
+        ? JSON.parse(main.dataset.existingKeyspace)
+        : null;
 
     // Inputs
     const ksNameInput = document.getElementById('keyspace-name');
+    const ksNameError = document.getElementById('ks-name-error');
     const durableWritesSelect = document.getElementById('durable-writes');
     const strategySelect = document.getElementById('replication-strategy');
     const simpleStrategyRF = document.getElementById('replication-factor');
@@ -24,16 +29,46 @@ document.addEventListener('DOMContentLoaded', () => {
     const confirmExecuteBtn = document.getElementById('confirm-execute-btn');
     const closeModalBtns = document.querySelectorAll('.close-modal');
 
+    const CQL_RESERVED = new Set([
+        'add', 'allow', 'alter', 'and', 'apply', 'asc', 'authorize', 'batch',
+        'begin', 'by', 'columnfamily', 'create', 'delete', 'desc', 'describe',
+        'drop', 'entries', 'execute', 'from', 'full', 'grant', 'if', 'in',
+        'index', 'infinity', 'insert', 'into', 'keyspace', 'limit', 'modify',
+        'nan', 'norecursive', 'not', 'null', 'of', 'on', 'or', 'order',
+        'primary', 'rename', 'replace', 'revoke', 'schema', 'select', 'set',
+        'table', 'to', 'token', 'truncate', 'unlogged', 'update', 'use',
+        'using', 'where', 'with'
+    ]);
+
     let datacenters = [];
 
-    // --- State Management ---
+    function validateKsName(name) {
+        if (!name) return '';
+        if (/^\d/.test(name)) return 'Name cannot start with a digit';
+        if (!/^[a-zA-Z_][a-zA-Z0-9_]*$/.test(name)) return 'Only alphanumeric and underscore allowed';
+        if (name.length > 48) return 'Name too long (max 48 chars)';
+        if (CQL_RESERVED.has(name.toLowerCase())) return `"${name}" is a CQL reserved word`;
+        return '';
+    }
+
     function updateState() {
         const name = ksNameInput.value.trim();
         const strategy = strategySelect.value;
         const rf = simpleStrategyRF.value;
         const durable = durableWritesSelect.value;
 
-        let cql = `CREATE KEYSPACE IF NOT EXISTS "${name || 'keyspace_name'}"\n`;
+        // Validate name
+        const nameErr = validateKsName(name);
+        if (nameErr) {
+            ksNameError.textContent = nameErr;
+            ksNameError.classList.remove('hidden');
+        } else {
+            ksNameError.classList.add('hidden');
+        }
+
+        const verb = mode === 'alter' ? 'ALTER' : 'CREATE';
+        const ifne = mode === 'alter' ? '' : ' IF NOT EXISTS';
+        let cql = `${verb} KEYSPACE${ifne} "${name || 'keyspace_name'}"\n`;
 
         if (strategy === 'SimpleStrategy') {
             cql += `WITH REPLICATION = {\n  'class': 'SimpleStrategy',\n  'replication_factor': ${rf || 1}\n}`;
@@ -54,31 +89,35 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         cqlPreview.textContent = cql;
-        createBtn.disabled = !name;
+        createBtn.disabled = !name || !!nameErr;
 
-        // Safety analysis
         analyzeSafety(strategy, rf);
     }
 
     function analyzeSafety(strategy, rf) {
         if (strategy === 'SimpleStrategy') {
             if (rf < 3) {
-                safetyReport.innerHTML = `<span class="warning">⚠️ Replication factor < 3 is risky for production availability.</span>`;
+                safetyReport.innerHTML = `<span class="warning">Replication factor < 3 is risky for production availability.</span>`;
             } else {
                 safetyReport.textContent = `A replication factor of ${rf} provides standard high availability.`;
             }
         } else {
             if (datacenters.length === 0) {
-                safetyReport.innerHTML = `<span class="warning">⚠️ Define at least one DC for NetworkTopologyStrategy.</span>`;
+                safetyReport.innerHTML = `<span class="warning">Define at least one DC for NetworkTopologyStrategy.</span>`;
             } else {
-                safetyReport.textContent = `NetworkTopologyStrategy is recommended for multi-datacenter deployments.`;
+                const lowRf = datacenters.filter(dc => dc.rf && parseInt(dc.rf) < 3);
+                if (lowRf.length > 0) {
+                    safetyReport.innerHTML = `<span class="warning">DC "${escapeHtml(lowRf[0].name)}" has RF < 3. Consider increasing for production.</span>`;
+                } else {
+                    safetyReport.textContent = `NetworkTopologyStrategy with ${datacenters.length} DC(s). Production-ready.`;
+                }
             }
         }
     }
 
     // --- Datacenter Management ---
     function addDatacenter(name = 'dc1', rf = 3) {
-        const id = Date.now();
+        const id = Date.now() + Math.random();
         const dcObj = { id, name, rf };
         datacenters.push(dcObj);
 
@@ -86,7 +125,7 @@ document.addEventListener('DOMContentLoaded', () => {
         row.className = 'datacenter-row';
         row.dataset.id = id;
         row.innerHTML = `
-            <input type="text" class="dc-name" value="${name}" placeholder="DC Name">
+            <input type="text" class="dc-name" value="${escapeHtml(name)}" placeholder="DC Name">
             <input type="number" class="dc-rf" value="${rf}" min="1" max="10">
             <button class="btn-icon-danger remove-dc-btn" title="Remove DC">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -155,35 +194,68 @@ document.addEventListener('DOMContentLoaded', () => {
 
     confirmExecuteBtn.addEventListener('click', async () => {
         confirmExecuteBtn.disabled = true;
-        confirmExecuteBtn.textContent = 'Deploying...';
+        confirmExecuteBtn.textContent = mode === 'alter' ? 'Applying...' : 'Deploying...';
 
         try {
             const response = await fetch(`/api/v1/cluster/${clusterName}/operations/cqlsh`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    cql: cqlPreview.textContent
-                })
+                body: JSON.stringify({ cql: cqlPreview.textContent })
             });
 
             const result = await response.json();
             if (response.ok) {
-                Toast.success("Keyspace deployed successfully!");
+                Toast.success(mode === 'alter' ? "Keyspace updated!" : "Keyspace deployed!");
                 setTimeout(() => {
                     window.location.href = `/cluster/${clusterName}/keyspace/${ksNameInput.value.trim()}`;
                 }, 1500);
             } else {
-                Toast.error(`Deployment failed: ${result.detail || 'Unknown error'}`);
+                Toast.error(`Failed: ${result.detail || 'Unknown error'}`);
                 confirmExecuteBtn.disabled = false;
-                confirmExecuteBtn.textContent = 'Confirm & Deploy';
+                confirmExecuteBtn.textContent = mode === 'alter' ? 'Confirm & Apply' : 'Confirm & Deploy';
             }
         } catch (err) {
             Toast.error(`Error: ${err.message}`);
             confirmExecuteBtn.disabled = false;
-            confirmExecuteBtn.textContent = 'Confirm & Deploy';
+            confirmExecuteBtn.textContent = mode === 'alter' ? 'Confirm & Apply' : 'Confirm & Deploy';
         }
     });
 
-    // Initial state
-    updateState();
+    // --- ALTER mode: pre-populate from existing schema ---
+    function loadExistingKeyspace() {
+        if (!existingKeyspace) return;
+
+        ksNameInput.value = existingKeyspace.name || '';
+
+        if (existingKeyspace.durable_writes === false) {
+            durableWritesSelect.value = 'false';
+        }
+
+        const strategy = existingKeyspace.strategy_class || '';
+        if (strategy.includes('NetworkTopologyStrategy')) {
+            strategySelect.value = 'NetworkTopologyStrategy';
+            simpleStrategyOptions.classList.add('hidden');
+            networkTopologyOptions.classList.remove('hidden');
+            strategyInfo.textContent = 'Use NetworkTopologyStrategy for multi-datacenter or production cloud deployments.';
+
+            const replication = existingKeyspace.replication || {};
+            for (const [dc, rf] of Object.entries(replication)) {
+                if (dc !== 'class') {
+                    addDatacenter(dc, parseInt(rf));
+                }
+            }
+        } else {
+            strategySelect.value = 'SimpleStrategy';
+            simpleStrategyRF.value = existingKeyspace.replication_factor || 3;
+        }
+
+        updateState();
+    }
+
+    // --- Initialize ---
+    if (mode === 'alter') {
+        loadExistingKeyspace();
+    } else {
+        updateState();
+    }
 });

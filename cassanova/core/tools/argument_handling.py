@@ -1,9 +1,8 @@
 import os
 from shlex import split
-from typing import Optional
 
 
-def parse_args(arg_string: Optional[str]) -> list[str]:
+def parse_args(arg_string: str | None) -> list[str]:
     return split(arg_string) if arg_string else []
 
 

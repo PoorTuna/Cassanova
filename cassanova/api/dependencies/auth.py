@@ -1,16 +1,21 @@
-from datetime import datetime, timedelta
-from typing import Optional, NoReturn
+from collections.abc import Callable
+from datetime import UTC, datetime, timedelta
+from logging import getLogger
+from typing import Any
 
 from fastapi import Depends, HTTPException, Request, status
 from fastapi.concurrency import run_in_threadpool
 from fastapi.security import OAuth2PasswordBearer
 from jose import JWTError, jwt
 
-from cassanova.config.cassanova_config import get_clusters_config, CassanovaConfig
+from cassanova.config.cassanova_config import CassanovaConfig, get_clusters_config
+from cassanova.config.ldap_config import LDAPConfig
 from cassanova.core.auth_utils import verify_password
 from cassanova.core.ldap_manager import LDAPManager
 from cassanova.exceptions.auth_exceptions import LoginRequired
 from cassanova.models.auth_models import WebUser
+
+logger = getLogger(__name__)
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/v1/login", auto_error=False)
 
@@ -19,20 +24,21 @@ def get_config() -> CassanovaConfig:
     return get_clusters_config()
 
 
-def create_access_token(data: dict, expires_delta: Optional[timedelta] = None) -> str:
+def create_access_token(data: dict[str, Any], expires_delta: timedelta | None = None) -> str:
     config = get_config()
     to_encode = data.copy()
     if expires_delta:
-        expire = datetime.utcnow() + expires_delta
+        expire = datetime.now(UTC) + expires_delta
     else:
-        expire = datetime.utcnow() + timedelta(minutes=config.auth.session_expire_minutes)
+        expire = datetime.now(UTC) + timedelta(minutes=config.auth.session_expire_minutes)
     to_encode.update({"exp": expire})
     encoded_jwt = jwt.encode(to_encode, config.auth.secret_key, algorithm=config.auth.algorithm)
-    return encoded_jwt
+    return encoded_jwt  # type: ignore[no-any-return]
 
 
 async def get_current_user(
-        request: Request, token: Optional[str] = Depends(oauth2_scheme)) -> Optional[WebUser]:
+    request: Request, token: str | None = Depends(oauth2_scheme)
+) -> WebUser | None:
     config = get_config()
 
     if not config.auth.enabled:
@@ -64,14 +70,20 @@ async def get_current_user(
 
         roles = payload.get("roles")
         if roles:
-            return WebUser(username=username, password="", roles=roles)
+            known_role_names = {r.name for r in config.auth.roles}
+            validated_roles = [r for r in roles if r in known_role_names]
+            if len(validated_roles) != len(roles):
+                dropped = set(roles) - known_role_names
+                logger.warning(f"JWT for '{username}' claimed unknown roles: {dropped}")
+            if validated_roles:
+                return WebUser(username=username, password="", roles=validated_roles)
 
         return None
     except JWTError:
         return None
 
 
-async def require_user(user: Optional[WebUser] = Depends(get_current_user)) -> WebUser | NoReturn:
+async def require_user(user: WebUser | None = Depends(get_current_user)) -> WebUser:
     if not user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -81,13 +93,15 @@ async def require_user(user: Optional[WebUser] = Depends(get_current_user)) -> W
     return user
 
 
-async def require_web_user(request: Request, user: Optional[WebUser] = Depends(get_current_user)) -> WebUser | NoReturn:
+async def require_web_user(
+    request: Request, user: WebUser | None = Depends(get_current_user)
+) -> WebUser:
     if not user:
         raise LoginRequired()
     return user
 
 
-def check_permission(user: Optional[WebUser], required_perm: str) -> bool:
+def check_permission(user: WebUser | None, required_perm: str) -> bool:
     config = get_config()
     if not config.auth.enabled:
         return True
@@ -113,19 +127,18 @@ def check_permission(user: Optional[WebUser], required_perm: str) -> bool:
     return False
 
 
-def require_permission(perm: str) -> WebUser | NoReturn:
-    async def _check_permission_dependency(user: WebUser = Depends(require_user)):
+def require_permission(perm: str) -> Callable[..., Any]:
+    async def _check_permission_dependency(user: WebUser = Depends(require_user)) -> WebUser:
         if not check_permission(user, perm):
             raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN,
-                detail=f"Missing permission: {perm}"
+                status_code=status.HTTP_403_FORBIDDEN, detail=f"Missing permission: {perm}"
             )
         return user
 
     return _check_permission_dependency
 
 
-async def authenticate_user(username: str, password: str) -> Optional[WebUser]:
+async def authenticate_user(username: str, password: str) -> WebUser | None:
     config = get_clusters_config()
 
     user = config.auth.get_user(username)
@@ -140,6 +153,6 @@ async def authenticate_user(username: str, password: str) -> Optional[WebUser]:
     return None
 
 
-def _ldap_authenticate(ldap_config, username, password) -> Optional[WebUser]:
+def _ldap_authenticate(ldap_config: LDAPConfig, username: str, password: str) -> WebUser | None:
     manager = LDAPManager(ldap_config)
     return manager.authenticate(username, password)

@@ -2,7 +2,7 @@
 
 Cassanova v1.4.0 introduces a stateless, configuration-driven Role-Based Access Control (RBAC) system. This document outlines how to configure users, roles, and permissions in your `cassanova.json` file.
 
-## ⚙️ Configuration Structure
+## Configuration Structure
 
 The security configuration lives under the `auth` key in your main configuration JSON.
 
@@ -26,7 +26,7 @@ The security configuration lives under the `auth` key in your main configuration
 
 ---
 
-## 👥 Users & Roles
+## Users & Roles
 
 You can define as many users and roles as needed.
 
@@ -57,7 +57,7 @@ Users are assigned one or more roles.
 
 ---
 
-## 🛡️ Available Permissions
+## Available Permissions
 
 The following permissions control access to specific parts of the Cassanova interface:
 
@@ -78,7 +78,7 @@ The system supports basic wildcards:
 
 ---
 
-## 📝 Example Configuration
+## Example Configuration
 
 A complete example of a secure setup:
 

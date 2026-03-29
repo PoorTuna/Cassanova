@@ -72,6 +72,16 @@
     --syntax-boolean: #B71C1C;
     --syntax-null: #708090;
 
+    /* --- Status Colors --- */
+    --status-healthy: #4caf50;
+    --status-degraded: #ff9800;
+    --status-down: #f44336;
+    --status-unknown: #9e9e9e;
+
+    /* --- Utilities --- */
+    --text-disabled: rgba(0, 0, 0, 0.3);
+    --bg-inset: #eaebee;
+
     /* --- Panel Tints --- */
     --bg-glass-tint: rgba(212, 175, 55, 0.05);
 }

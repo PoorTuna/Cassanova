@@ -9,17 +9,42 @@ const CQL_KEYWORDS = [
     'BEGIN', 'BATCH', 'APPLY', 'USING', 'TTL', 'TIMESTAMP', 'WRITETIME', 'JSON', 'DISTINCT'
 ];
 
+const _SCHEMA_CACHE_KEY = `cassanova_schema_${clusterName}`;
+const _SCHEMA_CACHE_TS_KEY = `cassanova_schema_ts_${clusterName}`;
+const _SCHEMA_CACHE_TTL_MS = 60000;
+
+function loadCachedSchema() {
+    try {
+        const cached = sessionStorage.getItem(_SCHEMA_CACHE_KEY);
+        const ts = parseInt(sessionStorage.getItem(_SCHEMA_CACHE_TS_KEY) || '0', 10);
+        if (cached && (Date.now() - ts) < _SCHEMA_CACHE_TTL_MS) {
+            clusterSchema = JSON.parse(cached);
+            console.log("Cassanova: Schema loaded from cache");
+            return true;
+        }
+    } catch (e) { /* ignore parse errors */ }
+    return false;
+}
+
 async function fetchSchema() {
     try {
         const response = await fetch(`/api/v1/cluster/${encodeURIComponent(clusterName)}/schema-map`);
         if (response.ok) {
             clusterSchema = await response.json();
+            try {
+                sessionStorage.setItem(_SCHEMA_CACHE_KEY, JSON.stringify(clusterSchema));
+                sessionStorage.setItem(_SCHEMA_CACHE_TS_KEY, String(Date.now()));
+            } catch (e) { /* sessionStorage full or unavailable */ }
             console.log("Cassanova: Schema Map Loaded for IntelliSense");
         }
     } catch (e) {
         console.error("Cassanova: Failed to fetch schema:", e);
     }
 }
+
+// Start schema fetch immediately — don't wait for Monaco to load
+loadCachedSchema();
+fetchSchema();
 
 require(['vs/editor/editor.main'], function () {
     // Basic context parser to see what we should suggest
@@ -164,7 +189,6 @@ require(['vs/editor/editor.main'], function () {
         padding: { top: 16 },
     });
 
-    fetchSchema();
 });
 
 const container = document.getElementById('container');
@@ -247,17 +271,17 @@ function renderTrace(trace) {
     const eventsHtml = trace.events.map(event => `
         <div class="trace-item">
             <div class="trace-header">
-                <span class="trace-desc">${event.description}</span>
+                <span class="trace-desc">${escapeHtml(event.description)}</span>
                 <span class="trace-duration">${event.elapsed_ms.toFixed(3)} ms</span>
             </div>
-            <div class="trace-source">Source: ${event.source}</div>
+            <div class="trace-source">Source: ${escapeHtml(event.source)}</div>
         </div>
     `).join('');
 
     traceEl.innerHTML = `
         <div class="trace-summary" style="margin-bottom: 20px; padding: 15px; background: rgba(var(--color-primary-rgb), 0.1); border-radius: 8px;">
             <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
-                <strong>Coordinator:</strong> <span>${trace.coordinator}</span>
+                <strong>Coordinator:</strong> <span>${escapeHtml(trace.coordinator)}</span>
             </div>
             <div style="display: flex; justify-content: space-between;">
                 <strong>Total Duration:</strong> <span style="color: var(--color-warning); font-weight: 700;">${trace.duration_ms.toFixed(3)} ms</span>
@@ -349,7 +373,7 @@ runBtn.addEventListener('click', () => {
             }
         })
         .catch((err) => {
-            resultEl.innerHTML = `<span class="error">Error: ${err.toString()}</span>`;
+            resultEl.innerHTML = `<span class="error">Error: ${escapeHtml(err.toString())}</span>`;
         });
 });
 
@@ -437,3 +461,6 @@ document.addEventListener('click', (e) => {
         closeDrawer();
     }
 });
+
+// Register for auto-refresh widget — refreshes schema for autocomplete
+window.cassanovaRefresh = () => fetchSchema();

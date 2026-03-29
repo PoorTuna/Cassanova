@@ -3,15 +3,25 @@
 
 <head>
     <meta charset="UTF-8" />
+    <script>
+        (function(){var t=localStorage.getItem('selectedTheme')||'dark';
+        var c={'dark':'#08080a','light':'#F5F7FA','dracula':'#282a36','cubic':'#1D1D1D',
+        'neon-punk':'#030305','kibana-dark':'#1D1E24','kibana-light':'#F5F7FA',
+        'orokin-dark':'#0A0A0C','orokin-light':'#F9FAFB','fortress-blue':'#242220',
+        'fortress-red':'#242220'};
+        document.documentElement.style.backgroundColor=c[t]||'#08080a';})();
+    </script>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" type="image/png" href="/static/icons/logo/cassanova-logo.png" />
     <title>{% block title %}Cassanova{% endblock %}</title>
 
     <link rel="stylesheet" href="/static/styles/app/main.css" />
     <link rel="stylesheet" href="/static/styles/app/toast.css" />
+    <script src="/static/scripts/app/escape-utils.js"></script>
     <script src="/static/scripts/app/toast.js" defer></script>
     <script src="/static/scripts/app/modal-utils.js" defer></script>
     <script src="/static/scripts/app/sidebar.js" defer></script>
+    <script src="/static/scripts/app/auto-refresh.js" defer></script>
     <script src="/static/scripts/app/copy-utils.js" defer></script>
     <script src="/static/scripts/app/syntax.js" defer></script>
     {% block head_extra %}{% endblock %}

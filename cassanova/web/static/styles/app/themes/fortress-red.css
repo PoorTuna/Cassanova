@@ -72,5 +72,15 @@
     --syntax-boolean: #5b7a8c;
     --syntax-null: #6B6865;
 
+    /* --- Status Colors --- */
+    --status-healthy: #4caf50;
+    --status-degraded: #ff9800;
+    --status-down: #f44336;
+    --status-unknown: #9e9e9e;
+
+    /* --- Utilities --- */
+    --text-disabled: #555;
+    --bg-inset: #151413;
+
     --bg-glass-tint: rgba(0, 0, 0, 0.2);
 }

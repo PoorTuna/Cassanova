@@ -124,34 +124,14 @@
     display: inline-block;
 }
 
-.dropdown-menu {
+/* Tables page dropdown positioning */
+.dropdown-wrapper .dropdown-menu {
     position: absolute;
     right: 0;
     top: 100%;
-    background-color: var(--bg-hover);
-    border: 1px solid var(--bg-panel-alt);
-    border-radius: 6px;
-    box-shadow: 0 4px 10px var(--shadow-medium);
-    padding: 6px 0;
-    z-index: 10;
+    z-index: var(--z-dropdown);
     display: flex;
     flex-direction: column;
-    min-width: 160px;
-}
-
-.dropdown-menu button {
-    background: none;
-    border: none;
-    color: var(--text-primary);
-    padding: 10px 16px;
-    text-align: left;
-    font-size: 0.95rem;
-    width: 100%;
-    cursor: pointer;
-}
-
-.dropdown-menu button:hover {
-    background-color: var(--bg-hover-active);
 }
 
 /* === Hidden Class === */

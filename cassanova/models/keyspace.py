@@ -1,4 +1,4 @@
-from typing import Annotated, Optional, Any
+from typing import Annotated, Any
 
 from pydantic import BaseModel, BeforeValidator, Field, computed_field
 
@@ -8,27 +8,24 @@ from cassanova.models.table import TableInfo
 
 class KeyspaceInfo(BaseModel):
     name: str
-    replication: Annotated[
-        Optional[Any],
-        BeforeValidator(lambda v: 'N/A' if v is None else v)
-    ] = Field(default='N/A')
+    replication: Annotated[Any | None, BeforeValidator(lambda v: "N/A" if v is None else v)] = (
+        Field(default="N/A")
+    )
     durable_writes: Annotated[
-        Optional[bool | str],
-        BeforeValidator(lambda v: 'N/A' if v is None else v)
-    ] = Field(default='N/A')
-    virtual: Annotated[
-        Optional[bool],
-        BeforeValidator(lambda v: False if v is None else v)
-    ] = Field(default=False)
+        bool | str | None, BeforeValidator(lambda v: "N/A" if v is None else v)
+    ] = Field(default="N/A")
+    virtual: Annotated[bool | None, BeforeValidator(lambda v: False if v is None else v)] = Field(
+        default=False
+    )
     tables: list[TableInfo]
-    indexes: list[IndexInfo] = Field(default_factory=dict)
+    indexes: list[IndexInfo] = Field(default_factory=dict)  # type: ignore[arg-type]
     user_types: dict[str, Any] = Field(default_factory=dict)
     functions: dict[str, Any] = Field(default_factory=dict)
     aggregates: dict[str, Any] = Field(default_factory=dict)
-    views: Optional[dict[str, Any]] = Field(default_factory=dict)
-    graph_engine: Optional[Any] = None
+    views: dict[str, Any] | None = Field(default_factory=dict)
+    graph_engine: Any | None = None
 
-    @computed_field
+    @computed_field  # type: ignore[prop-decorator]
     @property
     def table_count(self) -> int:
         return len(self.tables)

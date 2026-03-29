@@ -41,7 +41,7 @@ To run Cassanova using Docker:
 #### 1. Pull the image:
 
 ```bash
-docker pull poortuna/cassanova:v1.6.1
+docker pull poortuna/cassanova:v1.7.0
 ```
 
 #### 2. Create a configuration file:
@@ -102,7 +102,7 @@ Create a `cassanova.json` file. This includes the `auth` section:
 docker run -p 8080:8080 \
   -e CASSANOVA_CONFIG_PATH=/config/cassanova.json \
   -v $(pwd)/cassanova.json:/config/cassanova.json \
-  poortuna/cassanova:v1.6.1
+  poortuna/cassanova:v1.7.0
 ```
 
 > **Note**: Ensure your Cassandra nodes are reachable from within the container.
@@ -222,15 +222,24 @@ To run locally (Linux/WSL recommended):
 ```bash
 git clone https://github.com/poortuna/cassanova
 cd cassanova
-python -m venv venv
-source venv/bin/activate
-pip install -r requirements.txt
+pip install uv
+uv pip install -e ".[dev]"
 
 # Set config path
-export CASSANOVA_CONFIG_PATH=./config/dev_config.json
+export CASSANOVA_CONFIG_PATH=./cassanova.json
 
 # Run Server
 python -m cassanova.run
+```
+
+### Quality Tools
+
+```bash
+ruff check .           # Lint
+ruff format .          # Format
+mypy cassanova/        # Type check
+pytest tests/ -vv      # Run tests
+pre-commit install     # Set up git hooks
 ```
 
 ---

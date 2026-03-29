@@ -1,0 +1,36 @@
+stages:
+  - lint
+  - test
+
+variables:
+  PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
+  PYTHON_VERSION: "3.12"
+
+cache:
+  paths:
+    - .cache/pip
+
+.python-setup: &python-setup
+  image: python:${PYTHON_VERSION}-slim
+  before_script:
+    - pip install uv
+    - uv pip install --system -e ".[dev]"
+
+ruff:
+  <<: *python-setup
+  stage: lint
+  script:
+    - ruff check .
+    - ruff format --check .
+
+mypy:
+  <<: *python-setup
+  stage: lint
+  script:
+    - mypy cassanova/
+
+unit-tests:
+  <<: *python-setup
+  stage: test
+  script:
+    - pytest tests/ --cov=cassanova --cov-report=term-missing

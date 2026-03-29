@@ -1,36 +1,39 @@
-from typing import Annotated, Literal, Optional
+from typing import Annotated, Literal
 
 from cassandra.cqltypes import UUID
-from pydantic import BaseModel, Field, BeforeValidator, ConfigDict
+from pydantic import BaseModel, BeforeValidator, ConfigDict, Field
 
 
 class NodeInfo(BaseModel):
     host_id: Annotated[str | UUID, BeforeValidator(lambda v: str(v))]
-    data_center: Optional[str] = None
-    rack: Optional[str] = None
-    release_version: Optional[str] = None
+    data_center: str | None = None
+    rack: str | None = None
+    release_version: str | None = None
     schema_version: Annotated[
-        Optional[str | UUID],
+        str | UUID | None,
         BeforeValidator(lambda v: str(v) if v else None),
     ] = None
     tokens: Annotated[list[int], BeforeValidator(lambda v: list(v) if v else [])]
-    broadcast_address: Optional[str] = Field(default=None, alias="peer")
-    broadcast_port: Optional[int] = Field(default=None, alias="peer_port")
-    listen_address: Optional[str] = None
-    listen_port: Optional[int] = None
-    preferred_ip: Optional[str] = None
-    preferred_port: Optional[int] = None
-    rpc_address: Optional[str] = Field(default=None, alias="native_address")
-    rpc_port: Optional[int] = Field(default=None, alias="native_port")
-    key: Optional[str] = None
-    bootstrapped: Optional[Literal["COMPLETED", "IN_PROGRESS", "FAILED", "NONE"]] = None
-    cluster_name: Optional[str] = None
-    cql_version: Optional[str] = None
-    gossip_generation: Optional[int] = None
-    native_protocol_version: Optional[int] = None
-    partitioner: Optional[str] = None
+    broadcast_address: str | None = Field(default=None, alias="peer")
+    broadcast_port: int | None = Field(default=None, alias="peer_port")
+    listen_address: str | None = None
+    listen_port: int | None = None
+    preferred_ip: str | None = None
+    preferred_port: int | None = None
+    rpc_address: str | None = Field(default=None, alias="native_address")
+    rpc_port: int | None = Field(default=None, alias="native_port")
+    key: str | None = None
+    bootstrapped: Literal["COMPLETED", "IN_PROGRESS", "FAILED", "NONE"] | None = None
+    cluster_name: str | None = None
+    cql_version: str | None = None
+    gossip_generation: int | None = None
+    native_protocol_version: int | None = None
+    partitioner: str | None = None
     truncated_at: Annotated[
-        Optional[dict[str, str]],
-        BeforeValidator(lambda value: {str(k): v.hex() for k, v in dict(value).items()} if value else {})] = None
+        dict[str, str] | None,
+        BeforeValidator(
+            lambda value: {str(k): v.hex() for k, v in dict(value).items()} if value else {}
+        ),
+    ] = None
 
     model_config = ConfigDict(populate_by_name=True)

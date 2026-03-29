@@ -18,9 +18,8 @@
         <div class="sidebar-top">
             {% include "components/theme-selector.html" %}
 
-
-
             {% if cluster_config_entry %}
+            {% include "components/refresh-selector.html" %}
             {% if check_permission(request.state.user, 'cluster:view') %}
             <a href="/cluster/{{ cluster_config_entry }}" class="sidebar-link">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"

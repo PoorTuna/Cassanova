@@ -143,3 +143,4 @@ dmypy.json
 .vscode/
 
 cassanova/config/config-k3s
+cassanova.json

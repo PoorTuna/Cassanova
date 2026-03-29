@@ -82,23 +82,40 @@
     color: var(--color-primary);
 }
 
+/* Table-builder form layout override */
 .form-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 1.5rem;
 }
 
-.form-group {
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
+.form-grid.spaced-bottom {
+    margin-bottom: 1.5rem;
+}
+
+.dc-assignments-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+}
+
+.dc-list-container {
+    margin-top: 1rem;
+}
+
+.btn-outline.full-width {
+    width: 100%;
+    margin-top: 0.5rem;
+}
+
+.cql-confirm-preview {
+    font-size: 0.8rem;
+    white-space: pre-wrap;
 }
 
 .form-group label {
     font-size: 0.75rem;
     font-weight: 700;
-    color: var(--text-secondary);
-    text-transform: uppercase;
     letter-spacing: 0.05em;
 }
 
@@ -127,6 +144,11 @@
     transform: translateY(-1px);
 }
 
+.builder-page input[readonly] {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
 .builder-page select {
     appearance: none;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='rgba(255,255,255,0.4)' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'%3E%3C/path%3E%3C/svg%3E");
@@ -143,10 +165,16 @@
     margin-bottom: 1.25rem;
 }
 
+.column-row-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
 .column-row {
     display: grid;
-    grid-template-columns: 1fr 180px 80px 80px 42px;
-    gap: 0.75rem;
+    grid-template-columns: 1fr 150px 60px 60px 50px 62px 54px 42px;
+    gap: 0.5rem;
     align-items: center;
     background: rgba(255, 255, 255, 0.02);
     padding: 0.5rem;
@@ -159,9 +187,15 @@
     background: rgba(255, 255, 255, 0.04);
 }
 
+.column-row.locked-row {
+    border-color: rgba(255, 200, 50, 0.12);
+    background: rgba(255, 200, 50, 0.02);
+}
+
 .column-row input[type="text"] {
     border-color: transparent;
     background: transparent;
+    padding: 0.5rem 0.75rem;
 }
 
 .column-row input[type="text"]:focus {
@@ -169,20 +203,28 @@
     border-color: var(--color-primary);
 }
 
+.column-row select {
+    padding: 0.5rem 0.5rem;
+    padding-right: 2rem;
+    font-size: 0.85rem;
+    background-position: right 0.4rem center;
+}
+
 .pill-checkbox {
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    font-size: 0.75rem;
+    font-size: 0.7rem;
     font-weight: 800;
     color: var(--text-muted);
     background: rgba(255, 255, 255, 0.05);
-    height: 38px;
-    border-radius: 10px;
+    height: 34px;
+    border-radius: 8px;
     transition: all 0.2s;
     user-select: none;
     border: 1px solid transparent;
+    white-space: nowrap;
 }
 
 .pill-checkbox:hover {
@@ -201,6 +243,88 @@
     box-shadow: 0 0 15px rgba(0, 229, 255, 0.1);
 }
 
+.pill-checkbox.pill-sm {
+    font-size: 0.65rem;
+    height: 30px;
+    padding: 0 6px;
+    border-radius: 7px;
+}
+
+.pill-checkbox.pill-locked {
+    opacity: 0.4;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+/* CK order toggle button */
+.ck-order-btn {
+    background: rgba(0, 229, 255, 0.08);
+    border: 1px solid rgba(0, 229, 255, 0.25);
+    color: var(--color-primary);
+    font-size: 0.65rem;
+    font-weight: 800;
+    height: 30px;
+    padding: 0 8px;
+    border-radius: 7px;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.05em;
+}
+
+.ck-order-btn:hover {
+    background: rgba(0, 229, 255, 0.15);
+}
+
+.ck-order-btn.desc {
+    background: rgba(255, 170, 50, 0.1);
+    border-color: rgba(255, 170, 50, 0.3);
+    color: #ffaa32;
+}
+
+.ck-order-placeholder,
+.static-placeholder,
+.sai-placeholder {
+    width: 100%;
+    min-width: 0;
+}
+
+/* Sub-type picker row (second row under collection columns) */
+.sub-type-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.4rem 0.75rem 0.5rem 1rem;
+    background: rgba(0, 229, 255, 0.02);
+    border: 1px solid rgba(0, 229, 255, 0.06);
+    border-top: none;
+    border-radius: 0 0 14px 14px;
+    flex-wrap: wrap;
+}
+
+.sub-type-label {
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    white-space: nowrap;
+    letter-spacing: 0.03em;
+}
+
+.sub-type-select {
+    max-width: 150px;
+    padding: 0.4rem 0.5rem !important;
+    padding-right: 2rem !important;
+    font-size: 0.82rem !important;
+    border-radius: 8px !important;
+    background-position: right 0.3rem center !important;
+}
+
+.sub-type-input {
+    max-width: 200px;
+    padding: 0.4rem 0.5rem !important;
+    font-size: 0.82rem !important;
+    border-radius: 8px !important;
+}
+
 /* Sidebar Preview Panel */
 .preview-panel {
     display: flex;
@@ -210,7 +334,7 @@
 }
 
 .cql-preview-box {
-    background: #0d0d0f;
+    background: var(--bg-inset);
     border-radius: 16px;
     padding: 2rem;
     flex: 1;
@@ -276,7 +400,7 @@
 
 /* Buttons */
 .btn-primary {
-    background: linear-gradient(135deg, var(--color-primary) 0%, #00b8d4 100%);
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-info, #00b8d4) 100%);
     color: #000;
     border: none;
     padding: 0.85rem 1.75rem;
@@ -304,26 +428,15 @@
     box-shadow: none;
 }
 
-.btn-outline {
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    color: var(--text-primary);
-    padding: 0.85rem 1.75rem;
-    border-radius: 12px;
-    font-weight: 700;
-    font-size: 0.95rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    cursor: pointer;
-    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+.field-error {
+    font-size: 0.78rem;
+    color: var(--color-danger, #f44336);
+    margin-top: 0.35rem;
+    font-weight: 600;
 }
 
-.btn-outline:hover {
-    background: rgba(255, 255, 255, 0.08);
-    border-color: var(--color-primary);
-    transform: translateY(-1px);
+.field-error.hidden {
+    display: none;
 }
 
 .add-col-btn {
@@ -336,9 +449,9 @@
     background: transparent;
     border: 1px solid rgba(255, 68, 68, 0.1);
     color: #ff4444;
-    width: 38px;
-    height: 38px;
-    border-radius: 10px;
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -355,4 +468,76 @@
 .btn-icon-danger:disabled {
     opacity: 0.2;
     cursor: not-allowed;
+}
+
+/* Advanced Options Section */
+.advanced-options-section {
+    margin-top: 1.5rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    padding-top: 1rem;
+}
+
+.advanced-toggle-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: var(--text-secondary);
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 0.6rem 1rem;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s;
+    width: 100%;
+    justify-content: center;
+}
+
+.advanced-toggle-btn:hover {
+    background: rgba(255, 255, 255, 0.04);
+    border-color: rgba(255, 255, 255, 0.12);
+    color: var(--text-primary);
+}
+
+.advanced-toggle-btn svg {
+    transition: transform 0.2s;
+}
+
+.advanced-toggle-btn.expanded svg {
+    transform: rotate(180deg);
+}
+
+.advanced-options-body {
+    margin-top: 1rem;
+}
+
+.advanced-options-body.hidden {
+    display: none;
+}
+
+/* Inline toggle label for checkboxes like IF NOT EXISTS, CDC */
+.inline-toggle-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    font-size: 0.8rem !important;
+    font-weight: 700;
+    color: var(--text-secondary);
+    user-select: none;
+    padding-top: 0.5rem;
+}
+
+.inline-toggle-label input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    accent-color: var(--color-primary);
+    cursor: pointer;
+}
+
+.inline-toggle-label span {
+    letter-spacing: 0.04em;
 }
