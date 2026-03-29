@@ -23,6 +23,6 @@ def generate_cluster_metrics(cluster: Cluster, session: Session) -> ClusterMetri
         **get_cluster_description(session),
         **get_cluster_version(cluster),
         **get_dc_rack_distribution(cluster),
-        **get_cluster_health(cluster),
+        **get_cluster_health(cluster, session),
         technology=detect_database_technology(session),
     )
