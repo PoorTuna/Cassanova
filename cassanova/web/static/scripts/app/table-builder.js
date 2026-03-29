@@ -721,17 +721,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
                 Toast.success('Table altered successfully!');
             } else {
-                const response = await fetch(`/api/v1/cluster/${cluster}/operations/cqlsh`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ cql: cql })
-                });
-                if (response.ok) {
-                    Toast.success('Table created successfully!');
-                } else {
-                    const err = await response.json();
-                    throw new Error(err.detail || 'Unknown error');
+                const statements = cql.split(/;\s*\n/).map(s => s.trim()).filter(s => s && !s.startsWith('--'));
+                for (const stmt of statements) {
+                    const cleanStmt = stmt.endsWith(';') ? stmt : stmt + ';';
+                    const response = await fetch(`/api/v1/cluster/${cluster}/operations/cqlsh`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ cql: cleanStmt })
+                    });
+                    if (!response.ok) {
+                        const err = await response.json();
+                        throw new Error(err.detail || 'Failed to execute: ' + cleanStmt);
+                    }
                 }
+                Toast.success('Table created successfully!');
             }
 
             setTimeout(() => {
