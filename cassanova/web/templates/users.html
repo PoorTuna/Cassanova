@@ -14,10 +14,9 @@
             <p class="subtitle">Roles, permissions and access control overview</p>
         </div>
         <div class="header-actions">
-            <label class="checkbox-container"
-                style="background:var(--glass-surface); border:1px solid var(--glass-border); padding:0.5rem 1rem; margin-right:1rem;">
+            <label class="checkbox-container header-toggle">
                 <input type="checkbox" id="show-only-users" checked>
-                <span class="label-text" style="font-size:0.85rem; font-weight:600;">USERS ONLY</span>
+                <span class="label-text label-text-sm">USERS ONLY</span>
             </label>
             <button id="add-user-btn" class="btn-primary">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -179,7 +178,7 @@
             <div class="add-perm-form-container">
                 <h4>Grant New Permission</h4>
                 <div class="add-perm-form">
-                    <div class="form-group" style="flex: 0 0 150px;">
+                    <div class="form-group perm-type-group">
                         <select id="perm-type">
                             <option value="SELECT">SELECT</option>
                             <option value="MODIFY">MODIFY</option>
@@ -194,13 +193,11 @@
                             <option value="ALL">ALL</option>
                         </select>
                     </div>
-                    <div class="form-group"
-                        style="flex: 1; display:flex; flex-direction:row; align-items:center; gap:8px;">
-                        <span style="color:var(--text-muted); font-size:0.9rem; margin-bottom:0;">ON</span>
-                        <input type="text" id="perm-resource" placeholder="e.g. ALL KEYSPACES or keyspace.table"
-                            style="padding: 0.75rem 1rem;">
+                    <div class="form-group perm-resource-group">
+                        <span class="perm-on-label">ON</span>
+                        <input type="text" id="perm-resource" placeholder="e.g. ALL KEYSPACES or keyspace.table">
                     </div>
-                    <button class="btn-primary" id="grant-btn" style="padding: 0.75rem 1.5rem;">Grant</button>
+                    <button class="btn-primary perm-grant-btn" id="grant-btn">Grant</button>
                 </div>
             </div>
         </div>
@@ -422,16 +419,16 @@
         const tbArea = document.getElementById('vis-nodes-tb');
         const authArea = document.getElementById('vis-nodes-auth');
 
-        list.innerHTML = '<div style="padding:20px; text-align:center;">Loading permissions...</div>';
+        list.innerHTML = '<div class="perm-loading-message">Loading permissions...</div>';
         ksArea.innerHTML = ''; tbArea.innerHTML = ''; authArea.innerHTML = '';
 
         fetch(`/api/v1/cluster/${clusterName}/auth/permissions/${encodeURIComponent(role)}`)
             .then(res => res.json())
             .then(perms => {
-                if (perms.detail) return list.innerHTML = `<div style="padding:10px; color:#ff5252;">${perms.detail}</div>`;
+                if (perms.detail) return list.innerHTML = `<div class="perm-error-message">${perms.detail}</div>`;
 
                 if (!perms.length) {
-                    list.innerHTML = '<div style="padding:20px; width:100%; text-align:center; color:#888;">No explicit permissions found.</div>';
+                    list.innerHTML = '<div class="perm-empty-message">No explicit permissions found.</div>';
                     const msg = '<div class="vis-empty">NONE</div>';
                     ksArea.innerHTML = msg; tbArea.innerHTML = msg; authArea.innerHTML = msg;
                     return;
@@ -446,7 +443,7 @@
                     div.className = 'perm-item';
                     const safeRes = p.resource.replace(/</g, "&lt;").replace(/>/g, "&gt;");
                     const displayRes = safeRes.startsWith("&lt;") ?
-                        `<span style="opacity:0.7; font-style:italic;">${safeRes}</span>` : safeRes;
+                        `<span class="perm-res-implicit">${safeRes}</span>` : safeRes;
 
                     div.innerHTML = `
                          <div class="perm-name">${p.permission}</div>
@@ -478,7 +475,7 @@
                 if (!authArea.innerHTML) authArea.innerHTML = '<div class="vis-empty">NONE</div>';
             })
             .catch(e => {
-                list.innerHTML = '<div style="padding:10px; color:#ff5252;">Failed to load permissions.</div>';
+                list.innerHTML = '<div class="perm-error-message">Failed to load permissions.</div>';
                 Toast.error(e.message);
             });
     }

@@ -83,7 +83,7 @@
                     </svg>
                     Replication Strategy
                 </h3>
-                <div class="form-grid" style="margin-bottom: 1.5rem;">
+                <div class="form-grid spaced-bottom">
                     <div class="form-group">
                         <label>Strategy Class</label>
                         <select id="replication-strategy">
@@ -104,13 +104,12 @@
                 </div>
 
                 <div id="network-topology-options" class="strategy-options hidden">
-                    <label
-                        style="font-size: 0.75rem; font-weight: 700; color: var(--text-secondary); text-transform: uppercase;">Datacenter
+                    <label class="dc-assignments-label">Datacenter
                         Assignments</label>
-                    <div id="dc-list" style="margin-top: 1rem;">
+                    <div id="dc-list" class="dc-list-container">
                         <!-- DC rows injected by JS or added manually -->
                     </div>
-                    <button id="add-dc-btn" class="btn-outline" style="width: 100%; margin-top: 0.5rem;">
+                    <button id="add-dc-btn" class="btn-outline full-width">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                             stroke-width="2">
                             <path d="M12 5v14M5 12h14"></path>
@@ -155,7 +154,7 @@
         <div class="modal-body">
             <p>You are about to deploy a new keyspace. This operation will be logged.</p>
             <div class="details-box">
-                <pre id="final-cql-confirm" style="font-size: 0.8rem; white-space: pre-wrap;"></pre>
+                <pre id="final-cql-confirm" class="cql-confirm-preview"></pre>
             </div>
         </div>
         <div class="modal-footer">
