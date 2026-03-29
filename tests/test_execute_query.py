@@ -68,10 +68,11 @@ class TestExecuteQueryCql:
         assert isinstance(result, str)
         assert mock_session.execute.call_count == 1
 
-    def test_unexpected_exception_propagates(self, mock_session):
+    def test_unexpected_exception_returns_string(self, mock_session):
         mock_session.execute.side_effect = RuntimeError("unexpected")
-        with pytest.raises(RuntimeError, match="unexpected"):
-            execute_query_cql(mock_session, _make_query())
+        result = execute_query_cql(mock_session, _make_query())
+        assert isinstance(result, str)
+        assert "unexpected" in result
 
 
 class TestGetTraceInfo:

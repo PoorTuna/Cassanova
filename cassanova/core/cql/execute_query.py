@@ -47,7 +47,7 @@ def _execute_with_retry(session: Session, query: CQLQuery, attempt: int) -> list
     except (SyntaxException, NoHostAvailable) as e:
         return str(e)
     except Exception as e:
-        raise e
+        return str(e)
 
 
 def get_trace_info(result_set: ResultSet) -> dict[str, Any]:
