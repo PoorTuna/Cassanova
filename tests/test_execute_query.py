@@ -1,14 +1,12 @@
 from collections import namedtuple
-from unittest.mock import MagicMock, PropertyMock, patch
+from unittest.mock import MagicMock
 
-import pytest
-from cassandra import InvalidRequest, ConsistencyLevel
-from cassandra.protocol import SyntaxException
+from cassandra import ConsistencyLevel, InvalidRequest
 from cassandra.cluster import NoHostAvailable
+from cassandra.protocol import SyntaxException
 
 from cassanova.core.cql.execute_query import execute_query_cql, get_trace_info
 from cassanova.models.cql_query import CQLQuery
-
 
 Row = namedtuple("Row", ["id", "name"])
 
@@ -53,9 +51,7 @@ class TestExecuteQueryCql:
         ks_meta.tables = {"MyTable": MagicMock()}
         mock_session.cluster.metadata.keyspaces = {"ks": ks_meta}
 
-        result = execute_query_cql(
-            mock_session, _make_query("SELECT * FROM ks.mytable")
-        )
+        result = execute_query_cql(mock_session, _make_query("SELECT * FROM ks.mytable"))
         assert "result" in result
         assert mock_session.execute.call_count == 2
 

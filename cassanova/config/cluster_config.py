@@ -1,11 +1,11 @@
-from typing import Optional, Any
+from typing import Any
 
 from cassandra.auth import PlainTextAuthProvider
 from cassandra.cluster import Cluster
 from cassandra.policies import (
     DCAwareRoundRobinPolicy,
-    TokenAwarePolicy,
     RetryPolicy,
+    TokenAwarePolicy,
 )
 from pydantic import BaseModel, Field
 
@@ -18,11 +18,11 @@ class ClusterCredentials(BaseModel):
 class ClusterConnectionConfig(BaseModel):
     contact_points: list[str]
     port: int = Field(default=9042)
-    credentials: Optional[ClusterCredentials] = Field(default=None)
-    jmx_credentials: Optional[ClusterCredentials] = Field(default=None)
-    local_dc: Optional[str] = Field(default=None)
-    protocol_version: Optional[int] = Field(default=None)
-    additional_kwargs: Optional[dict[str, Any]] = Field(default_factory=dict)
+    credentials: ClusterCredentials | None = Field(default=None)
+    jmx_credentials: ClusterCredentials | None = Field(default=None)
+    local_dc: str | None = Field(default=None)
+    protocol_version: int | None = Field(default=None)
+    additional_kwargs: dict[str, Any] | None = Field(default_factory=dict)
 
 
 def generate_cluster_connection(cluster_config: ClusterConnectionConfig) -> Cluster:
@@ -30,14 +30,14 @@ def generate_cluster_connection(cluster_config: ClusterConnectionConfig) -> Clus
 
     if cluster_config.local_dc:
         kwargs.setdefault(
-            'load_balancing_policy',
+            "load_balancing_policy",
             TokenAwarePolicy(DCAwareRoundRobinPolicy(local_dc=cluster_config.local_dc)),
         )
 
-    kwargs.setdefault('default_retry_policy', RetryPolicy())
+    kwargs.setdefault("default_retry_policy", RetryPolicy())
 
     if cluster_config.protocol_version:
-        kwargs['protocol_version'] = cluster_config.protocol_version
+        kwargs["protocol_version"] = cluster_config.protocol_version
 
     return Cluster(
         contact_points=cluster_config.contact_points,
@@ -47,5 +47,7 @@ def generate_cluster_connection(cluster_config: ClusterConnectionConfig) -> Clus
     )
 
 
-def _get_auth_provider(credentials: Optional[ClusterCredentials] = None) -> PlainTextAuthProvider | None:
+def _get_auth_provider(
+    credentials: ClusterCredentials | None = None,
+) -> PlainTextAuthProvider | None:
     return PlainTextAuthProvider(**credentials.model_dump()) if credentials else None

@@ -3,11 +3,11 @@ import json
 import pytest
 
 from cassanova.core.cql.query_builder import (
-    build_where_clause,
-    build_insert_query,
+    _escape_cql_string,
     _format_cql_value,
     _validate_operator,
-    _escape_cql_string,
+    build_insert_query,
+    build_where_clause,
 )
 
 
@@ -24,13 +24,15 @@ class TestBuildWhereClause:
         assert result == """ WHERE "name" = 'alice'"""
 
     def test_multiple_filters(self):
-        filters = json.dumps([
-            {"col": "age", "op": ">", "val": "25"},
-            {"col": "city", "op": "=", "val": "NYC"},
-        ])
+        filters = json.dumps(
+            [
+                {"col": "age", "op": ">", "val": "25"},
+                {"col": "city", "op": "=", "val": "NYC"},
+            ]
+        )
         result = build_where_clause(filters)
         assert '"age" > 25' in result
-        assert '"city" = \'NYC\'' in result
+        assert "\"city\" = 'NYC'" in result
         assert " AND " in result
 
     def test_in_operator(self):
@@ -59,21 +61,36 @@ class TestBuildWhereClause:
 
 
 class TestOperatorWhitelist:
-    @pytest.mark.parametrize("op", [
-        "=", "!=", "<", ">", "<=", ">=", "IN", "LIKE", "CONTAINS", "CONTAINS KEY",
-    ])
+    @pytest.mark.parametrize(
+        "op",
+        [
+            "=",
+            "!=",
+            "<",
+            ">",
+            "<=",
+            ">=",
+            "IN",
+            "LIKE",
+            "CONTAINS",
+            "CONTAINS KEY",
+        ],
+    )
     def test_valid_operators_pass(self, op):
         _validate_operator(op)
 
-    @pytest.mark.parametrize("op", [
-        "= 1; DROP TABLE foo; --",
-        "OR 1=1",
-        "UNION SELECT",
-        "; DROP",
-        "= 1 OR",
-        "",
-        "BETWEEN",
-    ])
+    @pytest.mark.parametrize(
+        "op",
+        [
+            "= 1; DROP TABLE foo; --",
+            "OR 1=1",
+            "UNION SELECT",
+            "; DROP",
+            "= 1 OR",
+            "",
+            "BETWEEN",
+        ],
+    )
     def test_invalid_operators_rejected(self, op):
         with pytest.raises(ValueError, match="Invalid CQL operator"):
             _validate_operator(op)
@@ -81,43 +98,33 @@ class TestOperatorWhitelist:
 
 class TestCqlInjectionPrevention:
     def test_operator_injection_rejected(self):
-        filters = json.dumps([
-            {"col": "name", "op": "= 1; DROP TABLE users; --", "val": "x"}
-        ])
+        filters = json.dumps([{"col": "name", "op": "= 1; DROP TABLE users; --", "val": "x"}])
         with pytest.raises(ValueError, match="Invalid CQL operator"):
             build_where_clause(filters)
 
     def test_column_injection_rejected(self):
-        filters = json.dumps([
-            {"col": "name; DROP TABLE users", "op": "=", "val": "x"}
-        ])
+        filters = json.dumps([{"col": "name; DROP TABLE users", "op": "=", "val": "x"}])
         with pytest.raises(ValueError, match="Invalid CQL identifier"):
             build_where_clause(filters)
 
     def test_value_single_quote_escaped(self):
-        filters = json.dumps([
-            {"col": "name", "op": "=", "val": "x'; DROP TABLE users; --"}
-        ])
+        filters = json.dumps([{"col": "name", "op": "=", "val": "x'; DROP TABLE users; --"}])
         result = build_where_clause(filters)
         assert "x''; DROP TABLE users; --" in result
         assert "x'; DROP" not in result
 
     def test_in_value_single_quote_escaped(self):
-        filters = json.dumps([
-            {"col": "name", "op": "IN", "val": "a', b"}
-        ])
+        filters = json.dumps([{"col": "name", "op": "IN", "val": "a', b"}])
         result = build_where_clause(filters)
         assert "a''" in result
 
     def test_like_value_single_quote_escaped(self):
-        filters = json.dumps([
-            {"col": "name", "op": "LIKE", "val": "x'--"}
-        ])
+        filters = json.dumps([{"col": "name", "op": "LIKE", "val": "x'--"}])
         result = build_where_clause(filters)
         assert "x''--" in result
 
     def test_malformed_json_raises(self):
-        with pytest.raises(Exception):
+        with pytest.raises(ValueError):
             build_where_clause("{invalid json")
 
 

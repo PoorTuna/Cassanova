@@ -1,12 +1,13 @@
 import os
 from asyncio import gather
-from typing import Optional
 from uuid import uuid4
 
 from fastapi import UploadFile
 
 
-def get_namespace_dir(namespace: Optional[str] = None, base_dir: str = "/tmp/cassanova-sessions") -> (str, str):
+def get_namespace_dir(
+    namespace: str | None = None, base_dir: str = "/tmp/cassanova-sessions"
+) -> tuple[str, str]:
     if namespace is None:
         namespace = str(uuid4())
     path = os.path.join(base_dir, namespace)
@@ -14,7 +15,7 @@ def get_namespace_dir(namespace: Optional[str] = None, base_dir: str = "/tmp/cas
     return path, namespace
 
 
-async def save_uploaded_files(files: Optional[list[UploadFile]], base_dir: str) -> list[str]:
+async def save_uploaded_files(files: list[UploadFile] | None, base_dir: str) -> list[str]:
     if not files:
         return []
 
@@ -23,7 +24,7 @@ async def save_uploaded_files(files: Optional[list[UploadFile]], base_dir: str) 
     return saved
 
 
-async def _save_file(upload: UploadFile, base_dir: str) -> Optional[str]:
+async def _save_file(upload: UploadFile, base_dir: str) -> str | None:
     filename = os.path.basename(upload.filename or "").strip()
     if not filename or filename.endswith("/"):
         return None

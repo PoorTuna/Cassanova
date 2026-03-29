@@ -1,11 +1,11 @@
-from typing import Any, Optional
+from typing import Any
 
-from pydantic import BaseModel, Field, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class IndexInfo(BaseModel):
-    name: Optional[str] = None
-    table: Optional[str] = Field(default=None, alias="table_name")
+    name: str | None = None
+    table: str | None = Field(default=None, alias="table_name")
     kind: str
     index_options: dict[str, Any]
 

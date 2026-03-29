@@ -1,15 +1,14 @@
 from datetime import timedelta
-from unittest.mock import patch, MagicMock
+from unittest.mock import MagicMock, patch
 
-import pytest
 from jose import jwt
 
 from cassanova.api.dependencies.auth import (
-    create_access_token,
     check_permission,
+    create_access_token,
 )
 from cassanova.config.auth_config import AuthConfig
-from cassanova.models.auth_models import WebUser, WebRole
+from cassanova.models.auth_models import WebRole, WebUser
 
 
 def _make_config(**overrides):
@@ -22,7 +21,10 @@ def _make_config(**overrides):
         roles=[
             WebRole(name="admin", permissions=["*"]),
             WebRole(name="viewer", permissions=["cluster:view", "data:read"]),
-            WebRole(name="editor", permissions=["cluster:view", "cluster:write", "data:read", "data:write"]),
+            WebRole(
+                name="editor",
+                permissions=["cluster:view", "cluster:write", "data:read", "data:write"],
+            ),
         ],
     )
     defaults.update(overrides)
@@ -47,9 +49,7 @@ class TestCreateAccessToken:
     @patch("cassanova.api.dependencies.auth.get_config")
     def test_custom_expiration(self, mock_get_config):
         mock_get_config.return_value = _make_cassanova_config()
-        token = create_access_token(
-            {"sub": "alice"}, expires_delta=timedelta(minutes=5)
-        )
+        token = create_access_token({"sub": "alice"}, expires_delta=timedelta(minutes=5))
         payload = jwt.decode(token, "test_secret_key_for_unit_tests", algorithms=["HS256"])
         assert payload["sub"] == "alice"
 
@@ -109,17 +109,15 @@ class TestJwtRoleTrust:
             algorithm="HS256",
         )
 
-        from cassanova.api.dependencies.auth import get_current_user
-
         import asyncio
+
+        from cassanova.api.dependencies.auth import get_current_user
 
         request = MagicMock()
         request.headers.get.return_value = None
         request.cookies.get.return_value = None
 
-        user = asyncio.get_event_loop().run_until_complete(
-            get_current_user(request, token)
-        )
+        user = asyncio.get_event_loop().run_until_complete(get_current_user(request, token))
 
         assert user is not None
         assert "admin" in user.roles
@@ -137,16 +135,14 @@ class TestJwtRoleTrust:
             algorithm="HS256",
         )
 
-        from cassanova.api.dependencies.auth import get_current_user
-
         import asyncio
+
+        from cassanova.api.dependencies.auth import get_current_user
 
         request = MagicMock()
         request.headers.get.return_value = None
         request.cookies.get.return_value = None
 
-        user = asyncio.get_event_loop().run_until_complete(
-            get_current_user(request, token)
-        )
+        user = asyncio.get_event_loop().run_until_complete(get_current_user(request, token))
 
         assert user is None

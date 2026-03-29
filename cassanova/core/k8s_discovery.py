@@ -1,7 +1,7 @@
 import base64
 import os
 from logging import getLogger
-from typing import Optional
+from typing import Any
 
 try:
     from kubernetes import client, config
@@ -17,9 +17,9 @@ logger = getLogger(__name__)
 
 
 def discover_k8s_clusters(
-        kubeconfig_path: Optional[str] = None,
-        namespace: Optional[str] = None,
-        service_suffix: str = "-service"
+    kubeconfig_path: str | None = None,
+    namespace: str | None = None,
+    service_suffix: str = "-service",
 ) -> dict[str, ClusterConnectionConfig]:
     if not K8S_AVAILABLE:
         logger.warning("Kubernetes package not installed. Skipping K8s discovery.")
@@ -38,14 +38,14 @@ def discover_k8s_clusters(
     items = k8s_clusters.get("items", [])
     logger.info(f"Found {len(items)} K8ssandraClusters.")
 
-    discovered_clusters = {}
+    discovered_clusters: dict[str, ClusterConnectionConfig] = {}
     for item in items:
         _process_k8ssandra_cluster(item, core_api, namespace, service_suffix, discovered_clusters)
 
     return discovered_clusters
 
 
-def _load_k8s_config(kubeconfig_path: Optional[str]) -> bool:
+def _load_k8s_config(kubeconfig_path: str | None) -> bool:
     try:
         if kubeconfig_path and os.path.exists(kubeconfig_path):
             config.load_kube_config(config_file=kubeconfig_path)
@@ -60,20 +60,18 @@ def _load_k8s_config(kubeconfig_path: Optional[str]) -> bool:
         return False
 
 
-def _fetch_k8ssandra_clusters(custom_api, namespace: Optional[str]) -> Optional[dict]:
+def _fetch_k8ssandra_clusters(custom_api: Any, namespace: str | None) -> dict[str, Any] | None:
     try:
         if namespace:
-            return custom_api.list_namespaced_custom_object(
+            return custom_api.list_namespaced_custom_object(  # type: ignore[no-any-return]
                 group="k8ssandra.io",
                 version="v1alpha1",
                 namespace=namespace,
-                plural="k8ssandraclusters"
+                plural="k8ssandraclusters",
             )
         else:
-            return custom_api.list_cluster_custom_object(
-                group="k8ssandra.io",
-                version="v1alpha1",
-                plural="k8ssandraclusters"
+            return custom_api.list_cluster_custom_object(  # type: ignore[no-any-return]
+                group="k8ssandra.io", version="v1alpha1", plural="k8ssandraclusters"
             )
     except ApiException as e:
         if e.status == 404:
@@ -83,8 +81,13 @@ def _fetch_k8ssandra_clusters(custom_api, namespace: Optional[str]) -> Optional[
         return None
 
 
-def _process_k8ssandra_cluster(item: dict, core_api, namespace: Optional[str], 
-                                service_suffix: str, discovered_clusters: dict):
+def _process_k8ssandra_cluster(
+    item: dict[str, Any],
+    core_api: Any,
+    namespace: str | None,
+    service_suffix: str,
+    discovered_clusters: dict[str, ClusterConnectionConfig],
+) -> None:
     metadata = item.get("metadata", {})
     spec = item.get("spec", {})
     cluster_name = metadata.get("name")
@@ -97,12 +100,21 @@ def _process_k8ssandra_cluster(item: dict, core_api, namespace: Optional[str],
     datacenters = spec.get("cassandra", {}).get("datacenters", [])
 
     for dc in datacenters:
-        _process_datacenter(dc, cluster_name, cluster_namespace, namespace, 
-                           service_suffix, core_api, credentials, discovered_clusters)
+        _process_datacenter(
+            dc,
+            cluster_name,
+            cluster_namespace,
+            namespace,
+            service_suffix,
+            core_api,
+            credentials,
+            discovered_clusters,
+        )
 
 
-def _extract_cluster_credentials(core_api, cluster_name: str, 
-                                 cluster_namespace: str) -> Optional[ClusterCredentials]:
+def _extract_cluster_credentials(
+    core_api: Any, cluster_name: str, cluster_namespace: str
+) -> ClusterCredentials | None:
     secret_name = f"{cluster_name}-superuser"
     try:
         secret = core_api.read_namespaced_secret(secret_name, cluster_namespace)
@@ -111,31 +123,36 @@ def _extract_cluster_credentials(core_api, cluster_name: str,
         password_b64 = data.get("password")
 
         if username_b64 and password_b64:
-            username = base64.b64decode(username_b64).decode('utf-8')
-            password = base64.b64decode(password_b64).decode('utf-8')
+            username = base64.b64decode(username_b64).decode("utf-8")
+            password = base64.b64decode(password_b64).decode("utf-8")
             return ClusterCredentials(username=username, password=password)
     except ApiException:
         pass
     return None
 
 
-def _process_datacenter(dc: dict, cluster_name: str, cluster_namespace: str,
-                       namespace: Optional[str], service_suffix: str, core_api,
-                       credentials: Optional[ClusterCredentials], discovered_clusters: dict):
+def _process_datacenter(
+    dc: dict[str, Any],
+    cluster_name: str,
+    cluster_namespace: str,
+    namespace: str | None,
+    service_suffix: str,
+    core_api: Any,
+    credentials: ClusterCredentials | None,
+    discovered_clusters: dict[str, ClusterConnectionConfig],
+) -> None:
     dc_name = dc.get("metadata", {}).get("name")
     if not dc_name:
         return
 
     service_names = _build_service_names(cluster_name, dc_name, service_suffix)
-    
+
     for svc_name in service_names:
         contact_points = _discover_service_contact_points(core_api, svc_name, cluster_namespace)
         if contact_points:
             config_key = _build_config_key(cluster_name, cluster_namespace, namespace)
             discovered_clusters[config_key] = ClusterConnectionConfig(
-                contact_points=contact_points,
-                port=9042,
-                credentials=credentials
+                contact_points=contact_points, port=9042, credentials=credentials
             )
             logger.info(f"Discovered cluster {config_key} from service {svc_name}")
             break
@@ -149,8 +166,9 @@ def _build_service_names(cluster_name: str, dc_name: str, service_suffix: str) -
     return service_names
 
 
-def _discover_service_contact_points(core_api, svc_name: str, 
-                                     cluster_namespace: str) -> Optional[list[str]]:
+def _discover_service_contact_points(
+    core_api: Any, svc_name: str, cluster_namespace: str
+) -> list[str] | None:
     try:
         svc = core_api.read_namespaced_service(svc_name, cluster_namespace)
         contact_points = []
@@ -180,8 +198,7 @@ def _discover_service_contact_points(core_api, svc_name: str,
         return None
 
 
-def _build_config_key(cluster_name: str, cluster_namespace: str, 
-                      namespace: Optional[str]) -> str:
+def _build_config_key(cluster_name: str, cluster_namespace: str, namespace: str | None) -> str:
     if namespace and namespace != cluster_namespace:
         return f"{cluster_namespace}-{cluster_name}"
     return cluster_name

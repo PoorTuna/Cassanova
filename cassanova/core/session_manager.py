@@ -24,7 +24,7 @@ class SessionManager:
             return cls._sessions[cluster_name]
 
     @classmethod
-    def shutdown_all(cls):
+    def shutdown_all(cls) -> None:
         with cls._lock:
             for name, session in cls._sessions.items():
                 try:

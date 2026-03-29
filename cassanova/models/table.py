@@ -1,4 +1,4 @@
-from typing import Any, Annotated, Optional
+from typing import Annotated, Any
 
 from pydantic import BaseModel, BeforeValidator, Field
 
@@ -15,16 +15,13 @@ class TableColumnInfo(BaseModel):
 class TableInfo(BaseModel):
     name: str
     partition_key: list[Any]
-    clustering_key: Annotated[
-        list[Any],
-        BeforeValidator(lambda v: ['N/A'] if not v else v)
-    ]
+    clustering_key: Annotated[list[Any], BeforeValidator(lambda v: v if v else ["N/A"])]
     columns: dict[str, TableColumnInfo]
-    indexes: Optional[list[IndexInfo]] = Field(default_factory=list)
+    indexes: list[IndexInfo] | None = Field(default_factory=list)  # type: ignore[arg-type]
     options: dict[str, Any]
-    comparator: Optional[Any] = None
-    triggers: dict[str, Any] = Field(default_factory=list)
-    views: Optional[dict[str, Any]] = Field(default_factory=dict)
+    comparator: Any | None = None
+    triggers: dict[str, Any] = Field(default_factory=list)  # type: ignore[arg-type]
+    views: dict[str, Any] | None = Field(default_factory=dict)
     virtual: bool
     is_compact_storage: bool
-    extensions: Optional[dict[str, Any]] = Field(default_factory=dict)
+    extensions: dict[str, Any] | None = Field(default_factory=dict)

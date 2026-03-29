@@ -1,11 +1,11 @@
-from typing import Optional, Literal
+from typing import Literal
 
 from pydantic import BaseModel, Field
 
 
 class ClusterMetrics(BaseModel):
-    partitioner: Optional[str] = None
-    name: str = Field(alias='cluster')
+    partitioner: str | None = None
+    name: str = Field(alias="cluster")
     snitch: str
     rack_count: int
     dc_count: int
@@ -13,6 +13,6 @@ class ClusterMetrics(BaseModel):
     up_nodes: int
     down_nodes: int
     status: str
-    version: str = 'N/A'
+    version: str = "N/A"
     is_fully_upgraded: bool = False
-    technology: Literal['cassandra', 'scylla', 'dse']
+    technology: Literal["cassandra", "scylla", "dse"]

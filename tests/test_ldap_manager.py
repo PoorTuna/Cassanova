@@ -1,5 +1,3 @@
-import pytest
-
 from cassanova.core.ldap_manager import _ldap_escape
 
 

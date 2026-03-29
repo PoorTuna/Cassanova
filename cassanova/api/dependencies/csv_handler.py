@@ -1,7 +1,8 @@
+from collections.abc import Generator
 from csv import DictReader, writer
 from io import StringIO
 from logging import getLogger
-from typing import Generator, Any
+from typing import Any
 
 from cassandra.cluster import Session
 from cassandra.metadata import TableMetadata
@@ -27,8 +28,13 @@ def generate_csv_stream(session: Session, query: str) -> Generator[str, None, No
         yield _write_row(output, csv_writer, clean_values)
 
 
-def load_csv_data(content: bytes, keyspace_name: str, table_name: str, table_metadata: TableMetadata,
-                  session: Session) -> dict[str, Any]:
+def load_csv_data(
+    content: bytes,
+    keyspace_name: str,
+    table_name: str,
+    table_metadata: TableMetadata,
+    session: Session,
+) -> dict[str, Any]:
     reader = _create_csv_reader(content)
     success_count = 0
     errors = []
@@ -72,11 +78,7 @@ def load_csv_data(content: bytes, keyspace_name: str, table_name: str, table_met
         except Exception as e:
             errors.append(str(e))
 
-    return {
-        "success": success_count,
-        "failed": len(errors),
-        "errors": errors[:10]
-    }
+    return {"success": success_count, "failed": len(errors), "errors": errors[:10]}
 
 
 def _init_csv_writer() -> tuple[StringIO, Any]:
@@ -97,21 +99,15 @@ def _extract_clean_values(row: Any, headers: list[str]) -> list[Any]:
     clean_row = []
     for h in headers:
         val = getattr(row, h)
-        if hasattr(val, 'isoformat'):
+        if hasattr(val, "isoformat"):
             val = val.isoformat()
         clean_row.append(val)
     return clean_row
 
 
 def _create_csv_reader(content: bytes) -> DictReader:
-    decoded = content.decode('utf-8')
+    decoded = content.decode("utf-8")
     return DictReader(StringIO(decoded))
-
-
-def _insert_csv_row(row: dict, keyspace: str, table: str, meta: TableMetadata, session: Session):
-    columns, values = _prepare_insert_data(row, meta)
-    query = build_insert_query(keyspace, table, columns)
-    session.execute(query, values)
 
 
 def _prepare_insert_data(row: dict, meta: TableMetadata) -> tuple[list[str], list[Any]]:

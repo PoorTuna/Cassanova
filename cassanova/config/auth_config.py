@@ -1,9 +1,7 @@
-from typing import Optional
-
 from pydantic import BaseModel, Field
 
-from cassanova.models.auth_models import WebUser, WebRole, get_default_roles
 from cassanova.config.ldap_config import LDAPConfig
+from cassanova.models.auth_models import WebRole, WebUser, get_default_roles
 
 
 class AuthConfig(BaseModel):
@@ -13,9 +11,9 @@ class AuthConfig(BaseModel):
     session_expire_minutes: int = 120
     users: list[WebUser] = Field(default_factory=list)
     roles: list[WebRole] = Field(default_factory=get_default_roles)
-    ldap: Optional[LDAPConfig] = None
+    ldap: LDAPConfig | None = None
 
-    def get_user(self, username: str) -> Optional[WebUser]:
+    def get_user(self, username: str) -> WebUser | None:
         for user in self.users:
             if user.username == username:
                 return user

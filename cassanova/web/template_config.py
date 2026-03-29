@@ -1,24 +1,27 @@
 from datetime import datetime
+
 from fastapi.templating import Jinja2Templates
-from cassanova.config.cassanova_config import get_clusters_config
+
 # Import late to avoid circular dep if needed, or check auth.py deps
 from cassanova.api.dependencies.auth import check_permission
+from cassanova.config.cassanova_config import get_clusters_config
 
 templates = Jinja2Templates(directory="web/templates")
 
-def register_context_processors():
+
+def register_context_processors() -> None:
     """Register global context processors for all templates."""
     config = get_clusters_config()
-    
-    
+
     # Add current_year to globals
     templates.env.globals["current_year"] = datetime.now().year
-    
+
     # Feature flags
     templates.env.globals["node_recovery_enabled"] = config.k8s.node_recovery.enabled
 
     # RBAC Helper
     templates.env.globals["check_permission"] = check_permission
+
 
 # Call it once at module level or during bootstrap
 register_context_processors()

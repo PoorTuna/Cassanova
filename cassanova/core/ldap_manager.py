@@ -1,5 +1,5 @@
 from logging import getLogger
-from typing import Optional, Any
+from typing import Any
 
 try:
     import ldap
@@ -9,6 +9,8 @@ except ImportError:
     LDAP_AVAILABLE = False
     ldap = None
 
+import contextlib
+
 from cassanova.config.ldap_config import LDAPConfig
 from cassanova.models.auth_models import WebUser
 
@@ -17,21 +19,22 @@ logger = getLogger(__name__)
 
 def _ldap_escape(value: str) -> str:
     """Escape special characters per RFC 4515 to prevent LDAP injection."""
-    return (value
-            .replace('\\', '\\5c')
-            .replace('*', '\\2a')
-            .replace('(', '\\28')
-            .replace(')', '\\29')
-            .replace('\x00', '\\00'))
+    return (
+        value.replace("\\", "\\5c")
+        .replace("*", "\\2a")
+        .replace("(", "\\28")
+        .replace(")", "\\29")
+        .replace("\x00", "\\00")
+    )
 
 
 class LDAPManager:
-    def __init__(self, config: LDAPConfig):
+    def __init__(self, config: LDAPConfig) -> None:
         if not LDAP_AVAILABLE:
             raise ImportError("LDAP support is not available. Please install 'python-ldap'.")
         self.config = config
 
-    def authenticate(self, username: str, password: str) -> Optional[WebUser]:
+    def authenticate(self, username: str, password: str) -> WebUser | None:
         if not username or not password:
             return None
 
@@ -48,17 +51,13 @@ class LDAPManager:
             if not self._verify_password(conn, user_dn, password, username):
                 return None
 
-            roles = self._get_roles(conn, user_dn, username, user_attrs)
+            roles = self._get_roles(conn, user_dn, username, user_attrs)  # type: ignore[arg-type]
             if self.config.default_roles:
                 roles.extend(self.config.default_roles)
 
             roles = list(set(roles))
 
-            return WebUser(
-                username=username,
-                password="",
-                roles=roles
-            )
+            return WebUser(username=username, password="", roles=roles)
 
         except Exception as e:
             logger.error(f"Error during LDAP authentication: {e}")
@@ -67,7 +66,7 @@ class LDAPManager:
             if conn:
                 self._unbind_connection(conn)
 
-    def _initialize_connection(self) -> Optional[Any]:
+    def _initialize_connection(self) -> Any | None:
         try:
             conn = ldap.initialize(self.config.server_uri)
             conn.set_option(ldap.OPT_REFERRALS, 0)
@@ -84,7 +83,7 @@ class LDAPManager:
             logger.error(f"Failed to initialize LDAP connection: {e}")
             return None
 
-    def _bind_service(self, conn) -> bool:
+    def _bind_service(self, conn: Any) -> bool:
         try:
             if self.config.bind_dn and self.config.bind_password:
                 logger.info(f"Binding to LDAP as Service Account: {self.config.bind_dn}")
@@ -99,20 +98,15 @@ class LDAPManager:
             logger.error(f"LDAP bind error: {e}")
         return False
 
-    def _find_user(self, conn, username: str) -> tuple[Optional[str], Optional[dict]]:
+    def _find_user(self, conn: Any, username: str) -> tuple[str | None, dict[str, Any] | None]:
         search_filter = self.config.user_search_filter.replace("{username}", _ldap_escape(username))
 
-        attrs = ['1.1']
+        attrs = ["1.1"]
         if self.config.memberof_attribute:
             attrs = [self.config.memberof_attribute]
 
         try:
-            result = conn.search_s(
-                self.config.base_dn,
-                ldap.SCOPE_SUBTREE,
-                search_filter,
-                attrs
-            )
+            result = conn.search_s(self.config.base_dn, ldap.SCOPE_SUBTREE, search_filter, attrs)
             if not result or not result[0]:
                 logger.info(f"User {username} not found in LDAP")
                 return None, None
@@ -122,7 +116,7 @@ class LDAPManager:
             logger.warning(f"LDAP search failed: {e}")
             return None, None
 
-    def _verify_password(self, conn, user_dn: str, password: str, username: str) -> bool:
+    def _verify_password(self, conn: Any, user_dn: str, password: str, username: str) -> bool:
         try:
             conn.simple_bind_s(user_dn, password)
             logger.info(f"Successfully authenticated user: {username}")
@@ -133,23 +127,29 @@ class LDAPManager:
             logger.error(f"LDAP user bind error: {e}")
         return False
 
-    def _unbind_connection(self, conn):
-        try:
+    def _unbind_connection(self, conn: Any) -> None:
+        with contextlib.suppress(ldap.LDAPError, Exception):
             conn.unbind_s()
-        except (ldap.LDAPError, Exception):
-            pass
 
-    def _get_roles(self, conn, user_dn: str, username: str, user_attrs: dict) -> list[str]:
+    def _get_roles(
+        self, conn: Any, user_dn: str, username: str, user_attrs: dict[str, Any]
+    ) -> list[str]:
         roles = set()
 
         if self.config.memberof_attribute and user_attrs:
             member_of_values = user_attrs.get(self.config.memberof_attribute, [])
             if member_of_values:
                 logger.debug(
-                    f"Mapping roles via {self.config.memberof_attribute}: {len(member_of_values)} groups found")
+                    f"Mapping roles via {self.config.memberof_attribute}:"
+                    f" {len(member_of_values)} groups found"
+                )
 
                 for group_val in member_of_values:
-                    grp_name = group_val.decode('utf-8') if isinstance(group_val, bytes) else str(group_val)
+                    grp_name = (
+                        group_val.decode("utf-8")
+                        if isinstance(group_val, bytes)
+                        else str(group_val)
+                    )
                     roles.update(self._map_single_group_to_roles(grp_name))
 
         if self.config.group_search_base and self.config.group_search_filter:
@@ -176,28 +176,30 @@ class LDAPManager:
 
         return list(found_roles)
 
-    def _search_groups(self, conn, user_dn: str, username: str) -> list[tuple[str, dict[str, Any]]]:
+    def _search_groups(
+        self, conn: Any, user_dn: str, username: str
+    ) -> list[tuple[str, dict[str, Any]]]:
         group_filter = self.config.group_search_filter.replace(
             "{user_dn}", _ldap_escape(user_dn)
         ).replace("{username}", _ldap_escape(username))
         try:
-            return conn.search_s(
+            return conn.search_s(  # type: ignore[no-any-return]
                 self.config.group_search_base,
                 ldap.SCOPE_SUBTREE,
                 group_filter,
-                [self.config.group_name_attribute]
+                [self.config.group_name_attribute],
             )
         except ldap.LDAPError as e:
             logger.warning(f"LDAP group search failed: {e}")
             return []
 
-    def _map_group_to_roles(self, grp_dn: str, grp_attrs: dict) -> list[str]:
+    def _map_group_to_roles(self, grp_dn: str, grp_attrs: dict[str, Any]) -> list[str]:
         found_roles = set()
         grp_names = grp_attrs.get(self.config.group_name_attribute, [])
         grp_dn_lower = grp_dn.lower()
 
         for name_bytes in grp_names:
-            name = name_bytes.decode('utf-8') if isinstance(name_bytes, bytes) else str(name_bytes)
+            name = name_bytes.decode("utf-8") if isinstance(name_bytes, bytes) else str(name_bytes)
 
             for map_key, map_roles in self.config.role_mapping.items():
                 map_key_lower = map_key.lower()

@@ -2,10 +2,9 @@ from cassandra.cluster import Session
 from fastapi import HTTPException
 
 from cassanova.config.cassanova_config import get_clusters_config
+from cassanova.core.session_manager import session_manager
 
 clusters_config = get_clusters_config()
-
-from cassanova.core.session_manager import session_manager
 
 
 def get_session(cluster_name: str) -> Session:

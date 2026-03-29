@@ -3,8 +3,8 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from cassanova.core.session_manager import SessionManager
 from cassanova.config.cluster_config import ClusterConnectionConfig
+from cassanova.core.session_manager import SessionManager
 
 
 @pytest.fixture(autouse=True)

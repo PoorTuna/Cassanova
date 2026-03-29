@@ -52,9 +52,4 @@ def get_cluster_health(cluster: Cluster, session: Session) -> dict[str, int | st
 
     down = total - up
     status = "Healthy" if down == 0 else "Degraded" if down < total else "Down"
-    return {
-        "total_nodes": total,
-        "up_nodes": up,
-        "down_nodes": down,
-        "status": status
-    }
+    return {"total_nodes": total, "up_nodes": up, "down_nodes": down, "status": status}

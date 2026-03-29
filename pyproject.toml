@@ -1,0 +1,66 @@
+[project]
+name = "cassanova"
+version = "1.7.0"
+description = "Web UI for Apache Cassandra management"
+requires-python = ">=3.11"
+dependencies = [
+    "bcrypt==4.0.1",
+    "cassandra-driver==3.29.2",
+    "fastapi==0.109.2",
+    "fastapi-sessions==0.3.2",
+    "Jinja2==3.1.3",
+    "packaging==24.2",
+    "passlib==1.7.4",
+    "pydantic==2.10.6",
+    "pydantic-settings==2.7.1",
+    "python-dateutil==2.9.0",
+    "python-dotenv==1.0.1",
+    "python-jose[cryptography]==3.4.0",
+    "python-multipart==0.0.19",
+    "uvicorn==0.34.0",
+    "kubernetes>=28.1.0",
+    "python-ldap>=3.4.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=9.0",
+    "pytest-asyncio>=0.23.0",
+    "pytest-cov>=6.0",
+    "httpx>=0.27.0",
+    "ruff>=0.9",
+    "mypy>=1.14",
+    "pre-commit>=4.0",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-vv --tb=short"
+markers = [
+    "slow: Tests involving cache TTL waits or heavy computation",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP", "B", "SIM", "RUF"]
+ignore = [
+    "B008",   # Depends() in default args is idiomatic FastAPI
+    "RUF012", # Mutable class defaults are fine for module-level singletons
+]
+
+[tool.ruff.lint.isort]
+known-first-party = ["cassanova"]
+
+[tool.mypy]
+python_version = "3.11"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+check_untyped_defs = true
+
+[[tool.mypy.overrides]]
+module = ["kubernetes.*", "ldap.*", "cassandra.*", "jose.*", "passlib.*", "dateutil.*"]
+ignore_missing_imports = true

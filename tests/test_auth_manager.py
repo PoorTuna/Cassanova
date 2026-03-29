@@ -1,19 +1,17 @@
-from unittest.mock import MagicMock, call
+from unittest.mock import MagicMock
 
 import pytest
-from cassandra.cluster import Session
 
 from cassanova.core.cql.auth_manager import (
-    validate_role_name,
-    get_all_roles,
-    create_role,
-    alter_role,
-    drop_role,
-    list_permissions,
-    grant_permission,
-    revoke_permission,
     _validate_permission,
     _validate_resource,
+    alter_role,
+    create_role,
+    drop_role,
+    grant_permission,
+    list_permissions,
+    revoke_permission,
+    validate_role_name,
 )
 from cassanova.models.auth_request import CreateRoleRequest, EditRoleRequest
 
@@ -23,48 +21,67 @@ class TestValidateRoleName:
     def test_valid_names(self, name):
         validate_role_name(name)
 
-    @pytest.mark.parametrize("name", [
-        "admin; DROP",
-        "role name",
-        "role'--",
-        'role"',
-        "role()",
-        "",
-    ])
+    @pytest.mark.parametrize(
+        "name",
+        [
+            "admin; DROP",
+            "role name",
+            "role'--",
+            'role"',
+            "role()",
+            "",
+        ],
+    )
     def test_invalid_names_rejected(self, name):
         with pytest.raises(ValueError, match="invalid characters"):
             validate_role_name(name)
 
 
 class TestValidatePermission:
-    @pytest.mark.parametrize("perm", [
-        "SELECT", "MODIFY", "ALTER", "CREATE", "DROP",
-        "AUTHORIZE", "DESCRIBE", "EXECUTE", "ALL PERMISSIONS",
-    ])
+    @pytest.mark.parametrize(
+        "perm",
+        [
+            "SELECT",
+            "MODIFY",
+            "ALTER",
+            "CREATE",
+            "DROP",
+            "AUTHORIZE",
+            "DESCRIBE",
+            "EXECUTE",
+            "ALL PERMISSIONS",
+        ],
+    )
     def test_valid_permissions(self, perm):
         _validate_permission(perm)
 
-    @pytest.mark.parametrize("perm", [
-        "SELECT; DROP TABLE",
-        "INVALID",
-        "READ",
-        "WRITE",
-        "",
-    ])
+    @pytest.mark.parametrize(
+        "perm",
+        [
+            "SELECT; DROP TABLE",
+            "INVALID",
+            "READ",
+            "WRITE",
+            "",
+        ],
+    )
     def test_invalid_permissions_rejected(self, perm):
         with pytest.raises(ValueError, match="Invalid permission"):
             _validate_permission(perm)
 
 
 class TestValidateResource:
-    @pytest.mark.parametrize("resource", [
-        "ALL KEYSPACES",
-        "ALL TABLES",
-        "ALL ROLES",
-        "KEYSPACE my_ks",
-        "TABLE my_ks.my_table",
-        "ROLE admin",
-    ])
+    @pytest.mark.parametrize(
+        "resource",
+        [
+            "ALL KEYSPACES",
+            "ALL TABLES",
+            "ALL ROLES",
+            "KEYSPACE my_ks",
+            "TABLE my_ks.my_table",
+            "ROLE admin",
+        ],
+    )
     def test_valid_resources(self, resource):
         _validate_resource(resource)
 
