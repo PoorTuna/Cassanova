@@ -20,10 +20,18 @@ from cassanova.models.cql_query import CQLQuery
 tools_router = APIRouter()
 
 
+_DDL_KEYWORDS = {'CREATE', 'DROP', 'ALTER', 'TRUNCATE'}
+
+
 @tools_router.post("/cluster/{cluster_name}/operations/cqlsh")
 def run_cqlsh(cluster_name: str, query: CQLQuery, _user=Depends(require_permission("cluster:admin"))):
     session = get_session(cluster_name)
     result = execute_query_cql(session, query)
+
+    first_word = query.cql.strip().split()[0].upper() if query.cql.strip() else ''
+    if first_word in _DDL_KEYWORDS:
+        session.cluster.refresh_schema_metadata()
+
     return jsonable_encoder(result, custom_encoder={bytes: lambda var: var.hex()})
 
 
