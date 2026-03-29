@@ -131,63 +131,13 @@
     box-shadow: var(--shadow-xl);
 }
 
-.detail-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 2.5rem;
-    padding-bottom: 1.5rem;
-    border-bottom: 1px solid var(--glass-border);
-}
-
+/* Nodes-specific detail overrides */
 .detail-header h3 {
-    font-size: 2.2rem;
-    margin: 0;
-    font-weight: 800;
-    color: var(--color-primary);
     font-family: var(--font-mono);
-    letter-spacing: -0.05em;
 }
 
-.badge {
-    padding: 6px 14px;
-    border-radius: 8px;
-    font-weight: 800;
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-}
-
-/* Stats Grid */
 .detail-grid {
-    display: grid;
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 1.25rem;
-    margin-bottom: 2.5rem;
-}
-
-.detail-card {
-    background: rgba(255, 255, 255, 0.02);
-    border: 1px solid var(--glass-border);
-    border-radius: 16px;
-    padding: 1.25rem;
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-}
-
-.detail-card .label {
-    font-size: 0.7rem;
-    text-transform: uppercase;
-    color: var(--text-muted);
-    font-weight: 800;
-    letter-spacing: 0.1em;
-}
-
-.detail-card .value {
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: var(--text-primary);
 }
 
 .detail-card .value.code {
@@ -196,34 +146,14 @@
     color: var(--color-secondary);
 }
 
-/* Generic Section Header */
 .detail-section {
     margin-bottom: 2.5rem;
-}
-
-.detail-section h4 {
-    font-size: 0.85rem;
-    text-transform: uppercase;
-    color: var(--text-muted);
-    letter-spacing: 0.15em;
-    font-weight: 800;
-    margin-bottom: 1.5rem;
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-}
-
-.detail-section h4::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: var(--glass-border);
 }
 
 /* Token & Schema Boxes */
 .token-box,
 .schema-box {
-    background: #0a0a0c;
+    background: var(--bg-inset);
     padding: 1.5rem;
     border-radius: 16px;
     border: 1px solid var(--glass-border);
