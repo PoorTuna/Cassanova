@@ -6,7 +6,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 2000;
+    z-index: var(--z-modal);
     padding: 1rem;
     transition: opacity 0.3s ease;
 }
