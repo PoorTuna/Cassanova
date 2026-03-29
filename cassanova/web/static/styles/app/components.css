@@ -317,6 +317,10 @@ button:hover {
 
 .dropdown-menu button,
 .dropdown-menu a {
+    background: none;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
     padding: 12px 16px;
     font-weight: 500;
     text-align: left;
@@ -329,6 +333,7 @@ button:hover {
     width: 100%;
     box-sizing: border-box;
     font-size: 0.9rem;
+    font-family: inherit;
     white-space: nowrap;
 }
 
