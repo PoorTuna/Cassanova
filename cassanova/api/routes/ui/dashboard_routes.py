@@ -1,4 +1,4 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
 from fastapi.requests import Request
 
 from cassanova.api.dependencies.db_session import get_session
@@ -143,17 +143,23 @@ def keyspace_editor_dashboard(request: Request, cluster_name: str, keyspace_name
     cluster = session.cluster
     ks_meta = cluster.metadata.keyspaces.get(keyspace_name)
     if not ks_meta:
-        from fastapi import HTTPException
         raise HTTPException(status_code=404, detail="Keyspace not found")
 
-    replication = dict(ks_meta.replication_strategy.options) if ks_meta.replication_strategy else {}
-    strategy_class = ks_meta.replication_strategy.name if ks_meta.replication_strategy else 'SimpleStrategy'
+    rs = ks_meta.replication_strategy
+    strategy_class = rs.name if rs else 'SimpleStrategy'
+
+    replication = {}
+    replication_factor = 3
+    if strategy_class == 'NetworkTopologyStrategy' and hasattr(rs, 'dc_replication_factors'):
+        replication = {dc: int(rf) for dc, rf in rs.dc_replication_factors.items()}
+    elif strategy_class == 'SimpleStrategy' and hasattr(rs, 'replication_factor_info'):
+        replication_factor = rs.replication_factor_info.all_replicas
 
     existing_keyspace = {
         "name": keyspace_name,
         "strategy_class": strategy_class,
         "replication": replication,
-        "replication_factor": replication.get('replication_factor', 3),
+        "replication_factor": replication_factor,
         "durable_writes": ks_meta.durable_writes,
     }
 
@@ -173,29 +179,27 @@ def table_editor_dashboard(request: Request, cluster_name: str, keyspace_name: s
     cluster = session.cluster
     ks_meta = cluster.metadata.keyspaces.get(keyspace_name)
     if not ks_meta:
-        from fastapi import HTTPException
         raise HTTPException(status_code=404, detail="Keyspace not found")
     table_meta = ks_meta.tables.get(table_name)
     if not table_meta:
-        from fastapi import HTTPException
         raise HTTPException(status_code=404, detail="Table not found")
 
-    pk_names = [col.name for col in table_meta.partition_key]
-    ck_names = [col.name for col in table_meta.clustering_key]
-    ck_orders = {}
-    if table_meta.clustering_order:
-        for col, order in zip(ck_names, table_meta.clustering_order):
-            ck_orders[col] = order
+    pk_names = {col.name for col in table_meta.partition_key}
+    ck_names = {col.name for col in table_meta.clustering_key}
 
     columns = []
     for col_name, col_meta in table_meta.columns.items():
+        ck_order = "ASC"
+        if col_name in ck_names and hasattr(col_meta, 'is_reversed') and col_meta.is_reversed:
+            ck_order = "DESC"
+
         columns.append({
             "name": col_name,
             "type": str(col_meta.cql_type),
             "isPK": col_name in pk_names,
             "isCK": col_name in ck_names,
-            "ckOrder": ck_orders.get(col_name, "ASC"),
-            "isStatic": col_meta.is_static if hasattr(col_meta, 'is_static') else False,
+            "ckOrder": ck_order,
+            "isStatic": getattr(col_meta, 'is_static', False),
         })
 
     compaction_class = ''
