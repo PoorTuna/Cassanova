@@ -135,3 +135,86 @@ def table_builder_dashboard(request: Request, cluster_name: str, keyspace_name: 
         "cluster_config_entry": cluster_name,
         "keyspace_name": keyspace_name
     })
+
+
+@cassanova_ui_dashboard_router.get("/cluster/{cluster_name}/keyspace/{keyspace_name}/builder")
+def keyspace_editor_dashboard(request: Request, cluster_name: str, keyspace_name: str):
+    session = get_session(cluster_name)
+    cluster = session.cluster
+    ks_meta = cluster.metadata.keyspaces.get(keyspace_name)
+    if not ks_meta:
+        from fastapi import HTTPException
+        raise HTTPException(status_code=404, detail="Keyspace not found")
+
+    replication = dict(ks_meta.replication_strategy.options) if ks_meta.replication_strategy else {}
+    strategy_class = ks_meta.replication_strategy.name if ks_meta.replication_strategy else 'SimpleStrategy'
+
+    existing_keyspace = {
+        "name": keyspace_name,
+        "strategy_class": strategy_class,
+        "replication": replication,
+        "replication_factor": replication.get('replication_factor', 3),
+        "durable_writes": ks_meta.durable_writes,
+    }
+
+    return templates.TemplateResponse("keyspace-builder.html", {
+        "request": request,
+        "cluster_name": cluster.metadata.cluster_name,
+        "cluster_config_entry": cluster_name,
+        "keyspace_name": keyspace_name,
+        "mode": "alter",
+        "existing_keyspace": existing_keyspace,
+    })
+
+
+@cassanova_ui_dashboard_router.get("/cluster/{cluster_name}/keyspace/{keyspace_name}/table/{table_name}/builder")
+def table_editor_dashboard(request: Request, cluster_name: str, keyspace_name: str, table_name: str):
+    session = get_session(cluster_name)
+    cluster = session.cluster
+    ks_meta = cluster.metadata.keyspaces.get(keyspace_name)
+    if not ks_meta:
+        from fastapi import HTTPException
+        raise HTTPException(status_code=404, detail="Keyspace not found")
+    table_meta = ks_meta.tables.get(table_name)
+    if not table_meta:
+        from fastapi import HTTPException
+        raise HTTPException(status_code=404, detail="Table not found")
+
+    pk_names = [col.name for col in table_meta.partition_key]
+    ck_names = [col.name for col in table_meta.clustering_key]
+    ck_orders = {}
+    if table_meta.clustering_order:
+        for col, order in zip(ck_names, table_meta.clustering_order):
+            ck_orders[col] = order
+
+    columns = []
+    for col_name, col_meta in table_meta.columns.items():
+        columns.append({
+            "name": col_name,
+            "type": str(col_meta.cql_type),
+            "isPK": col_name in pk_names,
+            "isCK": col_name in ck_names,
+            "ckOrder": ck_orders.get(col_name, "ASC"),
+            "isStatic": col_meta.is_static if hasattr(col_meta, 'is_static') else False,
+        })
+
+    compaction_class = ''
+    if table_meta.options and 'compaction' in table_meta.options:
+        compaction = table_meta.options['compaction']
+        compaction_class = compaction.get('class', '') if isinstance(compaction, dict) else ''
+
+    existing_schema = {
+        "columns": columns,
+        "compaction": compaction_class,
+        "default_ttl": table_meta.options.get('default_time_to_live', 0) if table_meta.options else 0,
+    }
+
+    return templates.TemplateResponse("table-builder.html", {
+        "request": request,
+        "cluster_name": cluster.metadata.cluster_name,
+        "cluster_config_entry": cluster_name,
+        "keyspace_name": keyspace_name,
+        "table_name": table_name,
+        "mode": "alter",
+        "existing_schema": existing_schema,
+    })

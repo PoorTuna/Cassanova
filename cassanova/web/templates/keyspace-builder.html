@@ -29,20 +29,23 @@
 {% endblock %}
 
 {% block content %}
-<main class="with-sidebar builder-page" data-cluster="{{ cluster_config_entry }}">
+<main class="with-sidebar builder-page"
+    data-cluster="{{ cluster_config_entry }}"
+    data-mode="{{ mode | default('create') }}"
+    {% if existing_keyspace %}data-existing-keyspace='{{ existing_keyspace | tojson }}'{% endif %}>
     <header class="builder-header">
         <div class="breadcrumb">
             <a href="/cluster/{{ cluster_config_entry }}">{{ cluster_name }}</a>
             <span class="separator">/</span>
             <span class="active">Keyspace Builder</span>
         </div>
-        <h1>Keyspace Builder</h1>
+        <h1>{% if mode == 'alter' %}Edit Keyspace: {{ keyspace_name }}{% else %}Keyspace Builder{% endif %}</h1>
         <div class="header-actions">
             <button id="create-keyspace-btn" class="btn-primary" disabled>
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M5 12h14M12 5l7 7-7 7"></path>
                 </svg>
-                Deploy Keyspace
+                {% if mode == 'alter' %}Apply Changes{% else %}Deploy Keyspace{% endif %}
             </button>
         </div>
     </header>
@@ -63,7 +66,9 @@
                     <div class="form-group">
                         <label>Keyspace Name</label>
                         <input type="text" id="keyspace-name" placeholder="e.g. production_metrics" autocomplete="off"
-                            required>
+                            required value="{{ keyspace_name | default('') }}"
+                            {% if mode == 'alter' %}readonly{% endif %}>
+                        <div id="ks-name-error" class="field-error hidden"></div>
                     </div>
                     <div class="form-group">
                         <label>Durable Writes</label>
@@ -152,7 +157,7 @@
             <button class="btn-close-x close-modal">&times;</button>
         </div>
         <div class="modal-body">
-            <p>You are about to deploy a new keyspace. This operation will be logged.</p>
+            <p>You are about to {% if mode == 'alter' %}alter an existing{% else %}deploy a new{% endif %} keyspace.</p>
             <div class="details-box">
                 <pre id="final-cql-confirm" class="cql-confirm-preview"></pre>
             </div>
