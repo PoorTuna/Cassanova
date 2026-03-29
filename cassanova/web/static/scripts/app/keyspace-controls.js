@@ -61,6 +61,7 @@ function showKeyspaceDetail(item) {
                 ${isVirtual === 'True' ? '<span class="badge virtual">Virtual</span>' : ''}
             </div>
             <a href="/cluster/${clusterConfigName}/keyspace/${name}" class="btn-primary-sm">View Details</a>
+            <a href="/cluster/${clusterConfigName}/keyspace/${name}/builder" class="btn-primary-sm">Edit</a>
         </div>
         
         <div class="detail-grid">
