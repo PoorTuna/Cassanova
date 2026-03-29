@@ -12,7 +12,7 @@
     box-shadow: var(--shadow-lg);
     display: flex;
     flex-direction: column;
-    z-index: 1000;
+    z-index: var(--z-sidebar);
     transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     box-sizing: border-box;
     font-family: var(--font-body);
@@ -176,7 +176,7 @@
     overflow: hidden;
     position: absolute;
     left: 0;
-    z-index: 9999;
+    z-index: var(--z-dropdown);
     min-width: 160px;
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
 }
@@ -254,7 +254,7 @@
     overflow: hidden;
     position: absolute;
     left: 0;
-    z-index: 9999;
+    z-index: var(--z-dropdown);
     min-width: 140px;
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
 }
