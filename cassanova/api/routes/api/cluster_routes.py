@@ -21,6 +21,12 @@ clusters_config = get_clusters_config()
 _schema_map_cache: dict[str, tuple[float, dict]] = {}
 
 
+def _invalidate_schema_cache(cluster_name: str, session=None):
+    _schema_map_cache.pop(cluster_name, None)
+    if session:
+        session.cluster.refresh_schema_metadata()
+
+
 @cluster_router.get("/clusters")
 def get_clusters():
     return [get_cluster_safe(cluster_name) for cluster_name in clusters_config.clusters.keys()]
@@ -156,6 +162,7 @@ def get_cluster_vnodes(cluster_name: str) -> dict[str, list[dict[str, Any]]]:
 def delete_table(cluster_name: str, keyspace_name: str, table_name: str, _user=Depends(require_permission("cluster:admin"))):
     session = get_session(cluster_name)
     drop_table_cql(session, keyspace_name, table_name)
+    _invalidate_schema_cache(cluster_name, session)
     return JSONResponse({"detail": f"Table {keyspace_name}.{table_name} deleted successfully"})
 
 

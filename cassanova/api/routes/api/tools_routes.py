@@ -10,6 +10,7 @@ from fastapi.responses import JSONResponse
 from cassanova.api.dependencies.auth import require_permission
 from cassanova.api.dependencies.db_session import get_session
 from cassanova.consts.cass_tools import CassTools
+from cassanova.api.routes.api.cluster_routes import _invalidate_schema_cache
 from cassanova.core.cql.execute_query import execute_query_cql
 from cassanova.core.tools.argument_handling import parse_args, resolve_args
 from cassanova.core.tools.execute_tool import execute_tool
@@ -30,7 +31,7 @@ def run_cqlsh(cluster_name: str, query: CQLQuery, _user=Depends(require_permissi
 
     first_word = query.cql.strip().split()[0].upper() if query.cql.strip() else ''
     if first_word in _DDL_KEYWORDS:
-        session.cluster.refresh_schema_metadata()
+        _invalidate_schema_cache(cluster_name, session)
 
     return jsonable_encoder(result, custom_encoder={bytes: lambda var: var.hex()})
 
