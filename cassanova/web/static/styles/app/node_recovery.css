@@ -245,9 +245,12 @@
 
 .btn {
     padding: 0.5rem 1rem;
+    background: var(--glass-surface);
     border: none;
     border-radius: 6px;
     font-weight: 600;
+    color: var(--text-primary);
+    font-family: inherit;
     cursor: pointer;
     transition: background 0.2s, transform 0.1s;
 }

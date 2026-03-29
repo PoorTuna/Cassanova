@@ -124,19 +124,14 @@
     display: inline-block;
 }
 
-/* Tables page dropdown overrides */
-.dropdown-menu {
+/* Tables page dropdown positioning */
+.dropdown-wrapper .dropdown-menu {
     position: absolute;
     right: 0;
     top: 100%;
-    z-index: 10;
+    z-index: var(--z-dropdown);
     display: flex;
     flex-direction: column;
-}
-
-.dropdown-menu button:hover {
-    background-color: var(--bg-hover-active);
-    transform: none;
 }
 
 /* === Hidden Class === */
