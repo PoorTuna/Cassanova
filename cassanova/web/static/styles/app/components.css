@@ -234,6 +234,12 @@ button:hover {
     border-bottom: 1px solid var(--glass-border);
 }
 
+.detail-actions {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+}
+
 .detail-header h3 {
     font-size: 2.2rem;
     font-weight: 800;
