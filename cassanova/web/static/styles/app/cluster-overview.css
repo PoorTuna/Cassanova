@@ -23,23 +23,22 @@
 }
 
 .cluster-overview ul li {
-    background: var(--glass-surface);
-    backdrop-filter: var(--backdrop-blur);
+    background: rgba(255, 255, 255, 0.02);
     border: 1px solid var(--glass-border);
-    border-radius: 20px;
-    padding: 1.5rem;
+    border-radius: 10px;
+    padding: 1rem 1.25rem;
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
-    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
     position: relative;
     overflow: hidden;
     box-shadow: var(--shadow-sm);
 }
 
 .cluster-overview ul li:hover {
-    transform: translateY(-4px) scale(1.02);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
     border-color: var(--color-primary-light);
     background: var(--glass-surface-hover);
 }

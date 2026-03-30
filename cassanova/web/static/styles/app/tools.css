@@ -4,7 +4,7 @@
     /* Dark opaque for readability */
     backdrop-filter: blur(10px);
     border: 1px solid var(--glass-border);
-    border-radius: 12px;
+    border-radius: 8px;
     box-shadow: var(--shadow-xl);
     overflow: hidden;
     max-width: 100%;
@@ -22,7 +22,7 @@
     background: var(--glass-surface);
     backdrop-filter: var(--backdrop-blur);
     border: 1px solid var(--glass-border);
-    border-radius: 12px;
+    border-radius: 8px;
     padding: 2rem;
     max-width: 600px;
     margin: 0 auto;

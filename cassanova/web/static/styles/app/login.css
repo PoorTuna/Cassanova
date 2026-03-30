@@ -67,11 +67,11 @@
 .login-card {
     width: 100%;
     background: var(--glass-surface);
-    backdrop-filter: var(--backdrop-blur);
+    backdrop-filter: blur(8px);
     border: 1px solid var(--glass-border);
-    border-radius: 16px;
+    border-radius: 12px;
     padding: 2.5rem;
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
 }
 
 /* Login form overrides */

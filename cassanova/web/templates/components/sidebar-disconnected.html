@@ -1,21 +1,6 @@
 <aside class="sidebar">
-    <div class="sidebar-header">
-        <a href="/" class="sidebar-brand">
-            <img src="/static/icons/logo/cassanova-logo.png" alt="Cassanova Logo" class="sidebar-logo">
-            <span class="sidebar-title">Cassanova</span>
-        </a>
-        <button class="sidebar-toggle" aria-label="Toggle Menu" aria-expanded="false">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#e0e0e0" stroke-width="2"
-                stroke-linecap="round" stroke-linejoin="round">
-                <line x1="3" y1="6" x2="21" y2="6" />
-                <line x1="3" y1="12" x2="21" y2="12" />
-                <line x1="3" y1="18" x2="21" y2="18" />
-            </svg>
-        </button>
-    </div>
     <nav class="sidebar-nav">
         <div class="sidebar-top">
-            {% include "components/theme-selector.html" %}
             <a href="/" class="sidebar-link">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                     stroke="currentColor" class="icon">
@@ -35,8 +20,7 @@
                 <span class="label">Tools</span>
             </a>
 
-            {% if request.state.user and node_recovery_enabled and check_permission(request.state.user, 'cluster:admin')
-            %}
+            {% if request.state.user and node_recovery_enabled and check_permission(request.state.user, 'cluster:admin') %}
             <a href="/node-recovery" class="sidebar-link">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                     stroke="currentColor" class="icon">

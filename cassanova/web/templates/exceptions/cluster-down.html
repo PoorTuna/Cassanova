@@ -1,10 +1,9 @@
 {% extends "base.html" %}
 
 {% block title %}Cluster Unreachable{% endblock %}
+{% block breadcrumbs %}<span class="bc-current">Cluster Unreachable</span>{% endblock %}
 
-{% block head_extra %}
-<link href="/static/styles/app/exceptions.css" rel="stylesheet"/>
-{% endblock %}
+{% block body_class %}exception-page{% endblock %}
 
 {% block content %}
 <div class="starfield"></div>

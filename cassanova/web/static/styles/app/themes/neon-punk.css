@@ -32,7 +32,7 @@
     --glass-border-light: rgba(0, 229, 255, 0.5);
     /* Cyan Edges */
     --glass-shine: rgba(255, 255, 255, 0.05);
-    --backdrop-blur: blur(20px);
+    --backdrop-blur: blur(12px);
 
     /* --- Text Colors --- */
     --text-primary: #FFFFFF;
@@ -64,8 +64,8 @@
     --shadow-md: 0 0 20px rgba(255, 0, 127, 0.3);
     --shadow-lg: 0 0 40px rgba(255, 0, 127, 0.4);
 
-    --glow-primary: 0 0 15px #FF007F;
-    --glow-text: 0 0 5px rgba(255, 255, 255, 0.5);
+    --glow-primary: 0 0 8px #FF007F;
+    --glow-text: none;
 
     /* --- Syntax --- */
     --syntax-key: #00E5FF;

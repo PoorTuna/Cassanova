@@ -53,7 +53,7 @@
 .form-section {
     background: var(--glass-surface);
     border: 1px solid var(--glass-border);
-    border-radius: 20px;
+    border-radius: 10px;
     padding: 1.75rem;
     backdrop-filter: var(--backdrop-blur-heavy);
     box-shadow: var(--shadow-lg);
@@ -178,7 +178,7 @@
     align-items: center;
     background: rgba(255, 255, 255, 0.02);
     padding: 0.5rem;
-    border-radius: 14px;
+    border-radius: 8px;
     border: 1px solid rgba(255, 255, 255, 0.05);
     transition: all 0.2s;
 }
@@ -240,7 +240,7 @@
     background: rgba(0, 229, 255, 0.1);
     color: var(--color-primary);
     border-color: var(--color-primary);
-    box-shadow: 0 0 15px rgba(0, 229, 255, 0.1);
+    box-shadow: 0 0 4px rgba(0, 229, 255, 0.1);
 }
 
 .pill-checkbox.pill-sm {
@@ -335,7 +335,7 @@
 
 .cql-preview-box {
     background: var(--bg-inset);
-    border-radius: 16px;
+    border-radius: 10px;
     padding: 2rem;
     flex: 1;
     overflow: auto;
@@ -368,7 +368,7 @@
 .safety-analyzer {
     background: rgba(0, 0, 0, 0.2);
     border: 1px solid var(--glass-border);
-    border-radius: 16px;
+    border-radius: 10px;
     padding: 1.5rem;
 }
 
@@ -404,7 +404,7 @@
     color: #000;
     border: none;
     padding: 0.85rem 1.75rem;
-    border-radius: 12px;
+    border-radius: 8px;
     font-weight: 700;
     font-size: 0.95rem;
     display: flex;

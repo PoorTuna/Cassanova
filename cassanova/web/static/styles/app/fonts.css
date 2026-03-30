@@ -4,7 +4,7 @@
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url('/static/fonts/Inter/Inter_18pt-Regular.ttf') format('truetype');
+  src: url('/static/fonts/Inter/Inter_18pt-Regular.woff2') format('woff2');
 }
 
 @font-face {
@@ -12,7 +12,7 @@
   font-style: normal;
   font-weight: 500;
   font-display: swap;
-  src: url('/static/fonts/Inter/Inter_18pt-Medium.ttf') format('truetype');
+  src: url('/static/fonts/Inter/Inter_18pt-Medium.woff2') format('woff2');
 }
 
 @font-face {
@@ -20,7 +20,7 @@
   font-style: normal;
   font-weight: 700;
   font-display: swap;
-  src: url('/static/fonts/Inter/Inter_18pt-Bold.ttf') format('truetype');
+  src: url('/static/fonts/Inter/Inter_18pt-Bold.woff2') format('woff2');
 }
 
 /* Outfit - Heading Font */
@@ -29,7 +29,7 @@
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url('/static/fonts/Outfit/Outfit-Regular.ttf') format('truetype');
+  src: url('/static/fonts/Outfit/Outfit-Regular.woff2') format('woff2');
 }
 
 @font-face {
@@ -37,7 +37,7 @@
   font-style: normal;
   font-weight: 500;
   font-display: swap;
-  src: url('/static/fonts/Outfit/Outfit-Medium.ttf') format('truetype');
+  src: url('/static/fonts/Outfit/Outfit-Medium.woff2') format('woff2');
 }
 
 @font-face {
@@ -45,7 +45,7 @@
   font-style: normal;
   font-weight: 700;
   font-display: swap;
-  src: url('/static/fonts/Outfit/Outfit-Bold.ttf') format('truetype');
+  src: url('/static/fonts/Outfit/Outfit-Bold.woff2') format('woff2');
 }
 
 /* Fira Code - Monospace Font */
@@ -54,7 +54,7 @@
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url('/static/fonts/firaCode/FiraCode-Regular.ttf') format('truetype');
+  src: url('/static/fonts/firaCode/FiraCode-Regular.woff2') format('woff2');
 }
 
 @font-face {
@@ -62,7 +62,7 @@
   font-style: normal;
   font-weight: 500;
   font-display: swap;
-  src: url('/static/fonts/firaCode/FiraCode-Medium.ttf') format('truetype');
+  src: url('/static/fonts/firaCode/FiraCode-Medium.woff2') format('woff2');
 }
 
 @font-face {
@@ -70,7 +70,7 @@
   font-style: normal;
   font-weight: 700;
   font-display: swap;
-  src: url('/static/fonts/firaCode/FiraCode-Bold.ttf') format('truetype');
+  src: url('/static/fonts/firaCode/FiraCode-Bold.woff2') format('woff2');
 }
 
 /* CSS Variables for Font Stacks */

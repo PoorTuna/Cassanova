@@ -11,6 +11,7 @@ body {
     -moz-osx-font-smoothing: grayscale;
     overflow-x: hidden;
     line-height: 1.6;
+    padding-top: 48px;
 }
 
 /* === Copy Utilities === */
@@ -79,7 +80,7 @@ a {
 
 a:hover {
     color: var(--color-primary-hover);
-    text-shadow: 0 0 8px var(--color-primary-light);
+    text-shadow: none;
 }
 
 /* --- Scrollbars --- */
@@ -102,10 +103,16 @@ a:hover {
 }
 
 /* --- Layout --- */
-main {
-    padding: 2rem 3rem;
-    margin: 0;
+.page-wrapper {
+    display: flex;
+    flex-direction: column;
     min-height: 100vh;
+}
+
+main {
+    padding: 1.5rem 2rem;
+    margin: 0;
+    flex: 1;
     box-sizing: border-box;
     transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -115,16 +122,16 @@ main.with-sidebar {
     margin-left: 260px;
     /* Matched to sidebar width */
     max-width: calc(100vw - 260px);
-    padding: 2rem;
+    padding: 1.25rem 1.5rem;
 }
 
 /* --- Glass Elements --- */
 .glass-panel {
     background: var(--glass-surface);
-    -webkit-backdrop-filter: var(--backdrop-blur);
-    backdrop-filter: var(--backdrop-blur);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
     border: 1px solid var(--glass-border);
-    border-radius: 16px;
+    border-radius: 10px;
     box-shadow: var(--shadow-md);
 }
 
@@ -155,10 +162,10 @@ main.with-sidebar {
 /* --- Footer --- */
 footer {
     text-align: center;
-    padding: 2rem 0;
+    padding: 1rem 0;
     color: var(--text-muted);
-    font-size: 0.85rem;
-    margin-top: 4rem;
+    font-size: 0.8rem;
+    opacity: 0.5;
     border-top: 1px solid var(--glass-border);
 }
 

@@ -4,7 +4,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 4rem 2rem;
+    padding: 2.5rem 2rem;
     position: relative;
     z-index: 10;
     overflow-y: auto;
@@ -20,15 +20,15 @@
     width: 100vw;
     height: 100vh;
     z-index: -1;
-    opacity: 0.5;
+    opacity: 0.15;
     pointer-events: none;
 }
 
 /* --- Hero Header --- */
 .hero-header {
     text-align: center;
-    margin-bottom: 5rem;
-    animation: fadeSlideDown 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    margin-bottom: 2.5rem;
+    animation: fadeSlideDown 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .brand-group {
@@ -40,30 +40,29 @@
 }
 
 .hero-logo {
-    width: 72px;
-    height: 72px;
-    filter: drop-shadow(0 0 20px rgba(var(--color-primary-rgb), 0.3));
+    width: 48px;
+    height: 48px;
+    filter: drop-shadow(0 0 8px rgba(var(--color-primary-rgb), 0.15));
 }
 
 .hero-header h1 {
-    font-size: 4.5rem;
+    font-size: 2.8rem;
     margin: 0;
-    font-weight: 800;
+    font-weight: 700;
     background: linear-gradient(135deg, var(--text-primary) 0%, var(--color-primary) 50%, var(--text-primary) 100%);
     background-size: 200% auto;
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
-    letter-spacing: -0.05em;
-    animation: shine 5s linear infinite;
+    letter-spacing: -0.03em;
 }
 
 .hero-subtitle {
-    font-size: 1.25rem;
+    font-size: 1.1rem;
     color: var(--text-muted);
     font-weight: 500;
-    letter-spacing: 0.05em;
-    margin-bottom: 3rem;
+    letter-spacing: 0.03em;
+    margin-bottom: 1.5rem;
 }
 
 /* --- Search Wrapper --- */
@@ -76,12 +75,12 @@
 
 #cluster-filter {
     width: 100%;
-    padding: 1.25rem 2rem 1.25rem 3.5rem;
+    padding: 0.85rem 1.5rem 0.85rem 3rem;
     background: var(--glass-surface);
-    -webkit-backdrop-filter: var(--backdrop-blur);
-    backdrop-filter: var(--backdrop-blur);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
     border: 1px solid var(--glass-border);
-    border-radius: 20px;
+    border-radius: 10px;
     color: var(--text-primary);
     font-size: 1.1rem;
     transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
@@ -111,26 +110,24 @@
 /* --- Cluster Grid --- */
 #cluster-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-    gap: 2rem;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.25rem;
     width: 100%;
-    max-width: 1200px;
-    animation: fadeSlideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.2s backwards;
+    max-width: 1600px;
+    animation: fadeSlideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.1s backwards;
 }
 
 .cluster-hero-card {
-    background: var(--glass-surface);
-    -webkit-backdrop-filter: var(--backdrop-blur);
-    backdrop-filter: var(--backdrop-blur);
+    background: var(--bg-surface);
     border: 1px solid var(--glass-border);
-    border-radius: 28px;
-    padding: 2rem;
+    border-radius: 12px;
+    padding: 1.5rem;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    min-height: 280px;
+    min-height: auto;
     cursor: pointer;
-    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
     position: relative;
     overflow: hidden;
 }
@@ -146,17 +143,17 @@
 }
 
 .cluster-hero-card:hover {
-    transform: translateY(-10px) scale(1.02);
+    transform: translateY(-2px);
     background: var(--glass-surface-hover);
     border-color: var(--color-primary-light);
-    box-shadow: var(--shadow-lg);
+    box-shadow: var(--shadow-md);
 }
 
 .cluster-icon {
-    width: 48px;
-    height: 48px;
+    width: 40px;
+    height: 40px;
     background: rgba(var(--color-primary-rgb), 0.1);
-    border-radius: 14px;
+    border-radius: 10px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -168,11 +165,10 @@
 .cluster-hero-card:hover .cluster-icon {
     background: var(--color-primary);
     color: var(--text-on-primary, #000);
-    transform: rotate(10deg);
 }
 
 .cluster-hero-card h3 {
-    font-size: 1.75rem;
+    font-size: 1.35rem;
     margin: 0 0 1rem 0;
     font-weight: 800;
     color: var(--text-primary);
@@ -262,7 +258,7 @@
 @keyframes fadeSlideDown {
     from {
         opacity: 0;
-        transform: translateY(-30px);
+        transform: translateY(-12px);
     }
 
     to {
@@ -274,7 +270,7 @@
 @keyframes fadeSlideUp {
     from {
         opacity: 0;
-        transform: translateY(30px);
+        transform: translateY(12px);
     }
 
     to {

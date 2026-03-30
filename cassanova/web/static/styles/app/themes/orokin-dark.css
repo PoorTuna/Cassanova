@@ -28,8 +28,8 @@
     /* Gold tint border */
     --glass-border-light: rgba(212, 175, 55, 0.3);
     --glass-shine: rgba(212, 175, 55, 0.05);
-    --backdrop-blur: blur(12px);
-    --backdrop-blur-heavy: blur(20px);
+    --backdrop-blur: blur(8px);
+    --backdrop-blur-heavy: blur(12px);
 
     /* --- Text Colors --- */
     --text-primary: #F5F5F5;
@@ -63,9 +63,9 @@
     --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.4);
     --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
 
-    --glow-primary: 0 0 15px rgba(212, 175, 55, 0.25);
+    --glow-primary: 0 0 8px rgba(212, 175, 55, 0.15);
     /* Gold Glow */
-    --glow-text: 0 0 5px rgba(212, 175, 55, 0.1);
+    --glow-text: none;
 
     /* --- Syntax Highlighting --- */
     --syntax-key: #D4AF37;

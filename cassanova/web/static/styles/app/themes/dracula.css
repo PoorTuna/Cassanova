@@ -33,7 +33,7 @@
     --glass-border: rgba(189, 147, 249, 0.3);
     --glass-border-light: rgba(255, 121, 198, 0.3);
     --glass-shine: rgba(255, 255, 255, 0.05);
-    --backdrop-blur: blur(12px);
+    --backdrop-blur: blur(8px);
 
     /* --- Text Colors --- */
     --text-primary: #f8f8f2;
@@ -68,8 +68,8 @@
     --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.6);
     --shadow-lg: 0 12px 24px rgba(0, 0, 0, 0.7);
 
-    --glow-primary: 0 0 10px rgba(189, 147, 249, 0.3);
-    --glow-text: 0 0 5px rgba(248, 248, 242, 0.1);
+    --glow-primary: 0 0 6px rgba(189, 147, 249, 0.18);
+    --glow-text: none;
 
     /* --- Syntax (Dracula Official) --- */
     --syntax-key: #ff79c6;

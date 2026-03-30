@@ -4,9 +4,9 @@ section {
             var(--bg-panel) 100%);
     border: 1px solid var(--bg-hover);
     box-shadow: var(--shadow-md);
-    border-radius: 12px;
+    border-radius: 10px;
     padding: 1rem;
-    margin-bottom: 2.5rem;
+    margin-bottom: 1.5rem;
 }
 
 h2 {
@@ -65,7 +65,7 @@ button:hover {
 .btn-primary,
 .btn-primary-sm {
     background: var(--color-primary);
-    color: #000;
+    color: var(--text-on-primary, #000);
     border: none;
     cursor: pointer;
     text-decoration: none;
@@ -73,20 +73,20 @@ button:hover {
     align-items: center;
     gap: 8px;
     font-family: inherit;
-    font-weight: 700;
+    font-weight: 600;
     font-size: 0.95rem;
-    padding: 0.75rem 1.8rem;
-    border-radius: 12px;
+    padding: 0.6rem 1.4rem;
+    border-radius: 8px;
     transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-    box-shadow: 0 8px 16px rgba(var(--color-primary-rgb, 0, 229, 255), 0.2);
+    box-shadow: 0 2px 6px rgba(var(--color-primary-rgb, 0, 229, 255), 0.15);
 }
 
 .btn-primary:hover,
 .btn-primary-sm:hover {
     background: var(--color-primary-hover, var(--color-primary));
-    transform: translateY(-2px);
-    filter: brightness(1.1);
-    box-shadow: 0 12px 24px rgba(var(--color-primary-rgb, 0, 229, 255), 0.35);
+    transform: translateY(-1px);
+    filter: brightness(1.05);
+    box-shadow: 0 4px 12px rgba(var(--color-primary-rgb, 0, 229, 255), 0.25);
 }
 
 .btn-outline {
@@ -96,22 +96,20 @@ button:hover {
     text-decoration: none;
     cursor: pointer;
     font-family: inherit;
-    padding: 0.75rem 1.5rem;
-    border-radius: 12px;
-    font-weight: 700;
+    padding: 0.6rem 1.4rem;
+    border-radius: 8px;
+    font-weight: 600;
     font-size: 0.95rem;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: 10px;
-    cursor: pointer;
     transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .btn-outline:hover {
     background: rgba(255, 255, 255, 0.08);
     border-color: var(--color-primary);
-    transform: translateY(-1px);
 }
 
 .btn-danger {
@@ -120,19 +118,19 @@ button:hover {
     border: none;
     text-decoration: none;
     font-family: inherit;
-    padding: 0.75rem 1.8rem;
-    border-radius: 12px;
-    font-weight: 700;
+    padding: 0.6rem 1.4rem;
+    border-radius: 8px;
+    font-weight: 600;
     cursor: pointer;
     transition: all 0.2s;
     font-size: 0.95rem;
-    box-shadow: 0 8px 16px rgba(255, 68, 68, 0.2);
+    box-shadow: 0 2px 6px rgba(255, 68, 68, 0.15);
 }
 
 .btn-danger:hover {
     background: #ff5555;
-    transform: translateY(-2px);
-    box-shadow: 0 12px 24px rgba(255, 68, 68, 0.4);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(255, 68, 68, 0.25);
 }
 
 .btn-danger:active {
@@ -148,8 +146,8 @@ button:hover {
     font-family: inherit;
     font-weight: 600;
     font-size: 0.9rem;
-    padding: 0.75rem 1.5rem;
-    border-radius: 12px;
+    padding: 0.6rem 1.4rem;
+    border-radius: 8px;
     transition: all 0.2s;
     height: auto;
     width: auto;
@@ -172,8 +170,8 @@ button:hover {
     text-decoration: none;
     cursor: pointer;
     font-family: inherit;
-    padding: 0.75rem 1.5rem;
-    border-radius: 12px;
+    padding: 0.6rem 1.4rem;
+    border-radius: 8px;
     font-weight: 600;
     transition: all 0.2s;
 }
@@ -187,13 +185,13 @@ button:hover {
 .form-grid {
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
+    gap: 1.25rem;
 }
 
 .form-group {
     display: flex;
     flex-direction: column;
-    gap: 0.75rem;
+    gap: 0.5rem;
 }
 
 .form-group label {
@@ -208,8 +206,8 @@ button:hover {
 .form-group select {
     background: rgba(0, 0, 0, 0.6);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 12px;
-    padding: 1rem 1.25rem;
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
     color: #fff;
     font-family: inherit;
     font-size: 1rem;
@@ -221,7 +219,7 @@ button:hover {
 .form-group input:focus {
     border-color: var(--color-primary);
     background: rgba(0, 0, 0, 0.8);
-    box-shadow: 0 0 0 4px rgba(0, 229, 255, 0.1);
+    box-shadow: 0 0 0 3px rgba(var(--color-primary-rgb, 0, 229, 255), 0.1);
 }
 
 /* --- Detail Sections --- */
@@ -229,8 +227,8 @@ button:hover {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 2.5rem;
-    padding-bottom: 1.5rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
     border-bottom: 1px solid var(--glass-border);
 }
 
@@ -241,8 +239,8 @@ button:hover {
 }
 
 .detail-header h3 {
-    font-size: 2.2rem;
-    font-weight: 800;
+    font-size: 1.6rem;
+    font-weight: 700;
     margin: 0;
     color: var(--color-primary);
     letter-spacing: -0.05em;
@@ -252,14 +250,14 @@ button:hover {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 1.25rem;
-    margin-bottom: 2.5rem;
+    margin-bottom: 1.5rem;
 }
 
 .detail-card {
     background: rgba(255, 255, 255, 0.02);
     border: 1px solid var(--glass-border);
-    border-radius: 16px;
-    padding: 1.25rem;
+    border-radius: 10px;
+    padding: 1rem;
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
@@ -280,7 +278,7 @@ button:hover {
 }
 
 .detail-section {
-    margin-bottom: 3rem;
+    margin-bottom: 2rem;
 }
 
 .detail-section h4 {
@@ -315,7 +313,7 @@ button:hover {
 
 /* --- Dropdowns --- */
 .dropdown-menu {
-    border-radius: 16px;
+    border-radius: 10px;
     background: var(--glass-surface);
     backdrop-filter: blur(12px);
     padding: 8px;
@@ -350,7 +348,6 @@ button:hover {
 .dropdown-menu a:hover {
     background: var(--glass-surface-hover);
     color: var(--color-primary);
-    transform: translateX(2px);
 }
 
 .dropdown-menu button.danger:hover {

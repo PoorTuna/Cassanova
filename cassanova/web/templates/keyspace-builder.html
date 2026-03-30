@@ -1,9 +1,9 @@
 {% extends "base.html" %}
 
 {% block title %}Keyspace Builder - Cassanova{% endblock %}
+{% block breadcrumbs %}<a href="/">Clusters</a><span class="bc-sep">/</span><a href="/cluster/{{ cluster_config_entry }}">{{ cluster_config_entry }}</a><span class="bc-sep">/</span><span class="bc-current">Keyspace Builder</span>{% endblock %}
 
 {% block head_extra %}
-<link rel="stylesheet" href="/static/styles/app/table-builder.css">
 <style>
     /* Specific adjustments for Keyspace Builder */
     .datacenter-row {

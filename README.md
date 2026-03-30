@@ -30,7 +30,8 @@ Built with Python (FastAPI), it provides cluster monitoring, data exploration, a
 ### Core Capabilities
 - **Cluster Monitoring**: Node status, VNode distribution, and Token Range maps.
 - **Multi-Cluster Support**: Manage multiple Cassandra clusters from a single dashboard.
-- **Theming**: Includes Dark and Light themes.
+- **Theming**: 11 built-in themes with a quick-switch palette in the user menu.
+- **Navigation**: Top bar with breadcrumbs, global search across clusters/keyspaces/tables, and keyboard shortcut (Ctrl+K).
 
 ---
 
@@ -41,7 +42,7 @@ To run Cassanova using Docker:
 #### 1. Pull the image:
 
 ```bash
-docker pull poortuna/cassanova:v1.7.0
+docker pull poortuna/cassanova:v1.8.0
 ```
 
 #### 2. Create a configuration file:
@@ -102,7 +103,7 @@ Create a `cassanova.json` file. This includes the `auth` section:
 docker run -p 8080:8080 \
   -e CASSANOVA_CONFIG_PATH=/config/cassanova.json \
   -v $(pwd)/cassanova.json:/config/cassanova.json \
-  poortuna/cassanova:v1.7.0
+  poortuna/cassanova:v1.8.0
 ```
 
 > **Note**: Ensure your Cassandra nodes are reachable from within the container.

@@ -1,9 +1,9 @@
 {% extends "base.html" %}
 
 {% block title %}Explorer: {{ table_name }} - Cassanova{% endblock %}
+{% block breadcrumbs %}<a href="/">Clusters</a><span class="bc-sep">/</span><a href="/cluster/{{ cluster_config_entry }}">{{ cluster_config_entry }}</a><span class="bc-sep">/</span><a href="/cluster/{{ cluster_config_entry }}/keyspace/{{ keyspace_name }}">{{ keyspace_name }}</a><span class="bc-sep">/</span><span class="bc-current">{{ table_name }}</span>{% endblock %}
 
 {% block head_extra %}
-<link rel="stylesheet" href="/static/styles/app/explorer.css">
 <script src="/static/scripts/app/explorer.js" defer></script>
 {% endblock %}
 
@@ -14,11 +14,6 @@
     data-columns="{{ columns | tojson | forceescape }}">
 
     <header class="explorer-header">
-        <div class="breadcrumb">
-            <a href="/cluster/{{ cluster_config_entry }}/keyspace/{{ keyspace_name }}">{{ keyspace_name }}</a>
-            <span class="separator">/</span>
-            <span class="active">{{ table_name }}</span>
-        </div>
         <h1>Data Explorer</h1>
         <div id="expensive-query-warning" class="warning-alert hidden">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">

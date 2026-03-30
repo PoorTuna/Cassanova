@@ -1,10 +1,7 @@
 {% extends "base.html" %}
 
 {% block title %}User Management — {{ cluster_name }}{% endblock %}
-
-{% block head_extra %}
-<link href="/static/styles/app/users.css" rel="stylesheet" />
-{% endblock %}
+{% block breadcrumbs %}<a href="/">Clusters</a><span class="bc-sep">/</span><span class="bc-current">Users</span>{% endblock %}
 
 {% block content %}
 <main class="with-sidebar">

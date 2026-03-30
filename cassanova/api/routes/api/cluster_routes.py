@@ -28,6 +28,11 @@ def _invalidate_schema_cache(cluster_name: str, session: Any = None) -> None:
         session.cluster.refresh_schema_metadata()
 
 
+@cluster_router.get("/cluster-keys")
+def get_cluster_keys() -> list[str]:
+    return list(clusters_config.clusters.keys())
+
+
 @cluster_router.get("/clusters")
 def get_clusters() -> list[dict[str, Any]]:
     return [get_cluster_safe(cluster_name) for cluster_name in clusters_config.clusters]

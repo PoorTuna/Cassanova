@@ -67,7 +67,7 @@ aside h2 {
     margin-bottom: 1.5rem;
     background: rgba(255, 255, 255, 0.02);
     border: 1px solid var(--glass-border);
-    border-radius: 12px;
+    border-radius: 8px;
     padding: 1rem;
     transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
@@ -89,7 +89,6 @@ aside h2 {
 
 .node-header:hover {
     color: var(--color-primary-hover);
-    text-shadow: 0 0 10px var(--color-primary-light);
 }
 
 .vnode-list {
@@ -119,7 +118,7 @@ aside h2 {
 
 #node-filter {
     padding: 0.85rem 1.25rem;
-    border-radius: 14px;
+    border-radius: 8px;
     border: 1px solid var(--glass-border);
     background: var(--bg-hover-active);
     color: var(--text-primary);
@@ -132,7 +131,7 @@ aside h2 {
 #node-filter:focus {
     outline: none;
     border-color: var(--color-primary);
-    box-shadow: 0 0 20px rgba(var(--color-primary-rgb), 0.15);
+    box-shadow: 0 0 4px rgba(var(--color-primary-rgb), 0.15);
 }
 
 .arc.highlight {

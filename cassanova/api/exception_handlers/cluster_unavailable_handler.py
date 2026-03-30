@@ -5,9 +5,8 @@ from cassandra.cluster import NoHostAvailable
 from fastapi import FastAPI
 from fastapi.requests import Request
 from starlette.responses import Response
-from starlette.templating import Jinja2Templates
 
-templates = Jinja2Templates(directory="web/templates")
+from cassanova.web.template_config import templates
 
 
 def add_cluster_unavailable_exceptions(app: FastAPI) -> None:

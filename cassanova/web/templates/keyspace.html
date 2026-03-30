@@ -1,10 +1,11 @@
 {% extends "base.html" %}
 
 {% block title %}Keyspace: {{ keyspace.name }}{% endblock %}
+{% block breadcrumbs %}<a href="/">Clusters</a><span class="bc-sep">/</span><a href="/cluster/{{ cluster_config_entry }}">{{ cluster_config_entry }}</a><span class="bc-sep">/</span><span class="bc-current">{{ keyspace.name }}</span>{% endblock %}
 
 {% block head_extra %}
 <link href="/static/scripts/vendor/vis/vis-network.min.css" rel="stylesheet" />
-<link href="/static/styles/app/main.css" rel="stylesheet">
+<link rel="preload" href="/static/scripts/vendor/vis/vis-network.min.js" as="script" />
 <script>
     const clusterName = "{{ cluster_config_entry }}";
     const keyspaceName = "{{ keyspace.name }}";

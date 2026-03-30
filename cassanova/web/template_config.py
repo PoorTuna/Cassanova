@@ -1,3 +1,4 @@
+import time
 from datetime import datetime
 
 from fastapi.templating import Jinja2Templates
@@ -13,13 +14,9 @@ def register_context_processors() -> None:
     """Register global context processors for all templates."""
     config = get_clusters_config()
 
-    # Add current_year to globals
     templates.env.globals["current_year"] = datetime.now().year
-
-    # Feature flags
+    templates.env.globals["cache_bust"] = str(int(time.time()))
     templates.env.globals["node_recovery_enabled"] = config.k8s.node_recovery.enabled
-
-    # RBAC Helper
     templates.env.globals["check_permission"] = check_permission
 
 

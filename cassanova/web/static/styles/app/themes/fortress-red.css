@@ -29,7 +29,7 @@
     --glass-border: rgba(255, 255, 255, 0.1);
     --glass-border-light: rgba(184, 56, 59, 0.3);
     --glass-shine: rgba(255, 255, 255, 0.02);
-    --backdrop-blur: blur(5px);
+    --backdrop-blur: blur(3px);
     /* Less blur, more solid */
 
     /* --- Text Colors --- */

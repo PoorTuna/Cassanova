@@ -4,7 +4,10 @@ from logging import getLogger
 from fastapi import FastAPI
 from kubernetes import client
 from kubernetes import config as k8s_config
+from starlette.middleware.gzip import GZipMiddleware
+from starlette.responses import Response
 from starlette.staticfiles import StaticFiles
+from starlette.types import Scope
 
 from cassanova.api.exception_handlers.auth_handler import add_auth_exception_handler
 from cassanova.api.exception_handlers.cluster_unavailable_handler import (
@@ -30,11 +33,22 @@ from cassanova.middleware.tls_middleware import (
 
 logger = getLogger(__name__)
 
+_STATIC_CACHE_MAX_AGE = 60 * 60 * 24 * 30  # 30 days
+
+
+class CachedStaticFiles(StaticFiles):
+    async def get_response(self, path: str, scope: Scope) -> Response:
+        response = await super().get_response(path, scope)
+        if response.status_code == 200:
+            response.headers["Cache-Control"] = f"public, max-age={_STATIC_CACHE_MAX_AGE}"
+        return response
+
 
 def bootstrap_app(app: FastAPI, app_config: APPConfig) -> None:
     __load_static_files(app)
     __setup_tls_middleware(app, app_config.tls)
     app.add_middleware(AuthMiddleware)
+    app.add_middleware(GZipMiddleware, minimum_size=500)
     __add_routers(app, app_config.routers)
     __add_exception_handlers(app)
     __setup_k8s_clients(app)
@@ -52,7 +66,16 @@ def __add_routers(app: FastAPI, routers: list[str]) -> None:
 
 
 def __load_static_files(app: FastAPI) -> None:
-    app.mount("/static", StaticFiles(directory="web/static"), name="static")
+    _build_css_bundle()
+    app.mount("/static", CachedStaticFiles(directory="web/static"), name="static")
+
+
+def _build_css_bundle() -> None:
+    try:
+        from cassanova.web.build_css import build
+        build()
+    except Exception as e:
+        logger.warning(f"CSS bundle build failed, falling back to unbundled: {e}")
 
 
 def __add_exception_handlers(app: FastAPI) -> None:

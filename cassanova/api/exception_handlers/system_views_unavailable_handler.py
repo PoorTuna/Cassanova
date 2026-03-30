@@ -2,11 +2,9 @@ from http import HTTPStatus
 
 from fastapi import FastAPI, Request
 from starlette.responses import Response
-from starlette.templating import Jinja2Templates
 
 from cassanova.exceptions.system_views_unavailable import SystemViewsUnavailableException
-
-templates = Jinja2Templates(directory="web/templates")
+from cassanova.web.template_config import templates
 
 
 def add_system_views_unavailable_exception_handler(app: FastAPI) -> None:

@@ -7,7 +7,12 @@ logger = logging.getLogger(__name__)
 
 
 def build_uvicorn_config(app: Any, app_config: APPConfig) -> dict[str, Any]:
-    config = {"app": app, "host": app_config.host, "port": app_config.port}
+    config: dict[str, Any] = {
+        "app": app,
+        "host": app_config.host,
+        "port": app_config.port,
+        "timeout_keep_alive": 30,
+    }
 
     if app_config.tls.enabled:
         _configure_tls(config, app_config)
