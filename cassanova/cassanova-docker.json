@@ -1,0 +1,15 @@
+{
+  "app_config": {
+    "host": "0.0.0.0",
+    "port": 8181,
+    "routers": ["cassanova_ui_router", "cassanova_api_router"],
+    "tls": { "enabled": false }
+  },
+  "auth": { "enabled": false },
+  "clusters": {
+    "local": {
+      "contact_points": ["cassandra"],
+      "port": 9042
+    }
+  }
+}

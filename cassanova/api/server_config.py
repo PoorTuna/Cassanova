@@ -1,30 +1,18 @@
 import logging
-import os
-import sys
 from typing import Any
 
 from cassanova.config.app_config import APPConfig
 
 logger = logging.getLogger(__name__)
 
-_DEFAULT_WORKERS = min(os.cpu_count() or 1, 4)
-
 
 def build_uvicorn_config(app: Any, app_config: APPConfig) -> dict[str, Any]:
-    workers = _DEFAULT_WORKERS if sys.platform != "win32" else 1
-
     config: dict[str, Any] = {
-        "app": "cassanova.run:app" if workers > 1 else app,
+        "app": app,
         "host": app_config.host,
         "port": app_config.port,
-        "workers": workers,
         "timeout_keep_alive": 30,
     }
-
-    if workers > 1:
-        logger.info(f"Running with {workers} workers")
-    else:
-        logger.info("Running single worker (Windows or single-core)")
 
     if app_config.tls.enabled:
         _configure_tls(config, app_config)

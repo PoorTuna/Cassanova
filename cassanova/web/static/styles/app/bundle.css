@@ -1787,8 +1787,6 @@ button {
     font-family: var(--font-body);
 }
 
-/* === Header (moved to topbar) === */
-
 /* === Navigation === */
 .sidebar-nav {
     display: flex;
@@ -1842,8 +1840,6 @@ button {
 .sidebar-link.active .icon {
     stroke: var(--color-primary);
 }
-
-/* === Theme Selector (moved to topbar) === */
 
 /* === Refresh Selector === */
 .refresh-selector {
@@ -1943,7 +1939,6 @@ button {
 .sidebar-link.disconnect:hover {
     background: rgba(var(--color-danger-rgb), 0.1);
     color: var(--color-danger);
-    box-shadow: 0 0 15px rgba(var(--color-danger-rgb), 0.2);
 }
 
 /* === Collapsed State === */
@@ -1991,7 +1986,7 @@ body:has(.sidebar.collapsed) main.with-sidebar,
     border: 1px solid var(--color-primary);
 }
 
-/* === Theme/User (moved to topbar) === */
+
 /* === animations.css === */
 .fade-in {
     animation: fadeIn 0.5s ease-in both;
