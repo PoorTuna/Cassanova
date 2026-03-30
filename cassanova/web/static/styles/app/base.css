@@ -106,7 +106,7 @@ a:hover {
 main {
     padding: 1.5rem 2rem;
     margin: 0;
-    min-height: calc(100vh - 48px);
+    min-height: 100vh;
     box-sizing: border-box;
     transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -160,6 +160,11 @@ footer {
     color: var(--text-muted);
     font-size: 0.8rem;
     opacity: 0.6;
+    margin-left: 260px;
+}
+
+body:has(.sidebar.collapsed) footer {
+    margin-left: 80px;
     border-top: 1px solid var(--glass-border);
 }
 
