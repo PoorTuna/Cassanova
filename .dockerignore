@@ -35,6 +35,9 @@ docker-compose.yml
 *.log
 *.sqlite
 
+# Helm Charts
+charts/
+
 # Documentation (Optional, saves space)
 ROLES.md
 CODE_OF_CONDUCT.md
