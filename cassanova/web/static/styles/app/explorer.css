@@ -11,25 +11,6 @@
     margin-bottom: 2rem;
 }
 
-.breadcrumb {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-size: 0.9rem;
-    color: var(--text-secondary);
-    margin-bottom: 0.5rem;
-}
-
-.breadcrumb a {
-    color: var(--color-primary);
-    text-decoration: none;
-    transition: color 0.2s;
-}
-
-.breadcrumb a:hover {
-    color: var(--color-primary-hover);
-}
-
 .explorer-header h1 {
     font-family: var(--font-display);
     font-size: 1.75rem;

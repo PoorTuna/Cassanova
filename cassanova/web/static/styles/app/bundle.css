@@ -1412,6 +1412,77 @@ button {
     box-shadow: 0 0 0 3px rgba(var(--color-primary-rgb), 0.1);
 }
 
+/* --- Search Dropdown --- */
+.search-dropdown {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0;
+    right: 0;
+    max-height: 380px;
+    overflow-y: auto;
+    background: var(--bg-surface);
+    border: 1px solid var(--glass-border);
+    border-radius: 8px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+    z-index: var(--z-dropdown);
+    padding: 0.25rem 0;
+}
+
+.search-dropdown.hidden {
+    display: none;
+}
+
+.search-category-label {
+    font-size: 0.65rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 0.6rem 0.75rem 0.25rem;
+}
+
+.search-result {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.45rem 0.75rem;
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 0.85rem;
+    cursor: pointer;
+    border-radius: 4px;
+    margin: 0 0.25rem;
+    transition: background 0.1s, color 0.1s;
+}
+
+.search-result:hover,
+.search-result.active {
+    background: var(--bg-hover);
+    color: var(--text-primary);
+}
+
+.search-result-label {
+    font-weight: 500;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.search-result-meta {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    flex-shrink: 0;
+    margin-left: 1rem;
+    font-family: var(--font-mono);
+}
+
+.search-empty {
+    padding: 1rem 0.75rem;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    text-align: center;
+}
+
 /* --- Refresh selector in topbar --- */
 .topbar .refresh-selector {
     margin-bottom: 0;
@@ -4375,25 +4446,6 @@ aside h2 {
 
 .explorer-header {
     margin-bottom: 2rem;
-}
-
-.breadcrumb {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-size: 0.9rem;
-    color: var(--text-secondary);
-    margin-bottom: 0.5rem;
-}
-
-.breadcrumb a {
-    color: var(--color-primary);
-    text-decoration: none;
-    transition: color 0.2s;
-}
-
-.breadcrumb a:hover {
-    color: var(--color-primary-hover);
 }
 
 .explorer-header h1 {
