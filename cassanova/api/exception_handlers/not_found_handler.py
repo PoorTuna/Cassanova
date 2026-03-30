@@ -3,11 +3,10 @@ from http import HTTPStatus
 from fastapi import FastAPI
 from fastapi.exception_handlers import http_exception_handler
 from fastapi.requests import Request
-from fastapi.templating import Jinja2Templates
 from starlette.exceptions import HTTPException as StarletteHTTPException
 from starlette.responses import Response
 
-templates = Jinja2Templates(directory="web/templates")
+from cassanova.web.template_config import templates
 
 
 def add_notfound_exceptions(app: FastAPI) -> None:
