@@ -18,7 +18,7 @@
     <link rel="preload" href="/static/fonts/firaCode/FiraCode-Regular.woff2" as="font" type="font/woff2" crossorigin />
     <title>{% block title %}Cassanova{% endblock %}</title>
 
-    <link rel="stylesheet" href="/static/styles/app/bundle.css" />
+    <link rel="stylesheet" href="/static/styles/app/bundle.css?v={{ cache_bust }}" />
     <script src="/static/scripts/app/escape-utils.js" defer></script>
     <script src="/static/scripts/app/toast.js" defer></script>
     <script src="/static/scripts/app/modal-utils.js" defer></script>
