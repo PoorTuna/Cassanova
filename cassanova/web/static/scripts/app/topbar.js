@@ -139,7 +139,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
             fetchPromise = (async () => {
                 try {
-                    const clusterNames = window.__clusterKeys || [];
+                    const keysRes = await fetch('/api/v1/cluster-keys');
+                    if (!keysRes.ok) return;
+                    const clusterNames = await keysRes.json();
 
                     const schemaMaps = {};
                     await Promise.allSettled(
@@ -164,7 +166,12 @@ document.addEventListener("DOMContentLoaded", () => {
             if (!query) return [];
             const q = query.toLowerCase();
 
-            const matched = searchIndex.filter(item => item.searchText.includes(q));
+            let matched = searchIndex.filter(item => item.searchText.includes(q));
+
+            // If not connected to a cluster, hide cluster-specific pages
+            if (!currentCluster) {
+                matched = matched.filter(item => item.type !== 'page' || !item.cluster);
+            }
 
             // Sort: current cluster first, then prefix matches before substring matches
             matched.sort((a, b) => {
