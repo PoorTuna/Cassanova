@@ -154,8 +154,8 @@ body.exception-page main {
     }
 }
 
-/* Footer override for exceptions pages */
-footer {
+/* Footer override for exceptions pages only */
+body.exception-page footer {
     position: absolute;
     bottom: 1.5rem;
     width: 100%;
