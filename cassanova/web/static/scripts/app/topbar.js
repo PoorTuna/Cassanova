@@ -142,7 +142,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     const clustersRes = await fetch('/api/v1/clusters');
                     if (!clustersRes.ok) return;
                     const clusters = await clustersRes.json();
-                    const clusterNames = clusters.map(c => c.name || c.cluster_name || Object.keys(c)[0]).filter(Boolean);
+                    const clusterNames = clusters.map(c => c.metrics?.name || c.name).filter(Boolean);
 
                     const schemaMaps = {};
                     await Promise.allSettled(
