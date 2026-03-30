@@ -27,8 +27,8 @@
     --glass-border: rgba(255, 255, 255, 0.08);
     --glass-border-light: rgba(255, 255, 255, 0.15);
     --glass-shine: rgba(255, 255, 255, 0.03);
-    --backdrop-blur: blur(12px);
-    --backdrop-blur-heavy: blur(20px);
+    --backdrop-blur: blur(8px);
+    --backdrop-blur-heavy: blur(12px);
 
     /* --- Text Colors --- */
     --text-primary: #ECECEC;
@@ -61,7 +61,7 @@
     --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.4);
     --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
 
-    --glow-primary: 0 0 15px rgba(0, 179, 164, 0.25);
+    --glow-primary: 0 0 8px rgba(0, 179, 164, 0.15);
     /* Teal Glow */
     --glow-text: none;
 

@@ -24,22 +24,21 @@
 }
 
 .keyspace-overview ul li {
-    background: var(--glass-surface);
-    backdrop-filter: var(--backdrop-blur);
+    background: rgba(255, 255, 255, 0.02);
     border: 1px solid var(--glass-border);
-    border-radius: 20px;
-    padding: 1.5rem;
+    border-radius: 10px;
+    padding: 1rem 1.25rem;
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
-    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .keyspace-overview ul li:hover {
-    transform: translateY(-4px);
+    transform: translateY(-1px);
     background: var(--glass-surface-hover);
     border-color: var(--color-primary-light);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    box-shadow: var(--shadow-md);
 }
 
 .keyspace-overview ul li strong {
@@ -73,10 +72,10 @@
 #table-filter {
     width: 100%;
     max-width: 100%;
-    padding: 0.85rem 1.5rem;
+    padding: 0.75rem 1.25rem;
     background: var(--glass-surface);
     border: 1px solid var(--glass-border);
-    border-radius: 14px;
+    border-radius: 8px;
     color: var(--text-primary);
     font-family: var(--font-body);
     font-size: 1rem;
@@ -100,7 +99,7 @@
     flex: 0 0 320px;
     background: rgba(0, 0, 0, 0.2);
     border: 1px solid var(--glass-border);
-    border-radius: 20px;
+    border-radius: 10px;
     padding: 0.75rem;
     overflow-y: auto;
     display: flex;
@@ -109,8 +108,8 @@
 }
 
 .keyspace-item {
-    padding: 1rem 1.25rem;
-    border-radius: 14px;
+    padding: 0.85rem 1.1rem;
+    border-radius: 8px;
     cursor: pointer;
     transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
     border: 1px solid transparent;
@@ -119,7 +118,7 @@
 
 .keyspace-item:hover {
     background: rgba(255, 255, 255, 0.04);
-    transform: translateX(4px);
+    transform: translateX(2px);
 }
 
 .keyspace-item.active {
@@ -149,10 +148,10 @@
 #table-detail {
     flex: 1 1 auto;
     background: var(--glass-surface);
-    backdrop-filter: var(--backdrop-blur);
+    backdrop-filter: blur(8px);
     border: 1px solid var(--glass-border);
-    border-radius: 24px;
-    padding: 2.5rem;
+    border-radius: 12px;
+    padding: 1.75rem;
     overflow-y: auto;
     position: relative;
     box-shadow: var(--shadow-xl);
@@ -173,7 +172,7 @@
 /* --- Glass Table --- */
 .table-frame {
     border: 1px solid var(--glass-border);
-    border-radius: 16px;
+    border-radius: 10px;
     background: rgba(0, 0, 0, 0.2);
     overflow: hidden;
     width: 100%;
@@ -205,7 +204,7 @@
 
 .status-dot.on {
     background: var(--color-primary);
-    box-shadow: 0 0 10px var(--color-primary);
+    box-shadow: 0 0 4px var(--color-primary);
 }
 
 /* --- Options Grid --- */
@@ -218,8 +217,8 @@
 .option-item {
     background: rgba(255, 255, 255, 0.02);
     border: 1px solid var(--glass-border);
-    padding: 1.25rem;
-    border-radius: 14px;
+    padding: 1rem;
+    border-radius: 8px;
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
@@ -250,7 +249,7 @@
     height: 40px;
     background: rgba(255, 255, 255, 0.02);
     border: 1px solid var(--glass-border);
-    border-radius: 12px;
+    border-radius: 8px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -266,7 +265,7 @@
 .table-options-btn:hover {
     background: var(--color-primary);
     color: #000;
-    box-shadow: 0 0 20px rgba(0, 229, 255, 0.4);
+    box-shadow: 0 2px 8px rgba(var(--color-primary-rgb, 0, 229, 255), 0.2);
 }
 
 /* --- Vis Network Graph --- */
@@ -275,7 +274,7 @@
     width: 100%;
     height: 400px;
     border: 1px solid var(--glass-border);
-    border-radius: 20px;
+    border-radius: 10px;
     background: var(--bg-inset);
     box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.8);
 }
@@ -315,8 +314,8 @@
     background: rgba(255, 255, 255, 0.03);
     border: 1px solid rgba(255, 255, 255, 0.1);
     color: var(--text-primary);
-    padding: 0.65rem 1.25rem;
-    border-radius: 10px;
+    padding: 0.55rem 1.1rem;
+    border-radius: 8px;
     font-weight: 700;
     font-size: 0.85rem;
     display: inline-flex;

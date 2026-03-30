@@ -79,7 +79,7 @@ a {
 
 a:hover {
     color: var(--color-primary-hover);
-    text-shadow: 0 0 8px var(--color-primary-light);
+    text-shadow: none;
 }
 
 /* --- Scrollbars --- */
@@ -103,7 +103,7 @@ a:hover {
 
 /* --- Layout --- */
 main {
-    padding: 2rem 3rem;
+    padding: 1.5rem 2rem;
     margin: 0;
     min-height: 100vh;
     box-sizing: border-box;
@@ -115,16 +115,16 @@ main.with-sidebar {
     margin-left: 260px;
     /* Matched to sidebar width */
     max-width: calc(100vw - 260px);
-    padding: 2rem;
+    padding: 1.25rem 1.5rem;
 }
 
 /* --- Glass Elements --- */
 .glass-panel {
     background: var(--glass-surface);
-    -webkit-backdrop-filter: var(--backdrop-blur);
-    backdrop-filter: var(--backdrop-blur);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
     border: 1px solid var(--glass-border);
-    border-radius: 16px;
+    border-radius: 10px;
     box-shadow: var(--shadow-md);
 }
 
@@ -158,7 +158,7 @@ footer {
     padding: 2rem 0;
     color: var(--text-muted);
     font-size: 0.85rem;
-    margin-top: 4rem;
+    margin-top: 2rem;
     border-top: 1px solid var(--glass-border);
 }
 

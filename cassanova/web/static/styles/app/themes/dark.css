@@ -34,8 +34,8 @@
     --glass-border: rgba(255, 255, 255, 0.06);
     --glass-border-light: rgba(255, 255, 255, 0.12);
     --glass-shine: rgba(255, 255, 255, 0.01);
-    --backdrop-blur: blur(16px);
-    --backdrop-blur-heavy: blur(24px);
+    --backdrop-blur: blur(10px);
+    --backdrop-blur-heavy: blur(14px);
 
     /* --- Text Colors --- */
     --text-primary: #e1e1e6;
@@ -69,8 +69,8 @@
     --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.4);
     --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.5);
     --shadow-lg: 0 12px 24px rgba(0, 0, 0, 0.6);
-    --glow-primary: 0 0 15px rgba(18, 135, 177, 0.08);
-    --glow-text: 0 0 8px rgba(255, 255, 255, 0.03);
+    --glow-primary: 0 0 8px rgba(18, 135, 177, 0.05);
+    --glow-text: none;
 
     /* --- Syntax Highlighting (Muted Professional) --- */
     --syntax-key: #78dce8;

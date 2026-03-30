@@ -92,8 +92,8 @@ body {
     padding: 2rem 2.5rem;
     background-color: rgba(var(--bg-main-rgb), 0.85);
     /* added RGB variable for transparency */
-    border-radius: 12px;
-    box-shadow: 0 0 30px var(--color-primary-strong)66;
+    border-radius: 8px;
+    box-shadow: 0 0 4px var(--color-primary-strong)66;
     text-align: center;
 }
 
@@ -101,7 +101,7 @@ body {
     font-size: 3rem;
     font-weight: 700;
     color: var(--color-primary-active);
-    text-shadow: 0 0 10px var(--color-primary-strong)77;
+    text-shadow: none;
     letter-spacing: 1.5px;
     margin: 0;
 }
@@ -121,7 +121,7 @@ body {
     background-color: rgba(var(--bg-app-rgb, 0, 0, 0), 0.4);
     backdrop-filter: blur(8px);
     border: 1px solid var(--glass-border-light);
-    border-radius: 12px;
+    border-radius: 8px;
     color: var(--syntax-key);
     /* High-contrast cyan */
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);

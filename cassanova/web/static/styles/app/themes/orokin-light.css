@@ -27,8 +27,8 @@
     --glass-border: rgba(212, 175, 55, 0.2);
     --glass-border-light: rgba(212, 175, 55, 0.4);
     --glass-shine: rgba(212, 175, 55, 0.1);
-    --backdrop-blur: blur(12px);
-    --backdrop-blur-heavy: blur(20px);
+    --backdrop-blur: blur(8px);
+    --backdrop-blur-heavy: blur(12px);
 
     /* --- Text Colors --- */
     --text-primary: #1A1D1F;
@@ -61,7 +61,7 @@
     --shadow-md: 0 6px 12px rgba(0, 0, 0, 0.08);
     --shadow-lg: 0 12px 24px rgba(0, 0, 0, 0.12);
 
-    --glow-primary: 0 0 15px rgba(212, 175, 55, 0.15);
+    --glow-primary: 0 0 8px rgba(212, 175, 55, 0.09);
     /* Soft Gold Glow */
     --glow-text: none;
 

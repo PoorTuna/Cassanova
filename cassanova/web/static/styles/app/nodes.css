@@ -24,7 +24,7 @@
     padding: 0.75rem 1.25rem;
     background: var(--glass-surface);
     border: 1px solid var(--glass-border);
-    border-radius: 12px;
+    border-radius: 8px;
     color: var(--text-primary);
     font-size: 0.9rem;
     transition: all 0.3s;
@@ -34,7 +34,7 @@
 #node-filter:focus {
     outline: none;
     border-color: var(--color-primary);
-    box-shadow: 0 0 15px rgba(0, 229, 255, 0.2);
+    box-shadow: 0 0 0 3px rgba(var(--color-primary-rgb, 0, 229, 255), 0.1);
     background: rgba(0, 0, 0, 0.4);
 }
 
@@ -42,7 +42,7 @@
     padding: 0.75rem 1.5rem;
     background: rgba(255, 255, 255, 0.02);
     border: 1px solid var(--glass-border);
-    border-radius: 12px;
+    border-radius: 8px;
     color: var(--text-primary);
     font-weight: 700;
     font-size: 0.85rem;
@@ -56,7 +56,7 @@
     background: var(--color-primary);
     color: #000;
     border-color: var(--color-primary);
-    box-shadow: 0 0 20px rgba(0, 229, 255, 0.3);
+    box-shadow: 0 2px 8px rgba(var(--color-primary-rgb, 0, 229, 255), 0.2);
 }
 
 /* --- Layout Container (Master-Detail) --- */
@@ -72,7 +72,7 @@
     flex: 0 0 320px;
     background: rgba(0, 0, 0, 0.2);
     border: 1px solid var(--glass-border);
-    border-radius: 20px;
+    border-radius: 10px;
     padding: 0.75rem;
     overflow-y: auto;
     display: flex;
@@ -81,8 +81,8 @@
 }
 
 .node-item {
-    padding: 1rem 1.25rem;
-    border-radius: 14px;
+    padding: 0.85rem 1.1rem;
+    border-radius: 8px;
     cursor: pointer;
     transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
     border: 1px solid transparent;
@@ -94,7 +94,7 @@
 
 .node-item:hover {
     background: rgba(255, 255, 255, 0.04);
-    transform: translateX(4px);
+    transform: translateX(2px);
 }
 
 .node-item.active {
@@ -123,10 +123,10 @@
 #node-detail {
     flex: 1;
     background: var(--glass-surface);
-    backdrop-filter: var(--backdrop-blur);
+    backdrop-filter: blur(8px);
     border: 1px solid var(--glass-border);
-    border-radius: 24px;
-    padding: 2.5rem;
+    border-radius: 12px;
+    padding: 1.75rem;
     overflow-y: auto;
     box-shadow: var(--shadow-xl);
 }
@@ -154,8 +154,8 @@
 .token-box,
 .schema-box {
     background: var(--bg-inset);
-    padding: 1.5rem;
-    border-radius: 16px;
+    padding: 1.25rem;
+    border-radius: 10px;
     border: 1px solid var(--glass-border);
     color: var(--text-secondary);
     font-family: var(--font-mono);
