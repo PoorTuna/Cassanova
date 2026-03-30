@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 
 {% block title %}Cluster: {{ cluster_name }} - VNode Distribution{% endblock %}
+{% block breadcrumbs %}<a href="/">Clusters</a><span class="bc-sep">/</span><a href="/cluster/{{ cluster_config_entry }}">{{ cluster_config_entry }}</a><span class="bc-sep">/</span><span class="bc-current">VNodes</span>{% endblock %}
 
 {% block head_extra %}
 <script src="/static/scripts/vendor/d3/d3.v7.min.js" defer></script>

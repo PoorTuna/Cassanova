@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 
 {% block title %}{{ cluster_name }} - CQL DevTools{% endblock %}
+{% block breadcrumbs %}<a href="/">Clusters</a><span class="bc-sep">/</span><a href="/cluster/{{ cluster_config_entry }}">{{ cluster_config_entry }}</a><span class="bc-sep">/</span><span class="bc-current">CQL Shell</span>{% endblock %}
 
 {% block body_class %}cql-devtools with-sidebar{% endblock %}
 

@@ -23,6 +23,7 @@
     <script src="/static/scripts/app/toast.js" defer></script>
     <script src="/static/scripts/app/modal-utils.js" defer></script>
     <script src="/static/scripts/app/sidebar.js" defer></script>
+    <script src="/static/scripts/app/topbar.js" defer></script>
     <script src="/static/scripts/app/auto-refresh.js" defer></script>
     <script src="/static/scripts/app/copy-utils.js" defer></script>
     <script src="/static/scripts/app/syntax.js" defer></script>
@@ -30,6 +31,85 @@
 </head>
 
 <body class="{% block body_class %}{% endblock %}">
+
+    <!-- Top Navigation Bar -->
+    <header class="topbar">
+        <div class="topbar-left">
+            <button class="sidebar-toggle" aria-label="Toggle sidebar">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+            </button>
+            <a href="/" class="topbar-brand">
+                <img src="/static/icons/logo/cassanova-logo.png" alt="Cassanova" class="topbar-logo" />
+                <span class="topbar-title">Cassanova</span>
+            </a>
+            <nav class="topbar-breadcrumbs" aria-label="Breadcrumb">
+                {% block breadcrumbs %}{% endblock %}
+            </nav>
+        </div>
+        <div class="topbar-right">
+            <div class="topbar-search-wrapper">
+                <svg class="topbar-search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+                <input type="text" class="topbar-search" placeholder="Search..." aria-label="Search" />
+            </div>
+
+            {% if cluster_config_entry %}
+            {% include "components/refresh-selector.html" %}
+            {% endif %}
+
+            {% if request.state.user %}
+            <div class="topbar-user" id="topbar-user">
+                <button class="topbar-user-btn" id="topbar-user-btn" aria-label="User menu">
+                    <span class="topbar-avatar">{{ request.state.user.username | first | upper }}</span>
+                </button>
+                <div class="topbar-user-dropdown hidden" id="topbar-user-dropdown">
+                    <div class="topbar-dropdown-header">
+                        <div class="topbar-dropdown-avatar">{{ request.state.user.username | first | upper }}</div>
+                        <div class="topbar-dropdown-info">
+                            <div class="topbar-dropdown-name">{{ request.state.user.username }}</div>
+                            <div class="topbar-dropdown-role">{{ request.state.user.roles[0] if request.state.user.roles else 'User' }}</div>
+                        </div>
+                    </div>
+                    <div class="topbar-dropdown-divider"></div>
+                    <div class="topbar-dropdown-section">
+                        <div class="topbar-dropdown-label">Theme</div>
+                        <div class="topbar-theme-grid" id="topbar-theme-grid">
+                            <button class="topbar-theme-dot" data-theme="dark" title="Dark"><span class="theme-preview dark"></span></button>
+                            <button class="topbar-theme-dot" data-theme="light" title="Light"><span class="theme-preview light"></span></button>
+                            <button class="topbar-theme-dot" data-theme="dracula" title="Dracula"><span class="theme-preview dracula"></span></button>
+                            <button class="topbar-theme-dot" data-theme="cubic" title="Cubic"><span class="theme-preview cubic"></span></button>
+                            <button class="topbar-theme-dot" data-theme="neon-punk" title="Neon Punk"><span class="theme-preview neon-punk"></span></button>
+                            <button class="topbar-theme-dot" data-theme="kibana-dark" title="Kibana Dark"><span class="theme-preview kibana-dark"></span></button>
+                            <button class="topbar-theme-dot" data-theme="kibana-light" title="Kibana Light"><span class="theme-preview kibana-light"></span></button>
+                            <button class="topbar-theme-dot" data-theme="orokin-dark" title="Orokin Dark"><span class="theme-preview orokin-dark"></span></button>
+                            <button class="topbar-theme-dot" data-theme="orokin-light" title="Orokin Light"><span class="theme-preview orokin-light"></span></button>
+                            <button class="topbar-theme-dot" data-theme="fortress-blue" title="Fortress Blue"><span class="theme-preview fortress-blue"></span></button>
+                            <button class="topbar-theme-dot" data-theme="fortress-red" title="Fortress Red"><span class="theme-preview fortress-red"></span></button>
+                        </div>
+                    </div>
+                    <div class="topbar-dropdown-divider"></div>
+                    <a href="/logout" class="topbar-dropdown-item topbar-dropdown-danger">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                            <polyline points="16 17 21 12 16 7"></polyline>
+                            <line x1="21" y1="12" x2="9" y2="12"></line>
+                        </svg>
+                        Sign out
+                    </a>
+                </div>
+            </div>
+            {% else %}
+            <a href="/login" class="topbar-login-link">Sign in</a>
+            {% endif %}
+        </div>
+    </header>
+
     {% if cluster_config_entry %}
     {% include "components/sidebar.html" %}
     {% else %}

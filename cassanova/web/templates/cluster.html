@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 
 {% block title %}Cluster: {{ cluster.metrics.name }}{% endblock %}
+{% block breadcrumbs %}<a href="/">Clusters</a><span class="bc-sep">/</span><span class="bc-current">{{ cluster_config_entry }}</span>{% endblock %}
 
 {% block head_extra %}
 <link href="/static/scripts/vendor/vis/vis-network.min.css" rel="stylesheet" />

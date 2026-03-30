@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 
 {% block title %}Explorer: {{ table_name }} - Cassanova{% endblock %}
+{% block breadcrumbs %}<a href="/">Clusters</a><span class="bc-sep">/</span><a href="/cluster/{{ cluster_config_entry }}">{{ cluster_config_entry }}</a><span class="bc-sep">/</span><a href="/cluster/{{ cluster_config_entry }}/keyspace/{{ keyspace_name }}">{{ keyspace_name }}</a><span class="bc-sep">/</span><span class="bc-current">{{ table_name }}</span>{% endblock %}
 
 {% block head_extra %}
 <script src="/static/scripts/app/explorer.js" defer></script>

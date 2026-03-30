@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 
 {% block title %}Nodes — {{ cluster_name }}{% endblock %}
+{% block breadcrumbs %}<a href="/">Clusters</a><span class="bc-sep">/</span><a href="/cluster/{{ cluster_config_entry }}">{{ cluster_config_entry }}</a><span class="bc-sep">/</span><span class="bc-current">Nodes</span>{% endblock %}
 
 {% block head_extra %}
 <script type="module" src="/static/scripts/app/nodes.js" defer></script>
