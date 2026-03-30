@@ -1,6 +1,9 @@
 Cassanova has been deployed.
 
-{{- if .Values.ingress.enabled }}
+{{- if .Values.route.enabled }}
+Access the UI at:
+  https://{{ .Values.route.host }}{{ .Values.route.path }}
+{{- else if .Values.ingress.enabled }}
 Access the UI at:
 {{- range .Values.ingress.hosts }}
   http{{ if $.Values.ingress.tls }}s{{ end }}://{{ .host }}

@@ -1,0 +1,43 @@
+{{- if .Values.route.enabled -}}
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: {{ include "cassanova.fullname" . }}
+  labels:
+    {{- include "cassanova.labels" . | nindent 4 }}
+  {{- with .Values.route.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  host: {{ .Values.route.host | quote }}
+  {{- if .Values.route.path }}
+  path: {{ .Values.route.path }}
+  {{- end }}
+  to:
+    kind: Service
+    name: {{ include "cassanova.fullname" . }}
+    weight: 100
+  port:
+    targetPort: http
+  {{- if .Values.route.tls.enabled }}
+  tls:
+    termination: {{ .Values.route.tls.termination }}
+    {{- if eq .Values.route.tls.termination "edge" }}
+    insecureEdgeTerminationPolicy: {{ .Values.route.tls.insecureEdgeTerminationPolicy }}
+    {{- end }}
+    {{- if .Values.route.tls.certificate }}
+    certificate: |
+      {{- .Values.route.tls.certificate | nindent 6 }}
+    {{- end }}
+    {{- if .Values.route.tls.key }}
+    key: |
+      {{- .Values.route.tls.key | nindent 6 }}
+    {{- end }}
+    {{- if .Values.route.tls.caCertificate }}
+    caCertificate: |
+      {{- .Values.route.tls.caCertificate | nindent 6 }}
+    {{- end }}
+  {{- end }}
+  wildcardPolicy: None
+{{- end }}

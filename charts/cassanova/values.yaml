@@ -108,6 +108,20 @@ ingress:
   #    hosts:
   #      - cassanova.local
 
+# -- OpenShift Route (alternative to ingress)
+route:
+  enabled: false
+  host: ""
+  path: ""
+  annotations: {}
+  tls:
+    enabled: true
+    termination: edge  # edge, passthrough, or reencrypt
+    insecureEdgeTerminationPolicy: Redirect  # Allow, Redirect, or None
+    certificate: ""
+    key: ""
+    caCertificate: ""
+
 resources: {}
   # limits:
   #   cpu: 500m
