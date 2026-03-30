@@ -139,10 +139,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             fetchPromise = (async () => {
                 try {
-                    const clustersRes = await fetch('/api/v1/clusters');
-                    if (!clustersRes.ok) return;
-                    const clusters = await clustersRes.json();
-                    const clusterNames = clusters.map(c => c.metrics?.name || c.name).filter(Boolean);
+                    const clusterNames = window.__clusterKeys || [];
 
                     const schemaMaps = {};
                     await Promise.allSettled(
