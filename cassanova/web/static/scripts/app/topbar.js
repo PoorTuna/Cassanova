@@ -139,7 +139,25 @@ document.addEventListener("DOMContentLoaded", () => {
 
             fetchPromise = (async () => {
                 try {
-                    const clusterNames = window.__clusterKeys || [];
+                    let clusterNames = window.__clusterKeys || [];
+
+                    // Fallback: if template didn't provide keys, extract from API
+                    if (clusterNames.length === 0) {
+                        try {
+                            const res = await fetch('/api/v1/clusters');
+                            if (res.ok) {
+                                const clusters = await res.json();
+                                // Config keys aren't in the API response, so extract what we can
+                                clusterNames = Object.keys(
+                                    clusters.reduce((acc, c) => {
+                                        const name = c.name || c.cluster_name;
+                                        if (name) acc[name] = true;
+                                        return acc;
+                                    }, {})
+                                );
+                            }
+                        } catch (_) { /* API unavailable */ }
+                    }
 
                     const schemaMaps = {};
                     await Promise.allSettled(

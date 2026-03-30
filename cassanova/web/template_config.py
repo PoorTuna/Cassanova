@@ -18,7 +18,10 @@ def register_context_processors() -> None:
     templates.env.globals["cache_bust"] = str(int(time.time()))
     templates.env.globals["node_recovery_enabled"] = config.k8s.node_recovery.enabled
     templates.env.globals["check_permission"] = check_permission
-    templates.env.globals["cluster_keys"] = list(config.clusters.keys())
+    def _get_cluster_keys() -> list[str]:
+        return list(get_clusters_config().clusters.keys())
+
+    templates.env.globals["get_cluster_keys"] = _get_cluster_keys
 
 
 # Call it once at module level or during bootstrap
