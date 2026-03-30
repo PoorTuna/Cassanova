@@ -19,7 +19,7 @@
     <title>{% block title %}Cassanova{% endblock %}</title>
 
     <link rel="stylesheet" href="/static/styles/app/bundle.css?v={{ cache_bust }}" />
-    <script>window.__clusterKeys = {{ cluster_keys | tojson }};</script>
+    <script>window.__clusterKeys = {{ cluster_keys | default([]) | tojson }};</script>
     <script src="/static/scripts/app/escape-utils.js" defer></script>
     <script src="/static/scripts/app/toast.js" defer></script>
     <script src="/static/scripts/app/modal-utils.js" defer></script>
