@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "{{ include "cassanova.fullname" . }}-test-api"
+  labels:
+    {{- include "cassanova.labels" . | nindent 4 }}
+  annotations:
+    "helm.sh/hook": test
+    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
+spec:
+  containers:
+    - name: curl
+      image: curlimages/curl:8.5.0
+      command: ['sh', '-c']
+      args:
+        - |
+          echo "Testing cluster-keys endpoint..."
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" http://{{ include "cassanova.fullname" . }}:{{ .Values.service.port }}/api/v1/cluster-keys)
+          echo "GET /api/v1/cluster-keys -> HTTP $STATUS"
+          [ "$STATUS" = "200" ] || exit 1
+
+          echo "Testing clusters endpoint..."
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" http://{{ include "cassanova.fullname" . }}:{{ .Values.service.port }}/api/v1/clusters)
+          echo "GET /api/v1/clusters -> HTTP $STATUS"
+          [ "$STATUS" = "200" ] || exit 1
+
+          echo "All API tests passed."
+  restartPolicy: Never

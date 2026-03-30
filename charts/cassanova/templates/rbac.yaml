@@ -1,0 +1,61 @@
+{{- if and .Values.serviceAccount.create .Values.serviceAccount.rbac.create -}}
+{{- if .Values.serviceAccount.rbac.clusterWide }}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: {{ include "cassanova.fullname" . }}
+  labels:
+    {{- include "cassanova.labels" . | nindent 4 }}
+rules:
+  - apiGroups: ["k8ssandra.io"]
+    resources: ["k8ssandraclusters"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: [""]
+    resources: ["services", "secrets"]
+    verbs: ["get", "list"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: {{ include "cassanova.fullname" . }}
+  labels:
+    {{- include "cassanova.labels" . | nindent 4 }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: {{ include "cassanova.fullname" . }}
+subjects:
+  - kind: ServiceAccount
+    name: {{ include "cassanova.serviceAccountName" . }}
+    namespace: {{ .Release.Namespace }}
+{{- else }}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: {{ include "cassanova.fullname" . }}
+  labels:
+    {{- include "cassanova.labels" . | nindent 4 }}
+rules:
+  - apiGroups: ["k8ssandra.io"]
+    resources: ["k8ssandraclusters"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: [""]
+    resources: ["services", "secrets"]
+    verbs: ["get", "list"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: {{ include "cassanova.fullname" . }}
+  labels:
+    {{- include "cassanova.labels" . | nindent 4 }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: {{ include "cassanova.fullname" . }}
+subjects:
+  - kind: ServiceAccount
+    name: {{ include "cassanova.serviceAccountName" . }}
+    namespace: {{ .Release.Namespace }}
+{{- end }}
+{{- end }}

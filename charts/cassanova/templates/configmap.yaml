@@ -1,0 +1,79 @@
+{{- if not .Values.existingSecret }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "cassanova.fullname" . }}-config
+  labels:
+    {{- include "cassanova.labels" . | nindent 4 }}
+data:
+  cassanova.json: |
+    {
+      "app_config": {
+        "host": {{ .Values.config.appConfig.host | quote }},
+        "port": {{ .Values.config.appConfig.port }},
+        "routers": {{ .Values.config.appConfig.routers | toJson }},
+        "tls": {
+          "enabled": {{ .Values.config.tls.enabled }}
+          {{- if .Values.config.tls.enabled }},
+          "cert_file": {{ .Values.config.tls.certFile | quote }},
+          "key_file": {{ .Values.config.tls.keyFile | quote }},
+          "ca_bundle": {{ .Values.config.tls.caBundle | default "" | quote }},
+          "min_tls_version": {{ .Values.config.tls.minTlsVersion | quote }},
+          "enforce_https": {{ .Values.config.tls.enforceHttps }},
+          "hsts_enabled": {{ .Values.config.tls.hstsEnabled }},
+          "hsts_max_age": {{ .Values.config.tls.hstsMaxAge }}
+          {{- end }}
+        }
+      },
+      "auth": {
+        "enabled": {{ .Values.config.auth.enabled }},
+        "secret_key": {{ .Values.config.auth.secretKey | default "insecure_default_secret_change_me" | quote }},
+        "algorithm": {{ .Values.config.auth.algorithm | quote }},
+        "session_expire_minutes": {{ .Values.config.auth.sessionExpireMinutes }},
+        "users": {{ .Values.config.auth.users | default list | toJson }},
+        "roles": {{ .Values.config.auth.roles | toJson }}
+        {{- if .Values.config.auth.ldap.enabled }},
+        "ldap": {
+          "enabled": true,
+          "server_uri": {{ .Values.config.auth.ldap.serverUri | quote }},
+          "bind_dn": {{ .Values.config.auth.ldap.bindDn | quote }},
+          "bind_password": {{ .Values.config.auth.ldap.bindPassword | quote }},
+          "base_dn": {{ .Values.config.auth.ldap.baseDn | quote }},
+          "user_search_filter": {{ .Values.config.auth.ldap.userSearchFilter | quote }},
+          "role_mapping": {{ .Values.config.auth.ldap.roleMapping | toJson }},
+          "default_roles": {{ .Values.config.auth.ldap.defaultRoles | default list | toJson }}
+        }
+        {{- end }}
+      },
+      "clusters": {
+        {{- $first := true }}
+        {{- range $name, $cluster := .Values.config.clusters }}
+        {{- if not $first }},{{ end }}
+        {{ $name | quote }}: {
+          "contact_points": {{ $cluster.contactPoints | toJson }},
+          "port": {{ $cluster.port | default 9042 }}
+          {{- if $cluster.credentials }},
+          "credentials": {
+            "username": {{ $cluster.credentials.username | quote }},
+            "password": {{ $cluster.credentials.password | quote }}
+          }
+          {{- end }}
+          {{- if $cluster.localDc }},
+          "local_dc": {{ $cluster.localDc | quote }}
+          {{- end }}
+        }
+        {{- $first = false }}
+        {{- end }}
+      },
+      "k8s": {
+        "enabled": {{ .Values.config.k8s.enabled }},
+        "namespace": {{ .Values.config.k8s.namespace | default "" | quote }},
+        "suffix": {{ .Values.config.k8s.suffix | quote }},
+        "periodic_discovery_enabled": {{ .Values.config.k8s.periodicDiscoveryEnabled }},
+        "discovery_interval_seconds": {{ .Values.config.k8s.discoveryIntervalSeconds }},
+        "node_recovery": {
+          "enabled": {{ .Values.config.k8s.nodeRecovery.enabled }}
+        }
+      }
+    }
+{{- end }}

@@ -1,0 +1,143 @@
+replicaCount: 1
+
+image:
+  repository: poortuna/cassanova
+  tag: ""  # Defaults to appVersion
+  pullPolicy: IfNotPresent
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+# -- Cassanova application configuration (rendered as cassanova.json)
+config:
+  # -- Server settings
+  appConfig:
+    host: "0.0.0.0"
+    port: 8080
+    routers:
+      - cassanova_ui_router
+      - cassanova_api_router
+
+  # -- TLS settings (requires tls.enabled in the ingress or a manually mounted cert)
+  tls:
+    enabled: false
+    certFile: ""
+    keyFile: ""
+    caBundle: ""
+    minTlsVersion: "TLSv1_2"
+    enforceHttps: true
+    hstsEnabled: true
+    hstsMaxAge: 31536000
+
+  # -- Authentication and authorization
+  auth:
+    enabled: false
+    secretKey: ""  # Required when auth.enabled=true. Use existingSecret instead for production.
+    algorithm: "HS256"
+    sessionExpireMinutes: 120
+    users: []
+    #  - username: admin
+    #    password: changeme
+    #    roles: [admin]
+    roles:
+      - name: admin
+        permissions: ["*"]
+      - name: viewer
+        permissions: ["cluster:view", "data:read"]
+    ldap:
+      enabled: false
+      serverUri: "ldap://localhost:389"
+      bindDn: ""
+      bindPassword: ""
+      baseDn: "dc=example,dc=com"
+      userSearchFilter: "(uid={username})"
+      roleMapping: {}
+      defaultRoles: []
+
+  # -- Cassandra cluster connections
+  clusters: {}
+  #  production:
+  #    contactPoints: ["cassandra-0.cassandra", "cassandra-1.cassandra"]
+  #    port: 9042
+  #    credentials:
+  #      username: cassandra
+  #      password: cassandra
+  #    localDc: dc1
+
+  # -- Kubernetes service discovery for K8ssandra clusters
+  k8s:
+    enabled: false
+    namespace: ""
+    suffix: "-service"
+    periodicDiscoveryEnabled: false
+    discoveryIntervalSeconds: 60
+    nodeRecovery:
+      enabled: false
+
+# -- Use an existing secret for sensitive values (auth secret key, cluster credentials)
+# The secret must contain a full cassanova.json under the key "cassanova.json"
+existingSecret: ""
+
+serviceAccount:
+  create: true
+  annotations: {}
+  name: ""
+  # -- Create RBAC rules for K8ssandra cluster discovery
+  rbac:
+    create: false
+    # -- Use ClusterRole (true) or namespace-scoped Role (false)
+    clusterWide: false
+
+service:
+  type: ClusterIP
+  port: 8080
+
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+  #  nginx.ingress.kubernetes.io/ssl-redirect: "true"
+  hosts:
+    - host: cassanova.local
+      paths:
+        - path: /
+          pathType: Prefix
+  tls: []
+  #  - secretName: cassanova-tls
+  #    hosts:
+  #      - cassanova.local
+
+resources: {}
+  # limits:
+  #   cpu: 500m
+  #   memory: 512Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 256Mi
+
+nodeSelector: {}
+tolerations: []
+affinity: {}
+
+podAnnotations: {}
+podLabels: {}
+podSecurityContext:
+  runAsNonRoot: true
+  runAsUser: 1000
+  fsGroup: 1000
+securityContext:
+  allowPrivilegeEscalation: false
+  readOnlyRootFilesystem: false
+  capabilities:
+    drop:
+      - ALL
+
+# -- Extra environment variables to set on the container
+extraEnv: []
+#  - name: LOG_LEVEL
+#    value: "INFO"
+
+# -- Extra volume mounts (e.g., for TLS certs, kubeconfig)
+extraVolumeMounts: []
+extraVolumes: []

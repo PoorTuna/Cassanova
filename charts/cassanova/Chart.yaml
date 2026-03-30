@@ -1,0 +1,17 @@
+apiVersion: v2
+name: cassanova
+description: Web UI for Apache Cassandra management
+type: application
+version: 1.0.0
+appVersion: "1.8.0"
+keywords:
+  - cassandra
+  - database
+  - management
+  - monitoring
+  - k8ssandra
+home: https://github.com/PoorTuna/Cassanova
+sources:
+  - https://github.com/PoorTuna/Cassanova
+maintainers:
+  - name: Oren Kessler
