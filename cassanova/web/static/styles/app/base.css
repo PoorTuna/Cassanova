@@ -103,10 +103,16 @@ a:hover {
 }
 
 /* --- Layout --- */
+.page-wrapper {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
 main {
     padding: 1.5rem 2rem;
     margin: 0;
-    min-height: 100vh;
+    flex: 1;
     box-sizing: border-box;
     transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -159,12 +165,7 @@ footer {
     padding: 1rem 0;
     color: var(--text-muted);
     font-size: 0.8rem;
-    opacity: 0.6;
-    margin-left: 260px;
-}
-
-body:has(.sidebar.collapsed) footer {
-    margin-left: 80px;
+    opacity: 0.5;
     border-top: 1px solid var(--glass-border);
 }
 

@@ -116,12 +116,13 @@
     {% else %}
     {% include "components/sidebar-disconnected.html" %}
     {% endif %}
-    {% block content %}
-    {% endblock %}
-
-    <footer>
-        <p>&copy; {{ current_year }} Oren Kessler - Cassanova</p>
-    </footer>
+    <div class="page-wrapper">
+        {% block content %}
+        {% endblock %}
+        <footer>
+            <p>&copy; {{ current_year }} Oren Kessler - Cassanova</p>
+        </footer>
+    </div>
 </body>
 
 </html>
