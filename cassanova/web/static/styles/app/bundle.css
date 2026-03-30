@@ -1077,6 +1077,10 @@ body {
     -moz-osx-font-smoothing: grayscale;
     overflow-x: hidden;
     line-height: 1.6;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    padding-top: 48px;
 }
 
 /* === Copy Utilities === */
@@ -1171,8 +1175,7 @@ a:hover {
 main {
     padding: 1.5rem 2rem;
     margin: 0;
-    margin-top: 48px;
-    min-height: calc(100vh - 48px);
+    flex: 1;
     box-sizing: border-box;
     transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -1222,10 +1225,10 @@ main.with-sidebar {
 /* --- Footer --- */
 footer {
     text-align: center;
-    padding: 2rem 0;
+    padding: 1.5rem 0;
     color: var(--text-muted);
     font-size: 0.85rem;
-    margin-top: 2rem;
+    margin-top: auto;
     border-top: 1px solid var(--glass-border);
 }
 
@@ -2456,7 +2459,7 @@ button:hover {
 }
 /* === index.css === */
 .home-container {
-    min-height: calc(100vh - 48px);
+    min-height: 100vh;
     width: 100%;
     display: flex;
     flex-direction: column;
@@ -2941,7 +2944,7 @@ button:hover {
 .keyspaces-container {
     display: flex;
     gap: 1.5rem;
-    height: calc(100vh - 18rem - 48px);
+    height: calc(100vh - 18rem);
     min-height: 500px;
     width: 100%;
 }
@@ -3395,7 +3398,7 @@ button:hover {
 /* Container adjustment for sidebar */
 .cql-devtools #container {
     display: flex;
-    height: calc(100vh - 4rem - 48px);
+    height: calc(100vh - 4rem);
     /* Header/Padding height accounted for */
     overflow: hidden;
     min-height: 0;
@@ -3831,7 +3834,7 @@ button:hover {
 .nodes-container {
     display: flex;
     gap: 1.5rem;
-    height: calc(100vh - 16rem - 48px);
+    height: calc(100vh - 16rem);
     min-height: 500px;
 }
 
@@ -3941,7 +3944,7 @@ button:hover {
 /* === vnodes.css === */
 #app {
     display: flex;
-    height: calc(100vh - 48px);
+    height: 100vh;
     overflow: hidden;
     font-family: var(--font-body);
 }
@@ -4360,7 +4363,7 @@ aside h2 {
 /* === explorer.css === */
 .explorer-page {
     padding: 2rem 3rem;
-    height: calc(100vh - 48px);
+    height: 100vh;
     display: flex;
     flex-direction: column;
     overflow: hidden;
@@ -5138,7 +5141,7 @@ aside h2 {
     display: flex;
     align-items: center;
     justify-content: center;
-    min-height: calc(100vh - 48px);
+    min-height: 100vh;
     position: relative;
     /* Context for absolute footer */
 }
@@ -5298,7 +5301,7 @@ aside h2 {
 /* === table-builder.css === */
 .builder-page {
     padding: 1.5rem 2.5rem;
-    height: calc(100vh - 48px);
+    height: 100vh;
     display: flex;
     flex-direction: column;
     overflow: hidden;

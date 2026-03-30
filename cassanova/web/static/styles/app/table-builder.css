@@ -1,6 +1,6 @@
 .builder-page {
     padding: 1.5rem 2.5rem;
-    height: calc(100vh - 48px);
+    height: 100vh;
     display: flex;
     flex-direction: column;
     overflow: hidden;

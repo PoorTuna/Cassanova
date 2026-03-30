@@ -62,7 +62,7 @@
 .keyspaces-container {
     display: flex;
     gap: 1.5rem;
-    height: calc(100vh - 18rem - 48px);
+    height: calc(100vh - 18rem);
     min-height: 500px;
     width: 100%;
 }

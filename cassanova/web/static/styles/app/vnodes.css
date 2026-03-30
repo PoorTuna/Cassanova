@@ -1,6 +1,6 @@
 #app {
     display: flex;
-    height: calc(100vh - 48px);
+    height: 100vh;
     overflow: hidden;
     font-family: var(--font-body);
 }

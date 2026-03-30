@@ -3,7 +3,7 @@
 /* Container adjustment for sidebar */
 .cql-devtools #container {
     display: flex;
-    height: calc(100vh - 4rem - 48px);
+    height: calc(100vh - 4rem);
     /* Header/Padding height accounted for */
     overflow: hidden;
     min-height: 0;

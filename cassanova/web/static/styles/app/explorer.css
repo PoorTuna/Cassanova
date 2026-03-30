@@ -1,6 +1,6 @@
 .explorer-page {
     padding: 2rem 3rem;
-    height: calc(100vh - 48px);
+    height: 100vh;
     display: flex;
     flex-direction: column;
     overflow: hidden;
