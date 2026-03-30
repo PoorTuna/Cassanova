@@ -1260,7 +1260,14 @@ button {
     align-items: center;
     gap: 0.5rem;
     min-width: 0;
-    flex: 1;
+    flex: 1 1 0;
+}
+
+/* --- Center Section (Search) --- */
+.topbar-center {
+    flex: 0 1 480px;
+    display: flex;
+    justify-content: center;
 }
 
 .topbar .sidebar-toggle {
@@ -1357,7 +1364,8 @@ button {
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    flex-shrink: 0;
+    flex: 1 1 0;
+    justify-content: flex-end;
 }
 
 /* --- Search --- */
@@ -1365,6 +1373,7 @@ button {
     position: relative;
     display: flex;
     align-items: center;
+    width: 100%;
 }
 
 .topbar-search-icon {
@@ -1376,13 +1385,13 @@ button {
 
 .topbar-search {
     background: var(--bg-hover);
-    border: 1px solid transparent;
+    border: 1px solid var(--glass-border);
     border-radius: 6px;
-    padding: 6px 10px 6px 32px;
+    padding: 7px 12px 7px 34px;
     color: var(--text-primary);
     font-family: inherit;
-    font-size: 0.8rem;
-    width: 200px;
+    font-size: 0.85rem;
+    width: 100%;
     transition: all 0.2s;
     outline: none;
 }
@@ -1394,7 +1403,6 @@ button {
 .topbar-search:focus {
     border-color: var(--color-primary);
     background: rgba(0, 0, 0, 0.3);
-    width: 280px;
     box-shadow: 0 0 0 3px rgba(var(--color-primary-rgb), 0.1);
 }
 
@@ -6168,14 +6176,14 @@ aside h2 {
     gap: 1rem;
 }
 /* === exceptions.css === */
-html,
-body {
-    margin: 0;
-    padding: 0;
-    background: var(--bg-main);
-    color: var(--text-primary);
+/* Scoped to exception pages only — prevents breaking scroll on other pages */
+body.exception-page {
     overflow: hidden;
-    height: 100vh;
+}
+
+body.exception-page main {
+    height: calc(100vh - 48px);
+    overflow: hidden;
     position: relative;
 }
 

@@ -1,11 +1,11 @@
-html,
-body {
-    margin: 0;
-    padding: 0;
-    background: var(--bg-main);
-    color: var(--text-primary);
+/* Scoped to exception pages only — prevents breaking scroll on other pages */
+body.exception-page {
     overflow: hidden;
-    height: 100vh;
+}
+
+body.exception-page main {
+    height: calc(100vh - 48px);
+    overflow: hidden;
     position: relative;
 }
 

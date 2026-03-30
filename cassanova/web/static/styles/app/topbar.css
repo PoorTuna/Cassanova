@@ -22,7 +22,14 @@
     align-items: center;
     gap: 0.5rem;
     min-width: 0;
-    flex: 1;
+    flex: 1 1 0;
+}
+
+/* --- Center Section (Search) --- */
+.topbar-center {
+    flex: 0 1 480px;
+    display: flex;
+    justify-content: center;
 }
 
 .topbar .sidebar-toggle {
@@ -119,7 +126,8 @@
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    flex-shrink: 0;
+    flex: 1 1 0;
+    justify-content: flex-end;
 }
 
 /* --- Search --- */
@@ -127,6 +135,7 @@
     position: relative;
     display: flex;
     align-items: center;
+    width: 100%;
 }
 
 .topbar-search-icon {
@@ -138,13 +147,13 @@
 
 .topbar-search {
     background: var(--bg-hover);
-    border: 1px solid transparent;
+    border: 1px solid var(--glass-border);
     border-radius: 6px;
-    padding: 6px 10px 6px 32px;
+    padding: 7px 12px 7px 34px;
     color: var(--text-primary);
     font-family: inherit;
-    font-size: 0.8rem;
-    width: 200px;
+    font-size: 0.85rem;
+    width: 100%;
     transition: all 0.2s;
     outline: none;
 }
@@ -156,7 +165,6 @@
 .topbar-search:focus {
     border-color: var(--color-primary);
     background: rgba(0, 0, 0, 0.3);
-    width: 280px;
     box-shadow: 0 0 0 3px rgba(var(--color-primary-rgb), 0.1);
 }
 
