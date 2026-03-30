@@ -51,13 +51,15 @@
             </nav>
         </div>
         <div class="topbar-center">
-            <div class="topbar-search-wrapper" data-current-cluster="{{ cluster_config_entry or '' }}">
+            {% if cluster_config_entry %}
+            <div class="topbar-search-wrapper" data-current-cluster="{{ cluster_config_entry }}">
                 <svg class="topbar-search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <circle cx="11" cy="11" r="8"></circle>
                     <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                 </svg>
                 <input type="text" class="topbar-search" placeholder="Find apps, content, and more..." aria-label="Search" />
             </div>
+            {% endif %}
         </div>
         <div class="topbar-right">
             {% if cluster_config_entry %}
