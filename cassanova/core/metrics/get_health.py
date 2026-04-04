@@ -17,7 +17,10 @@ def get_cluster_health(cluster: Cluster, session: Session) -> dict[str, int | st
 
     driver_hosts = {str(h.host_id): h for h in cluster.metadata.all_hosts()}
 
-    # system.local + system.peers_v2 is the ground truth for cluster membership
+    # system.local + system.peers_v2 is the ground truth for cluster membership.
+    # However, the two queries may hit different coordinators (especially behind
+    # a load balancer), causing one node to be absent.  The driver's discovered-
+    # host list fills that gap.
     peer_ids = set()
     try:
         for row in session.execute("SELECT host_id FROM system.local"):
@@ -25,8 +28,10 @@ def get_cluster_health(cluster: Cluster, session: Session) -> dict[str, int | st
         for row in session.execute("SELECT host_id FROM system.peers_v2"):
             peer_ids.add(str(row.host_id))
     except Exception:
-        # Fallback: just use driver hosts if system tables fail
-        peer_ids = set(driver_hosts.keys())
+        pass
+
+    # Merge in driver-known hosts so no node is missed
+    peer_ids |= set(driver_hosts.keys())
 
     total = len(peer_ids)
     up = 0

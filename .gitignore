@@ -144,3 +144,4 @@ dmypy.json
 
 cassanova/config/config-k3s
 cassanova.json
+.claude

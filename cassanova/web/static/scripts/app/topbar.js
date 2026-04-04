@@ -16,13 +16,23 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
+    // --- Theme Application (always, even on pages without the grid) ---
+    function applyTheme(theme) {
+        document.documentElement.classList.forEach(cls => {
+            if (cls.endsWith('-theme')) {
+                document.documentElement.classList.remove(cls);
+            }
+        });
+        document.documentElement.classList.add(`${theme}-theme`);
+    }
+
+    const savedTheme = localStorage.getItem('selectedTheme') || 'dark';
+    applyTheme(savedTheme);
+
     // --- Theme Switching (dot grid in user dropdown) ---
     const themeGrid = document.getElementById('topbar-theme-grid');
     if (themeGrid) {
         const dots = themeGrid.querySelectorAll('.topbar-theme-dot');
-
-        let savedTheme = localStorage.getItem('selectedTheme') || 'dark';
-        applyTheme(savedTheme);
         markActiveDot(savedTheme);
 
         dots.forEach(dot => {
@@ -40,15 +50,6 @@ document.addEventListener("DOMContentLoaded", () => {
             const active = themeGrid.querySelector(`[data-theme="${theme}"]`);
             if (active) active.classList.add('active');
         }
-    }
-
-    function applyTheme(theme) {
-        document.documentElement.classList.forEach(cls => {
-            if (cls.endsWith('-theme')) {
-                document.documentElement.classList.remove(cls);
-            }
-        });
-        document.documentElement.classList.add(`${theme}-theme`);
     }
 
     // --- Search ---

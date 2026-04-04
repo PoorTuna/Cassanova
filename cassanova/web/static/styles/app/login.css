@@ -1,11 +1,18 @@
 .login-page {
     background: var(--bg-main);
+}
+
+.login-page .topbar,
+.login-page .sidebar {
+    display: none;
+}
+
+.login-page .page-wrapper {
     display: flex;
     align-items: center;
     justify-content: center;
     min-height: 100vh;
     position: relative;
-    /* Context for absolute footer */
 }
 
 /* Fix "messed up" footer */
@@ -43,13 +50,13 @@
 .logo-circle {
     width: 80px;
     height: 80px;
-    background: var(--glass-surface);
+    background: rgba(255, 255, 255, 0.06);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-    border: 1px solid var(--glass-border);
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .logo-circle img {
@@ -66,39 +73,42 @@
 
 .login-card {
     width: 100%;
-    background: var(--glass-surface);
+    background: rgba(255, 255, 255, 0.05);
     backdrop-filter: blur(8px);
-    border: 1px solid var(--glass-border);
+    border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 12px;
     padding: 2.5rem;
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
 }
 
-/* Login form overrides */
-.form-group {
+/* Login form overrides — scoped for specificity over components.css */
+.login-page .form-group {
     margin-bottom: 1.5rem;
     gap: 0;
 }
 
-.form-group label {
+.login-page .form-group label {
     display: block;
     font-size: 0.9rem;
     margin-bottom: 0.5rem;
     color: var(--text-primary);
     text-transform: none;
     letter-spacing: normal;
+    font-weight: normal;
 }
 
-.form-group input {
+.login-page .form-group input {
     padding: 0.75rem 1rem;
-    background: rgba(0, 0, 0, 0.2);
-    border: 1px solid var(--glass-border);
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 8px;
+    color: var(--text-primary);
 }
 
-.form-group input:focus {
-    box-shadow: 0 0 0 3px rgba(var(--color-primary-rgb), 0.1);
-    background: rgba(0, 0, 0, 0.3);
+.login-page .form-group input:focus {
+    box-shadow: 0 0 0 3px rgba(var(--color-primary-rgb), 0.15);
+    border-color: var(--color-primary);
+    background: rgba(0, 0, 0, 0.4);
 }
 
 .password-wrapper {

@@ -12,53 +12,59 @@
 <main class="home-container with-sidebar">
     <canvas id="bg-particles"></canvas>
 
-    <header class="hero-header">
-        <div class="brand-group">
-            <img src="/static/icons/logo/cassanova-logo.png" class="hero-logo" alt="Cassanova Logo">
-            <h1>Cassanova</h1>
+    <header class="page-header">
+        <div class="page-header-left">
+            <h1 class="page-title">Clusters</h1>
+            <span class="cluster-count">{{ clusters | length }}</span>
         </div>
-
         <div class="search-wrapper">
-            <input type="text" id="cluster-filter" placeholder="Cluster Filter" aria-label="Filter clusters"/>
             <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <circle cx="11" cy="11" r="8"></circle>
                 <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
             </svg>
+            <input type="text" id="cluster-filter" placeholder="Filter clusters..." aria-label="Filter clusters"/>
         </div>
     </header>
 
-    <div id="cluster-grid">
+    <div id="cluster-list">
         {% for name, config in clusters.items() %}
-        <div class="cluster-hero-card cluster-row" data-name="{{ name | lower }}"
+        <div class="cluster-card cluster-row" data-name="{{ name | lower }}"
              onclick="window.location.href='/cluster/{{ name }}'">
 
-            <div class="card-main">
+            <div class="card-row">
                 <div class="cluster-icon">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
                     </svg>
                 </div>
-                <h3>{{ name }}</h3>
-                <div class="cluster-meta">
-                    <div class="meta-item">
-                        <span class="meta-label">Contact Pts</span>
-                        <span class="meta-val">{{ config.contact_points | length }}</span>
-                    </div>
-                    <div class="meta-item">
-                        <span class="meta-label">Port</span>
-                        <span class="meta-val">{{ config.port }}</span>
-                    </div>
-                </div>
-            </div>
+                <span class="cluster-name">{{ name }}</span>
 
-            <div class="card-footer">
-                <span class="contact-points">{{ config.contact_points[0] }}{% if config.contact_points | length > 1 %},
-                    ...{% endif %}</span>
+                <div class="card-meta">
+                    <span class="meta-chip">:{{ config.port }}</span>
+                    {% if config.local_dc %}
+                    <span class="meta-sep">&middot;</span>
+                    <span class="meta-chip">{{ config.local_dc }}</span>
+                    {% endif %}
+                </div>
+
+                {% if config.credentials %}
+                <span class="auth-badge" title="Authentication enabled">
+                    <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                    </svg>
+                </span>
+                {% endif %}
+
                 <div class="arrow-btn">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <polyline points="9 6 15 12 9 18"/>
                     </svg>
                 </div>
+            </div>
+
+            <div class="card-contact">
+                <span class="contact-points" title="{{ config.contact_points | join(', ') }}">{{ config.contact_points[0] }}{% if config.contact_points | length > 1 %} +{{ config.contact_points | length - 1 }} more{% endif %}</span>
             </div>
         </div>
         {% endfor %}

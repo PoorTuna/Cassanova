@@ -172,6 +172,21 @@ def get_cluster_vnodes(cluster_name: str) -> dict[str, list[dict[str, Any]]]:
             for row in rows
         ]
 
+        # The two CQL queries above may hit different coordinators,
+        # causing one node to be absent.  Back-fill from driver metadata.
+        seen_ids = {n["host_id"] for n in nodes}
+        for host in session.cluster.metadata.all_hosts():
+            hid = str(host.host_id)
+            if hid not in seen_ids:
+                addr = str(host.broadcast_rpc_address) if getattr(host, "broadcast_rpc_address", None) else str(host.address)
+                nodes.append(
+                    {
+                        "host_id": hid,
+                        "address": addr,
+                        "tokens": [int(t.value) for t in host.tokens] if host.tokens else [],
+                    }
+                )
+
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to fetch cluster vnodes: {e}") from e
 
