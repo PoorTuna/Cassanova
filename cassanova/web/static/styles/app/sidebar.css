@@ -22,49 +22,58 @@
 .sidebar-nav {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: 2px;
     flex-grow: 1;
     width: 100%;
+}
+
+.sidebar-section-label {
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-muted);
+    padding: 0.75rem 14px 0.35rem;
 }
 
 .sidebar-link {
     display: flex;
     align-items: center;
-    gap: 14px;
-    padding: 10px 14px;
+    gap: 10px;
+    padding: 7px 14px;
     color: var(--text-secondary);
     text-decoration: none;
-    border-radius: 8px;
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 6px;
+    transition: all 0.15s ease;
+    font-size: 0.87rem;
     font-weight: 500;
     position: relative;
     overflow: hidden;
     white-space: nowrap;
-    height: 42px;
-    /* Fixed height consistency */
+    height: 34px;
     flex-shrink: 0;
 }
 
 .sidebar-link:hover {
-    background: var(--glass-surface-hover);
+    background: var(--bg-hover);
     color: var(--text-primary);
 }
 
 .sidebar-link.active {
-    background: linear-gradient(90deg, var(--color-primary-light), transparent);
+    background: var(--bg-hover);
     color: var(--color-primary);
-    border-left: 3px solid var(--color-primary);
+    box-shadow: inset 3px 0 0 var(--color-primary);
 }
 
 /* ICON STRICT SIZING */
 .sidebar-link .icon {
-    width: 24px !important;
-    height: 24px !important;
-    min-width: 24px !important;
-    min-height: 24px !important;
+    width: 18px !important;
+    height: 18px !important;
+    min-width: 18px !important;
+    min-height: 18px !important;
     flex-shrink: 0 !important;
-    stroke-width: 1.5;
-    transition: all 0.3s ease;
+    stroke-width: 1.8;
+    transition: color 0.15s ease;
     margin: 0;
 }
 
@@ -160,7 +169,7 @@
     padding-top: 0.5rem;
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: 2px;
 }
 
 .sidebar-link.disconnect {

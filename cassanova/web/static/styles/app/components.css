@@ -1,3 +1,22 @@
+/* --- Page Header (shared across pages) --- */
+.page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.page-header .header-content h2 {
+    margin: 0 0 0.25rem 0;
+}
+
+.page-header .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
 section {
     background: linear-gradient(135deg,
             var(--bg-panel-alt) 50%,

@@ -2667,49 +2667,58 @@ button {
 .sidebar-nav {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: 2px;
     flex-grow: 1;
     width: 100%;
+}
+
+.sidebar-section-label {
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-muted);
+    padding: 0.75rem 14px 0.35rem;
 }
 
 .sidebar-link {
     display: flex;
     align-items: center;
-    gap: 14px;
-    padding: 10px 14px;
+    gap: 10px;
+    padding: 7px 14px;
     color: var(--text-secondary);
     text-decoration: none;
-    border-radius: 8px;
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 6px;
+    transition: all 0.15s ease;
+    font-size: 0.87rem;
     font-weight: 500;
     position: relative;
     overflow: hidden;
     white-space: nowrap;
-    height: 42px;
-    /* Fixed height consistency */
+    height: 34px;
     flex-shrink: 0;
 }
 
 .sidebar-link:hover {
-    background: var(--glass-surface-hover);
+    background: var(--bg-hover);
     color: var(--text-primary);
 }
 
 .sidebar-link.active {
-    background: linear-gradient(90deg, var(--color-primary-light), transparent);
+    background: var(--bg-hover);
     color: var(--color-primary);
-    border-left: 3px solid var(--color-primary);
+    box-shadow: inset 3px 0 0 var(--color-primary);
 }
 
 /* ICON STRICT SIZING */
 .sidebar-link .icon {
-    width: 24px !important;
-    height: 24px !important;
-    min-width: 24px !important;
-    min-height: 24px !important;
+    width: 18px !important;
+    height: 18px !important;
+    min-width: 18px !important;
+    min-height: 18px !important;
     flex-shrink: 0 !important;
-    stroke-width: 1.5;
-    transition: all 0.3s ease;
+    stroke-width: 1.8;
+    transition: color 0.15s ease;
     margin: 0;
 }
 
@@ -2805,7 +2814,7 @@ button {
     padding-top: 0.5rem;
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: 2px;
 }
 
 .sidebar-link.disconnect {
@@ -3051,6 +3060,25 @@ body:has(.sidebar.collapsed) main.with-sidebar,
     cursor: pointer;
 }
 /* === components.css === */
+/* --- Page Header (shared across pages) --- */
+.page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.page-header .header-content h2 {
+    margin: 0 0 0.25rem 0;
+}
+
+.page-header .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
 section {
     background: linear-gradient(135deg,
             var(--bg-panel-alt) 50%,
@@ -3458,8 +3486,8 @@ button:hover {
     pointer-events: none;
 }
 
-/* --- Page Header --- */
-.page-header {
+/* --- Page Header (scoped to index page) --- */
+.home-container .page-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -3730,7 +3758,7 @@ button:hover {
 
 /* --- Responsive --- */
 @media (max-width: 700px) {
-    .page-header {
+    .home-container .page-header {
         flex-direction: column;
         align-items: stretch;
         gap: 0.75rem;
@@ -7614,16 +7642,16 @@ body.exception-page footer {
 /* User Management - Professional Aesthetic */
 .guard-overview-stats {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 1.5rem;
-    margin-bottom: 3rem;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
 }
 
 .stat-card {
     background: var(--glass-surface);
     border: 1px solid var(--glass-border);
     border-radius: 10px;
-    padding: 1.5rem;
+    padding: 1rem 1.25rem;
     position: relative;
     overflow: hidden;
     backdrop-filter: var(--backdrop-blur);
@@ -7653,7 +7681,7 @@ body.exception-page footer {
 }
 
 .stat-value {
-    font-size: 2.5rem;
+    font-size: 1.75rem;
     font-weight: 800;
     color: var(--text-primary);
 }
@@ -7667,7 +7695,7 @@ body.exception-page footer {
 .user-card {
     display: flex;
     flex-direction: column;
-    padding: 2rem;
+    padding: 1.25rem;
     background: var(--glass-surface);
     backdrop-filter: var(--backdrop-blur);
     border: 1px solid var(--glass-border);

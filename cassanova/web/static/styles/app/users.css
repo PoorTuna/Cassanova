@@ -6,16 +6,16 @@
 /* User Management - Professional Aesthetic */
 .guard-overview-stats {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 1.5rem;
-    margin-bottom: 3rem;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
 }
 
 .stat-card {
     background: var(--glass-surface);
     border: 1px solid var(--glass-border);
     border-radius: 10px;
-    padding: 1.5rem;
+    padding: 1rem 1.25rem;
     position: relative;
     overflow: hidden;
     backdrop-filter: var(--backdrop-blur);
@@ -45,7 +45,7 @@
 }
 
 .stat-value {
-    font-size: 2.5rem;
+    font-size: 1.75rem;
     font-weight: 800;
     color: var(--text-primary);
 }
@@ -59,7 +59,7 @@
 .user-card {
     display: flex;
     flex-direction: column;
-    padding: 2rem;
+    padding: 1.25rem;
     background: var(--glass-surface);
     backdrop-filter: var(--backdrop-blur);
     border: 1px solid var(--glass-border);

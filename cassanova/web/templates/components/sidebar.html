@@ -2,6 +2,7 @@
     <nav class="sidebar-nav">
         <div class="sidebar-top">
             {% if cluster_config_entry %}
+            <div class="sidebar-section-label">Cluster</div>
             {% if check_permission(request.state.user, 'cluster:view') %}
             <a href="/cluster/{{ cluster_config_entry }}" class="sidebar-link">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
@@ -66,6 +67,7 @@
         </div>
 
         <div class="sidebar-bottom">
+            <div class="sidebar-section-label">General</div>
             <a href="/" class="sidebar-link">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                     stroke="currentColor" class="icon">
