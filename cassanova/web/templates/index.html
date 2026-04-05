@@ -37,17 +37,19 @@
 
     {% if clusters | length >= 2 %}
     <div class="compare-bar hidden" id="compare-bar">
-        <select class="compare-select" id="idx-compare-a">
-            {% for name in clusters %}
-            <option value="{{ name }}">{{ name }}</option>
-            {% endfor %}
-        </select>
+        <div class="combobox" data-id="idx-compare-a">
+            <input type="text" class="combobox-input" placeholder="Select cluster..." autocomplete="off" />
+            <div class="combobox-list hidden">
+                {% for name in clusters %}<div class="combobox-option" data-value="{{ name }}">{{ name }}</div>{% endfor %}
+            </div>
+        </div>
         <span class="compare-vs">vs</span>
-        <select class="compare-select" id="idx-compare-b">
-            {% for name in clusters %}
-            <option value="{{ name }}" {{ 'selected' if loop.index == 2 }}>{{ name }}</option>
-            {% endfor %}
-        </select>
+        <div class="combobox" data-id="idx-compare-b">
+            <input type="text" class="combobox-input" placeholder="Select cluster..." autocomplete="off" />
+            <div class="combobox-list hidden">
+                {% for name in clusters %}<div class="combobox-option" data-value="{{ name }}">{{ name }}</div>{% endfor %}
+            </div>
+        </div>
         <button class="btn-primary-sm" id="idx-compare-go">Compare</button>
     </div>
     {% endif %}
@@ -180,18 +182,22 @@
 
 
     <script>
+        document.addEventListener('DOMContentLoaded', () => {
         // Compare bar toggle
         const toggleBtn = document.getElementById('toggle-compare');
         const compareBar = document.getElementById('compare-bar');
         if (toggleBtn && compareBar) {
             toggleBtn.addEventListener('click', () => compareBar.classList.toggle('hidden'));
+            initComboboxes(compareBar);
             document.getElementById('idx-compare-go').addEventListener('click', () => {
-                const a = document.getElementById('idx-compare-a').value;
-                const b = document.getElementById('idx-compare-b').value;
+                const a = compareBar.querySelector('[data-id="idx-compare-a"]').dataset.selected || '';
+                const b = compareBar.querySelector('[data-id="idx-compare-b"]').dataset.selected || '';
+                if (!a || !b) { Toast.error('Select both clusters'); return; }
                 if (a === b) { Toast.error('Select two different clusters'); return; }
                 window.location.href = `/compare/${encodeURIComponent(a)}/${encodeURIComponent(b)}`;
             });
         }
+        });
 
         const _testCooldowns = {};
         const TEST_COOLDOWN_MS = 5000;

@@ -21,17 +21,19 @@
             <div id="compare-summary" class="compare-summary"></div>
         </div>
         <div class="compare-picker">
-            <select id="compare-select-a" class="compare-select">
-                {% for key in cluster_keys %}
-                <option value="{{ key }}" {{ 'selected' if key == cluster_a }}>{{ key }}</option>
-                {% endfor %}
-            </select>
+            <div class="combobox" data-id="compare-select-a" data-selected="{{ cluster_a }}">
+                <input type="text" class="combobox-input" value="{{ cluster_a }}" autocomplete="off" />
+                <div class="combobox-list hidden">
+                    {% for key in cluster_keys %}<div class="combobox-option" data-value="{{ key }}">{{ key }}</div>{% endfor %}
+                </div>
+            </div>
             <span class="compare-vs">vs</span>
-            <select id="compare-select-b" class="compare-select">
-                {% for key in cluster_keys %}
-                <option value="{{ key }}" {{ 'selected' if key == cluster_b }}>{{ key }}</option>
-                {% endfor %}
-            </select>
+            <div class="combobox" data-id="compare-select-b" data-selected="{{ cluster_b }}">
+                <input type="text" class="combobox-input" value="{{ cluster_b }}" autocomplete="off" />
+                <div class="combobox-list hidden">
+                    {% for key in cluster_keys %}<div class="combobox-option" data-value="{{ key }}">{{ key }}</div>{% endfor %}
+                </div>
+            </div>
             <button class="btn-primary-sm" id="compare-btn">Compare</button>
         </div>
     </header>

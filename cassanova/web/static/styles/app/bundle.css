@@ -3130,6 +3130,8 @@ button:hover {
     font-size: 0.95rem;
     padding: 0.6rem 1.4rem;
     border-radius: 8px;
+    box-sizing: border-box;
+    line-height: 1.2;
     transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
     box-shadow: 0 2px 6px rgba(var(--color-primary-rgb, 0, 229, 255), 0.15);
 }
@@ -8582,6 +8584,68 @@ body.exception-page footer {
     display: none;
 }
 
-.compare-bar .compare-select {
+.compare-bar .combobox {
     max-width: 250px;
+}
+
+/* --- Searchable Combobox --- */
+.combobox {
+    position: relative;
+    flex: 1;
+}
+
+.combobox-input {
+    width: 100%;
+    padding: 0.5rem 0.75rem;
+    background: var(--glass-surface);
+    border: 1px solid var(--glass-border);
+    border-radius: 8px;
+    color: var(--text-primary);
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    box-sizing: border-box;
+}
+
+.combobox-input:focus {
+    outline: none;
+    border-color: var(--color-primary);
+}
+
+.combobox-list {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    margin-top: 4px;
+    background: var(--bg-surface);
+    border: 1px solid var(--glass-border-light);
+    border-radius: 8px;
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: var(--z-dropdown);
+    box-shadow: var(--shadow-lg);
+}
+
+.combobox-list.hidden {
+    display: none;
+}
+
+.combobox-option {
+    padding: 0.45rem 0.75rem;
+    font-size: 0.85rem;
+    color: var(--text-primary);
+    cursor: pointer;
+    transition: background 0.1s;
+}
+
+.combobox-option:hover {
+    background: var(--bg-hover);
+}
+
+.combobox-option:first-child {
+    border-radius: 8px 8px 0 0;
+}
+
+.combobox-option:last-child {
+    border-radius: 0 0 8px 8px;
 }

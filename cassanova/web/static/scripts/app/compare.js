@@ -6,9 +6,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const hideIdentical = document.getElementById('hide-identical');
 
     // Picker navigation
+    const pickerContainer = document.querySelector('.compare-picker');
+    initComboboxes(pickerContainer);
     document.getElementById('compare-btn').addEventListener('click', () => {
-        const a = document.getElementById('compare-select-a').value;
-        const b = document.getElementById('compare-select-b').value;
+        const a = pickerContainer.querySelector('[data-id="compare-select-a"]').dataset.selected || '';
+        const b = pickerContainer.querySelector('[data-id="compare-select-b"]').dataset.selected || '';
+        if (!a || !b) { Toast.error('Select both clusters'); return; }
         if (a === b) { Toast.error('Select two different clusters'); return; }
         window.location.href = `/compare/${encodeURIComponent(a)}/${encodeURIComponent(b)}`;
     });
