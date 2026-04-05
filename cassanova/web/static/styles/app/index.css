@@ -204,6 +204,49 @@
     flex-shrink: 0;
 }
 
+/* --- Test Button --- */
+.test-btn {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    border: 1px solid var(--glass-border);
+    background: transparent;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+    white-space: nowrap;
+}
+
+.test-btn:hover {
+    color: var(--color-primary);
+    border-color: var(--color-primary);
+}
+
+.test-btn.testing {
+    color: var(--color-primary);
+    border-color: var(--color-primary);
+    opacity: 0.7;
+}
+
+.test-btn.success {
+    color: var(--color-success);
+    border-color: var(--color-success);
+}
+
+.test-btn.error {
+    color: var(--color-danger);
+    border-color: var(--color-danger);
+}
+
+.test-btn:disabled {
+    cursor: default;
+}
+
 /* --- Arrow Button --- */
 .arrow-btn {
     width: 28px;
@@ -231,6 +274,10 @@
 
 /* --- Contact Point Line --- */
 .card-contact {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
     padding-top: 0.5rem;
     padding-left: 2.75rem;
 }

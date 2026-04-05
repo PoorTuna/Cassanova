@@ -1,0 +1,280 @@
+{% extends "base.html" %}
+
+{% block title %}Profile - Cassanova{% endblock %}
+{% block breadcrumbs %}<a href="/">Clusters</a><span class="bc-sep">/</span><span class="bc-current">Profile</span>{% endblock %}
+
+{% block content %}
+<main class="with-sidebar profile-page">
+
+    <section class="profile-section">
+        <h2>Account</h2>
+        <div class="profile-fields">
+            <div class="profile-field">
+                <span class="field-label">Username</span>
+                <span class="field-value">{{ request.state.user.username }}</span>
+            </div>
+            <div class="profile-field">
+                <span class="field-label">Full Name</span>
+                <span class="field-value">{{ request.state.user.full_name or '\u2014' }}</span>
+            </div>
+            <div class="profile-field">
+                <span class="field-label">Role</span>
+                <span class="field-value">{{ request.state.user.roles[0] if request.state.user.roles else 'User' }}</span>
+            </div>
+        </div>
+    </section>
+
+    <section class="profile-section">
+        <h2>Appearance</h2>
+        <div class="theme-grid theme-grid-single">
+            <button class="theme-card theme-card-system" data-theme="system" title="System — follows OS preference">
+                <div class="theme-preview-bars theme-preview-split">
+                    <span class="split-bar"><span class="split-dark" style="background:#08080a"></span><span class="split-light" style="background:#F5F7FA"></span></span>
+                    <span class="split-bar"><span class="split-dark" style="background:#121216"></span><span class="split-light" style="background:#ffffff"></span></span>
+                    <span class="split-bar"><span class="split-dark" style="background:#1287b1"></span><span class="split-light" style="background:#0066FF"></span></span>
+                    <span class="split-bar"><span class="split-dark" style="background:#e1e1e6"></span><span class="split-light" style="background:#1A1D1F"></span></span>
+                </div>
+                <span class="theme-card-name">System</span>
+            </button>
+        </div>
+        <h3 class="theme-group-label">Dark</h3>
+        <div class="theme-grid" id="theme-grid">
+            <button class="theme-card" data-theme="dark" title="Dark">
+                <div class="theme-preview-bars">
+                    <span style="background:#08080a"></span>
+                    <span style="background:#121216"></span>
+                    <span style="background:#1287b1"></span>
+                    <span style="background:#e1e1e6"></span>
+                </div>
+                <span class="theme-card-name">Dark</span>
+            </button>
+            <button class="theme-card" data-theme="dracula" title="Dracula">
+                <div class="theme-preview-bars">
+                    <span style="background:#282a36"></span>
+                    <span style="background:#44475a"></span>
+                    <span style="background:#bd93f9"></span>
+                    <span style="background:#f8f8f2"></span>
+                </div>
+                <span class="theme-card-name">Dracula</span>
+            </button>
+            <button class="theme-card" data-theme="monokai" title="Monokai">
+                <div class="theme-preview-bars">
+                    <span style="background:#272822"></span>
+                    <span style="background:#2d2e27"></span>
+                    <span style="background:#f92672"></span>
+                    <span style="background:#f8f8f2"></span>
+                </div>
+                <span class="theme-card-name">Monokai</span>
+            </button>
+            <button class="theme-card" data-theme="nord" title="Nord">
+                <div class="theme-preview-bars">
+                    <span style="background:#2e3440"></span>
+                    <span style="background:#3b4252"></span>
+                    <span style="background:#88c0d0"></span>
+                    <span style="background:#eceff4"></span>
+                </div>
+                <span class="theme-card-name">Nord</span>
+            </button>
+            <button class="theme-card" data-theme="tokyo-night" title="Tokyo Night">
+                <div class="theme-preview-bars">
+                    <span style="background:#1a1b26"></span>
+                    <span style="background:#24283b"></span>
+                    <span style="background:#7aa2f7"></span>
+                    <span style="background:#c0caf5"></span>
+                </div>
+                <span class="theme-card-name">Tokyo Night</span>
+            </button>
+            <button class="theme-card" data-theme="catppuccin-mocha" title="Catppuccin Mocha">
+                <div class="theme-preview-bars">
+                    <span style="background:#1e1e2e"></span>
+                    <span style="background:#313244"></span>
+                    <span style="background:#cba6f7"></span>
+                    <span style="background:#cdd6f4"></span>
+                </div>
+                <span class="theme-card-name">Catppuccin Mocha</span>
+            </button>
+            <button class="theme-card" data-theme="gruvbox-dark" title="Gruvbox Dark">
+                <div class="theme-preview-bars">
+                    <span style="background:#1d2021"></span>
+                    <span style="background:#282828"></span>
+                    <span style="background:#fe8019"></span>
+                    <span style="background:#ebdbb2"></span>
+                </div>
+                <span class="theme-card-name">Gruvbox Dark</span>
+            </button>
+            <button class="theme-card" data-theme="solarized-dark" title="Solarized Dark">
+                <div class="theme-preview-bars">
+                    <span style="background:#002b36"></span>
+                    <span style="background:#073642"></span>
+                    <span style="background:#268bd2"></span>
+                    <span style="background:#eee8d5"></span>
+                </div>
+                <span class="theme-card-name">Solarized Dark</span>
+            </button>
+            <button class="theme-card" data-theme="cubic" title="Cubic">
+                <div class="theme-preview-bars">
+                    <span style="background:#1D1D1D"></span>
+                    <span style="background:#2E2E2E"></span>
+                    <span style="background:#52AA3F"></span>
+                    <span style="background:#e0e0e0"></span>
+                </div>
+                <span class="theme-card-name">Cubic</span>
+            </button>
+            <button class="theme-card" data-theme="neon-punk" title="Neon Punk">
+                <div class="theme-preview-bars">
+                    <span style="background:#030305"></span>
+                    <span style="background:#14141e"></span>
+                    <span style="background:#FF007F"></span>
+                    <span style="background:#f0f0f0"></span>
+                </div>
+                <span class="theme-card-name">Neon Punk</span>
+            </button>
+            <button class="theme-card" data-theme="kubana-dark" title="Kubana Dark">
+                <div class="theme-preview-bars">
+                    <span style="background:#1D1E24"></span>
+                    <span style="background:#2D2E34"></span>
+                    <span style="background:#DB1374"></span>
+                    <span style="background:#DFE5EF"></span>
+                </div>
+                <span class="theme-card-name">Kubana Dark</span>
+            </button>
+            <button class="theme-card" data-theme="orokin-dark" title="Orokin Dark">
+                <div class="theme-preview-bars">
+                    <span style="background:#0A0A0C"></span>
+                    <span style="background:#1E1E1E"></span>
+                    <span style="background:#D4AF37"></span>
+                    <span style="background:#e0dcd0"></span>
+                </div>
+                <span class="theme-card-name">Orokin Dark</span>
+            </button>
+            <button class="theme-card" data-theme="fortress-blue" title="Fortress Blue">
+                <div class="theme-preview-bars">
+                    <span style="background:#242220"></span>
+                    <span style="background:#302E2C"></span>
+                    <span style="background:#5b7a8c"></span>
+                    <span style="background:#d4cfc8"></span>
+                </div>
+                <span class="theme-card-name">Fortress Blue</span>
+            </button>
+            <button class="theme-card" data-theme="fortress-red" title="Fortress Red">
+                <div class="theme-preview-bars">
+                    <span style="background:#242220"></span>
+                    <span style="background:#302E2C"></span>
+                    <span style="background:#B8383B"></span>
+                    <span style="background:#d4cfc8"></span>
+                </div>
+                <span class="theme-card-name">Fortress Red</span>
+            </button>
+            <button class="theme-card" data-theme="cassandra-orange" title="Cassandra Orange">
+                <div class="theme-preview-bars">
+                    <span style="background:#0c0c0e"></span>
+                    <span style="background:#161618"></span>
+                    <span style="background:#f0810f"></span>
+                    <span style="background:#e8e4e0"></span>
+                </div>
+                <span class="theme-card-name">Cassandra Orange</span>
+            </button>
+            <button class="theme-card" data-theme="midnight-purple" title="Midnight Purple">
+                <div class="theme-preview-bars">
+                    <span style="background:#0f0a1a"></span>
+                    <span style="background:#1a1128"></span>
+                    <span style="background:#a855f7"></span>
+                    <span style="background:#e2ddf5"></span>
+                </div>
+                <span class="theme-card-name">Midnight Purple</span>
+            </button>
+            <button class="theme-card" data-theme="matrix" title="Matrix">
+                <div class="theme-preview-bars">
+                    <span style="background:#000000"></span>
+                    <span style="background:#0a0a0a"></span>
+                    <span style="background:#00ff41"></span>
+                    <span style="background:#00cc33"></span>
+                </div>
+                <span class="theme-card-name">Matrix</span>
+            </button>
+        </div>
+
+        <h3 class="theme-group-label">Light</h3>
+        <div class="theme-grid">
+            <button class="theme-card" data-theme="light" title="Light">
+                <div class="theme-preview-bars">
+                    <span style="background:#F5F7FA"></span>
+                    <span style="background:#ffffff"></span>
+                    <span style="background:#0066FF"></span>
+                    <span style="background:#1A1D1F"></span>
+                </div>
+                <span class="theme-card-name">Light</span>
+            </button>
+            <button class="theme-card" data-theme="github-light" title="GitHub Light">
+                <div class="theme-preview-bars">
+                    <span style="background:#ffffff"></span>
+                    <span style="background:#f6f8fa"></span>
+                    <span style="background:#0969da"></span>
+                    <span style="background:#1f2328"></span>
+                </div>
+                <span class="theme-card-name">GitHub Light</span>
+            </button>
+            <button class="theme-card" data-theme="solarized-light" title="Solarized Light">
+                <div class="theme-preview-bars">
+                    <span style="background:#fdf6e3"></span>
+                    <span style="background:#eee8d5"></span>
+                    <span style="background:#268bd2"></span>
+                    <span style="background:#073642"></span>
+                </div>
+                <span class="theme-card-name">Solarized Light</span>
+            </button>
+            <button class="theme-card" data-theme="catppuccin-latte" title="Catppuccin Latte">
+                <div class="theme-preview-bars">
+                    <span style="background:#eff1f5"></span>
+                    <span style="background:#e6e9ef"></span>
+                    <span style="background:#8839ef"></span>
+                    <span style="background:#4c4f69"></span>
+                </div>
+                <span class="theme-card-name">Catppuccin Latte</span>
+            </button>
+            <button class="theme-card" data-theme="kubana-light" title="Kubana Light">
+                <div class="theme-preview-bars">
+                    <span style="background:#F5F7FA"></span>
+                    <span style="background:#ffffff"></span>
+                    <span style="background:#00b3a4"></span>
+                    <span style="background:#343741"></span>
+                </div>
+                <span class="theme-card-name">Kubana Light</span>
+            </button>
+            <button class="theme-card" data-theme="orokin-light" title="Orokin Light">
+                <div class="theme-preview-bars">
+                    <span style="background:#F9FAFB"></span>
+                    <span style="background:#ffffff"></span>
+                    <span style="background:#D4AF37"></span>
+                    <span style="background:#2d2a1e"></span>
+                </div>
+                <span class="theme-card-name">Orokin Light</span>
+            </button>
+        </div>
+    </section>
+
+</main>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const cards = document.querySelectorAll('.theme-card');
+        const current = localStorage.getItem('selectedTheme') || 'system';
+
+        function markActive(theme) {
+            cards.forEach(c => c.classList.toggle('active', c.dataset.theme === theme));
+        }
+
+        markActive(current);
+
+        cards.forEach(card => {
+            card.addEventListener('click', () => {
+                const theme = card.dataset.theme;
+                // applyTheme is defined globally in topbar.js
+                applyTheme(theme);
+                localStorage.setItem('selectedTheme', theme);
+                markActive(theme);
+            });
+        });
+    });
+</script>
+{% endblock %}

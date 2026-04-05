@@ -1,0 +1,73 @@
+.solarized-light-theme {
+    --font-display: 'Outfit', sans-serif;
+    --font-body: 'Inter', sans-serif;
+    --font-mono: 'Fira Code', monospace;
+
+    --color-primary: #268bd2;
+    --color-primary-rgb: 38, 139, 210;
+    --color-secondary: #2aa198;
+    --color-success: #859900;
+    --color-warning: #b58900;
+    --color-danger: #dc322f;
+    --color-info: #268bd2;
+
+    --bg-app: #fdf6e3;
+    --bg-surface: #eee8d5;
+    --bg-sidebar: rgba(253, 246, 227, 0.85);
+
+    --glass-surface: rgba(253, 246, 227, 0.7);
+    --glass-surface-hover: rgba(253, 246, 227, 0.9);
+    --glass-border: rgba(0, 0, 0, 0.08);
+    --glass-border-light: rgba(0, 0, 0, 0.15);
+    --glass-shine: rgba(255, 255, 255, 0.5);
+    --backdrop-blur: blur(8px);
+    --backdrop-blur-heavy: blur(12px);
+
+    --text-primary: #073642;
+    --text-secondary: #586e75;
+    --text-muted: #93a1a1;
+    --text-on-primary: #FFFFFF;
+
+    --bg-main: var(--bg-app);
+    --bg-main-rgb: 253, 246, 227;
+    --bg-panel: var(--glass-surface);
+    --bg-panel-alt: rgba(0, 0, 0, 0.03);
+    --bg-terminal: #fdf6e3;
+    --bg-xterm: #eee8d5;
+
+    --bg-detail: transparent;
+    --bg-hover: rgba(0, 0, 0, 0.05);
+    --bg-hover-active: rgba(38, 139, 210, 0.08);
+
+    --color-primary-hover: #4ea3e0;
+    --color-primary-active: #1a6ba8;
+    --color-primary-light: rgba(38, 139, 210, 0.15);
+    --color-primary-strong: #268bd2;
+
+    --color-error: var(--color-danger);
+    --color-error-light: #e87674;
+
+    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 6px 12px rgba(0, 0, 0, 0.08);
+    --shadow-lg: 0 12px 24px rgba(0, 0, 0, 0.12);
+    --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.15);
+
+    --glow-primary: 0 0 8px rgba(38, 139, 210, 0.09);
+    --glow-text: none;
+
+    --syntax-key: #268bd2;
+    --syntax-string: #2aa198;
+    --syntax-number: #d33682;
+    --syntax-boolean: #cb4b16;
+    --syntax-null: #93a1a1;
+
+    --status-healthy: #859900;
+    --status-degraded: #b58900;
+    --status-down: #dc322f;
+    --status-unknown: #93a1a1;
+
+    --text-disabled: rgba(0, 0, 0, 0.3);
+    --bg-inset: #ddd6c1;
+
+    --bg-glass-tint: rgba(0, 0, 0, 0.05);
+}

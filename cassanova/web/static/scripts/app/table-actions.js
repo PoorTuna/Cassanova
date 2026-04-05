@@ -40,11 +40,41 @@ function showTableSchema(cluster, keyspace, table) {
         });
 }
 
+function showTableCql(cluster, keyspace, table) {
+    const url = `/api/v1/cluster/${encodeURIComponent(cluster)}/keyspace/${encodeURIComponent(keyspace)}/table/${encodeURIComponent(table)}/cql`;
+    return fetch(url)
+        .then(res => {
+            if (!res.ok) throw new Error(res.statusText);
+            return res.json();
+        })
+        .then(data => showCqlModal(data.cql))
+        .catch(err => Toast.error(`Export CQL failed: ${err.message}`));
+}
+
+function showKeyspaceCql() {
+    const url = `/api/v1/cluster/${encodeURIComponent(clusterName)}/keyspace/${encodeURIComponent(keyspaceName)}/cql`;
+    return fetch(url)
+        .then(res => {
+            if (!res.ok) throw new Error(res.statusText);
+            return res.json();
+        })
+        .then(data => showCqlModal(data.cql))
+        .catch(err => Toast.error(`Export CQL failed: ${err.message}`));
+}
+
+
 /* ------------------- Modals ------------------- */
 function showModal(jsonData) {
     const modal = document.getElementById('json-modal');
     const pre = document.getElementById('modal-pre');
     pre.innerHTML = syntaxHighlight(jsonData);
+    modal.classList.remove('hidden');
+}
+
+function showCqlModal(cqlText) {
+    const modal = document.getElementById('json-modal');
+    const pre = document.getElementById('modal-pre');
+    pre.textContent = cqlText;
     modal.classList.remove('hidden');
 }
 
@@ -59,6 +89,21 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('json-modal').addEventListener('click', e => {
         if (e.target === e.currentTarget) hideModal();
     });
+
+    const copyBtn = document.getElementById('modal-copy');
+    if (copyBtn) {
+        copyBtn.addEventListener('click', async () => {
+            const pre = document.getElementById('modal-pre');
+            const text = pre.textContent;
+            try {
+                await navigator.clipboard.writeText(text);
+                copyBtn.textContent = 'Copied!';
+                setTimeout(() => { copyBtn.textContent = 'Copy'; }, 1500);
+            } catch (err) {
+                Toast.error('Failed to copy');
+            }
+        });
+    }
 
     /* Table filter */
     const filterInput = document.getElementById('table-filter');
@@ -148,6 +193,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     confirmClass: 'btn-danger',
                     onConfirm: () => deleteTable(clusterName, keyspaceName, table)
                 });
+            } else if (action === 'export-cql') {
+                showTableCql(clusterName, keyspaceName, table);
             } else if (action === 'truncate') {
                 ConfirmModal.show({
                     title: 'Truncate Table',

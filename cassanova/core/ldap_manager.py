@@ -52,7 +52,7 @@ class LDAPManager:
                 return None
 
             roles = self._get_roles(conn, user_dn, username, user_attrs)  # type: ignore[arg-type]
-            if self.config.default_roles:
+            if not roles and self.config.default_roles:
                 roles.extend(self.config.default_roles)
 
             roles = list(set(roles))

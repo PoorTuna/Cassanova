@@ -24,6 +24,11 @@ def index(request: Request) -> Response:
     )
 
 
+@cassanova_ui_dashboard_router.get("/profile")
+def profile_page(request: Request) -> Response:
+    return templates.TemplateResponse("profile.html", {"request": request})
+
+
 @cassanova_ui_dashboard_router.get("/cluster/{cluster_name}")
 def cluster_dashboard(request: Request, cluster_name: str) -> Response:
     session = get_session(cluster_name)

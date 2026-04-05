@@ -89,6 +89,29 @@ button:hover {
     box-shadow: 0 4px 12px rgba(var(--color-primary-rgb, 0, 229, 255), 0.25);
 }
 
+.btn-outline-sm {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--text-secondary);
+    text-decoration: none;
+    cursor: pointer;
+    font-family: inherit;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 0.4rem 0.8rem;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-outline-sm:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: var(--color-primary);
+    color: var(--text-primary);
+}
+
 .btn-outline {
     background: rgba(255, 255, 255, 0.03);
     border: 1px solid rgba(255, 255, 255, 0.1);

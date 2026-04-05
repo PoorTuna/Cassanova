@@ -79,6 +79,15 @@ def get_keyspace(cluster_name: str, keyspace_name: str) -> dict[str, Any]:
     return generate_keyspaces_info([(keyspace_name, keyspace)])[0].model_dump()
 
 
+@cluster_router.get("/cluster/{cluster_name}/keyspace/{keyspace_name}/cql")
+def get_keyspace_cql(cluster_name: str, keyspace_name: str) -> dict[str, str]:
+    session = get_session(cluster_name)
+    ks_meta = session.cluster.metadata.keyspaces.get(keyspace_name)
+    if not ks_meta:
+        raise HTTPException(status_code=404, detail="Keyspace not found")
+    return {"cql": ks_meta.export_as_string()}
+
+
 @cluster_router.get("/cluster/{cluster_name}/keyspace/{keyspace_name}/tables")
 def get_tables(cluster_name: str, keyspace_name: str) -> list[dict[str, Any]]:
     session = get_session(cluster_name)
@@ -111,6 +120,18 @@ def get_table(cluster_name: str, keyspace_name: str, table_name: str) -> dict[st
     return table_info.model_dump()
 
 
+@cluster_router.get("/cluster/{cluster_name}/keyspace/{keyspace_name}/table/{table_name}/cql")
+def get_table_cql(cluster_name: str, keyspace_name: str, table_name: str) -> dict[str, str]:
+    session = get_session(cluster_name)
+    ks_meta = session.cluster.metadata.keyspaces.get(keyspace_name)
+    if not ks_meta:
+        raise HTTPException(status_code=404, detail="Keyspace not found")
+    table_meta = ks_meta.tables.get(table_name)
+    if not table_meta:
+        raise HTTPException(status_code=404, detail="Table not found")
+    return {"cql": table_meta.export_as_string()}
+
+
 @cluster_router.get("/cluster/{cluster_name}/keyspace/{keyspace_name}/table/{table_name}/schema")
 def get_table_schema(
     cluster_name: str, keyspace_name: str, table_name: str
@@ -127,6 +148,16 @@ def get_table_description(
 ) -> list[dict[str, Any]]:
     session = get_session(cluster_name)
     return show_table_description_cql(session, keyspace_name, table_name)
+
+
+@cluster_router.get("/cluster/{cluster_name}/test")
+def test_cluster_connection(cluster_name: str) -> dict[str, str]:
+    try:
+        session = get_session(cluster_name)
+        session.execute("SELECT key FROM system.local LIMIT 1", timeout=5.0)
+        return {"status": "ok"}
+    except Exception as e:
+        raise HTTPException(status_code=503, detail=str(e)) from e
 
 
 @cluster_router.get("/cluster/{cluster_name}/nodes")

@@ -17,17 +17,32 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // --- Theme Application (always, even on pages without the grid) ---
-    function applyTheme(theme) {
+    function resolveTheme(theme) {
+        if (theme === 'system') {
+            return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        }
+        return theme;
+    }
+
+    window.applyTheme = function(theme) {
+        const resolved = resolveTheme(theme);
         document.documentElement.classList.forEach(cls => {
             if (cls.endsWith('-theme')) {
                 document.documentElement.classList.remove(cls);
             }
         });
-        document.documentElement.classList.add(`${theme}-theme`);
-    }
+        document.documentElement.classList.add(`${resolved}-theme`);
+    };
 
-    const savedTheme = localStorage.getItem('selectedTheme') || 'dark';
-    applyTheme(savedTheme);
+    const savedTheme = localStorage.getItem('selectedTheme') || 'system';
+    window.applyTheme(savedTheme);
+
+    // Auto-switch when OS preference changes (only if in system mode)
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+        if (localStorage.getItem('selectedTheme') === 'system') {
+            window.applyTheme('system');
+        }
+    });
 
     // --- Theme Switching (dot grid in user dropdown) ---
     const themeGrid = document.getElementById('topbar-theme-grid');
@@ -39,7 +54,7 @@ document.addEventListener("DOMContentLoaded", () => {
             dot.addEventListener('click', (e) => {
                 e.stopPropagation();
                 const theme = dot.dataset.theme;
-                applyTheme(theme);
+                window.applyTheme(theme);
                 markActiveDot(theme);
                 localStorage.setItem('selectedTheme', theme);
             });

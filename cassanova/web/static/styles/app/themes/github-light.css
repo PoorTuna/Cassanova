@@ -1,0 +1,73 @@
+.github-light-theme {
+    --font-display: 'Outfit', sans-serif;
+    --font-body: 'Inter', sans-serif;
+    --font-mono: 'Fira Code', monospace;
+
+    --color-primary: #0969da;
+    --color-primary-rgb: 9, 105, 218;
+    --color-secondary: #8250df;
+    --color-success: #1a7f37;
+    --color-warning: #bf8700;
+    --color-danger: #cf222e;
+    --color-info: #0969da;
+
+    --bg-app: #ffffff;
+    --bg-surface: #f6f8fa;
+    --bg-sidebar: rgba(255, 255, 255, 0.85);
+
+    --glass-surface: rgba(255, 255, 255, 0.7);
+    --glass-surface-hover: rgba(255, 255, 255, 0.9);
+    --glass-border: rgba(0, 0, 0, 0.08);
+    --glass-border-light: rgba(0, 0, 0, 0.15);
+    --glass-shine: rgba(255, 255, 255, 0.5);
+    --backdrop-blur: blur(8px);
+    --backdrop-blur-heavy: blur(12px);
+
+    --text-primary: #1f2328;
+    --text-secondary: #656d76;
+    --text-muted: #8b949e;
+    --text-on-primary: #FFFFFF;
+
+    --bg-main: var(--bg-app);
+    --bg-main-rgb: 255, 255, 255;
+    --bg-panel: var(--glass-surface);
+    --bg-panel-alt: rgba(0, 0, 0, 0.03);
+    --bg-terminal: #ffffff;
+    --bg-xterm: #f6f8fa;
+
+    --bg-detail: transparent;
+    --bg-hover: rgba(0, 0, 0, 0.05);
+    --bg-hover-active: rgba(9, 105, 218, 0.08);
+
+    --color-primary-hover: #3a8ae6;
+    --color-primary-active: #0550ae;
+    --color-primary-light: rgba(9, 105, 218, 0.15);
+    --color-primary-strong: #0969da;
+
+    --color-error: var(--color-danger);
+    --color-error-light: #e57373;
+
+    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 6px 12px rgba(0, 0, 0, 0.08);
+    --shadow-lg: 0 12px 24px rgba(0, 0, 0, 0.12);
+    --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.15);
+
+    --glow-primary: 0 0 8px rgba(9, 105, 218, 0.09);
+    --glow-text: none;
+
+    --syntax-key: #0550ae;
+    --syntax-string: #0a3069;
+    --syntax-number: #953800;
+    --syntax-boolean: #cf222e;
+    --syntax-null: #8b949e;
+
+    --status-healthy: #1a7f37;
+    --status-degraded: #bf8700;
+    --status-down: #cf222e;
+    --status-unknown: #8b949e;
+
+    --text-disabled: rgba(0, 0, 0, 0.3);
+    --bg-inset: #eaecef;
+
+    --bg-glass-tint: rgba(0, 0, 0, 0.05);
+}

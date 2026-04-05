@@ -366,8 +366,8 @@
     /* --- Panel Tints --- */
     --bg-glass-tint: rgba(212, 175, 55, 0.05);
 }
-/* === themes\kibana-dark.css === */
-.kibana-dark-theme {
+/* === themes\kubana-dark.css === */
+.kubana-dark-theme {
     /* --- Typography --- */
     --font-display: 'Outfit', sans-serif;
     --font-body: 'Inter', sans-serif;
@@ -454,8 +454,8 @@
     /* --- Panel Tints --- */
     --bg-glass-tint: rgba(0, 0, 0, 0.2);
 }
-/* === themes\kibana-light.css === */
-.kibana-light-theme {
+/* === themes\kubana-light.css === */
+.kubana-light-theme {
     /* --- Typography --- */
     --font-display: 'Outfit', sans-serif;
     --font-body: 'Inter', sans-serif;
@@ -991,6 +991,900 @@
 
     --bg-glass-tint: rgba(40, 42, 54, 0.4);
 }
+/* === themes\monokai.css === */
+.monokai-theme {
+    --font-display: 'Outfit', sans-serif;
+    --font-body: 'Inter', sans-serif;
+    --font-mono: 'Fira Code', monospace;
+
+    --color-primary: #f92672;
+    --color-primary-rgb: 249, 38, 114;
+    --color-secondary: #a6e22e;
+    --color-secondary-rgb: 166, 226, 46;
+
+    --color-success: #a6e22e;
+    --color-warning: #e6db74;
+    --color-danger: #f92672;
+    --color-info: #66d9ef;
+
+    --bg-app: #272822;
+    --bg-surface: #2d2e27;
+    --bg-sidebar: rgba(39, 40, 34, 0.9);
+
+    --glass-surface: rgba(45, 46, 39, 0.65);
+    --glass-surface-hover: rgba(55, 56, 49, 0.7);
+    --glass-border: rgba(255, 255, 255, 0.06);
+    --glass-border-light: rgba(255, 255, 255, 0.12);
+    --glass-shine: rgba(255, 255, 255, 0.01);
+    --backdrop-blur: blur(10px);
+    --backdrop-blur-heavy: blur(14px);
+
+    --text-primary: #f8f8f2;
+    --text-secondary: #cfcfc2;
+    --text-muted: #75715e;
+    --text-on-primary: #ffffff;
+
+    --bg-main: var(--bg-app);
+    --bg-panel: var(--glass-surface);
+    --bg-panel-alt: rgba(255, 255, 255, 0.02);
+    --bg-terminal: #22231e;
+    --bg-xterm: #1a1b16;
+
+    --bg-detail: transparent;
+    --bg-hover: rgba(255, 255, 255, 0.04);
+    --bg-hover-active: rgba(249, 38, 114, 0.1);
+
+    --color-primary-hover: #fb5590;
+    --color-primary-active: #d01e5c;
+    --color-primary-light: rgba(249, 38, 114, 0.15);
+    --color-primary-strong: #f92672;
+
+    --color-error: var(--color-danger);
+    --color-error-light: #fb5590;
+
+    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.4);
+    --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.5);
+    --shadow-lg: 0 12px 24px rgba(0, 0, 0, 0.6);
+    --glow-primary: 0 0 8px rgba(249, 38, 114, 0.05);
+    --glow-text: none;
+
+    --syntax-key: #66d9ef;
+    --syntax-string: #e6db74;
+    --syntax-number: #ae81ff;
+    --syntax-boolean: #f92672;
+    --syntax-null: #75715e;
+
+    --status-healthy: #a6e22e;
+    --status-degraded: #e6db74;
+    --status-down: #f92672;
+    --status-unknown: #75715e;
+
+    --text-disabled: rgba(255, 255, 255, 0.25);
+    --bg-inset: #22231e;
+
+    --bg-glass-tint: rgba(39, 40, 34, 0.4);
+}
+
+/* === themes\nord.css === */
+.nord-theme {
+    --font-display: 'Outfit', sans-serif;
+    --font-body: 'Inter', sans-serif;
+    --font-mono: 'Fira Code', monospace;
+
+    --color-primary: #88c0d0;
+    --color-primary-rgb: 136, 192, 208;
+    --color-secondary: #b48ead;
+    --color-secondary-rgb: 180, 142, 173;
+
+    --color-success: #a3be8c;
+    --color-warning: #ebcb8b;
+    --color-danger: #bf616a;
+    --color-info: #88c0d0;
+
+    --bg-app: #2e3440;
+    --bg-surface: #3b4252;
+    --bg-sidebar: rgba(46, 52, 64, 0.9);
+
+    --glass-surface: rgba(59, 66, 82, 0.65);
+    --glass-surface-hover: rgba(67, 76, 94, 0.7);
+    --glass-border: rgba(255, 255, 255, 0.06);
+    --glass-border-light: rgba(255, 255, 255, 0.12);
+    --glass-shine: rgba(255, 255, 255, 0.01);
+    --backdrop-blur: blur(10px);
+    --backdrop-blur-heavy: blur(14px);
+
+    --text-primary: #eceff4;
+    --text-secondary: #d8dee9;
+    --text-muted: #7b88a1;
+    --text-on-primary: #2e3440;
+
+    --bg-main: var(--bg-app);
+    --bg-panel: var(--glass-surface);
+    --bg-panel-alt: rgba(255, 255, 255, 0.02);
+    --bg-terminal: #272c36;
+    --bg-xterm: #21262e;
+
+    --bg-detail: transparent;
+    --bg-hover: rgba(255, 255, 255, 0.04);
+    --bg-hover-active: rgba(136, 192, 208, 0.1);
+
+    --color-primary-hover: #9dd0de;
+    --color-primary-active: #6ba8b8;
+    --color-primary-light: rgba(136, 192, 208, 0.15);
+    --color-primary-strong: #88c0d0;
+
+    --color-error: var(--color-danger);
+    --color-error-light: #d08770;
+
+    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.4);
+    --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.5);
+    --shadow-lg: 0 12px 24px rgba(0, 0, 0, 0.6);
+    --glow-primary: 0 0 8px rgba(136, 192, 208, 0.05);
+    --glow-text: none;
+
+    --syntax-key: #88c0d0;
+    --syntax-string: #a3be8c;
+    --syntax-number: #b48ead;
+    --syntax-boolean: #bf616a;
+    --syntax-null: #616e88;
+
+    --status-healthy: #a3be8c;
+    --status-degraded: #ebcb8b;
+    --status-down: #bf616a;
+    --status-unknown: #616e88;
+
+    --text-disabled: rgba(255, 255, 255, 0.25);
+    --bg-inset: #272c36;
+
+    --bg-glass-tint: rgba(46, 52, 64, 0.4);
+}
+
+/* === themes\gruvbox-dark.css === */
+.gruvbox-dark-theme {
+    --font-display: 'Outfit', sans-serif;
+    --font-body: 'Inter', sans-serif;
+    --font-mono: 'Fira Code', monospace;
+
+    --color-primary: #fe8019;
+    --color-primary-rgb: 254, 128, 25;
+    --color-secondary: #b8bb26;
+    --color-secondary-rgb: 184, 187, 38;
+
+    --color-success: #b8bb26;
+    --color-warning: #fabd2f;
+    --color-danger: #fb4934;
+    --color-info: #83a598;
+
+    --bg-app: #1d2021;
+    --bg-surface: #282828;
+    --bg-sidebar: rgba(29, 32, 33, 0.9);
+
+    --glass-surface: rgba(40, 40, 40, 0.65);
+    --glass-surface-hover: rgba(50, 48, 47, 0.7);
+    --glass-border: rgba(255, 255, 255, 0.06);
+    --glass-border-light: rgba(255, 255, 255, 0.12);
+    --glass-shine: rgba(255, 255, 255, 0.01);
+    --backdrop-blur: blur(10px);
+    --backdrop-blur-heavy: blur(14px);
+
+    --text-primary: #ebdbb2;
+    --text-secondary: #d5c4a1;
+    --text-muted: #928374;
+    --text-on-primary: #1d2021;
+
+    --bg-main: var(--bg-app);
+    --bg-panel: var(--glass-surface);
+    --bg-panel-alt: rgba(255, 255, 255, 0.02);
+    --bg-terminal: #181a1b;
+    --bg-xterm: #131516;
+
+    --bg-detail: transparent;
+    --bg-hover: rgba(255, 255, 255, 0.04);
+    --bg-hover-active: rgba(254, 128, 25, 0.1);
+
+    --color-primary-hover: #fea04d;
+    --color-primary-active: #d56a0f;
+    --color-primary-light: rgba(254, 128, 25, 0.15);
+    --color-primary-strong: #fe8019;
+
+    --color-error: var(--color-danger);
+    --color-error-light: #fb6b5b;
+
+    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.4);
+    --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.5);
+    --shadow-lg: 0 12px 24px rgba(0, 0, 0, 0.6);
+    --glow-primary: 0 0 8px rgba(254, 128, 25, 0.05);
+    --glow-text: none;
+
+    --syntax-key: #83a598;
+    --syntax-string: #b8bb26;
+    --syntax-number: #d3869b;
+    --syntax-boolean: #fb4934;
+    --syntax-null: #928374;
+
+    --status-healthy: #b8bb26;
+    --status-degraded: #fabd2f;
+    --status-down: #fb4934;
+    --status-unknown: #928374;
+
+    --text-disabled: rgba(255, 255, 255, 0.25);
+    --bg-inset: #181a1b;
+
+    --bg-glass-tint: rgba(29, 32, 33, 0.4);
+}
+
+/* === themes\solarized-dark.css === */
+.solarized-dark-theme {
+    --font-display: 'Outfit', sans-serif;
+    --font-body: 'Inter', sans-serif;
+    --font-mono: 'Fira Code', monospace;
+
+    --color-primary: #268bd2;
+    --color-primary-rgb: 38, 139, 210;
+    --color-secondary: #2aa198;
+    --color-secondary-rgb: 42, 161, 152;
+
+    --color-success: #859900;
+    --color-warning: #b58900;
+    --color-danger: #dc322f;
+    --color-info: #2aa198;
+
+    --bg-app: #002b36;
+    --bg-surface: #073642;
+    --bg-sidebar: rgba(0, 43, 54, 0.9);
+
+    --glass-surface: rgba(7, 54, 66, 0.65);
+    --glass-surface-hover: rgba(14, 66, 80, 0.7);
+    --glass-border: rgba(255, 255, 255, 0.06);
+    --glass-border-light: rgba(255, 255, 255, 0.12);
+    --glass-shine: rgba(255, 255, 255, 0.01);
+    --backdrop-blur: blur(10px);
+    --backdrop-blur-heavy: blur(14px);
+
+    --text-primary: #eee8d5;
+    --text-secondary: #93a1a1;
+    --text-muted: #657b83;
+    --text-on-primary: #fdf6e3;
+
+    --bg-main: var(--bg-app);
+    --bg-panel: var(--glass-surface);
+    --bg-panel-alt: rgba(255, 255, 255, 0.02);
+    --bg-terminal: #00222b;
+    --bg-xterm: #001b22;
+
+    --bg-detail: transparent;
+    --bg-hover: rgba(255, 255, 255, 0.04);
+    --bg-hover-active: rgba(38, 139, 210, 0.1);
+
+    --color-primary-hover: #4aa3e0;
+    --color-primary-active: #1e6fa8;
+    --color-primary-light: rgba(38, 139, 210, 0.15);
+    --color-primary-strong: #268bd2;
+
+    --color-error: var(--color-danger);
+    --color-error-light: #e35d5b;
+
+    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.4);
+    --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.5);
+    --shadow-lg: 0 12px 24px rgba(0, 0, 0, 0.6);
+    --glow-primary: 0 0 8px rgba(38, 139, 210, 0.05);
+    --glow-text: none;
+
+    --syntax-key: #268bd2;
+    --syntax-string: #2aa198;
+    --syntax-number: #d33682;
+    --syntax-boolean: #cb4b16;
+    --syntax-null: #657b83;
+
+    --status-healthy: #859900;
+    --status-degraded: #b58900;
+    --status-down: #dc322f;
+    --status-unknown: #657b83;
+
+    --text-disabled: rgba(255, 255, 255, 0.25);
+    --bg-inset: #00222b;
+
+    --bg-glass-tint: rgba(0, 43, 54, 0.4);
+}
+
+/* === themes\solarized-light.css === */
+.solarized-light-theme {
+    --font-display: 'Outfit', sans-serif;
+    --font-body: 'Inter', sans-serif;
+    --font-mono: 'Fira Code', monospace;
+
+    --color-primary: #268bd2;
+    --color-primary-rgb: 38, 139, 210;
+    --color-secondary: #2aa198;
+    --color-success: #859900;
+    --color-warning: #b58900;
+    --color-danger: #dc322f;
+    --color-info: #268bd2;
+
+    --bg-app: #fdf6e3;
+    --bg-surface: #eee8d5;
+    --bg-sidebar: rgba(253, 246, 227, 0.85);
+
+    --glass-surface: rgba(253, 246, 227, 0.7);
+    --glass-surface-hover: rgba(253, 246, 227, 0.9);
+    --glass-border: rgba(0, 0, 0, 0.08);
+    --glass-border-light: rgba(0, 0, 0, 0.15);
+    --glass-shine: rgba(255, 255, 255, 0.5);
+    --backdrop-blur: blur(8px);
+    --backdrop-blur-heavy: blur(12px);
+
+    --text-primary: #073642;
+    --text-secondary: #586e75;
+    --text-muted: #93a1a1;
+    --text-on-primary: #FFFFFF;
+
+    --bg-main: var(--bg-app);
+    --bg-main-rgb: 253, 246, 227;
+    --bg-panel: var(--glass-surface);
+    --bg-panel-alt: rgba(0, 0, 0, 0.03);
+    --bg-terminal: #fdf6e3;
+    --bg-xterm: #eee8d5;
+
+    --bg-detail: transparent;
+    --bg-hover: rgba(0, 0, 0, 0.05);
+    --bg-hover-active: rgba(38, 139, 210, 0.08);
+
+    --color-primary-hover: #4ea3e0;
+    --color-primary-active: #1a6ba8;
+    --color-primary-light: rgba(38, 139, 210, 0.15);
+    --color-primary-strong: #268bd2;
+
+    --color-error: var(--color-danger);
+    --color-error-light: #e87674;
+
+    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 6px 12px rgba(0, 0, 0, 0.08);
+    --shadow-lg: 0 12px 24px rgba(0, 0, 0, 0.12);
+    --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.15);
+
+    --glow-primary: 0 0 8px rgba(38, 139, 210, 0.09);
+    --glow-text: none;
+
+    --syntax-key: #268bd2;
+    --syntax-string: #2aa198;
+    --syntax-number: #d33682;
+    --syntax-boolean: #cb4b16;
+    --syntax-null: #93a1a1;
+
+    --status-healthy: #859900;
+    --status-degraded: #b58900;
+    --status-down: #dc322f;
+    --status-unknown: #93a1a1;
+
+    --text-disabled: rgba(0, 0, 0, 0.3);
+    --bg-inset: #ddd6c1;
+
+    --bg-glass-tint: rgba(0, 0, 0, 0.05);
+}
+
+/* === themes\tokyo-night.css === */
+.tokyo-night-theme {
+    --font-display: 'Outfit', sans-serif;
+    --font-body: 'Inter', sans-serif;
+    --font-mono: 'Fira Code', monospace;
+
+    --color-primary: #7aa2f7;
+    --color-primary-rgb: 122, 162, 247;
+    --color-secondary: #bb9af7;
+    --color-secondary-rgb: 187, 154, 247;
+
+    --color-success: #9ece6a;
+    --color-warning: #e0af68;
+    --color-danger: #f7768e;
+    --color-info: #7dcfff;
+
+    --bg-app: #1a1b26;
+    --bg-surface: #24283b;
+    --bg-sidebar: rgba(26, 27, 38, 0.9);
+
+    --glass-surface: rgba(36, 40, 59, 0.65);
+    --glass-surface-hover: rgba(44, 49, 70, 0.7);
+    --glass-border: rgba(255, 255, 255, 0.06);
+    --glass-border-light: rgba(255, 255, 255, 0.12);
+    --glass-shine: rgba(255, 255, 255, 0.01);
+    --backdrop-blur: blur(10px);
+    --backdrop-blur-heavy: blur(14px);
+
+    --text-primary: #c0caf5;
+    --text-secondary: #a9b1d6;
+    --text-muted: #565f89;
+    --text-on-primary: #1a1b26;
+
+    --bg-main: var(--bg-app);
+    --bg-panel: var(--glass-surface);
+    --bg-panel-alt: rgba(255, 255, 255, 0.02);
+    --bg-terminal: #151620;
+    --bg-xterm: #11121b;
+
+    --bg-detail: transparent;
+    --bg-hover: rgba(255, 255, 255, 0.04);
+    --bg-hover-active: rgba(122, 162, 247, 0.1);
+
+    --color-primary-hover: #9bb8f9;
+    --color-primary-active: #5a86e0;
+    --color-primary-light: rgba(122, 162, 247, 0.15);
+    --color-primary-strong: #7aa2f7;
+
+    --color-error: var(--color-danger);
+    --color-error-light: #f99aac;
+
+    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.4);
+    --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.5);
+    --shadow-lg: 0 12px 24px rgba(0, 0, 0, 0.6);
+    --glow-primary: 0 0 8px rgba(122, 162, 247, 0.05);
+    --glow-text: none;
+
+    --syntax-key: #7aa2f7;
+    --syntax-string: #9ece6a;
+    --syntax-number: #ff9e64;
+    --syntax-boolean: #f7768e;
+    --syntax-null: #565f89;
+
+    --status-healthy: #9ece6a;
+    --status-degraded: #e0af68;
+    --status-down: #f7768e;
+    --status-unknown: #565f89;
+
+    --text-disabled: rgba(255, 255, 255, 0.25);
+    --bg-inset: #151620;
+
+    --bg-glass-tint: rgba(26, 27, 38, 0.4);
+}
+
+/* === themes\catppuccin-mocha.css === */
+.catppuccin-mocha-theme {
+    --font-display: 'Outfit', sans-serif;
+    --font-body: 'Inter', sans-serif;
+    --font-mono: 'Fira Code', monospace;
+
+    --color-primary: #cba6f7;
+    --color-primary-rgb: 203, 166, 247;
+    --color-secondary: #f5c2e7;
+    --color-secondary-rgb: 245, 194, 231;
+
+    --color-success: #a6e3a1;
+    --color-warning: #f9e2af;
+    --color-danger: #f38ba8;
+    --color-info: #89b4fa;
+
+    --bg-app: #1e1e2e;
+    --bg-surface: #313244;
+    --bg-sidebar: rgba(30, 30, 46, 0.9);
+
+    --glass-surface: rgba(49, 50, 68, 0.65);
+    --glass-surface-hover: rgba(58, 59, 79, 0.7);
+    --glass-border: rgba(255, 255, 255, 0.06);
+    --glass-border-light: rgba(255, 255, 255, 0.12);
+    --glass-shine: rgba(255, 255, 255, 0.01);
+    --backdrop-blur: blur(10px);
+    --backdrop-blur-heavy: blur(14px);
+
+    --text-primary: #cdd6f4;
+    --text-secondary: #bac2de;
+    --text-muted: #6c7086;
+    --text-on-primary: #1e1e2e;
+
+    --bg-main: var(--bg-app);
+    --bg-panel: var(--glass-surface);
+    --bg-panel-alt: rgba(255, 255, 255, 0.02);
+    --bg-terminal: #181825;
+    --bg-xterm: #13131e;
+
+    --bg-detail: transparent;
+    --bg-hover: rgba(255, 255, 255, 0.04);
+    --bg-hover-active: rgba(203, 166, 247, 0.1);
+
+    --color-primary-hover: #d9bff9;
+    --color-primary-active: #a87ef0;
+    --color-primary-light: rgba(203, 166, 247, 0.15);
+    --color-primary-strong: #cba6f7;
+
+    --color-error: var(--color-danger);
+    --color-error-light: #f5a6bc;
+
+    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.4);
+    --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.5);
+    --shadow-lg: 0 12px 24px rgba(0, 0, 0, 0.6);
+    --glow-primary: 0 0 8px rgba(203, 166, 247, 0.05);
+    --glow-text: none;
+
+    --syntax-key: #89b4fa;
+    --syntax-string: #a6e3a1;
+    --syntax-number: #fab387;
+    --syntax-boolean: #f38ba8;
+    --syntax-null: #6c7086;
+
+    --status-healthy: #a6e3a1;
+    --status-degraded: #f9e2af;
+    --status-down: #f38ba8;
+    --status-unknown: #6c7086;
+
+    --text-disabled: rgba(255, 255, 255, 0.25);
+    --bg-inset: #181825;
+
+    --bg-glass-tint: rgba(30, 30, 46, 0.4);
+}
+
+/* === themes\catppuccin-latte.css === */
+.catppuccin-latte-theme {
+    --font-display: 'Outfit', sans-serif;
+    --font-body: 'Inter', sans-serif;
+    --font-mono: 'Fira Code', monospace;
+
+    --color-primary: #8839ef;
+    --color-primary-rgb: 136, 57, 239;
+    --color-secondary: #ea76cb;
+    --color-success: #40a02b;
+    --color-warning: #df8e1d;
+    --color-danger: #d20f39;
+    --color-info: #1e66f5;
+
+    --bg-app: #eff1f5;
+    --bg-surface: #e6e9ef;
+    --bg-sidebar: rgba(239, 241, 245, 0.85);
+
+    --glass-surface: rgba(239, 241, 245, 0.7);
+    --glass-surface-hover: rgba(239, 241, 245, 0.9);
+    --glass-border: rgba(0, 0, 0, 0.08);
+    --glass-border-light: rgba(0, 0, 0, 0.15);
+    --glass-shine: rgba(255, 255, 255, 0.5);
+    --backdrop-blur: blur(8px);
+    --backdrop-blur-heavy: blur(12px);
+
+    --text-primary: #4c4f69;
+    --text-secondary: #6c6f85;
+    --text-muted: #9ca0b0;
+    --text-on-primary: #FFFFFF;
+
+    --bg-main: var(--bg-app);
+    --bg-main-rgb: 239, 241, 245;
+    --bg-panel: var(--glass-surface);
+    --bg-panel-alt: rgba(0, 0, 0, 0.03);
+    --bg-terminal: #eff1f5;
+    --bg-xterm: #e6e9ef;
+
+    --bg-detail: transparent;
+    --bg-hover: rgba(0, 0, 0, 0.05);
+    --bg-hover-active: rgba(136, 57, 239, 0.08);
+
+    --color-primary-hover: #a060f4;
+    --color-primary-active: #6d2dbf;
+    --color-primary-light: rgba(136, 57, 239, 0.15);
+    --color-primary-strong: #8839ef;
+
+    --color-error: var(--color-danger);
+    --color-error-light: #e66a84;
+
+    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 6px 12px rgba(0, 0, 0, 0.08);
+    --shadow-lg: 0 12px 24px rgba(0, 0, 0, 0.12);
+    --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.15);
+
+    --glow-primary: 0 0 8px rgba(136, 57, 239, 0.09);
+    --glow-text: none;
+
+    --syntax-key: #1e66f5;
+    --syntax-string: #40a02b;
+    --syntax-number: #fe640b;
+    --syntax-boolean: #d20f39;
+    --syntax-null: #9ca0b0;
+
+    --status-healthy: #40a02b;
+    --status-degraded: #df8e1d;
+    --status-down: #d20f39;
+    --status-unknown: #9ca0b0;
+
+    --text-disabled: rgba(0, 0, 0, 0.3);
+    --bg-inset: #dce0e8;
+
+    --bg-glass-tint: rgba(0, 0, 0, 0.05);
+}
+
+/* === themes\github-light.css === */
+.github-light-theme {
+    --font-display: 'Outfit', sans-serif;
+    --font-body: 'Inter', sans-serif;
+    --font-mono: 'Fira Code', monospace;
+
+    --color-primary: #0969da;
+    --color-primary-rgb: 9, 105, 218;
+    --color-secondary: #8250df;
+    --color-success: #1a7f37;
+    --color-warning: #bf8700;
+    --color-danger: #cf222e;
+    --color-info: #0969da;
+
+    --bg-app: #ffffff;
+    --bg-surface: #f6f8fa;
+    --bg-sidebar: rgba(255, 255, 255, 0.85);
+
+    --glass-surface: rgba(255, 255, 255, 0.7);
+    --glass-surface-hover: rgba(255, 255, 255, 0.9);
+    --glass-border: rgba(0, 0, 0, 0.08);
+    --glass-border-light: rgba(0, 0, 0, 0.15);
+    --glass-shine: rgba(255, 255, 255, 0.5);
+    --backdrop-blur: blur(8px);
+    --backdrop-blur-heavy: blur(12px);
+
+    --text-primary: #1f2328;
+    --text-secondary: #656d76;
+    --text-muted: #8b949e;
+    --text-on-primary: #FFFFFF;
+
+    --bg-main: var(--bg-app);
+    --bg-main-rgb: 255, 255, 255;
+    --bg-panel: var(--glass-surface);
+    --bg-panel-alt: rgba(0, 0, 0, 0.03);
+    --bg-terminal: #ffffff;
+    --bg-xterm: #f6f8fa;
+
+    --bg-detail: transparent;
+    --bg-hover: rgba(0, 0, 0, 0.05);
+    --bg-hover-active: rgba(9, 105, 218, 0.08);
+
+    --color-primary-hover: #3a8ae6;
+    --color-primary-active: #0550ae;
+    --color-primary-light: rgba(9, 105, 218, 0.15);
+    --color-primary-strong: #0969da;
+
+    --color-error: var(--color-danger);
+    --color-error-light: #e57373;
+
+    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 6px 12px rgba(0, 0, 0, 0.08);
+    --shadow-lg: 0 12px 24px rgba(0, 0, 0, 0.12);
+    --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.15);
+
+    --glow-primary: 0 0 8px rgba(9, 105, 218, 0.09);
+    --glow-text: none;
+
+    --syntax-key: #0550ae;
+    --syntax-string: #0a3069;
+    --syntax-number: #953800;
+    --syntax-boolean: #cf222e;
+    --syntax-null: #8b949e;
+
+    --status-healthy: #1a7f37;
+    --status-degraded: #bf8700;
+    --status-down: #cf222e;
+    --status-unknown: #8b949e;
+
+    --text-disabled: rgba(0, 0, 0, 0.3);
+    --bg-inset: #eaecef;
+
+    --bg-glass-tint: rgba(0, 0, 0, 0.05);
+}
+
+/* === themes\cassandra-orange.css === */
+.cassandra-orange-theme {
+    --font-display: 'Outfit', sans-serif;
+    --font-body: 'Inter', sans-serif;
+    --font-mono: 'Fira Code', monospace;
+
+    --color-primary: #f0810f;
+    --color-primary-rgb: 240, 129, 15;
+    --color-secondary: #1287b1;
+    --color-success: #4caf50;
+    --color-warning: #e8c547;
+    --color-danger: #e85d4a;
+    --color-info: #1287b1;
+
+    --bg-app: #0c0c0e;
+    --bg-surface: #161618;
+    --bg-sidebar: rgba(12, 12, 14, 0.9);
+
+    --glass-surface: rgba(22, 22, 24, 0.7);
+    --glass-surface-hover: rgba(22, 22, 24, 0.9);
+    --glass-border: rgba(255, 255, 255, 0.06);
+    --glass-border-light: rgba(255, 255, 255, 0.12);
+    --glass-shine: rgba(255, 255, 255, 0.05);
+    --backdrop-blur: blur(8px);
+    --backdrop-blur-heavy: blur(12px);
+
+    --text-primary: #e8e4e0;
+    --text-secondary: #a8a4a0;
+    --text-muted: #706c68;
+    --text-on-primary: #FFFFFF;
+
+    --bg-main: var(--bg-app);
+    --bg-main-rgb: 12, 12, 14;
+    --bg-panel: var(--glass-surface);
+    --bg-panel-alt: rgba(255, 255, 255, 0.03);
+    --bg-terminal: #0c0c0e;
+    --bg-xterm: #111113;
+
+    --bg-detail: transparent;
+    --bg-hover: rgba(255, 255, 255, 0.04);
+    --bg-hover-active: rgba(240, 129, 15, 0.10);
+
+    --color-primary-hover: #f49a3f;
+    --color-primary-active: #c0670c;
+    --color-primary-light: rgba(240, 129, 15, 0.15);
+    --color-primary-strong: #f0810f;
+
+    --color-error: var(--color-danger);
+    --color-error-light: #f08878;
+
+    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.4);
+    --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.5);
+    --shadow-lg: 0 12px 24px rgba(0, 0, 0, 0.6);
+    --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.7);
+
+    --glow-primary: 0 0 8px rgba(240, 129, 15, 0.15);
+    --glow-text: none;
+
+    --syntax-key: #1287b1;
+    --syntax-string: #f0810f;
+    --syntax-number: #e8c547;
+    --syntax-boolean: #e85d4a;
+    --syntax-null: #706c68;
+
+    --status-healthy: #4caf50;
+    --status-degraded: #e8c547;
+    --status-down: #e85d4a;
+    --status-unknown: #706c68;
+
+    --text-disabled: rgba(255, 255, 255, 0.3);
+    --bg-inset: #0a0a0c;
+
+    --bg-glass-tint: rgba(255, 255, 255, 0.03);
+}
+
+/* === themes\matrix.css === */
+.matrix-theme {
+    --font-display: 'Outfit', sans-serif;
+    --font-body: 'Inter', sans-serif;
+    --font-mono: 'Fira Code', monospace;
+
+    --color-primary: #00ff41;
+    --color-primary-rgb: 0, 255, 65;
+    --color-secondary: #008f11;
+    --color-success: #00ff41;
+    --color-warning: #ccff00;
+    --color-danger: #ff3333;
+    --color-info: #00cc33;
+
+    --bg-app: #000000;
+    --bg-surface: #0a0a0a;
+    --bg-sidebar: rgba(0, 0, 0, 0.9);
+
+    --glass-surface: rgba(10, 10, 10, 0.7);
+    --glass-surface-hover: rgba(10, 10, 10, 0.9);
+    --glass-border: rgba(255, 255, 255, 0.06);
+    --glass-border-light: rgba(255, 255, 255, 0.12);
+    --glass-shine: rgba(0, 255, 65, 0.05);
+    --backdrop-blur: blur(8px);
+    --backdrop-blur-heavy: blur(12px);
+
+    --text-primary: #00ff41;
+    --text-secondary: #00cc33;
+    --text-muted: #336633;
+    --text-on-primary: #000000;
+
+    --bg-main: var(--bg-app);
+    --bg-main-rgb: 0, 0, 0;
+    --bg-panel: var(--glass-surface);
+    --bg-panel-alt: rgba(255, 255, 255, 0.03);
+    --bg-terminal: #000000;
+    --bg-xterm: #050505;
+
+    --bg-detail: transparent;
+    --bg-hover: rgba(255, 255, 255, 0.04);
+    --bg-hover-active: rgba(0, 255, 65, 0.10);
+
+    --color-primary-hover: #33ff66;
+    --color-primary-active: #00cc33;
+    --color-primary-light: rgba(0, 255, 65, 0.15);
+    --color-primary-strong: #00ff41;
+
+    --color-error: var(--color-danger);
+    --color-error-light: #ff6666;
+
+    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.4);
+    --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.5);
+    --shadow-lg: 0 12px 24px rgba(0, 0, 0, 0.6);
+    --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.7);
+
+    --glow-primary: 0 0 8px rgba(0, 255, 65, 0.20);
+    --glow-text: 0 0 4px rgba(0, 255, 65, 0.3);
+
+    --syntax-key: #00ff41;
+    --syntax-string: #33ff77;
+    --syntax-number: #99ff99;
+    --syntax-boolean: #ff3333;
+    --syntax-null: #336633;
+
+    --status-healthy: #00ff41;
+    --status-degraded: #ccff00;
+    --status-down: #ff3333;
+    --status-unknown: #336633;
+
+    --text-disabled: rgba(255, 255, 255, 0.3);
+    --bg-inset: #050505;
+
+    --bg-glass-tint: rgba(255, 255, 255, 0.03);
+}
+
+/* === themes\midnight-purple.css === */
+.midnight-purple-theme {
+    --font-display: 'Outfit', sans-serif;
+    --font-body: 'Inter', sans-serif;
+    --font-mono: 'Fira Code', monospace;
+
+    --color-primary: #a855f7;
+    --color-primary-rgb: 168, 85, 247;
+    --color-secondary: #ec4899;
+    --color-success: #34d399;
+    --color-warning: #fbbf24;
+    --color-danger: #ef4444;
+    --color-info: #818cf8;
+
+    --bg-app: #0f0a1a;
+    --bg-surface: #1a1128;
+    --bg-sidebar: rgba(15, 10, 26, 0.9);
+
+    --glass-surface: rgba(26, 17, 40, 0.7);
+    --glass-surface-hover: rgba(26, 17, 40, 0.9);
+    --glass-border: rgba(255, 255, 255, 0.06);
+    --glass-border-light: rgba(255, 255, 255, 0.12);
+    --glass-shine: rgba(168, 85, 247, 0.05);
+    --backdrop-blur: blur(8px);
+    --backdrop-blur-heavy: blur(12px);
+
+    --text-primary: #e2ddf5;
+    --text-secondary: #a8a0c0;
+    --text-muted: #6b6488;
+    --text-on-primary: #FFFFFF;
+
+    --bg-main: var(--bg-app);
+    --bg-main-rgb: 15, 10, 26;
+    --bg-panel: var(--glass-surface);
+    --bg-panel-alt: rgba(255, 255, 255, 0.03);
+    --bg-terminal: #0f0a1a;
+    --bg-xterm: #140e22;
+
+    --bg-detail: transparent;
+    --bg-hover: rgba(255, 255, 255, 0.04);
+    --bg-hover-active: rgba(168, 85, 247, 0.10);
+
+    --color-primary-hover: #bf7ff9;
+    --color-primary-active: #8b3fd4;
+    --color-primary-light: rgba(168, 85, 247, 0.15);
+    --color-primary-strong: #a855f7;
+
+    --color-error: var(--color-danger);
+    --color-error-light: #f87171;
+
+    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.4);
+    --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.5);
+    --shadow-lg: 0 12px 24px rgba(0, 0, 0, 0.6);
+    --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.7);
+
+    --glow-primary: 0 0 8px rgba(168, 85, 247, 0.18);
+    --glow-text: none;
+
+    --syntax-key: #a855f7;
+    --syntax-string: #34d399;
+    --syntax-number: #fb923c;
+    --syntax-boolean: #f472b6;
+    --syntax-null: #6b6488;
+
+    --status-healthy: #34d399;
+    --status-degraded: #fbbf24;
+    --status-down: #ef4444;
+    --status-unknown: #6b6488;
+
+    --text-disabled: rgba(255, 255, 255, 0.3);
+    --bg-inset: #0a0714;
+
+    --bg-glass-tint: rgba(255, 255, 255, 0.03);
+}
+
 /* --- Default status & utility variables (fallback if a theme omits them) --- */
 :root {
     --status-healthy: #4caf50;
@@ -1020,49 +1914,31 @@
     --z-toast: 9000;
 }
 
-.theme-preview.light {
-    background: #ffffff;
-}
+/* --- Theme preview dots (topbar, legacy) --- */
+.theme-preview.light { background: #ffffff; }
+.theme-preview.dark { background: #101010; }
+.theme-preview.orokin-light { background: #fff4d6; }
+.theme-preview.orokin-dark { background: #ffe066; }
+.theme-preview.kubana-light { background: #00b3a4; }
+.theme-preview.kubana-dark { background: #DB1374; }
+.theme-preview.cubic { background: #52AA3F; }
+.theme-preview.neon-punk { background: #FF007F; }
+.theme-preview.fortress-blue { background: #5b7a8c; }
+.theme-preview.fortress-red { background: #B8383B; }
+.theme-preview.dracula { background: #bd93f9; }
+.theme-preview.monokai { background: #f92672; }
+.theme-preview.nord { background: #88c0d0; }
+.theme-preview.gruvbox-dark { background: #fe8019; }
+.theme-preview.solarized-dark { background: #268bd2; }
+.theme-preview.solarized-light { background: #fdf6e3; }
+.theme-preview.tokyo-night { background: #7aa2f7; }
+.theme-preview.catppuccin-mocha { background: #cba6f7; }
+.theme-preview.catppuccin-latte { background: #8839ef; }
+.theme-preview.github-light { background: #f6f8fa; }
+.theme-preview.cassandra-orange { background: #f0810f; }
+.theme-preview.matrix { background: #00ff41; }
+.theme-preview.midnight-purple { background: #a855f7; }
 
-.theme-preview.dark {
-    background: #101010;
-}
-
-.theme-preview.orokin-light {
-    background: #fff4d6;
-}
-
-.theme-preview.orokin-dark {
-    background: #ffe066;
-}
-
-.theme-preview.kibana-light {
-    background: #00b3a4;
-}
-
-.theme-preview.kibana-dark {
-    background: #DB1374;
-}
-
-.theme-preview.cubic {
-    background: #52AA3F;
-}
-
-.theme-preview.neon-punk {
-    background: #FF007F;
-}
-
-.theme-preview.fortress-blue {
-    background: #5b7a8c;
-}
-
-.theme-preview.fortress-red {
-    background: #B8383B;
-}
-
-.theme-preview.dracula {
-    background: #bd93f9;
-}
 /* === base.css === */
 html {
     background-color: var(--bg-app);
@@ -2113,6 +2989,11 @@ body:has(.sidebar.collapsed) main.with-sidebar,
     border-top: 1px solid var(--glass-border);
 }
 
+.modal-copy-btn {
+    margin-left: auto;
+    margin-right: 1rem;
+}
+
 .modal-close {
     font-size: 1.5rem;
     cursor: pointer;
@@ -2259,6 +3140,29 @@ button:hover {
     transform: translateY(-1px);
     filter: brightness(1.05);
     box-shadow: 0 4px 12px rgba(var(--color-primary-rgb, 0, 229, 255), 0.25);
+}
+
+.btn-outline-sm {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--text-secondary);
+    text-decoration: none;
+    cursor: pointer;
+    font-family: inherit;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 0.4rem 0.8rem;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-outline-sm:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: var(--color-primary);
+    color: var(--text-primary);
 }
 
 .btn-outline {
@@ -2733,6 +3637,49 @@ button:hover {
     flex-shrink: 0;
 }
 
+/* --- Test Button --- */
+.test-btn {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    border: 1px solid var(--glass-border);
+    background: transparent;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+    white-space: nowrap;
+}
+
+.test-btn:hover {
+    color: var(--color-primary);
+    border-color: var(--color-primary);
+}
+
+.test-btn.testing {
+    color: var(--color-primary);
+    border-color: var(--color-primary);
+    opacity: 0.7;
+}
+
+.test-btn.success {
+    color: var(--color-success);
+    border-color: var(--color-success);
+}
+
+.test-btn.error {
+    color: var(--color-danger);
+    border-color: var(--color-danger);
+}
+
+.test-btn:disabled {
+    cursor: default;
+}
+
 /* --- Arrow Button --- */
 .arrow-btn {
     width: 28px;
@@ -2760,6 +3707,10 @@ button:hover {
 
 /* --- Contact Point Line --- */
 .card-contact {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
     padding-top: 0.5rem;
     padding-left: 2.75rem;
 }
@@ -7245,4 +8196,147 @@ body.exception-page footer {
         opacity: 1;
         transform: translateY(0);
     }
+}
+/* === profile.css === */
+.profile-page {
+    max-width: 800px;
+}
+
+.profile-section {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid var(--glass-border);
+    border-radius: 10px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    box-shadow: var(--shadow-sm);
+}
+
+.profile-section h2 {
+    font-family: var(--font-display);
+    font-size: 0.85rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--text-muted);
+    margin: 0 0 1.25rem 0;
+}
+
+/* --- Account Fields --- */
+.profile-fields {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1.25rem;
+}
+
+.profile-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+
+.field-label {
+    font-family: var(--font-display);
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-muted);
+}
+
+.field-value {
+    font-family: var(--font-mono);
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.profile-note {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin: 1rem 0 0 0;
+    opacity: 0.7;
+}
+
+/* --- Theme Group Labels --- */
+.theme-group-label {
+    font-family: var(--font-display);
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-secondary);
+    margin: 1.25rem 0 0.6rem 0;
+}
+
+.theme-group-label:first-of-type {
+    margin-top: 0;
+}
+
+/* --- Theme Grid --- */
+.theme-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 0.75rem;
+}
+
+.theme-card {
+    background: var(--bg-surface);
+    border: 2px solid var(--glass-border);
+    border-radius: 10px;
+    padding: 0.75rem;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    text-align: left;
+}
+
+.theme-card:hover {
+    transform: translateY(-1px);
+    border-color: var(--glass-border-light);
+    box-shadow: var(--shadow-md);
+}
+
+.theme-card.active {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 12px rgba(var(--color-primary-rgb), 0.15);
+}
+
+.theme-preview-bars {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.theme-preview-bars span {
+    display: block;
+    height: 8px;
+    width: 100%;
+}
+
+/* --- System theme card (split dark/light preview) --- */
+.theme-grid-single {
+    max-width: 160px;
+    margin-bottom: 0.25rem;
+}
+
+.theme-preview-split span.split-bar {
+    display: flex;
+    height: 8px;
+}
+
+.theme-preview-split .split-dark,
+.theme-preview-split .split-light {
+    flex: 1;
+    height: 100%;
+}
+
+.theme-card-name {
+    font-family: var(--font-body);
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--text-primary);
 }

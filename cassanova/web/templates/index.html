@@ -65,6 +65,10 @@
 
             <div class="card-contact">
                 <span class="contact-points" title="{{ config.contact_points | join(', ') }}">{{ config.contact_points[0] }}{% if config.contact_points | length > 1 %} +{{ config.contact_points | length - 1 }} more{% endif %}</span>
+                <button class="test-btn" title="Test connection"
+                        onclick="event.stopPropagation(); testCluster(this, '{{ name }}')">
+                    Test
+                </button>
             </div>
         </div>
         {% endfor %}
@@ -150,6 +154,44 @@
 
 
     <script>
+        const _testCooldowns = {};
+        const TEST_COOLDOWN_MS = 5000;
+
+        function testCluster(btn, name) {
+            const now = Date.now();
+            if (_testCooldowns[name] && now - _testCooldowns[name] < TEST_COOLDOWN_MS) return;
+            _testCooldowns[name] = now;
+
+            btn.classList.remove('success', 'error');
+            btn.classList.add('testing');
+            btn.textContent = 'Testing...';
+            btn.disabled = true;
+
+            fetch(`/api/v1/cluster/${encodeURIComponent(name)}/test`)
+                .then(res => {
+                    btn.classList.remove('testing');
+                    if (res.ok) {
+                        btn.classList.add('success');
+                        btn.textContent = 'Reachable';
+                    } else {
+                        btn.classList.add('error');
+                        btn.textContent = 'Unreachable';
+                    }
+                })
+                .catch(() => {
+                    btn.classList.remove('testing');
+                    btn.classList.add('error');
+                    btn.textContent = 'Unreachable';
+                })
+                .finally(() => {
+                    btn.disabled = false;
+                    setTimeout(() => {
+                        btn.classList.remove('success', 'error');
+                        btn.textContent = 'Test';
+                    }, 3000);
+                });
+        }
+
         function openSSTableSmasher() {
             document.getElementById('game-modal').classList.remove('hidden');
             if (!window.gameInstance) {

@@ -1,0 +1,72 @@
+.nord-theme {
+    --font-display: 'Outfit', sans-serif;
+    --font-body: 'Inter', sans-serif;
+    --font-mono: 'Fira Code', monospace;
+
+    --color-primary: #88c0d0;
+    --color-primary-rgb: 136, 192, 208;
+    --color-secondary: #b48ead;
+    --color-secondary-rgb: 180, 142, 173;
+
+    --color-success: #a3be8c;
+    --color-warning: #ebcb8b;
+    --color-danger: #bf616a;
+    --color-info: #88c0d0;
+
+    --bg-app: #2e3440;
+    --bg-surface: #3b4252;
+    --bg-sidebar: rgba(46, 52, 64, 0.9);
+
+    --glass-surface: rgba(59, 66, 82, 0.65);
+    --glass-surface-hover: rgba(67, 76, 94, 0.7);
+    --glass-border: rgba(255, 255, 255, 0.06);
+    --glass-border-light: rgba(255, 255, 255, 0.12);
+    --glass-shine: rgba(255, 255, 255, 0.01);
+    --backdrop-blur: blur(10px);
+    --backdrop-blur-heavy: blur(14px);
+
+    --text-primary: #eceff4;
+    --text-secondary: #d8dee9;
+    --text-muted: #7b88a1;
+    --text-on-primary: #2e3440;
+
+    --bg-main: var(--bg-app);
+    --bg-panel: var(--glass-surface);
+    --bg-panel-alt: rgba(255, 255, 255, 0.02);
+    --bg-terminal: #272c36;
+    --bg-xterm: #21262e;
+
+    --bg-detail: transparent;
+    --bg-hover: rgba(255, 255, 255, 0.04);
+    --bg-hover-active: rgba(136, 192, 208, 0.1);
+
+    --color-primary-hover: #9dd0de;
+    --color-primary-active: #6ba8b8;
+    --color-primary-light: rgba(136, 192, 208, 0.15);
+    --color-primary-strong: #88c0d0;
+
+    --color-error: var(--color-danger);
+    --color-error-light: #d08770;
+
+    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.4);
+    --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.5);
+    --shadow-lg: 0 12px 24px rgba(0, 0, 0, 0.6);
+    --glow-primary: 0 0 8px rgba(136, 192, 208, 0.05);
+    --glow-text: none;
+
+    --syntax-key: #88c0d0;
+    --syntax-string: #a3be8c;
+    --syntax-number: #b48ead;
+    --syntax-boolean: #bf616a;
+    --syntax-null: #616e88;
+
+    --status-healthy: #a3be8c;
+    --status-degraded: #ebcb8b;
+    --status-down: #bf616a;
+    --status-unknown: #616e88;
+
+    --text-disabled: rgba(255, 255, 255, 0.25);
+    --bg-inset: #272c36;
+
+    --bg-glass-tint: rgba(46, 52, 64, 0.4);
+}

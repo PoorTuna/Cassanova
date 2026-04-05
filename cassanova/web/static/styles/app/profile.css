@@ -1,0 +1,142 @@
+.profile-page {
+    max-width: 800px;
+}
+
+.profile-section {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid var(--glass-border);
+    border-radius: 10px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    box-shadow: var(--shadow-sm);
+}
+
+.profile-section h2 {
+    font-family: var(--font-display);
+    font-size: 0.85rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--text-muted);
+    margin: 0 0 1.25rem 0;
+}
+
+/* --- Account Fields --- */
+.profile-fields {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1.25rem;
+}
+
+.profile-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+
+.field-label {
+    font-family: var(--font-display);
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-muted);
+}
+
+.field-value {
+    font-family: var(--font-mono);
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.profile-note {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin: 1rem 0 0 0;
+    opacity: 0.7;
+}
+
+/* --- Theme Group Labels --- */
+.theme-group-label {
+    font-family: var(--font-display);
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-secondary);
+    margin: 1.25rem 0 0.6rem 0;
+}
+
+.theme-group-label:first-of-type {
+    margin-top: 0;
+}
+
+/* --- Theme Grid --- */
+.theme-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 0.75rem;
+}
+
+.theme-card {
+    background: var(--bg-surface);
+    border: 2px solid var(--glass-border);
+    border-radius: 10px;
+    padding: 0.75rem;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    text-align: left;
+}
+
+.theme-card:hover {
+    transform: translateY(-1px);
+    border-color: var(--glass-border-light);
+    box-shadow: var(--shadow-md);
+}
+
+.theme-card.active {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 12px rgba(var(--color-primary-rgb), 0.15);
+}
+
+.theme-preview-bars {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.theme-preview-bars span {
+    display: block;
+    height: 8px;
+    width: 100%;
+}
+
+/* --- System theme card (split dark/light preview) --- */
+.theme-grid-single {
+    max-width: 160px;
+    margin-bottom: 0.25rem;
+}
+
+.theme-preview-split span.split-bar {
+    display: flex;
+    height: 8px;
+}
+
+.theme-preview-split .split-dark,
+.theme-preview-split .split-light {
+    flex: 1;
+    height: 100%;
+}
+
+.theme-card-name {
+    font-family: var(--font-body);
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}

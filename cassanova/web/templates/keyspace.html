@@ -30,6 +30,13 @@
                     </svg>
                     Edit Keyspace
                 </a>
+                <button class="btn-outline-sm" onclick="showKeyspaceCql()">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="16 18 22 12 16 6"></polyline>
+                        <polyline points="8 6 2 12 8 18"></polyline>
+                    </svg>
+                    Export CQL
+                </button>
             </div>
         </div>
         <ul>
@@ -110,6 +117,7 @@
                                     <a href="/cluster/{{ cluster_config_entry }}/keyspace/{{ keyspace.name }}/table/{{ table.name }}/builder">Edit Table</a>
                                     <button data-action="description" data-table="{{ table.name }}">Show Description</button>
                                     <button data-action="schema" data-table="{{ table.name }}">Show Schema</button>
+                                    <button data-action="export-cql" data-table="{{ table.name }}">Export CQL</button>
                                     <button data-action="truncate" data-table="{{ table.name }}" class="danger">Truncate Table</button>
                                     <button data-action="delete" data-table="{{ table.name }}" class="danger">Delete Table</button>
                                 </div>
@@ -287,6 +295,7 @@
     <div class="modal-content glass-panel schema-modal-content">
         <div class="modal-header">
             <h3 id="modal-title">Schema Details</h3>
+            <button id="modal-copy" class="btn-outline-sm modal-copy-btn" title="Copy to clipboard">Copy</button>
             <span id="modal-close" class="modal-close">&times;</span>
         </div>
         <div class="modal-body">

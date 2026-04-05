@@ -4,11 +4,16 @@
 <head>
     <meta charset="UTF-8" />
     <script>
-        (function(){var t=localStorage.getItem('selectedTheme')||'dark';
+        (function(){var t=localStorage.getItem('selectedTheme')||'system';
+        if(t==='system'){t=window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light';}
         var c={'dark':'#08080a','light':'#F5F7FA','dracula':'#282a36','cubic':'#1D1D1D',
-        'neon-punk':'#030305','kibana-dark':'#1D1E24','kibana-light':'#F5F7FA',
+        'neon-punk':'#030305','kubana-dark':'#1D1E24','kubana-light':'#F5F7FA',
         'orokin-dark':'#0A0A0C','orokin-light':'#F9FAFB','fortress-blue':'#242220',
-        'fortress-red':'#242220'};
+        'fortress-red':'#242220','monokai':'#272822','nord':'#2e3440',
+        'gruvbox-dark':'#1d2021','solarized-dark':'#002b36','solarized-light':'#fdf6e3',
+        'tokyo-night':'#1a1b26','catppuccin-mocha':'#1e1e2e','catppuccin-latte':'#eff1f5',
+        'github-light':'#ffffff','cassandra-orange':'#0c0c0e','matrix':'#000000',
+        'midnight-purple':'#0f0a1a'};
         document.documentElement.style.backgroundColor=c[t]||'#08080a';})();
     </script>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -80,23 +85,13 @@
                         </div>
                     </div>
                     <div class="topbar-dropdown-divider"></div>
-                    <div class="topbar-dropdown-section">
-                        <div class="topbar-dropdown-label">Theme</div>
-                        <div class="topbar-theme-grid" id="topbar-theme-grid">
-                            <button class="topbar-theme-dot" data-theme="dark" title="Dark"><span class="theme-preview dark"></span></button>
-                            <button class="topbar-theme-dot" data-theme="light" title="Light"><span class="theme-preview light"></span></button>
-                            <button class="topbar-theme-dot" data-theme="dracula" title="Dracula"><span class="theme-preview dracula"></span></button>
-                            <button class="topbar-theme-dot" data-theme="cubic" title="Cubic"><span class="theme-preview cubic"></span></button>
-                            <button class="topbar-theme-dot" data-theme="neon-punk" title="Neon Punk"><span class="theme-preview neon-punk"></span></button>
-                            <button class="topbar-theme-dot" data-theme="kibana-dark" title="Kibana Dark"><span class="theme-preview kibana-dark"></span></button>
-                            <button class="topbar-theme-dot" data-theme="kibana-light" title="Kibana Light"><span class="theme-preview kibana-light"></span></button>
-                            <button class="topbar-theme-dot" data-theme="orokin-dark" title="Orokin Dark"><span class="theme-preview orokin-dark"></span></button>
-                            <button class="topbar-theme-dot" data-theme="orokin-light" title="Orokin Light"><span class="theme-preview orokin-light"></span></button>
-                            <button class="topbar-theme-dot" data-theme="fortress-blue" title="Fortress Blue"><span class="theme-preview fortress-blue"></span></button>
-                            <button class="topbar-theme-dot" data-theme="fortress-red" title="Fortress Red"><span class="theme-preview fortress-red"></span></button>
-                        </div>
-                    </div>
-                    <div class="topbar-dropdown-divider"></div>
+                    <a href="/profile" class="topbar-dropdown-item">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="12" cy="7" r="4"></circle>
+                        </svg>
+                        Profile
+                    </a>
                     <a href="/logout" class="topbar-dropdown-item topbar-dropdown-danger">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
