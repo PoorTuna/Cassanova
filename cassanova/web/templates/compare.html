@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block title %}Compare: {{ cluster_a }} vs {{ cluster_b }}{% endblock %}
+{% block breadcrumbs %}<a href="/">Clusters</a><span class="bc-sep">/</span><span class="bc-current">Compare</span>{% endblock %}
+
+{% block head_extra %}
+<script>
+    const compareClusterA = '{{ cluster_a }}';
+    const compareClusterB = '{{ cluster_b }}';
+    const clusterKeys = JSON.parse('{{ cluster_keys | tojson | safe }}');
+</script>
+<script src="/static/scripts/app/compare.js" defer></script>
+{% endblock %}
+
+{% block content %}
+<main class="with-sidebar compare-page">
+
+    <header class="compare-header">
+        <div class="compare-title-row">
+            <h1 class="page-title">Schema Comparison</h1>
+            <div id="compare-summary" class="compare-summary"></div>
+        </div>
+        <div class="compare-picker">
+            <select id="compare-select-a" class="compare-select">
+                {% for key in cluster_keys %}
+                <option value="{{ key }}" {{ 'selected' if key == cluster_a }}>{{ key }}</option>
+                {% endfor %}
+            </select>
+            <span class="compare-vs">vs</span>
+            <select id="compare-select-b" class="compare-select">
+                {% for key in cluster_keys %}
+                <option value="{{ key }}" {{ 'selected' if key == cluster_b }}>{{ key }}</option>
+                {% endfor %}
+            </select>
+            <button class="btn-primary-sm" id="compare-btn">Compare</button>
+        </div>
+    </header>
+
+    <div class="compare-filter-row">
+        <input type="text" id="compare-filter" placeholder="Filter keyspaces and tables..." />
+        <label class="compare-toggle">
+            <input type="checkbox" id="hide-identical" checked />
+            <span>Hide identical</span>
+        </label>
+    </div>
+
+    <div id="diff-tree" class="diff-tree">
+        <div class="compare-loading" id="compare-loading">Loading schemas...</div>
+    </div>
+
+</main>
+{% endblock %}

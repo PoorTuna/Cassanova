@@ -29,6 +29,19 @@ def profile_page(request: Request) -> Response:
     return templates.TemplateResponse("profile.html", {"request": request})
 
 
+@cassanova_ui_dashboard_router.get("/compare/{cluster_a}/{cluster_b}")
+def compare_clusters_page(request: Request, cluster_a: str, cluster_b: str) -> Response:
+    return templates.TemplateResponse(
+        "compare.html",
+        {
+            "request": request,
+            "cluster_a": cluster_a,
+            "cluster_b": cluster_b,
+            "cluster_keys": list(clusters_config.clusters.keys()),
+        },
+    )
+
+
 @cassanova_ui_dashboard_router.get("/cluster/{cluster_name}")
 def cluster_dashboard(request: Request, cluster_name: str) -> Response:
     session = get_session(cluster_name)

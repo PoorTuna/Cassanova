@@ -8340,3 +8340,248 @@ body.exception-page footer {
     font-weight: 600;
     color: var(--text-primary);
 }
+
+/* === compare.css === */
+.compare-page {
+    max-width: 1000px;
+}
+
+/* --- Header --- */
+.compare-header {
+    margin-bottom: 1.25rem;
+}
+
+.compare-title-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+}
+
+.compare-title-row .page-title {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0;
+}
+
+.compare-summary {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.compare-picker {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.compare-select {
+    flex: 1;
+    padding: 0.5rem 0.75rem;
+    background: var(--glass-surface);
+    border: 1px solid var(--glass-border);
+    border-radius: 8px;
+    color: var(--text-primary);
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+}
+
+.compare-select:focus {
+    outline: none;
+    border-color: var(--color-primary);
+}
+
+.compare-vs {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* --- Filter Row --- */
+.compare-filter-row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.compare-filter-row input[type="text"] {
+    flex: 1;
+    padding: 0.5rem 0.75rem;
+    background: var(--glass-surface);
+    border: 1px solid var(--glass-border);
+    border-radius: 8px;
+    color: var(--text-primary);
+    font-size: 0.85rem;
+}
+
+.compare-filter-row input[type="text"]:focus {
+    outline: none;
+    border-color: var(--color-primary);
+}
+
+.compare-toggle {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    white-space: nowrap;
+    cursor: pointer;
+}
+
+.compare-toggle input[type="checkbox"] {
+    accent-color: var(--color-primary);
+}
+
+/* --- Diff Tree --- */
+.diff-tree {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid var(--glass-border);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.compare-loading {
+    padding: 2rem;
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+.compare-loading.error {
+    color: var(--color-danger);
+}
+
+.compare-empty {
+    padding: 2rem;
+    text-align: center;
+    color: var(--text-muted);
+}
+
+/* --- Diff Nodes --- */
+.diff-node {
+    border-bottom: 1px solid var(--glass-border);
+}
+
+.diff-node:last-child {
+    border-bottom: none;
+}
+
+.diff-node-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 1rem;
+    transition: background 0.15s;
+}
+
+.diff-node-header:hover {
+    background: var(--bg-hover);
+}
+
+.diff-toggle {
+    width: 1rem;
+    font-size: 0.65rem;
+    color: var(--text-muted);
+    flex-shrink: 0;
+    text-align: center;
+}
+
+.diff-toggle-spacer {
+    width: 1rem;
+    flex-shrink: 0;
+}
+
+.diff-label {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.diff-table .diff-label {
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.diff-col .diff-label {
+    font-size: 0.78rem;
+    font-weight: 400;
+    color: var(--text-secondary);
+}
+
+/* --- Badges --- */
+.diff-badge {
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 0.1rem 0.4rem;
+    border-radius: 4px;
+    flex-shrink: 0;
+}
+
+.badge-identical {
+    color: var(--text-muted);
+    background: rgba(255, 255, 255, 0.03);
+}
+
+.badge-only_a {
+    color: var(--color-success);
+    background: rgba(76, 175, 80, 0.12);
+}
+
+.badge-only_b {
+    color: var(--color-danger);
+    background: rgba(244, 67, 54, 0.12);
+}
+
+.badge-different {
+    color: var(--color-warning);
+    background: rgba(255, 179, 0, 0.12);
+}
+
+/* --- Detail --- */
+.diff-detail {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-left: auto;
+}
+
+/* --- Children (nesting) --- */
+.diff-children {
+    padding-left: 1.25rem;
+    border-top: 1px solid var(--glass-border);
+}
+
+.diff-children.hidden {
+    display: none;
+}
+
+.diff-children .diff-children {
+    padding-left: 1rem;
+}
+
+/* --- Index page picker bar --- */
+.compare-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 0;
+    animation: fadeSlideDown 0.3s ease;
+}
+
+.compare-bar.hidden {
+    display: none;
+}
+
+.compare-bar .compare-select {
+    max-width: 250px;
+}

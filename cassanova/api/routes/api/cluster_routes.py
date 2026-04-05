@@ -7,6 +7,7 @@ from fastapi.responses import JSONResponse
 from cassanova.api.dependencies.auth import require_permission
 from cassanova.api.dependencies.db_session import get_session
 from cassanova.config.cassanova_config import get_clusters_config
+from cassanova.core.constructors._schema_diff import compare_schemas
 from cassanova.core.constructors.cluster_info import generate_cluster_info
 from cassanova.core.constructors.keyspaces import generate_keyspaces_info
 from cassanova.core.constructors.nodes import generate_nodes_info
@@ -31,6 +32,17 @@ def _invalidate_schema_cache(cluster_name: str, session: Any = None) -> None:
 @cluster_router.get("/cluster-keys")
 def get_cluster_keys() -> list[str]:
     return list(clusters_config.clusters.keys())
+
+
+@cluster_router.get("/compare/{cluster_a}/{cluster_b}")
+def compare_cluster_schemas(cluster_a: str, cluster_b: str) -> dict[str, Any]:
+    session_a = get_session(cluster_a)
+    session_b = get_session(cluster_b)
+    diff = compare_schemas(
+        session_a.cluster.metadata.keyspaces,
+        session_b.cluster.metadata.keyspaces,
+    )
+    return {"cluster_a": cluster_a, "cluster_b": cluster_b, "keyspaces": diff}
 
 
 @cluster_router.get("/clusters")
