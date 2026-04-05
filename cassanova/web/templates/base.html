@@ -32,6 +32,7 @@
     <script src="/static/scripts/app/auto-refresh.js" defer></script>
     <script src="/static/scripts/app/copy-utils.js" defer></script>
     <script src="/static/scripts/app/syntax.js" defer></script>
+    {% if cluster_config_entry %}<script src="/static/scripts/app/cluster-favicon.js" defer></script>{% endif %}
     {% block head_extra %}{% endblock %}
 </head>
 
