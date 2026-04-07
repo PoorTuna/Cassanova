@@ -4,10 +4,13 @@ from uvicorn import run
 from cassanova.api.bootstrap import bootstrap_app
 from cassanova.api.server_config import build_uvicorn_config
 from cassanova.config.cassanova_config import get_clusters_config
+from cassanova.config.logging_config import configure_logging
 
 app = FastAPI()
 
 if __name__ == "__main__":
+    configure_logging()
+
     config = get_clusters_config()
     app_config = config.app_config
 
