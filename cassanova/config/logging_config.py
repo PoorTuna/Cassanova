@@ -1,10 +1,3 @@
-"""Centralized logging configuration for Cassanova.
-
-Sets up:
-- Root logger: StreamHandler (stdout) + RotatingFileHandler (logs/cassanova.log)
-- Audit logger: StreamHandler (stdout, JSON only) + RotatingFileHandler (logs/audit.log)
-"""
-
 import logging
 import sys
 from logging.handlers import RotatingFileHandler
