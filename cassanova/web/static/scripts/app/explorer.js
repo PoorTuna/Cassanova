@@ -492,23 +492,43 @@ document.addEventListener('DOMContentLoaded', () => {
         fetchData();
     });
 
-    document.getElementById('export-csv-btn').addEventListener('click', () => {
-        const url = new URL(`/api/v1/cluster/${cluster}/keyspace/${keyspace}/table/${table}/export`, window.location.origin);
-        if (activeFilters.length > 0) {
-            url.searchParams.set('filter_json', JSON.stringify(activeFilters));
-        }
-        if (explicitAllowFiltering) {
-            url.searchParams.set('allow_filtering', 'true');
-        }
+    const exportBtn = document.getElementById('export-btn');
+    const exportDropdown = document.getElementById('export-dropdown');
 
-        const link = document.createElement('a');
-        link.href = url.toString();
-        link.setAttribute('download', '');
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+    exportBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        exportDropdown.classList.toggle('hidden');
+    });
 
-        Toast.info("Preparing CSV export...");
+    document.addEventListener('click', (e) => {
+        if (!exportBtn.contains(e.target) && !exportDropdown.contains(e.target)) {
+            exportDropdown.classList.add('hidden');
+        }
+    });
+
+    exportDropdown.querySelectorAll('[data-format]').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const format = btn.dataset.format;
+            exportDropdown.classList.add('hidden');
+
+            const url = new URL(`/api/v1/cluster/${cluster}/keyspace/${keyspace}/table/${table}/export`, window.location.origin);
+            url.searchParams.set('format', format);
+            if (activeFilters.length > 0) {
+                url.searchParams.set('filter_json', JSON.stringify(activeFilters));
+            }
+            if (explicitAllowFiltering) {
+                url.searchParams.set('allow_filtering', 'true');
+            }
+
+            const link = document.createElement('a');
+            link.href = url.toString();
+            link.setAttribute('download', '');
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+
+            Toast.info(`Exporting as ${format.toUpperCase()}...`);
+        });
     });
 
     const importBtn = document.getElementById('import-csv-btn');

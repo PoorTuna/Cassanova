@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 from collections.abc import Generator
 from csv import DictReader, writer
 from io import StringIO
@@ -31,6 +32,14 @@ def generate_csv_stream(session: Session, query: str) -> Generator[str, None, No
     for row in rows:
         clean_values = _extract_clean_values(row, headers)
         yield _write_row(output, csv_writer, clean_values)
+
+
+def generate_json_stream(session: Session, query: str) -> Generator[str, None, None]:
+    rows = session.execute(query)
+    headers = rows.column_names
+    for row in rows:
+        clean_values = _extract_clean_values(row, headers)
+        yield json.dumps(dict(zip(headers, clean_values)), default=str) + "\n"
 
 
 def load_csv_data(

@@ -8,7 +8,7 @@ from fastapi.encoders import jsonable_encoder
 from fastapi.responses import StreamingResponse
 
 from cassanova.api.dependencies.auth import require_permission
-from cassanova.api.dependencies.csv_handler import generate_csv_stream, load_csv_data
+from cassanova.api.dependencies.csv_handler import generate_csv_stream, generate_json_stream, load_csv_data
 from cassanova.api.dependencies.db_session import get_session
 from cassanova.core.cql._executor import execute_cql
 from cassanova.core.cql.converters import convert_value_for_cql
@@ -257,6 +257,7 @@ def export_table_data(
     table_name: str,
     filter_json: str | None = None,
     allow_filtering: bool = False,
+    format: str = "csv",
 ) -> StreamingResponse:
     session = get_session(cluster_name)
     keyspace_name = sanitize_identifier(keyspace_name)
@@ -271,6 +272,13 @@ def export_table_data(
 
     if allow_filtering:
         query += " ALLOW FILTERING"
+
+    if format == "json":
+        return StreamingResponse(
+            generate_json_stream(session, query),
+            media_type="application/x-ndjson",
+            headers={"Content-Disposition": f"attachment; filename={table_name}_export.json"},
+        )
 
     return StreamingResponse(
         generate_csv_stream(session, query),

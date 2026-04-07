@@ -76,12 +76,18 @@
                 </div>
             </div>
             <div class="view-controls">
-                <button id="export-csv-btn" class="btn-outline" title="Export to CSV">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"></path>
-                    </svg>
-                    Export CSV
-                </button>
+                <div class="dropdown-wrapper">
+                    <button id="export-btn" class="btn-outline" title="Export data">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"></path>
+                        </svg>
+                        Export
+                    </button>
+                    <div class="dropdown-menu hidden" id="export-dropdown">
+                        <button data-format="csv">Export CSV</button>
+                        <button data-format="json">Export JSON</button>
+                    </div>
+                </div>
                 <button id="import-csv-btn" class="btn-outline" title="Import from CSV">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"></path>
