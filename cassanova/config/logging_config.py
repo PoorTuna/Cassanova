@@ -11,7 +11,7 @@ _BACKUP_COUNT = 5
 
 class LogHandlerConfig(BaseModel):
     stdout: bool = Field(default=True)
-    file: bool = Field(default=True)
+    file: bool = Field(default=False)
 
 
 class LoggingConfig(BaseModel):
