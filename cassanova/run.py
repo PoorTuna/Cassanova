@@ -9,9 +9,9 @@ from cassanova.config.logging_config import configure_logging
 app = FastAPI()
 
 if __name__ == "__main__":
-    configure_logging()
-
     config = get_clusters_config()
+    configure_logging(config.logging)
+
     app_config = config.app_config
 
     bootstrap_app(app, app_config)
