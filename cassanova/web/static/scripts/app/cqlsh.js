@@ -177,8 +177,11 @@ require(['vs/editor/editor.main'], function () {
         }
     });
 
+    const savedContent = localStorage.getItem(`cqlsh_editor_${clusterName}`);
+    const defaultContent = "-- Write your CQL queries here\n-- Ctrl+Enter runs the statement at cursor\n-- Select multiple statements to run them all\nSELECT * FROM system_schema.keyspaces;";
+
     window.editorInstance = monaco.editor.create(document.getElementById('monaco-editor'), {
-        value: "-- Write your CQL query here\n-- Use mouse selection if there are multiple queries\nSELECT * FROM system_schema.keyspaces;",
+        value: savedContent || defaultContent,
         language: 'sql',
         theme: 'vs-dark',
         automaticLayout: false,
@@ -188,6 +191,21 @@ require(['vs/editor/editor.main'], function () {
         lineNumbers: 'on',
         padding: { top: 16 },
     });
+
+    // Persist editor content on change (debounced)
+    let _saveTimer;
+    window.editorInstance.onDidChangeModelContent(() => {
+        clearTimeout(_saveTimer);
+        _saveTimer = setTimeout(() => {
+            localStorage.setItem(`cqlsh_editor_${clusterName}`, window.editorInstance.getValue());
+        }, 500);
+    });
+
+    // Ctrl+Enter keybinding
+    window.editorInstance.addCommand(
+        monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter,
+        () => { if (window.runQuery) window.runQuery(); }
+    );
 
 });
 
@@ -293,24 +311,52 @@ function renderTrace(trace) {
     `;
 }
 
-runBtn.addEventListener('click', () => {
+function getStatementAtCursor() {
+    const editor = window.editorInstance;
+    const text = editor.getValue();
+    const offset = editor.getModel().getOffsetAt(editor.getPosition());
+    const parts = text.split(';');
+    let pos = 0;
+    for (const part of parts) {
+        const start = pos;
+        const end = pos + part.length;
+        if (offset >= start && offset <= end) {
+            return part.trim();
+        }
+        pos = end + 1;
+    }
+    return text.trim();
+}
+
+async function executeStatement(cql, consistency, tracing) {
+    const res = await fetch(`/api/v1/cluster/${encodeURIComponent(clusterName)}/operations/cqlsh`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ cql, cl: consistency, enable_tracing: tracing }),
+    });
+    if (!res.ok) {
+        let errorText = await res.text();
+        try {
+            const errorJson = JSON.parse(errorText);
+            errorText = errorJson.detail || JSON.stringify(errorJson);
+        } catch { }
+        throw new Error(errorText || res.statusText);
+    }
+    return res.json();
+}
+
+window.runQuery = async function runQuery() {
     if (!window.editorInstance) return;
 
     const selection = window.editorInstance.getSelection();
     const model = window.editorInstance.getModel();
+    const selectedText = selection && !selection.isEmpty() ? model.getValueInRange(selection).trim() : '';
 
-    let cql = '';
+    const rawCql = selectedText || getStatementAtCursor();
+    const statements = rawCql.split(';').map(s => s.trim()).filter(Boolean);
 
-    if (selection && !selection.isEmpty()) {
-        cql = model.getValueInRange(selection);
-    } else {
-        cql = window.editorInstance.getValue();
-    }
-
-    cql = cql.trim();
-
-    if (!cql) {
-        resultEl.textContent = 'Please enter a CQL query.';
+    if (!statements.length) {
+        resultEl.textContent = 'No statement to run.';
         return;
     }
 
@@ -320,62 +366,56 @@ runBtn.addEventListener('click', () => {
     const tracing = tracingCheckbox ? tracingCheckbox.checked : false;
 
     runBtn.disabled = true;
-    resultEl.innerHTML = '<span class="loading">Running query...</span>';
-    document.getElementById('trace-result').innerHTML = '<em>Waiting for trace...</em>';
-
-    // Switch to results tab on new run
+    resultEl.innerHTML = '<span class="loading">Running...</span>';
+    document.getElementById('trace-result').innerHTML = '';
     tabBtns[0].click();
 
-    fetch(`/api/v1/cluster/${encodeURIComponent(clusterName)}/operations/cqlsh`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ cql: cql, cl: consistency, enable_tracing: tracing }),
-    })
-        .then(async (res) => {
-            runBtn.disabled = false;
-            if (!res.ok) {
-                let errorText = await res.text();
-                try {
-                    const errorJson = JSON.parse(errorText);
-                    errorText = errorJson.detail || JSON.stringify(errorJson);
-                } catch { }
-                throw new Error(errorText || res.statusText);
-            }
-            return res.json();
-        })
-        .then((data) => {
-            if (!queryHistory.includes(cql)) {
-                queryHistory.unshift(cql);
+    const allResults = [];
+    let lastTrace = null;
+
+    try {
+        for (const stmt of statements) {
+            const data = await executeStatement(stmt, consistency, tracing);
+
+            if (!queryHistory.includes(stmt)) {
+                queryHistory.unshift(stmt);
                 if (queryHistory.length > 30) queryHistory.pop();
-                localStorage.setItem('cqlshHistory', JSON.stringify(queryHistory));
-                updateHistoryUI();
             }
 
             const actualData = data.result || data;
-            const traceData = data.trace || (data.result && data.result.trace);
+            allResults.push(actualData.result || actualData);
 
-            try {
-                if (window.syntaxHighlight) {
-                    resultEl.innerHTML = window.syntaxHighlight(actualData.result || actualData);
-                } else {
-                    resultEl.textContent = JSON.stringify(actualData, null, 2);
-                }
-            } catch (e) {
-                resultEl.textContent = JSON.stringify(actualData, null, 2);
-            }
+            const traceData = data.trace || (actualData && actualData.trace);
+            if (traceData) lastTrace = traceData;
+        }
 
-            if (traceData) {
-                renderTrace(traceData);
-                // Optionally auto-switch to trace if it's a long execution or requested
-                // For now, just show a badge on the tab if possible
+        localStorage.setItem('cqlshHistory', JSON.stringify(queryHistory));
+        updateHistoryUI();
+
+        const combined = statements.length === 1 ? allResults[0] : allResults;
+        try {
+            if (window.syntaxHighlight) {
+                resultEl.innerHTML = window.syntaxHighlight(combined);
             } else {
-                document.getElementById('trace-result').innerHTML = '<em>No trace info available (Tracing was not enabled for this run).</em>';
+                resultEl.textContent = JSON.stringify(combined, null, 2);
             }
-        })
-        .catch((err) => {
-            resultEl.innerHTML = `<span class="error">Error: ${escapeHtml(err.toString())}</span>`;
-        });
-});
+        } catch (e) {
+            resultEl.textContent = JSON.stringify(combined, null, 2);
+        }
+
+        if (lastTrace) {
+            renderTrace(lastTrace);
+        } else {
+            document.getElementById('trace-result').innerHTML = '<em>Tracing was not enabled.</em>';
+        }
+    } catch (err) {
+        resultEl.innerHTML = `<span class="error">Error: ${escapeHtml(err.toString())}</span>`;
+    } finally {
+        runBtn.disabled = false;
+    }
+};
+
+runBtn.addEventListener('click', window.runQuery);
 
 function updateHistoryUI() {
     historyList.innerHTML = '';
