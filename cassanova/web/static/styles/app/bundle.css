@@ -4454,16 +4454,33 @@ button:hover {
 /* Global box-sizing handles by base.css now */
 
 /* Container adjustment for sidebar */
+.cql-devtools {
+    overflow: hidden;
+}
+
+.cql-devtools .page-wrapper {
+    height: calc(100vh - 48px);
+    min-height: 0;
+    max-height: calc(100vh - 48px);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    margin-top: 48px;
+    padding: 0;
+}
+
+.cql-devtools footer {
+    display: none;
+}
+
 .cql-devtools #container {
     display: flex;
-    height: calc(100vh - 4rem);
-    /* Header/Padding height accounted for */
+    flex: 1;
     overflow: hidden;
     min-height: 0;
     gap: 0;
-    padding: 0;
-    max-width: none;
-    /* override base.css max-width for full workspace */
+    padding: 0 !important;
+    max-width: none !important;
 }
 
 .cql-devtools #container>* {
