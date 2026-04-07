@@ -6,19 +6,25 @@ from cassandra.cluster import NoHostAvailable, ResultSet, Session
 from cassandra.protocol import SyntaxException
 from cassandra.query import SimpleStatement
 
+from cassanova.core.cql._executor import execute_cql
+from cassanova.models.auth_models import WebUser
 from cassanova.models.cql_query import CQLQuery
 
 
-def execute_query_cql(session: Session, query: CQLQuery) -> list[dict[str, Any]] | str:
-    return _execute_with_retry(session, query, attempt=1)
+def execute_query_cql(
+    session: Session, query: CQLQuery, cluster_name: str = "", user: WebUser | None = None
+) -> list[dict[str, Any]] | str:
+    return _execute_with_retry(session, query, cluster_name, user, attempt=1)
 
 
 def _execute_with_retry(
-    session: Session, query: CQLQuery, attempt: int
+    session: Session, query: CQLQuery, cluster_name: str, user: WebUser | None, attempt: int
 ) -> list[dict[str, Any]] | str:
     statement = SimpleStatement(query_string=query.cql, consistency_level=query.cl)
     try:
-        result_set = session.execute(statement, trace=query.enable_tracing)
+        result_set = execute_cql(
+            session, statement, cluster_name, user, trace=query.enable_tracing
+        )
         result = [row._asdict() for row in result_set]
         if query.enable_tracing:
             result = {"result": result, "trace": get_trace_info(result_set)}  # type: ignore[assignment]
@@ -50,7 +56,7 @@ def _execute_with_retry(
                     new_query = CQLQuery(
                         cql=new_cql, cl=query.cl, enable_tracing=query.enable_tracing
                     )
-                    return _execute_with_retry(session, new_query, attempt=2)
+                    return _execute_with_retry(session, new_query, cluster_name, user, attempt=2)
 
         return str(e)
     except (SyntaxException, NoHostAvailable) as e:

@@ -34,7 +34,7 @@ def run_cqlsh(
     _user: WebUser = Depends(require_permission("cluster:admin")),
 ) -> Any:
     session = get_session(cluster_name)
-    result = execute_query_cql(session, query)
+    result = execute_query_cql(session, query, cluster_name, _user)
 
     first_word = query.cql.strip().split()[0].upper() if query.cql.strip() else ""
     if first_word in _DDL_KEYWORDS:

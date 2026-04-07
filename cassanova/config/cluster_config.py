@@ -22,6 +22,7 @@ class ClusterConnectionConfig(BaseModel):
     jmx_credentials: ClusterCredentials | None = Field(default=None)
     local_dc: str | None = Field(default=None)
     protocol_version: int | None = Field(default=None)
+    read_only: bool = Field(default=False)
     additional_kwargs: dict[str, Any] | None = Field(default_factory=dict)
 
 

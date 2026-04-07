@@ -2,7 +2,9 @@ from re import match
 
 from cassandra.cluster import Session
 
+from cassanova.core.cql._executor import execute_cql
 from cassanova.core.cql.sanitize_input import sanitize_identifier
+from cassanova.models.auth_models import WebUser
 from cassanova.models.auth_request import CreateRoleRequest, EditRoleRequest
 
 _VALID_PERMISSIONS = frozenset(
@@ -79,7 +81,9 @@ def get_all_roles(session: Session) -> list[dict]:
         raise e
 
 
-def create_role(session: Session, request: CreateRoleRequest) -> str:
+def create_role(
+    session: Session, request: CreateRoleRequest, cluster_name: str = "", user: WebUser | None = None
+) -> str:
     validate_role_name(request.username)
 
     options = [
@@ -95,7 +99,7 @@ def create_role(session: Session, request: CreateRoleRequest) -> str:
     final_cql = f'CREATE ROLE IF NOT EXISTS "{request.username}" WITH {" AND ".join(options)}'
 
     try:
-        session.execute(final_cql, tuple(cql_params))
+        execute_cql(session, final_cql, cluster_name, user, parameters=tuple(cql_params))
         return f"Role {request.username} created successfully"
     except Exception as db_err:
         if "doesn't support PASSWORD" in str(db_err) and request.password:
@@ -103,12 +107,18 @@ def create_role(session: Session, request: CreateRoleRequest) -> str:
             fallback_cql = (
                 f'CREATE ROLE IF NOT EXISTS "{request.username}" WITH {" AND ".join(fallback_opts)}'
             )
-            session.execute(fallback_cql)
+            execute_cql(session, fallback_cql, cluster_name, user)
             return f"Role {request.username} created (Password ignored by server setting)"
         raise db_err
 
 
-def alter_role(session: Session, role_name: str, request: EditRoleRequest) -> str:
+def alter_role(
+    session: Session,
+    role_name: str,
+    request: EditRoleRequest,
+    cluster_name: str = "",
+    user: WebUser | None = None,
+) -> str:
     validate_role_name(role_name)
 
     changes = []
@@ -128,13 +138,15 @@ def alter_role(session: Session, role_name: str, request: EditRoleRequest) -> st
         return "No changes requested"
 
     cql = f'ALTER ROLE "{role_name}" WITH {(" AND ".join(changes))}'
-    session.execute(cql, tuple(params))
+    execute_cql(session, cql, cluster_name, user, parameters=tuple(params))
     return f"Role {role_name} updated"
 
 
-def drop_role(session: Session, role_name: str) -> str:
+def drop_role(
+    session: Session, role_name: str, cluster_name: str = "", user: WebUser | None = None
+) -> str:
     validate_role_name(role_name)
-    session.execute(f'DROP ROLE IF EXISTS "{role_name}"')
+    execute_cql(session, f'DROP ROLE IF EXISTS "{role_name}"', cluster_name, user)
     return f"Role {role_name} deleted"
 
 
@@ -144,19 +156,33 @@ def list_permissions(session: Session, role_name: str) -> list[dict[str, str]]:
     return [{"resource": row.resource, "permission": row.permission} for row in rows]
 
 
-def grant_permission(session: Session, permission: str, resource: str, role: str) -> str:
+def grant_permission(
+    session: Session,
+    permission: str,
+    resource: str,
+    role: str,
+    cluster_name: str = "",
+    user: WebUser | None = None,
+) -> str:
     _validate_permission(permission)
     _validate_resource(resource)
     validate_role_name(role)
     cql = f'GRANT {permission} ON {resource} TO "{role}"'
-    session.execute(cql)
+    execute_cql(session, cql, cluster_name, user)
     return f"Granted {permission} on {resource} to {role}"
 
 
-def revoke_permission(session: Session, permission: str, resource: str, role: str) -> str:
+def revoke_permission(
+    session: Session,
+    permission: str,
+    resource: str,
+    role: str,
+    cluster_name: str = "",
+    user: WebUser | None = None,
+) -> str:
     _validate_permission(permission)
     _validate_resource(resource)
     validate_role_name(role)
     cql = f'REVOKE {permission} ON {resource} FROM "{role}"'
-    session.execute(cql)
+    execute_cql(session, cql, cluster_name, user)
     return f"Revoked {permission} on {resource} from {role}"

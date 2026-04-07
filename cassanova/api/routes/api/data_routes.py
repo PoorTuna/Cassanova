@@ -10,6 +10,7 @@ from fastapi.responses import StreamingResponse
 from cassanova.api.dependencies.auth import require_permission
 from cassanova.api.dependencies.csv_handler import generate_csv_stream, load_csv_data
 from cassanova.api.dependencies.db_session import get_session
+from cassanova.core.cql._executor import execute_cql
 from cassanova.core.cql.converters import convert_value_for_cql
 from cassanova.core.cql.query_builder import build_insert_query, build_where_clause
 from cassanova.core.cql.sanitize_input import sanitize_identifier
@@ -151,7 +152,7 @@ def update_table_row(
 
         query = f'UPDATE "{keyspace_name}"."{table_name}" SET {set_clause} WHERE {where_clause}'
 
-        session.execute(query, converted_values)
+        execute_cql(session, query, cluster_name, _user, parameters=converted_values)
         return {"detail": "Row updated successfully"}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to update row: {e}") from e
@@ -195,7 +196,7 @@ def delete_table_row(
         where_clause = " AND ".join(where_clause_parts)
         query = f'DELETE FROM "{keyspace_name}"."{table_name}" WHERE {where_clause}'
 
-        session.execute(query, converted_values)
+        execute_cql(session, query, cluster_name, _user, parameters=converted_values)
         return {"detail": "Row deleted successfully"}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to delete row: {e}") from e
@@ -243,7 +244,7 @@ def insert_table_row(
     query = build_insert_query(keyspace_name, table_name, columns)
 
     try:
-        session.execute(query, converted_values)
+        execute_cql(session, query, cluster_name, _user, parameters=converted_values)
         return {"detail": "Row inserted successfully"}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to insert row: {e}") from e
@@ -305,4 +306,6 @@ def import_table_data(
     content = file.file.read(_MAX_CSV_SIZE + 1)
     if len(content) > _MAX_CSV_SIZE:
         raise HTTPException(status_code=413, detail="CSV file too large (max 50MB)")
-    return load_csv_data(content, keyspace_name, table_name, table_metadata, session)
+    return load_csv_data(
+        content, keyspace_name, table_name, table_metadata, session, cluster_name, _user
+    )

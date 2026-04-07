@@ -1,8 +1,13 @@
+from __future__ import annotations
+
 from collections.abc import Generator
 from csv import DictReader, writer
 from io import StringIO
 from logging import getLogger
-from typing import Any
+from typing import TYPE_CHECKING, Any
+
+if TYPE_CHECKING:
+    from cassanova.models.auth_models import WebUser
 
 from cassandra.cluster import Session
 from cassandra.metadata import TableMetadata
@@ -34,7 +39,10 @@ def load_csv_data(
     table_name: str,
     table_metadata: TableMetadata,
     session: Session,
+    cluster_name: str = "",
+    user: "WebUser | None" = None,
 ) -> dict[str, Any]:
+    from cassanova.core.cql._executor import execute_cql
     reader = _create_csv_reader(content)
     success_count = 0
     errors = []
@@ -53,7 +61,7 @@ def load_csv_data(
             batch_rows += 1
 
             if batch_rows >= _BATCH_SIZE:
-                session.execute(batch)
+                execute_cql(session, batch, cluster_name, user)
                 success_count += batch_rows
                 batch = BatchStatement(batch_type=BatchType.UNLOGGED)
                 batch_rows = 0
@@ -61,7 +69,7 @@ def load_csv_data(
         except Exception as e:
             if batch_rows > 0:
                 try:
-                    session.execute(batch)
+                    execute_cql(session, batch, cluster_name, user)
                     success_count += batch_rows
                 except Exception as batch_err:
                     errors.append(str(batch_err))
@@ -73,7 +81,7 @@ def load_csv_data(
 
     if batch_rows > 0:
         try:
-            session.execute(batch)
+            execute_cql(session, batch, cluster_name, user)
             success_count += batch_rows
         except Exception as e:
             errors.append(str(e))

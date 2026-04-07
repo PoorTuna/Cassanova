@@ -244,7 +244,7 @@ def delete_table(
     _user: WebUser = Depends(require_permission("cluster:admin")),
 ) -> JSONResponse:
     session = get_session(cluster_name)
-    drop_table_cql(session, keyspace_name, table_name)
+    drop_table_cql(session, keyspace_name, table_name, cluster_name, _user)
     _invalidate_schema_cache(cluster_name, session)
     return JSONResponse({"detail": f"Table {keyspace_name}.{table_name} deleted successfully"})
 
@@ -259,7 +259,7 @@ def truncate_table(
     _user: WebUser = Depends(require_permission("cluster:admin")),
 ) -> dict[str, str]:
     session = get_session(cluster_name)
-    truncate_table_cql(session, keyspace_name, table_name)
+    truncate_table_cql(session, keyspace_name, table_name, cluster_name, _user)
     return {"detail": f"Table {keyspace_name}.{table_name} truncated successfully"}
 
 

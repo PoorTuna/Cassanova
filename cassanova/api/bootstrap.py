@@ -10,6 +10,7 @@ from starlette.staticfiles import StaticFiles
 from starlette.types import Scope
 
 from cassanova.api.exception_handlers.auth_handler import add_auth_exception_handler
+from cassanova.api.exception_handlers.cql_handler import add_cql_exception_handlers
 from cassanova.api.exception_handlers.cluster_unavailable_handler import (
     add_cluster_unavailable_exceptions,
 )
@@ -84,6 +85,7 @@ def __add_exception_handlers(app: FastAPI) -> None:
     add_cluster_unavailable_exceptions(app)
     add_system_views_unavailable_exception_handler(app)
     add_auth_exception_handler(app)
+    add_cql_exception_handlers(app)
 
 
 def __setup_tls_middleware(app: FastAPI, tls_config: TLSConfig) -> None:

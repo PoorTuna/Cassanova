@@ -36,7 +36,7 @@ def create_role_route(
 ) -> dict[str, str]:
     session = get_session(cluster_name)
     try:
-        message = create_role(session, request)
+        message = create_role(session, request, cluster_name, _user)
         return {"message": message}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e)) from e
@@ -51,7 +51,7 @@ def edit_role_route(
 ) -> dict[str, str]:
     session = get_session(cluster_name)
     try:
-        message = alter_role(session, role_name, request)
+        message = alter_role(session, role_name, request, cluster_name, _user)
         return {"message": message}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e)) from e
@@ -63,7 +63,7 @@ def delete_role_route(
 ) -> dict[str, str]:
     session = get_session(cluster_name)
     try:
-        message = drop_role(session, role_name)
+        message = drop_role(session, role_name, cluster_name, _user)
         return {"message": message}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e)) from e
@@ -86,7 +86,9 @@ def grant_permission_route(
 ) -> dict[str, str]:
     session = get_session(cluster_name)
     try:
-        message = grant_permission(session, request.permission, request.resource, request.role)
+        message = grant_permission(
+            session, request.permission, request.resource, request.role, cluster_name, _user
+        )
         return {"message": message}
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e)) from e
@@ -100,7 +102,9 @@ def revoke_permission_route(
 ) -> dict[str, str]:
     session = get_session(cluster_name)
     try:
-        message = revoke_permission(session, request.permission, request.resource, request.role)
+        message = revoke_permission(
+            session, request.permission, request.resource, request.role, cluster_name, _user
+        )
         return {"message": message}
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e)) from e
