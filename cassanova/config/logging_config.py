@@ -1,9 +1,8 @@
 import logging
 import sys
-from enum import Enum
+from collections.abc import Callable
 from logging.handlers import RotatingFileHandler
 from pathlib import Path
-from typing import Literal
 
 from pydantic import BaseModel, Field
 
@@ -18,7 +17,7 @@ class FileHandlerConfig(BaseModel):
 
 
 class LoggerConfig(BaseModel):
-    handlers: list[Literal["stdout", "file"]] = Field(default=["stdout"])
+    handlers: list[str] = Field(default=["stdout"])
     file: FileHandlerConfig = FileHandlerConfig()
 
 
@@ -28,55 +27,64 @@ class LoggingConfig(BaseModel):
     audit: LoggerConfig = LoggerConfig()
 
 
+def _build_stdout_handler(fmt: logging.Formatter, _cfg: LoggerConfig) -> logging.Handler:
+    handler = logging.StreamHandler(sys.stdout)
+    handler.setFormatter(fmt)
+    return handler
+
+
+def _build_file_handler(
+    fmt: logging.Formatter, cfg: LoggerConfig, filename: str
+) -> logging.Handler:
+    log_dir = Path(cfg.file.dir)
+    log_dir.mkdir(exist_ok=True)
+    handler = RotatingFileHandler(
+        log_dir / filename, maxBytes=cfg.file.max_bytes, backupCount=cfg.file.backup_count
+    )
+    handler.setFormatter(fmt)
+    return handler
+
+
 def configure_logging(config: LoggingConfig | None = None) -> None:
     config = config or LoggingConfig()
     level = getattr(logging, config.level.upper(), logging.INFO)
 
-    _configure_root_logger(level, config.app)
-    _configure_audit_logger(config.audit)
-
-
-def _configure_root_logger(level: int, cfg: LoggerConfig) -> None:
-    root = logging.getLogger("cassanova")
-    root.setLevel(level)
-
-    fmt = logging.Formatter(
-        "%(asctime)s %(levelname)-8s %(name)s — %(message)s",
-        datefmt="%Y-%m-%d %H:%M:%S",
+    _configure_logger(
+        "cassanova",
+        level,
+        config.app,
+        logging.Formatter("%(asctime)s %(levelname)-8s %(name)s — %(message)s", datefmt="%Y-%m-%d %H:%M:%S"),
+        "cassanova.log",
+    )
+    _configure_logger(
+        "cassanova.audit",
+        logging.INFO,
+        config.audit,
+        logging.Formatter("%(message)s"),
+        "audit.log",
+        propagate=False,
     )
 
-    if "stdout" in cfg.handlers:
-        handler = logging.StreamHandler(sys.stdout)
-        handler.setFormatter(fmt)
-        root.addHandler(handler)
 
-    if "file" in cfg.handlers:
-        log_dir = Path(cfg.file.dir)
-        log_dir.mkdir(exist_ok=True)
-        handler = RotatingFileHandler(
-            log_dir / "cassanova.log", maxBytes=cfg.file.max_bytes, backupCount=cfg.file.backup_count
-        )
-        handler.setFormatter(fmt)
-        root.addHandler(handler)
+_HANDLER_FACTORIES: dict[str, Callable[..., logging.Handler]] = {
+    "stdout": lambda fmt, cfg, _fn: _build_stdout_handler(fmt, cfg),
+    "file": lambda fmt, cfg, fn: _build_file_handler(fmt, cfg, fn),
+}
 
 
-def _configure_audit_logger(cfg: LoggerConfig) -> None:
-    audit = logging.getLogger("cassanova.audit")
-    audit.setLevel(logging.INFO)
-    audit.propagate = False
+def _configure_logger(
+    name: str,
+    level: int,
+    cfg: LoggerConfig,
+    fmt: logging.Formatter,
+    filename: str,
+    propagate: bool = True,
+) -> None:
+    logger = logging.getLogger(name)
+    logger.setLevel(level)
+    logger.propagate = propagate
 
-    json_fmt = logging.Formatter("%(message)s")
-
-    if "stdout" in cfg.handlers:
-        handler = logging.StreamHandler(sys.stdout)
-        handler.setFormatter(json_fmt)
-        audit.addHandler(handler)
-
-    if "file" in cfg.handlers:
-        log_dir = Path(cfg.file.dir)
-        log_dir.mkdir(exist_ok=True)
-        handler = RotatingFileHandler(
-            log_dir / "audit.log", maxBytes=cfg.file.max_bytes, backupCount=cfg.file.backup_count
-        )
-        handler.setFormatter(json_fmt)
-        audit.addHandler(handler)
+    for handler_name in cfg.handlers:
+        factory = _HANDLER_FACTORIES.get(handler_name)
+        if factory:
+            logger.addHandler(factory(fmt, cfg, filename))
