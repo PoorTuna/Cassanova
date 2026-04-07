@@ -19,6 +19,12 @@ from cassanova.exceptions.cql_exceptions import CQLPermissionDenied, ReadOnlyClu
 from cassanova.models.auth_models import WebUser
 
 _audit_logger = logging.getLogger("cassanova.audit")
+if not _audit_logger.handlers:
+    _handler = logging.StreamHandler()
+    _handler.setFormatter(logging.Formatter("%(message)s"))
+    _audit_logger.addHandler(_handler)
+    _audit_logger.setLevel(logging.INFO)
+    _audit_logger.propagate = False
 
 _MUTATION_PREFIXES = frozenset({
     "INSERT", "UPDATE", "DELETE", "DROP", "TRUNCATE",
