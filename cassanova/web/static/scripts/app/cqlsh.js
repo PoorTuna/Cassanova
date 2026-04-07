@@ -281,34 +281,82 @@ tabBtns.forEach(btn => {
 
 function renderTrace(trace) {
     const traceEl = document.getElementById('trace-result');
-    if (!trace) {
+    if (!trace || !trace.events || !trace.events.length) {
         traceEl.innerHTML = '<em>No trace info available.</em>';
         return;
     }
 
-    const eventsHtml = trace.events.map(event => `
-        <div class="trace-item">
-            <div class="trace-header">
-                <span class="trace-desc">${escapeHtml(event.description)}</span>
-                <span class="trace-duration">${event.elapsed_ms.toFixed(3)} ms</span>
-            </div>
-            <div class="trace-source">Source: ${escapeHtml(event.source)}</div>
-        </div>
-    `).join('');
+    function nodeColor(source) {
+        let hash = 0;
+        for (let i = 0; i < String(source).length; i++) hash = String(source).charCodeAt(i) + ((hash << 5) - hash);
+        return `hsl(${Math.abs(hash) % 360}, 65%, 55%)`;
+    }
 
-    traceEl.innerHTML = `
-        <div class="trace-summary" style="margin-bottom: 20px; padding: 15px; background: rgba(var(--color-primary-rgb), 0.1); border-radius: 8px;">
-            <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
-                <strong>Coordinator:</strong> <span>${escapeHtml(trace.coordinator)}</span>
+    const events = trace.events.slice().sort((a, b) => a.elapsed_ms - b.elapsed_ms);
+    const totalMs = trace.duration_ms || events[events.length - 1].elapsed_ms || 1;
+
+    let maxStepMs = 0;
+    let maxStepIdx = 0;
+    for (let i = 0; i < events.length; i++) {
+        const prevMs = i === 0 ? 0 : events[i - 1].elapsed_ms;
+        events[i].step_ms = events[i].elapsed_ms - prevMs;
+        if (events[i].step_ms > maxStepMs) {
+            maxStepMs = events[i].step_ms;
+            maxStepIdx = i;
+        }
+    }
+
+    const sources = [...new Set(events.map(e => String(e.source)))];
+
+    const summaryHtml = `
+        <div class="trace-summary">
+            <div class="trace-summary-item">
+                <span class="trace-summary-label">Coordinator</span>
+                <span class="trace-summary-value">${escapeHtml(trace.coordinator)}</span>
             </div>
-            <div style="display: flex; justify-content: space-between;">
-                <strong>Total Duration:</strong> <span style="color: var(--color-warning); font-weight: 700;">${trace.duration_ms.toFixed(3)} ms</span>
+            <div class="trace-summary-item">
+                <span class="trace-summary-label">Duration</span>
+                <span class="trace-summary-value duration">${totalMs.toFixed(3)} ms</span>
             </div>
-        </div>
-        <div class="trace-container">
-            ${eventsHtml}
-        </div>
-    `;
+            <div class="trace-summary-item">
+                <span class="trace-summary-label">Events</span>
+                <span class="trace-summary-value">${events.length}</span>
+            </div>
+            <div class="trace-summary-item">
+                <span class="trace-summary-label">Nodes</span>
+                <span class="trace-summary-value">${sources.length}</span>
+            </div>
+        </div>`;
+
+    const rowsHtml = events.map((event, i) => {
+        const prevMs = i === 0 ? 0 : events[i - 1].elapsed_ms;
+        const leftPct = (prevMs / totalMs) * 100;
+        const widthPct = Math.max((event.step_ms / totalMs) * 100, 2);
+        const color = nodeColor(event.source);
+        const isBn = i === maxStepIdx && events.length > 1;
+
+        return `
+            <div class="trace-event">
+                <div class="trace-event-header">
+                    <span class="trace-event-dot" style="background:${color}"></span>
+                    <span class="trace-event-desc">${escapeHtml(event.description)}</span>
+                    <div class="trace-event-meta">
+                        <span class="trace-event-source">${escapeHtml(String(event.source))}</span>
+                        <span class="trace-event-time${isBn ? ' bottleneck' : ''}">${event.step_ms.toFixed(3)} ms</span>
+                    </div>
+                </div>
+                <div class="trace-event-bar-track">
+                    <div class="trace-event-bar${isBn ? ' bottleneck' : ''}" style="left:${leftPct.toFixed(1)}%;width:${widthPct.toFixed(1)}%;background:${color}"></div>
+                </div>
+            </div>`;
+    }).join('');
+
+    const legendHtml = sources.length > 1 ? `
+        <div class="trace-legend">
+            ${sources.map(s => `<div class="trace-legend-item"><span class="trace-event-dot" style="background:${nodeColor(s)}"></span>${escapeHtml(s)}</div>`).join('')}
+        </div>` : '';
+
+    traceEl.innerHTML = summaryHtml + `<div class="trace-waterfall">${rowsHtml}</div>` + legendHtml;
 }
 
 function getStatementAtCursor() {
