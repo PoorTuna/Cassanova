@@ -8,7 +8,11 @@ from fastapi.encoders import jsonable_encoder
 from fastapi.responses import StreamingResponse
 
 from cassanova.api.dependencies.auth import require_permission
-from cassanova.api.dependencies.csv_handler import generate_csv_stream, generate_json_stream, load_csv_data
+from cassanova.api.dependencies.csv_handler import (
+    generate_csv_stream,
+    generate_json_stream,
+    load_csv_data,
+)
 from cassanova.api.dependencies.db_session import get_session
 from cassanova.core.cql._executor import execute_cql
 from cassanova.core.cql.converters import convert_value_for_cql

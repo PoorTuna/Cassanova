@@ -82,7 +82,10 @@ def get_all_roles(session: Session) -> list[dict]:
 
 
 def create_role(
-    session: Session, request: CreateRoleRequest, cluster_name: str = "", user: WebUser | None = None
+    session: Session,
+    request: CreateRoleRequest,
+    cluster_name: str = "",
+    user: WebUser | None = None,
 ) -> str:
     validate_role_name(request.username)
 

@@ -39,7 +39,7 @@ def generate_json_stream(session: Session, query: str) -> Generator[str, None, N
     headers = rows.column_names
     for row in rows:
         clean_values = _extract_clean_values(row, headers)
-        yield json.dumps(dict(zip(headers, clean_values)), default=str) + "\n"
+        yield json.dumps(dict(zip(headers, clean_values, strict=True)), default=str) + "\n"
 
 
 def load_csv_data(
@@ -49,7 +49,7 @@ def load_csv_data(
     table_metadata: TableMetadata,
     session: Session,
     cluster_name: str = "",
-    user: "WebUser | None" = None,
+    user: WebUser | None = None,
 ) -> dict[str, Any]:
     from cassanova.config.cassanova_config import get_clusters_config
     from cassanova.core.cql._executor import execute_cql

@@ -224,7 +224,8 @@ def get_cluster_vnodes(cluster_name: str) -> dict[str, list[dict[str, Any]]]:
         for host in session.cluster.metadata.all_hosts():
             hid = str(host.host_id)
             if hid not in seen_ids:
-                addr = str(host.broadcast_rpc_address) if getattr(host, "broadcast_rpc_address", None) else str(host.address)
+                rpc_addr = getattr(host, "broadcast_rpc_address", None)
+                addr = str(rpc_addr) if rpc_addr else str(host.address)
                 nodes.append(
                     {
                         "host_id": hid,

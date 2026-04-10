@@ -10,10 +10,10 @@ from starlette.staticfiles import StaticFiles
 from starlette.types import Scope
 
 from cassanova.api.exception_handlers.auth_handler import add_auth_exception_handler
-from cassanova.api.exception_handlers.cql_handler import add_cql_exception_handlers
 from cassanova.api.exception_handlers.cluster_unavailable_handler import (
     add_cluster_unavailable_exceptions,
 )
+from cassanova.api.exception_handlers.cql_handler import add_cql_exception_handlers
 from cassanova.api.exception_handlers.default_handler import add_default_exceptions
 from cassanova.api.exception_handlers.not_found_handler import add_notfound_exceptions
 from cassanova.api.exception_handlers.system_views_unavailable_handler import (

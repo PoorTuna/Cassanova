@@ -23,18 +23,20 @@ def generate_nodes_info(session: Session) -> list[NodeInfo]:
     seen_ids = {n.host_id for n in nodes}
     for host in session.cluster.metadata.all_hosts():
         host_id = str(host.host_id)
-        if host_id not in seen_ids:
-            nodes.append(
-                NodeInfo(
-                    host_id=host_id,
-                    data_center=host.datacenter,
-                    rack=host.rack,
-                    release_version=host.release_version,
-                    tokens=[int(t.value) for t in host.tokens] if host.tokens else [],
-                    broadcast_address=str(host.broadcast_address) if host.broadcast_address else None,
-                    listen_address=str(host.listen_address) if host.listen_address else None,
-                    rpc_address=str(host.broadcast_rpc_address) if getattr(host, "broadcast_rpc_address", None) else None,
-                )
+        if host_id in seen_ids:
+            continue
+        rpc_addr = getattr(host, "broadcast_rpc_address", None)
+        nodes.append(
+            NodeInfo(
+                host_id=host_id,
+                data_center=host.datacenter,
+                rack=host.rack,
+                release_version=host.release_version,
+                tokens=[int(t.value) for t in host.tokens] if host.tokens else [],
+                broadcast_address=str(host.broadcast_address) if host.broadcast_address else None,
+                listen_address=str(host.listen_address) if host.listen_address else None,
+                rpc_address=str(rpc_addr) if rpc_addr else None,
             )
+        )
 
     return nodes
