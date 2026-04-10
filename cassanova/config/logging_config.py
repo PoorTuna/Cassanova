@@ -6,6 +6,8 @@ from pathlib import Path
 
 from pydantic import BaseModel, Field
 
+from cassanova.config._json_log_formatter import JsonFormatter
+
 _MAX_BYTES = 10 * 1024 * 1024  # 10 MB
 _BACKUP_COUNT = 5
 
@@ -53,7 +55,7 @@ def configure_logging(config: LoggingConfig | None = None) -> None:
         "cassanova",
         level,
         config.app,
-        logging.Formatter("%(asctime)s %(levelname)-8s %(name)s — %(message)s", datefmt="%Y-%m-%d %H:%M:%S"),
+        JsonFormatter(),
         "cassanova.log",
     )
     _configure_logger(

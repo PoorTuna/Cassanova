@@ -486,9 +486,18 @@ document.addEventListener('DOMContentLoaded', () => {
     fetchData();
 
     // Event listeners
-    document.getElementById('refresh-data').addEventListener('click', () => {
+    document.getElementById('refresh-data').addEventListener('click', async () => {
         pagingStack = [null];
         nextPagingState = null;
+        try {
+            await fetch(`/api/v1/cluster/${encodeURIComponent(cluster)}/schema/refresh`, {
+                method: 'POST',
+            });
+            sessionStorage.removeItem(`cassanova_schema_${cluster}`);
+            sessionStorage.removeItem(`cassanova_schema_ts_${cluster}`);
+        } catch (e) {
+            console.error('Cassanova: Failed to invalidate schema cache:', e);
+        }
         fetchData();
     });
 

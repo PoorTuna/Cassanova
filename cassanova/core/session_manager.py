@@ -3,6 +3,7 @@ from threading import Lock
 
 from cassandra.cluster import Cluster, Session
 
+from cassanova.config.cassanova_config import get_clusters_config
 from cassanova.config.cluster_config import ClusterConnectionConfig, generate_cluster_connection
 
 logger = getLogger(__name__)
@@ -17,9 +18,12 @@ class SessionManager:
     def get_session(cls, cluster_name: str, cluster_config: ClusterConnectionConfig) -> Session:
         with cls._lock:
             if cluster_name not in cls._sessions:
-                cluster = generate_cluster_connection(cluster_config)
+                timeouts = get_clusters_config().timeouts
+                cluster = generate_cluster_connection(cluster_config, timeouts)
+                session = cluster.connect()
+                session.default_timeout = timeouts.default_query
                 cls._instances[cluster_name] = cluster
-                cls._sessions[cluster_name] = cluster.connect()
+                cls._sessions[cluster_name] = session
 
             return cls._sessions[cluster_name]
 

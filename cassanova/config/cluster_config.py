@@ -9,6 +9,8 @@ from cassandra.policies import (
 )
 from pydantic import BaseModel, Field
 
+from cassanova.config.timeouts_config import TimeoutConfig
+
 
 class ClusterCredentials(BaseModel):
     username: str
@@ -26,7 +28,10 @@ class ClusterConnectionConfig(BaseModel):
     additional_kwargs: dict[str, Any] | None = Field(default_factory=dict)
 
 
-def generate_cluster_connection(cluster_config: ClusterConnectionConfig) -> Cluster:
+def generate_cluster_connection(
+    cluster_config: ClusterConnectionConfig,
+    timeouts: TimeoutConfig | None = None,
+) -> Cluster:
     kwargs = dict(cluster_config.additional_kwargs or {})
 
     if cluster_config.local_dc:
@@ -39,6 +44,9 @@ def generate_cluster_connection(cluster_config: ClusterConnectionConfig) -> Clus
 
     if cluster_config.protocol_version:
         kwargs["protocol_version"] = cluster_config.protocol_version
+
+    if timeouts is not None:
+        kwargs.setdefault("connect_timeout", timeouts.connect)
 
     return Cluster(
         contact_points=cluster_config.contact_points,

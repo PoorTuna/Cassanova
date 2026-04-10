@@ -51,7 +51,10 @@ def load_csv_data(
     cluster_name: str = "",
     user: "WebUser | None" = None,
 ) -> dict[str, Any]:
+    from cassanova.config.cassanova_config import get_clusters_config
     from cassanova.core.cql._executor import execute_cql
+
+    batch_timeout = get_clusters_config().timeouts.batch
     reader = _create_csv_reader(content)
     success_count = 0
     errors = []
@@ -70,7 +73,7 @@ def load_csv_data(
             batch_rows += 1
 
             if batch_rows >= _BATCH_SIZE:
-                execute_cql(session, batch, cluster_name, user)
+                execute_cql(session, batch, cluster_name, user, timeout=batch_timeout)
                 success_count += batch_rows
                 batch = BatchStatement(batch_type=BatchType.UNLOGGED)
                 batch_rows = 0
@@ -78,7 +81,7 @@ def load_csv_data(
         except Exception as e:
             if batch_rows > 0:
                 try:
-                    execute_cql(session, batch, cluster_name, user)
+                    execute_cql(session, batch, cluster_name, user, timeout=batch_timeout)
                     success_count += batch_rows
                 except Exception as batch_err:
                     errors.append(str(batch_err))
@@ -90,7 +93,7 @@ def load_csv_data(
 
     if batch_rows > 0:
         try:
-            execute_cql(session, batch, cluster_name, user)
+            execute_cql(session, batch, cluster_name, user, timeout=batch_timeout)
             success_count += batch_rows
         except Exception as e:
             errors.append(str(e))

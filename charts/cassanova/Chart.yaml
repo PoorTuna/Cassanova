@@ -2,8 +2,8 @@ apiVersion: v2
 name: cassanova
 description: Web UI for Apache Cassandra management
 type: application
-version: 1.0.0
-appVersion: "1.8.0"
+version: 1.0.1
+appVersion: "1.11.0"
 keywords:
   - cassandra
   - database

@@ -166,7 +166,10 @@ def get_table_description(
 def test_cluster_connection(cluster_name: str) -> dict[str, str]:
     try:
         session = get_session(cluster_name)
-        session.execute("SELECT key FROM system.local LIMIT 1", timeout=5.0)
+        session.execute(
+            "SELECT key FROM system.local LIMIT 1",
+            timeout=clusters_config.timeouts.health_check,
+        )
         return {"status": "ok"}
     except Exception as e:
         raise HTTPException(status_code=503, detail=str(e)) from e
@@ -264,6 +267,21 @@ def truncate_table(
 
 
 _SCHEMA_MAP_TTL_SECONDS = 60
+
+
+@cluster_router.post("/cluster/{cluster_name}/schema/refresh")
+def refresh_schema_cache(cluster_name: str) -> dict[str, str]:
+    """Manually invalidate the schema cache and refresh driver metadata.
+
+    Useful when DDL was applied outside Cassanova (e.g. via cqlsh) and
+    the in-memory cache hasn't expired yet.
+    """
+    try:
+        session = get_session(cluster_name)
+    except Exception:
+        session = None
+    _invalidate_schema_cache(cluster_name, session)
+    return {"detail": "Schema cache invalidated"}
 
 
 @cluster_router.get("/cluster/{cluster_name}/schema-map")

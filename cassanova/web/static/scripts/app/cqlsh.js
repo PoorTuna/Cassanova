@@ -550,5 +550,16 @@ document.addEventListener('click', (e) => {
     }
 });
 
-// Register for auto-refresh widget — refreshes schema for autocomplete
-window.cassanovaRefresh = () => fetchSchema();
+// Register for auto-refresh widget — invalidates server cache and re-fetches schema
+window.cassanovaRefresh = async () => {
+    try {
+        await fetch(`/api/v1/cluster/${encodeURIComponent(clusterName)}/schema/refresh`, {
+            method: 'POST',
+        });
+        sessionStorage.removeItem(_SCHEMA_CACHE_KEY);
+        sessionStorage.removeItem(_SCHEMA_CACHE_TS_KEY);
+    } catch (e) {
+        console.error('Cassanova: Failed to invalidate schema cache:', e);
+    }
+    return fetchSchema();
+};

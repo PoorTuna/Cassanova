@@ -16,6 +16,7 @@ from cassanova.config.auth_config import AuthConfig
 from cassanova.config.cluster_config import ClusterConnectionConfig
 from cassanova.config.k8s_config import K8sConfig
 from cassanova.config.logging_config import LoggingConfig
+from cassanova.config.timeouts_config import TimeoutConfig
 
 logger = getLogger(__name__)
 
@@ -30,6 +31,7 @@ class CassanovaConfig(BaseSettings):
     app_config: APPConfig = APPConfig()
     logging: LoggingConfig = LoggingConfig()
     k8s: K8sConfig = K8sConfig()
+    timeouts: TimeoutConfig = TimeoutConfig()
 
     @classmethod
     def settings_customise_sources(
