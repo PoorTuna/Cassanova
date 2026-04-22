@@ -10,7 +10,7 @@ from cassanova.config.cassanova_config import get_clusters_config
 from cassanova.core.constructors._schema_diff import compare_schemas
 from cassanova.core.constructors.cluster_info import generate_cluster_info
 from cassanova.core.constructors.keyspaces import generate_keyspaces_info
-from cassanova.core.constructors.nodes import generate_nodes_info
+from cassanova.core.constructors.nodes import generate_nodes_info, host_tokens_from_metadata
 from cassanova.core.constructors.tables import generate_tables_info
 from cassanova.core.cql.table_cleanup import drop_table_cql, truncate_table_cql
 from cassanova.core.cql.table_info import show_table_description_cql, show_table_schema_cql
@@ -230,7 +230,7 @@ def get_cluster_vnodes(cluster_name: str) -> dict[str, list[dict[str, Any]]]:
                     {
                         "host_id": hid,
                         "address": addr,
-                        "tokens": [int(t.value) for t in host.tokens] if host.tokens else [],
+                        "tokens": host_tokens_from_metadata(session, host),
                     }
                 )
 

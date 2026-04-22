@@ -3,6 +3,23 @@ from cassandra.cluster import Session
 from cassanova.models.node import NodeInfo
 
 
+def host_tokens_from_metadata(session: Session, host) -> list[int]:
+    """Tokens owned by ``host`` according to the driver's token map.
+
+    The driver's ``Host`` object has no ``.tokens`` attribute; ownership
+    lives centrally in ``cluster.metadata.token_map.token_to_host_owner``.
+    Returns an empty list if the token map hasn't been built yet.
+    """
+    token_map = session.cluster.metadata.token_map
+    if token_map is None:
+        return []
+    return [
+        int(token.value)
+        for token, owner in token_map.token_to_host_owner.items()
+        if owner.host_id == host.host_id
+    ]
+
+
 def generate_nodes_info(session: Session) -> list[NodeInfo]:
     """Build a complete node list from CQL system tables.
 
@@ -32,7 +49,7 @@ def generate_nodes_info(session: Session) -> list[NodeInfo]:
                 data_center=host.datacenter,
                 rack=host.rack,
                 release_version=host.release_version,
-                tokens=[int(t.value) for t in host.tokens] if host.tokens else [],
+                tokens=host_tokens_from_metadata(session, host),
                 broadcast_address=str(host.broadcast_address) if host.broadcast_address else None,
                 listen_address=str(host.listen_address) if host.listen_address else None,
                 rpc_address=str(rpc_addr) if rpc_addr else None,
