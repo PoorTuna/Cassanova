@@ -22,7 +22,8 @@ FROM python:3.12-slim
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     PATH="/opt/venv/bin:/opt/jdk-17.0.8+7-jre/bin:$PATH" \
-    PYTHONPATH=/opt/cassanova:$PYTHONPATH
+    PYTHONPATH=/opt/cassanova:$PYTHONPATH \
+    CASSANOVA_CONFIG_PATH=/opt/cassanova/cassanova.json
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
