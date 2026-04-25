@@ -7608,15 +7608,34 @@ body.exception-page footer {
     transform: scale(1.1);
 }
 
+/* Manual overlay fills the game container so the scrollable
+ * content is always bounded and the close button reachable. */
+#game-manual-overlay {
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    transform: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    box-sizing: border-box;
+}
+
 .manual-content {
     width: 480px;
-    max-height: 85vh;
-    padding: 2.5rem;
+    max-width: 100%;
+    max-height: 100%;
+    padding: 2rem 2.5rem;
     text-align: left;
     pointer-events: auto;
     display: flex;
     flex-direction: column;
     overflow-y: auto;
+    box-sizing: border-box;
 }
 
 /* Custom scrollbar for Manual */
@@ -7699,18 +7718,16 @@ body.exception-page footer {
     border-color: #ff4444;
 }
 
-/* Keyframe for merge glow */
+/* Combo pop-in — short scale/brightness pulse */
 @keyframes mergeGlow {
     0% {
-        filter: brightness(1) blur(0px);
-    }
-
-    50% {
-        filter: brightness(2) blur(10px);
+        transform: scale(0.82);
+        filter: brightness(1.8);
     }
 
     100% {
-        filter: brightness(1) blur(0px);
+        transform: scale(1);
+        filter: brightness(1);
     }
 }
 
@@ -7744,6 +7761,165 @@ body.exception-page footer {
 .accent {
     color: var(--color-primary);
     font-weight: 800;
+}
+
+/* ===== Right HUD: next queue + nodetool ===== */
+.game-hud-right {
+    position: absolute;
+    top: 5.25rem;
+    right: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.1rem;
+    z-index: 5;
+    pointer-events: none;
+}
+
+.hud-block {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    align-items: flex-end;
+}
+
+.hud-label {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    color: var(--text-muted);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    opacity: 0.7;
+}
+
+.mini-tiles {
+    display: flex;
+    gap: 0.35rem;
+}
+
+.mini-tile {
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.02);
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    letter-spacing: 0;
+}
+
+.powerup-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    align-items: stretch;
+    min-width: 9.5rem;
+}
+
+.powerup-badge {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.2rem 0.55rem;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.02);
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.08em;
+    opacity: 0.4;
+    transition: opacity 0.2s, border-color 0.2s;
+}
+
+.powerup-badge::before {
+    content: attr(data-key);
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    line-height: 14px;
+    text-align: center;
+    border-radius: 3px;
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text-muted);
+    font-size: 0.6rem;
+    font-weight: 800;
+    flex-shrink: 0;
+}
+
+.powerup-badge.available {
+    opacity: 1;
+    border-color: rgba(0, 229, 255, 0.3);
+}
+
+.powerup-badge.available::before {
+    background: var(--color-primary);
+    color: #000;
+}
+
+.powerup-name {
+    color: var(--text-muted);
+    flex: 1;
+}
+
+.powerup-badge.available .powerup-name {
+    color: #fff;
+}
+
+.powerup-count {
+    color: var(--color-primary);
+    font-weight: 800;
+    min-width: 0.9rem;
+    text-align: right;
+}
+
+/* ===== Bottom-left HOLD slot ===== */
+.game-hud-hold {
+    position: absolute;
+    bottom: 2rem;
+    left: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    align-items: flex-start;
+    z-index: 5;
+    pointer-events: none;
+}
+
+/* ===== Bottom-right combo counter ===== */
+.combo-counter {
+    position: absolute;
+    bottom: 2rem;
+    right: 2rem;
+    font-family: var(--font-mono);
+    font-size: 1rem;
+    font-weight: 800;
+    color: var(--color-primary);
+    letter-spacing: 0.12em;
+    opacity: 0;
+    transition: opacity 0.25s ease-out;
+    z-index: 5;
+    pointer-events: none;
+    transform-origin: right bottom;
+}
+
+.combo-counter.active {
+    opacity: 1;
+    animation: mergeGlow 0.28s ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .combo-counter.active {
+        animation: none;
+    }
+
+    #game-trigger:hover,
+    .game-help-trigger:hover {
+        transform: none;
+    }
 }
 /* === users.css === */
 /* Cassanova Guard - SOC Aesthetic */
@@ -8428,10 +8604,12 @@ body.exception-page footer {
     padding: 0.75rem;
     cursor: pointer;
     transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-    display: flex;
-    flex-direction: column;
-    gap: 0.6rem;
+    /* Chromium wraps <button> contents in an internal anonymous box that doesn't
+       honor display:flex — block children like .theme-preview-bars collapse to 0 width.
+       Keep the card as display:block and space children with margin instead of gap. */
+    display: block;
     text-align: left;
+    width: 100%;
 }
 
 .theme-card:hover {
@@ -8451,6 +8629,8 @@ body.exception-page footer {
     gap: 3px;
     border-radius: 6px;
     overflow: hidden;
+    width: 100%;
+    margin-bottom: 0.6rem;
 }
 
 .theme-preview-bars span {

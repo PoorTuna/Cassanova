@@ -86,10 +86,12 @@
     padding: 0.75rem;
     cursor: pointer;
     transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-    display: flex;
-    flex-direction: column;
-    gap: 0.6rem;
+    /* Chromium wraps <button> contents in an internal anonymous box that doesn't
+       honor display:flex — block children like .theme-preview-bars collapse to 0 width.
+       Keep the card as display:block and space children with margin instead of gap. */
+    display: block;
     text-align: left;
+    width: 100%;
 }
 
 .theme-card:hover {
@@ -109,6 +111,8 @@
     gap: 3px;
     border-radius: 6px;
     overflow: hidden;
+    width: 100%;
+    margin-bottom: 0.6rem;
 }
 
 .theme-preview-bars span {
