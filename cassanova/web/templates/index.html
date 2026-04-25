@@ -126,8 +126,47 @@
                 <div class="stat-item">COMPACTION SCORE: <span id="game-score-val">0</span></div>
                 <div class="stat-item">READ LATENCY (P99): <span id="latency-val"
                                                                  style="color: var(--color-success)">0ms</span></div>
-                <div class="stat-item">DISK STATUS: <span style="color: var(--color-success)">NOMINAL</span></div>
+                <div class="stat-item">DISK STATUS: <span id="game-disk-status"
+                                                          style="color: var(--color-success)">NOMINAL</span></div>
+                <div class="stat-item">BEST RUN: <span id="game-best-val">0</span></div>
             </div>
+
+            <!-- Right HUD: next queue + nodetool power-ups -->
+            <div class="game-hud-right">
+                <div class="hud-block">
+                    <div class="hud-label">NEXT</div>
+                    <div class="mini-tiles">
+                        <div class="mini-tile" id="game-next-0">--</div>
+                        <div class="mini-tile" id="game-next-1">--</div>
+                    </div>
+                </div>
+                <div class="hud-block">
+                    <div class="hud-label">NODETOOL</div>
+                    <div class="powerup-list">
+                        <div class="powerup-badge" data-key="C">
+                            <span class="powerup-name">CLEANUP</span>
+                            <span class="powerup-count" id="powerup-cleanup">0</span>
+                        </div>
+                        <div class="powerup-badge" data-key="R">
+                            <span class="powerup-name">REPAIR</span>
+                            <span class="powerup-count" id="powerup-repair">0</span>
+                        </div>
+                        <div class="powerup-badge" data-key="M">
+                            <span class="powerup-name">MINOR</span>
+                            <span class="powerup-count" id="powerup-minorCompaction">0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hold slot -->
+            <div class="game-hud-hold">
+                <div class="hud-label">HOLD</div>
+                <div class="mini-tile" id="game-hold">--</div>
+            </div>
+
+            <!-- Combo counter -->
+            <div id="combo-counter" class="combo-counter"></div>
 
             <!-- Help Trigger -->
             <div class="game-help-trigger" onclick="toggleGameManual()" title="Operations Manual">
@@ -142,9 +181,10 @@
                 <div class="game-title">SSTABLE SMASHER</div>
                 <div class="game-subtitle">STCS - TOKEN RING SIMULATOR</div>
                 <div class="game-instructions">
-                    MANAGE THE 12 TOKEN BUCKETS<br>
-                    <span class="accent">ARROWS</span> TO SELECT TOKEN SECTOR<br>
-                    <span class="accent">SPACE</span> TO FLUSH SSTABLE<br><br>
+                    <span class="accent">ARROWS</span> SELECT SECTOR<br>
+                    <span class="accent">SPACE</span> FLUSH SSTABLE<br>
+                    <span class="accent">H</span> HOLD / SWAP<br>
+                    <span class="accent">C R M</span> NODETOOL OPS<br><br>
                     <span style="font-size: 0.75rem; letter-spacing: 0.1em; opacity: 0.6">SIZE-TIERED COMPACTION
                         (STCS)</span><br>
                     <span style="font-size: 0.75rem; letter-spacing: 0.1em; color: #ef4444">WATCH OUT FOR TOMBSTONES
@@ -159,18 +199,44 @@
                     <h3>OPERATIONS MANUAL</h3>
                     <div class="manual-section">
                         <h4>Size-Tiered Compaction (STCS)</h4>
-                        <p>Stack 4 identical size tables (L0, L1, etc.) in one bucket to trigger a merge. This reduces
-                            the number of SSTables and improves read performance.</p>
+                        <p>Stack 4 identical sstables in one bucket to merge them into the next level. There is no
+                            ceiling — L4, L5 and beyond are reachable and score geometrically.</p>
                     </div>
                     <div class="manual-section">
-                        <h4>The Token Ring</h4>
-                        <p>Your cluster is divided into 12 sectors. Distribute your writes (Space) evenly to prevent
-                            single-node disk overflows.</p>
+                        <h4>Token Ring</h4>
+                        <p>Twelve sectors, eight rows each. An overflow drop ends the run. Arrows steer, Space flushes
+                            the current piece into the selected sector.</p>
                     </div>
                     <div class="manual-section">
-                        <h4>GC Grace Period</h4>
-                        <p>Tombstones (T) are generated on delete. They stay for 10 turns. You cannot building on top of
-                            them until they expire and the node reclaims space.</p>
+                        <h4>Tombstones (T)</h4>
+                        <p>On an empty bucket a tombstone counts down 10 turns then is reclaimed. On an occupied bucket
+                            it becomes a shadow delete: it removes the tile directly beneath it after 3 turns, then
+                            removes itself. Four tombstones stacked in a row purge together for a flat bonus.</p>
+                    </div>
+                    <div class="manual-section">
+                        <h4>Hold &amp; Preview</h4>
+                        <p><span class="accent">H</span> swaps the current piece with the hold slot, once per turn. The
+                            NEXT queue previews the two upcoming pieces.</p>
+                    </div>
+                    <div class="manual-section">
+                        <h4>nodetool</h4>
+                        <p><span class="accent">C</span> cleanup &mdash; purge every tombstone on the ring.<br>
+                            <span class="accent">R</span> repair &mdash; remove the top tile of the selected
+                            sector.<br>
+                            <span class="accent">M</span> minor compact &mdash; force-merge the lowest same-level run in
+                            the selected sector.<br>
+                            Earned at 1k / 5k / 20k / 50k. Capped at 3 each.
+                        </p>
+                    </div>
+                    <div class="manual-section">
+                        <h4>Chain Multiplier</h4>
+                        <p>Compactions resolving within one second stack a multiplier up to 8&times;. Any turn-consuming
+                            action resets it.</p>
+                    </div>
+                    <div class="manual-section">
+                        <h4>Read Hot</h4>
+                        <p>Every 50 drops one sector flares for 10 seconds. Drops into that sector score double and
+                            stack with the chain multiplier.</p>
                     </div>
                     <button class="btn-primary" onclick="toggleGameManual()">RESUME OPS</button>
                 </div>
