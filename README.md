@@ -7,6 +7,25 @@ Built with Python (FastAPI), it provides cluster monitoring, data exploration, a
 
 ---
 
+## Screenshots
+
+**Cluster Overview** — health, topology, and keyspaces at a glance.
+![Cluster Overview](docs/images/cluster-overview.png)
+
+**VNode Distribution** — token ranges rendered as a ring.
+![VNode Ring](docs/images/vnodes-ring.png)
+
+**Schema Graph** — keyspace and tables visualized as a graph.
+![Schema Graph](docs/images/keyspace-graph.png)
+
+**Data Explorer** — filter, inspect, and edit rows with full schema awareness.
+![Data Explorer](docs/images/data-explorer.png)
+
+**CQL Console** — Monaco-powered editor with results, tracing, and history.
+![CQL Console](docs/images/cql-console.png)
+
+---
+
 ## Features
 
 ### Security & RBAC
