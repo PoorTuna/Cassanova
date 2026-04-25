@@ -5,24 +5,7 @@ Built with Python (FastAPI), it provides cluster monitoring, data exploration, a
 
 [![Docker Pulls](https://img.shields.io/docker/pulls/poortuna/cassanova.svg)](https://hub.docker.com/r/poortuna/cassanova)
 
----
-
-## Screenshots
-
-**Cluster Overview** — health, topology, and keyspaces at a glance.
-![Cluster Overview](docs/images/cluster-overview.png)
-
-**VNode Distribution** — token ranges rendered as a ring.
-![VNode Ring](docs/images/vnodes-ring.png)
-
-**Schema Graph** — keyspace and tables visualized as a graph.
-![Schema Graph](docs/images/keyspace-graph.png)
-
-**Data Explorer** — filter, inspect, and edit rows with full schema awareness.
-![Data Explorer](docs/images/data-explorer.png)
-
-**CQL Console** — Monaco-powered editor with results, tracing, and history.
-![CQL Console](docs/images/cql-console.png)
+<img src="docs/images/cluster-overview.png" alt="Cluster Overview" width="600" />
 
 ---
 
@@ -40,17 +23,23 @@ Built with Python (FastAPI), it provides cluster monitoring, data exploration, a
 - **Data Management**: Form-based row insertion, aware of table schema.
 - **Topology Visualization**: Graphs showing Token Ring and Schema relationships.
 
+<img src="docs/images/data-explorer.png" alt="Data Explorer" width="600" />
+
 ### Operational Tools
 - **Schema Management**: UI for creating and modifying Keyspaces and Tables.
 - **CQL Console**: Web-based terminal with history and syntax highlighting.
 - **Query Tracing**: List view for analyzing query performance and latency.
 - **Process Management**: Web interfaces for `sstabledump`, `nodetool`, and `cassandra-stress`.
 
+<img src="docs/images/cql-console.png" alt="CQL Console" width="600" />
+
 ### Core Capabilities
 - **Cluster Monitoring**: Node status, VNode distribution, and Token Range maps.
 - **Multi-Cluster Support**: Manage multiple Cassandra clusters from a single dashboard.
 - **Theming**: 11 built-in themes with a quick-switch palette in the user menu.
 - **Navigation**: Top bar with breadcrumbs, global search across clusters/keyspaces/tables, and keyboard shortcut (Ctrl+K).
+
+<img src="docs/images/vnodes-ring.png" alt="VNode Distribution" width="600" />
 
 ---
 
