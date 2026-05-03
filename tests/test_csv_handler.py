@@ -6,10 +6,12 @@ import pytest
 from cassanova.api.dependencies.csv_handler import (
     _create_csv_reader,
     _init_csv_writer,
+    _iter_json_rows,
     _prepare_insert_data,
     _write_row,
     generate_csv_stream,
     load_csv_data,
+    load_json_data,
 )
 
 
@@ -139,6 +141,79 @@ class TestLoadCsvData:
         session = MagicMock()
 
         result = load_csv_data(csv_bytes, "ks", "tbl", meta, session)
+
+        assert result["failed"] > 0
+        assert any("Unknown column" in e for e in result["errors"])
+
+
+class TestIterJsonRows:
+    def test_parses_json_array(self):
+        content = b'[{"name": "alice", "age": 30}, {"name": "bob", "age": 25}]'
+
+        rows = list(_iter_json_rows(content))
+
+        assert rows == [{"name": "alice", "age": 30}, {"name": "bob", "age": 25}]
+
+    def test_parses_ndjson(self):
+        content = b'{"name": "alice", "age": 30}\n{"name": "bob", "age": 25}\n'
+
+        rows = list(_iter_json_rows(content))
+
+        assert rows == [{"name": "alice", "age": 30}, {"name": "bob", "age": 25}]
+
+    def test_skips_blank_ndjson_lines(self):
+        content = b'\n{"name": "alice"}\n\n{"name": "bob"}\n'
+
+        rows = list(_iter_json_rows(content))
+
+        assert rows == [{"name": "alice"}, {"name": "bob"}]
+
+    def test_empty_content_yields_nothing(self):
+        rows = list(_iter_json_rows(b"   "))
+
+        assert rows == []
+
+    def test_rejects_non_object_array_element(self):
+        content = b'[{"name": "alice"}, "bad"]'
+
+        with pytest.raises(ValueError, match="must be an object"):
+            list(_iter_json_rows(content))
+
+    def test_rejects_non_array_root_when_starts_with_bracket(self):
+        # Edge case: starts with '[' but not a valid array of objects
+        content = b'[1, 2, 3]'
+
+        with pytest.raises(ValueError, match="must be an object"):
+            list(_iter_json_rows(content))
+
+
+class TestLoadJsonData:
+    def test_imports_json_array(self):
+        content = b'[{"name": "alice", "age": 30}, {"name": "bob", "age": 25}]'
+        meta = _make_table_metadata({"name": "text", "age": "int"})
+        session = MagicMock()
+
+        result = load_json_data(content, "ks", "tbl", meta, session)
+
+        assert result["success"] == 2
+        assert result["failed"] == 0
+
+    def test_imports_ndjson(self):
+        content = b'{"name": "alice", "age": 30}\n{"name": "bob", "age": 25}\n'
+        meta = _make_table_metadata({"name": "text", "age": "int"})
+        session = MagicMock()
+
+        result = load_json_data(content, "ks", "tbl", meta, session)
+
+        assert result["success"] == 2
+        assert result["failed"] == 0
+
+    def test_unknown_column_reported(self):
+        content = b'[{"name": "alice", "bogus": "x"}]'
+        meta = _make_table_metadata({"name": "text"})
+        session = MagicMock()
+
+        result = load_json_data(content, "ks", "tbl", meta, session)
 
         assert result["failed"] > 0
         assert any("Unknown column" in e for e in result["errors"])

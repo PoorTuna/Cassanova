@@ -540,19 +540,51 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    const importBtn = document.getElementById('import-csv-btn');
-    const importModal = document.getElementById('import-csv-modal');
-    const fileInput = document.getElementById('csv-file-input');
+    const importBtn = document.getElementById('import-btn');
+    const importDropdown = document.getElementById('import-dropdown');
+    const importModal = document.getElementById('import-data-modal');
+    const importTitle = document.getElementById('import-modal-title');
+    const importHelp = document.getElementById('import-modal-help');
+    const fileInput = document.getElementById('import-file-input');
     const dropZone = document.getElementById('import-drop-zone');
     const confirmImportBtn = document.getElementById('confirm-import-btn');
     const importStatus = document.getElementById('import-status');
     const importProgress = document.getElementById('import-progress-bar');
     const importStatusText = document.getElementById('import-status-text');
 
-    importBtn.addEventListener('click', () => {
+    let selectedImportFormat = 'csv';
+
+    importBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        importDropdown.classList.toggle('hidden');
+    });
+
+    document.addEventListener('click', (e) => {
+        if (!importBtn.contains(e.target) && !importDropdown.contains(e.target)) {
+            importDropdown.classList.add('hidden');
+        }
+    });
+
+    importDropdown.querySelectorAll('[data-format]').forEach(btn => {
+        btn.addEventListener('click', () => {
+            selectedImportFormat = btn.dataset.format;
+            importDropdown.classList.add('hidden');
+            openImportModal(selectedImportFormat);
+        });
+    });
+
+    function openImportModal(format) {
+        const upper = format.toUpperCase();
+        importTitle.textContent = `Import Data from ${upper}`;
+        const helpExtra = format === 'csv'
+            ? ' Ensure headers match column names exactly.'
+            : ' Accepts a JSON array of objects or NDJSON (one object per line).';
+        importHelp.innerHTML =
+            `Select a ${upper} file to import into <strong>${escapeHtml(table)}</strong>.${helpExtra}`;
+        fileInput.accept = format === 'json' ? '.json' : '.csv';
         importModal.classList.remove('hidden');
         resetImportUI();
-    });
+    }
 
     dropZone.addEventListener('click', () => fileInput.click());
 
@@ -574,8 +606,9 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     function handleFileSelection(file) {
-        if (!file.name.endsWith('.csv')) {
-            Toast.error("Please select a CSV file.");
+        const ext = file.name.split('.').pop().toLowerCase();
+        if (ext !== selectedImportFormat) {
+            Toast.error(`Please select a ${selectedImportFormat.toUpperCase()} file.`);
             return;
         }
         confirmImportBtn.disabled = false;
@@ -587,7 +620,8 @@ document.addEventListener('DOMContentLoaded', () => {
         confirmImportBtn.textContent = 'Start Import';
         importStatus.classList.add('hidden');
         importProgress.style.width = '0%';
-        dropZone.querySelector('p').textContent = `Click to select or drag & drop CSV file`;
+        dropZone.querySelector('p').textContent =
+            `Click to select or drag & drop ${selectedImportFormat.toUpperCase()} file`;
         fileInput.value = '';
     }
 
@@ -605,7 +639,12 @@ document.addEventListener('DOMContentLoaded', () => {
         importProgress.style.width = '50%';
 
         try {
-            const res = await fetch(`/api/v1/cluster/${cluster}/keyspace/${keyspace}/table/${table}/import`, {
+            const importUrl = new URL(
+                `/api/v1/cluster/${cluster}/keyspace/${keyspace}/table/${table}/import`,
+                window.location.origin
+            );
+            importUrl.searchParams.set('format', selectedImportFormat);
+            const res = await fetch(importUrl, {
                 method: 'POST',
                 body: formData
             });

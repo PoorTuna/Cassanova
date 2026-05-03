@@ -4,7 +4,7 @@
 {% block breadcrumbs %}<a href="/">Clusters</a><span class="bc-sep">/</span><a href="/cluster/{{ cluster_config_entry }}">{{ cluster_config_entry }}</a><span class="bc-sep">/</span><a href="/cluster/{{ cluster_config_entry }}/keyspace/{{ keyspace_name }}">{{ keyspace_name }}</a><span class="bc-sep">/</span><span class="bc-current">{{ table_name }}</span>{% endblock %}
 
 {% block head_extra %}
-<script src="/static/scripts/app/explorer.js" defer></script>
+<script src="/static/scripts/app/explorer.js?v={{ cache_bust }}" defer></script>
 {% endblock %}
 
 {% block content %}
@@ -88,12 +88,18 @@
                         <button data-format="json">Export JSON</button>
                     </div>
                 </div>
-                <button id="import-csv-btn" class="btn-outline" title="Import from CSV">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"></path>
-                    </svg>
-                    Import CSV
-                </button>
+                <div class="dropdown-wrapper">
+                    <button id="import-btn" class="btn-outline" title="Import data">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"></path>
+                        </svg>
+                        Import
+                    </button>
+                    <div class="dropdown-menu hidden" id="import-dropdown">
+                        <button data-format="csv">Import CSV</button>
+                        <button data-format="json">Import JSON</button>
+                    </div>
+                </div>
                 <button id="insert-row-btn" class="btn-primary-sm" title="Insert New Row">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M12 5v14M5 12h14"></path>
@@ -220,24 +226,23 @@
                 </li>
             </ul>
         </div>
-        <!-- Import CSV Modal -->
-        <div id="import-csv-modal" class="modal hidden">
+        <!-- Import Data Modal -->
+        <div id="import-data-modal" class="modal hidden">
             <div class="modal-content glass-panel">
                 <div class="modal-header">
-                    <h3>Import Data from CSV</h3>
+                    <h3 id="import-modal-title">Import Data</h3>
                     <span class="modal-close close-modal">&times;</span>
                 </div>
                 <div class="modal-body">
-                    <p>Select a CSV file to import into <strong>{{ table_name }}</strong>. Ensure headers match column
-                        names exactly.</p>
+                    <p id="import-modal-help">Select a file to import into <strong>{{ table_name }}</strong>.</p>
                     <div class="import-drop-zone" id="import-drop-zone">
-                        <input type="file" id="csv-file-input" accept=".csv" class="hidden">
+                        <input type="file" id="import-file-input" class="hidden">
                         <div class="drop-zone-content">
                             <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                 stroke-width="2">
                                 <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"></path>
                             </svg>
-                            <p>Click to select or drag & drop CSV file</p>
+                            <p>Click to select or drag & drop file</p>
                         </div>
                     </div>
                     <div id="import-status" class="import-status-container hidden">

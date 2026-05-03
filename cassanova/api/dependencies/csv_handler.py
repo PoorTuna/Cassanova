@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import json
-from collections.abc import Generator
+from collections.abc import Generator, Iterable, Iterator
 from csv import DictReader, writer
 from io import StringIO
 from logging import getLogger
@@ -51,19 +51,48 @@ def load_csv_data(
     cluster_name: str = "",
     user: WebUser | None = None,
 ) -> dict[str, Any]:
+    reader = _create_csv_reader(content)
+    return _bulk_insert_rows(
+        reader, keyspace_name, table_name, table_metadata, session, cluster_name, user
+    )
+
+
+def load_json_data(
+    content: bytes,
+    keyspace_name: str,
+    table_name: str,
+    table_metadata: TableMetadata,
+    session: Session,
+    cluster_name: str = "",
+    user: WebUser | None = None,
+) -> dict[str, Any]:
+    rows_iter = _iter_json_rows(content)
+    return _bulk_insert_rows(
+        rows_iter, keyspace_name, table_name, table_metadata, session, cluster_name, user
+    )
+
+
+def _bulk_insert_rows(
+    rows_iter: Iterable[dict[str, Any]],
+    keyspace_name: str,
+    table_name: str,
+    table_metadata: TableMetadata,
+    session: Session,
+    cluster_name: str,
+    user: WebUser | None,
+) -> dict[str, Any]:
     from cassanova.config.cassanova_config import get_clusters_config
     from cassanova.core.cql._executor import execute_cql
 
     batch_timeout = get_clusters_config().timeouts.batch
-    reader = _create_csv_reader(content)
     success_count = 0
-    errors = []
+    errors: list[str] = []
 
     batch = BatchStatement(batch_type=BatchType.UNLOGGED)
     batch_rows = 0
     insert_query = None
 
-    for row in reader:
+    for row in rows_iter:
         try:
             columns, values = _prepare_insert_data(row, table_metadata)
             if insert_query is None:
@@ -128,6 +157,31 @@ def _extract_clean_values(row: Any, headers: list[str]) -> list[Any]:
 def _create_csv_reader(content: bytes) -> DictReader:
     decoded = content.decode("utf-8")
     return DictReader(StringIO(decoded))
+
+
+def _iter_json_rows(content: bytes) -> Iterator[dict[str, Any]]:
+    decoded = content.decode("utf-8").strip()
+    if not decoded:
+        return
+
+    if decoded.startswith("["):
+        parsed = json.loads(decoded)
+        if not isinstance(parsed, list):
+            raise ValueError("JSON root must be an array of objects or NDJSON")
+        for row in parsed:
+            if not isinstance(row, dict):
+                raise ValueError("Each JSON row must be an object")
+            yield row
+        return
+
+    for line in decoded.splitlines():
+        stripped = line.strip()
+        if not stripped:
+            continue
+        row = json.loads(stripped)
+        if not isinstance(row, dict):
+            raise ValueError("Each JSON row must be an object")
+        yield row
 
 
 def _prepare_insert_data(row: dict, meta: TableMetadata) -> tuple[list[str], list[Any]]:

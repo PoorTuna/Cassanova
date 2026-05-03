@@ -1,5 +1,5 @@
 from binascii import hexlify, unhexlify
-from json import loads
+from json import JSONDecodeError, loads
 from typing import Any
 
 from cassandra.query import SimpleStatement
@@ -12,6 +12,7 @@ from cassanova.api.dependencies.csv_handler import (
     generate_csv_stream,
     generate_json_stream,
     load_csv_data,
+    load_json_data,
 )
 from cassanova.api.dependencies.db_session import get_session
 from cassanova.core.cql._executor import execute_cql
@@ -291,7 +292,7 @@ def export_table_data(
     )
 
 
-_MAX_CSV_SIZE = 50 * 1024 * 1024
+_MAX_IMPORT_SIZE = 50 * 1024 * 1024
 
 
 @data_router.post("/cluster/{cluster_name}/keyspace/{keyspace_name}/table/{table_name}/import")
@@ -300,6 +301,7 @@ def import_table_data(
     keyspace_name: str,
     table_name: str,
     file: UploadFile = File(...),
+    format: str | None = None,
     _user: WebUser = Depends(require_permission("cluster:write")),
 ) -> dict[str, Any]:
     session = get_session(cluster_name)
@@ -315,9 +317,28 @@ def import_table_data(
     if not table_metadata:
         raise HTTPException(status_code=404, detail="Table not found")
 
-    content = file.file.read(_MAX_CSV_SIZE + 1)
-    if len(content) > _MAX_CSV_SIZE:
-        raise HTTPException(status_code=413, detail="CSV file too large (max 50MB)")
+    content = file.file.read(_MAX_IMPORT_SIZE + 1)
+    if len(content) > _MAX_IMPORT_SIZE:
+        raise HTTPException(status_code=413, detail="File too large (max 50MB)")
+
+    resolved_format = (format or _infer_import_format(file.filename)).lower()
+    if resolved_format == "json":
+        try:
+            return load_json_data(
+                content, keyspace_name, table_name, table_metadata, session, cluster_name, _user
+            )
+        except (ValueError, JSONDecodeError) as e:
+            raise HTTPException(status_code=400, detail=f"Invalid JSON: {e}") from e
+    if resolved_format != "csv":
+        raise HTTPException(
+            status_code=400, detail=f"Unsupported import format: {resolved_format}"
+        )
     return load_csv_data(
         content, keyspace_name, table_name, table_metadata, session, cluster_name, _user
     )
+
+
+def _infer_import_format(filename: str | None) -> str:
+    if filename and filename.lower().endswith(".json"):
+        return "json"
+    return "csv"
