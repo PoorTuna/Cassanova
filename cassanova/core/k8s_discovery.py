@@ -20,12 +20,56 @@ def discover_k8s_clusters(
     kubeconfig_path: str | None = None,
     namespace: str | None = None,
     service_suffix: str = "-service",
+    contexts: list[str] | None = None,
 ) -> dict[str, ClusterConnectionConfig]:
     if not K8S_AVAILABLE:
         logger.warning("Kubernetes package not installed. Skipping K8s discovery.")
         return {}
 
-    if not _load_k8s_config(kubeconfig_path):
+    target_contexts = _resolve_contexts(kubeconfig_path, contexts)
+
+    if target_contexts is None:
+        return _discover_for_context(kubeconfig_path, None, namespace, service_suffix, prefix=False)
+
+    discovered: dict[str, ClusterConnectionConfig] = {}
+    multi = len(target_contexts) > 1
+    for ctx in target_contexts:
+        ctx_discovered = _discover_for_context(
+            kubeconfig_path, ctx, namespace, service_suffix, prefix=multi
+        )
+        for key, value in ctx_discovered.items():
+            if key in discovered:
+                logger.warning(f"Duplicate cluster key '{key}' across contexts; overwriting.")
+            discovered[key] = value
+    return discovered
+
+
+def _resolve_contexts(
+    kubeconfig_path: str | None, contexts: list[str] | None
+) -> list[str] | None:
+    if contexts:
+        return contexts
+
+    if not kubeconfig_path or not os.path.exists(kubeconfig_path):
+        return None
+
+    try:
+        all_contexts, _ = config.list_kube_config_contexts(config_file=kubeconfig_path)
+    except Exception as e:
+        logger.error(f"Failed to list kubeconfig contexts: {e}")
+        return None
+
+    return [c["name"] for c in all_contexts if c.get("name")]
+
+
+def _discover_for_context(
+    kubeconfig_path: str | None,
+    context: str | None,
+    namespace: str | None,
+    service_suffix: str,
+    prefix: bool,
+) -> dict[str, ClusterConnectionConfig]:
+    if not _load_k8s_config(kubeconfig_path, context):
         return {}
 
     core_api = client.CoreV1Api()
@@ -36,27 +80,31 @@ def discover_k8s_clusters(
         return {}
 
     items = k8s_clusters.get("items", [])
-    logger.info(f"Found {len(items)} K8ssandraClusters.")
+    logger.info(
+        f"Context '{context or 'default'}': found {len(items)} K8ssandraClusters."
+    )
 
-    discovered_clusters: dict[str, ClusterConnectionConfig] = {}
+    discovered: dict[str, ClusterConnectionConfig] = {}
     for item in items:
-        _process_k8ssandra_cluster(item, core_api, namespace, service_suffix, discovered_clusters)
+        _process_k8ssandra_cluster(item, core_api, namespace, service_suffix, discovered)
 
-    return discovered_clusters
+    if prefix and context:
+        return {f"{context}/{key}": value for key, value in discovered.items()}
+    return discovered
 
 
-def _load_k8s_config(kubeconfig_path: str | None) -> bool:
+def _load_k8s_config(kubeconfig_path: str | None, context: str | None = None) -> bool:
     try:
         if kubeconfig_path and os.path.exists(kubeconfig_path):
-            config.load_kube_config(config_file=kubeconfig_path)
+            config.load_kube_config(config_file=kubeconfig_path, context=context)
         else:
             try:
                 config.load_incluster_config()
             except config.ConfigException:
-                config.load_kube_config()
+                config.load_kube_config(context=context)
         return True
     except Exception as e:
-        logger.error(f"Failed to load kubeconfig: {e}")
+        logger.error(f"Failed to load kubeconfig (context={context}): {e}")
         return False
 
 

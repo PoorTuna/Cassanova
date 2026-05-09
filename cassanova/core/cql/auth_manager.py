@@ -40,7 +40,7 @@ _VALID_RESOURCE_PREFIXES = frozenset(
 def validate_role_name(name: str) -> None:
     if not match(r"^[a-zA-Z0-9_\-]+$", name):
         raise ValueError(
-            "Role/Username contains invalid characters (only alphanumeric, _ and - allowed)"
+            "Role name contains invalid characters (only alphanumeric, _ and - allowed)"
         )
 
 

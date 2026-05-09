@@ -35,7 +35,6 @@
         </div>
     </header>
 
-    {% if clusters | length >= 2 %}
     <div class="compare-bar hidden" id="compare-bar">
         <div class="combobox" data-id="idx-compare-a">
             <input type="text" class="combobox-input" placeholder="Select cluster..." autocomplete="off" />
@@ -52,7 +51,6 @@
         </div>
         <button class="btn-primary-sm" id="idx-compare-go">Compare</button>
     </div>
-    {% endif %}
 
     <div id="cluster-list">
         {% for name, config in clusters.items() %}
@@ -259,7 +257,6 @@
                 const a = compareBar.querySelector('[data-id="idx-compare-a"]').dataset.selected || '';
                 const b = compareBar.querySelector('[data-id="idx-compare-b"]').dataset.selected || '';
                 if (!a || !b) { Toast.error('Select both clusters'); return; }
-                if (a === b) { Toast.error('Select two different clusters'); return; }
                 window.location.href = `/compare/${encodeURIComponent(a)}/${encodeURIComponent(b)}`;
             });
         }

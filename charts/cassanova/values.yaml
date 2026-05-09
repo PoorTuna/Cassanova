@@ -68,6 +68,9 @@ config:
   # -- Kubernetes service discovery for K8ssandra clusters
   k8s:
     enabled: false
+    # -- Optional list of kubeconfig contexts to scrape. Empty = all contexts in the kubeconfig.
+    # -- Use to scrape multiple clusters from a merged kubeconfig.
+    contexts: []
     namespace: ""
     suffix: "-service"
     periodicDiscoveryEnabled: false

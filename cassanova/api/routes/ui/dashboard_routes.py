@@ -128,13 +128,13 @@ def vnodes_dashboard(request: Request, cluster_name: str) -> Response:
     )
 
 
-@cassanova_ui_dashboard_router.get("/cluster/{cluster_name}/users")
-def users_dashboard(request: Request, cluster_name: str) -> Response:
+@cassanova_ui_dashboard_router.get("/cluster/{cluster_name}/roles")
+def roles_dashboard(request: Request, cluster_name: str) -> Response:
     session = get_session(cluster_name)
     cluster = session.cluster
 
     return templates.TemplateResponse(
-        "users.html",
+        "roles.html",
         {
             "request": request,
             "cluster_name": cluster.metadata.cluster_name,

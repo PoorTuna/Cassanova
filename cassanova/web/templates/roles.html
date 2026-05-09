@@ -1,21 +1,21 @@
 {% extends "base.html" %}
 
-{% block title %}User Management — {{ cluster_name }}{% endblock %}
-{% block breadcrumbs %}<a href="/">Clusters</a><span class="bc-sep">/</span><span class="bc-current">Users</span>{% endblock %}
+{% block title %}Role Management — {{ cluster_name }}{% endblock %}
+{% block breadcrumbs %}<a href="/">Clusters</a><span class="bc-sep">/</span><span class="bc-current">Roles</span>{% endblock %}
 
 {% block content %}
 <main class="with-sidebar">
     <section class="page-header">
         <div class="header-content">
-            <h2>User Management</h2>
+            <h2>Role Management</h2>
             <p class="subtitle">Roles, permissions and access control overview</p>
         </div>
         <div class="header-actions">
             <label class="checkbox-container header-toggle">
-                <input type="checkbox" id="show-only-users" checked>
-                <span class="label-text label-text-sm">USERS ONLY</span>
+                <input type="checkbox" id="show-only-login" checked>
+                <span class="label-text label-text-sm">LOGIN-ENABLED ONLY</span>
             </label>
-            <button id="add-user-btn" class="btn-primary">
+            <button id="add-role-btn" class="btn-primary">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
                     <circle cx="8.5" cy="7" r="4"></circle>
@@ -38,7 +38,7 @@
         </div>
     </section>
 
-    <div id="users-grid" class="users-grid">
+    <div id="roles-grid" class="roles-grid">
         <div class="loading-state">
             <div class="spinner"></div>
             Loading roles...
@@ -209,7 +209,7 @@
         fetchRoles();
         setupModals();
 
-        document.getElementById('show-only-users').addEventListener('change', fetchRoles);
+        document.getElementById('show-only-login').addEventListener('change', fetchRoles);
 
         // Register for auto-refresh widget
         window.cassanovaRefresh = () => fetchRoles();
@@ -217,7 +217,7 @@
 
     // --- Roles Grid ---
     function fetchRoles() {
-        const grid = document.getElementById('users-grid');
+        const grid = document.getElementById('roles-grid');
         const rolesCountEl = document.getElementById('total-roles-count');
         const superCountEl = document.getElementById('superuser-count');
 
@@ -228,7 +228,7 @@
                 if (roles.error || roles.detail) return Toast.error(roles.detail || 'Failed to load roles');
 
                 // Filter?
-                const showOnlyUsers = document.getElementById('show-only-users').checked;
+                const showOnlyLogin = document.getElementById('show-only-login').checked;
                 let displayRoles = roles;
 
                 // Keep stats on ALL roles
@@ -236,7 +236,7 @@
                 const superCount = roles.filter(r => r.is_superuser).length;
                 superCountEl.textContent = superCount;
 
-                if (showOnlyUsers) {
+                if (showOnlyLogin) {
                     displayRoles = roles.filter(r => r.can_login);
                 }
 
@@ -244,7 +244,7 @@
 
                 displayRoles.forEach(role => {
                     const card = document.createElement('div');
-                    card.className = `user-card glass-panel ${role.is_superuser ? 'superuser-card' : ''}`;
+                    card.className = `role-card glass-panel ${role.is_superuser ? 'superuser-card' : ''}`;
                     card.innerHTML = `
                         <div class="card-header">
                             <div class="avatar ${role.is_superuser ? 'superuser' : ''}">${role.role.charAt(0).toUpperCase()}</div>
@@ -308,7 +308,7 @@
         };
 
         // Create
-        document.getElementById('add-user-btn').onclick = () => {
+        document.getElementById('add-role-btn').onclick = () => {
             document.getElementById('create-modal').classList.remove('hidden');
             document.getElementById('new-role-name').focus();
         };

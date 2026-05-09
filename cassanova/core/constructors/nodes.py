@@ -23,19 +23,22 @@ def host_tokens_from_metadata(session: Session, host) -> list[int]:
 def generate_nodes_info(session: Session) -> list[NodeInfo]:
     """Build a complete node list from CQL system tables.
 
-    ``system.local`` and ``system.peers_v2`` may be routed to different
-    coordinators by the driver's load-balancing policy (especially behind
-    a load balancer).  ``system.peers_v2`` excludes its own coordinator,
-    so a coordinator mismatch leaves one node absent from the union.
+    When the driver's load-balancer routes the two queries to different
+    coordinators, ``system.peers_v2`` from coordinator B will include
+    coordinator A, while ``system.local`` (routed to A) also returns A —
+    producing a duplicate.  We dedup by host_id during construction.
 
-    We use the driver's discovered-host list as a safety net: any node
-    the driver knows about but the CQL results missed gets appended with
-    the subset of metadata the driver exposes.
+    The back-fill loop below handles the inverse case: a node absent from
+    both CQL results gets appended from driver metadata.
     """
-    rows = list(session.execute("SELECT * FROM system.local")) + list(
-        session.execute("SELECT * FROM system.peers_v2")
-    )
-    nodes = [NodeInfo(**row._asdict()) for row in rows]
+    local_rows = list(session.execute("SELECT * FROM system.local"))
+    seen_ids = {str(row.host_id) for row in local_rows}
+    peers_rows = [
+        r
+        for r in session.execute("SELECT * FROM system.peers_v2")
+        if str(r.host_id) not in seen_ids
+    ]
+    nodes = [NodeInfo(**row._asdict()) for row in local_rows + peers_rows]
 
     seen_ids = {n.host_id for n in nodes}
     for host in session.cluster.metadata.all_hosts():

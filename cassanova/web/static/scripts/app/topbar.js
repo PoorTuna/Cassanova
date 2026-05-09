@@ -104,7 +104,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     { label: 'Nodes', path: '/nodes', extra: 'nodes servers' },
                     { label: 'VNodes', path: '/vnodes', extra: 'vnodes tokens virtual' },
                     { label: 'CQL Shell', path: '/tools/cqlsh', extra: 'cql query shell console' },
-                    { label: 'Users', path: '/users', extra: 'users roles permissions auth' },
+                    { label: 'Roles', path: '/roles', extra: 'roles permissions auth' },
                     { label: 'Settings', path: '/settings', extra: 'settings configuration' },
                 ];
                 for (const page of pages) {

@@ -3,7 +3,7 @@
     padding-bottom: 5rem;
 }
 
-/* User Management - Professional Aesthetic */
+/* Role Management - Professional Aesthetic */
 .guard-overview-stats {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -50,13 +50,13 @@
     color: var(--text-primary);
 }
 
-.users-grid {
+.roles-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
     gap: 1.5rem;
 }
 
-.user-card {
+.role-card {
     display: flex;
     flex-direction: column;
     padding: 1.25rem;
@@ -69,7 +69,7 @@
     overflow: hidden;
 }
 
-.user-card:hover {
+.role-card:hover {
     transform: translateY(-2px);
     border-color: var(--color-primary-light);
     box-shadow: var(--shadow-lg);
@@ -77,7 +77,7 @@
 }
 
 /* Card Header */
-.user-card .card-header {
+.role-card .card-header {
     display: flex;
     align-items: center;
     gap: 1rem;
@@ -113,7 +113,7 @@
     letter-spacing: 0.02em;
 }
 
-/* Users page badge size override */
+/* Role page badge size override */
 .badge {
     padding: 2px 8px;
     border-radius: 4px;
@@ -201,7 +201,7 @@
     transform: translateY(-1px);
 }
 
-/* --- Users Modal Overrides --- */
+/* --- Roles Modal Overrides --- */
 .modal {
     background: rgba(0, 0, 0, 0.85);
     backdrop-filter: blur(12px);
@@ -256,7 +256,7 @@
     transform: none;
 }
 
-/* --- Users Form Overrides --- */
+/* --- Roles Form Overrides --- */
 .form-group.checkbox-group {
     flex-direction: row;
     align-items: center;

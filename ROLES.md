@@ -66,7 +66,7 @@ The following permissions control access to specific parts of the Cassanova inte
 | **`cluster:view`** | Basic Read Access | Cluster Overview, Nodes List, VNodes Visualizer. |
 | **`tools:view`** | Operational Tools | Access to the Tools Hub (SSTableDump, Stress, etc.). |
 | **`tools:cqlsh`** | CQL Console | Access to the interactive CQLSh web terminal. |
-| **`users:view`** | User Management | Access to the Users management page. |
+| **`roles:view`** | Role Management | Access to the Role management page. |
 | **`settings:view`** | Configuration | Access to the Read-Only Settings page. |
 | **`*`** | Superuser | Grants **ALL** permissions automatically. |
 

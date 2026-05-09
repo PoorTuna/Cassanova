@@ -159,6 +159,7 @@ async def run_periodic_discovery(config: CassanovaConfig) -> None:
                 config.k8s.kubeconfig,
                 config.k8s.namespace,
                 config.k8s.suffix,
+                config.k8s.contexts,
             )
 
             if discovered:

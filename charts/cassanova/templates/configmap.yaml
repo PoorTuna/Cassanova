@@ -67,6 +67,9 @@ data:
       },
       "k8s": {
         "enabled": {{ .Values.config.k8s.enabled }},
+        {{- if .Values.config.k8s.contexts }}
+        "contexts": {{ .Values.config.k8s.contexts | toJson }},
+        {{- end }}
         "namespace": {{ .Values.config.k8s.namespace | default "" | quote }},
         "suffix": {{ .Values.config.k8s.suffix | quote }},
         "periodic_discovery_enabled": {{ .Values.config.k8s.periodicDiscoveryEnabled }},

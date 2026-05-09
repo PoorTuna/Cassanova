@@ -61,6 +61,7 @@ class CassanovaConfig(BaseSettings):
                     kubeconfig_path=self.k8s.kubeconfig,
                     namespace=self.k8s.namespace,
                     service_suffix=self.k8s.suffix,
+                    contexts=self.k8s.contexts,
                 )
                 if discovered:
                     self.clusters.update(discovered)

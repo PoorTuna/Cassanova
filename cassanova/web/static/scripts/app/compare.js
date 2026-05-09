@@ -12,7 +12,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const a = pickerContainer.querySelector('[data-id="compare-select-a"]').dataset.selected || '';
         const b = pickerContainer.querySelector('[data-id="compare-select-b"]').dataset.selected || '';
         if (!a || !b) { Toast.error('Select both clusters'); return; }
-        if (a === b) { Toast.error('Select two different clusters'); return; }
         window.location.href = `/compare/${encodeURIComponent(a)}/${encodeURIComponent(b)}`;
     });
 

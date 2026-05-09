@@ -206,20 +206,23 @@ def get_cluster_settings(cluster_name: str) -> dict[str, Any]:
 def get_cluster_vnodes(cluster_name: str) -> dict[str, list[dict[str, Any]]]:
     session = get_session(cluster_name)
     try:
-        rows = list(
-            session.execute("SELECT host_id, rpc_address, tokens FROM system.local")
-        ) + list(session.execute("SELECT host_id, rpc_address, tokens FROM system.peers"))
+        local_rows = list(session.execute("SELECT host_id, rpc_address, tokens FROM system.local"))
+        seen_ids = {str(r.host_id) for r in local_rows}
+        peers_rows = [
+            r
+            for r in session.execute("SELECT host_id, rpc_address, tokens FROM system.peers")
+            if str(r.host_id) not in seen_ids
+        ]
         nodes = [
             {
                 "host_id": str(row.host_id),
                 "address": str(row.rpc_address),
                 "tokens": [int(token) for token in row.tokens],
             }
-            for row in rows
+            for row in local_rows + peers_rows
         ]
 
-        # The two CQL queries above may hit different coordinators,
-        # causing one node to be absent.  Back-fill from driver metadata.
+        # Back-fill any node the driver knows about but the CQL results missed.
         seen_ids = {n["host_id"] for n in nodes}
         for host in session.cluster.metadata.all_hosts():
             hid = str(host.host_id)

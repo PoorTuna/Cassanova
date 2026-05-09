@@ -75,6 +75,11 @@ async def run_tool(
         resolved_args = resolve_args(safe_args, workdir)
         stdout, stderr, ret_code = await execute_tool(tool_path, resolved_args, workdir)
 
+        stderr = "\n".join(
+            line for line in stderr.splitlines()
+            if "--add-exports" not in line and "--add-opens" not in line
+        ).strip()
+
         return JSONResponse(
             {
                 "namespace": namespace,

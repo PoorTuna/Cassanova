@@ -50,7 +50,7 @@ To run Cassanova using Docker:
 #### 1. Pull the image:
 
 ```bash
-docker pull poortuna/cassanova:v1.13.0
+docker pull poortuna/cassanova:v1.14.0
 ```
 
 #### 2. Create a configuration file:
@@ -83,7 +83,7 @@ Create a `cassanova.json` file. This includes the `auth` section:
     ],
     "roles": [
       { "name": "admin", "permissions": ["*"] },
-      { "name": "viewer", "permissions": ["cluster:view", "users:view"] }
+      { "name": "viewer", "permissions": ["cluster:view", "roles:view"] }
     ]
   },
   "clusters": {
@@ -95,6 +95,7 @@ Create a `cassanova.json` file. This includes the `auth` section:
   "k8s": {
     "enabled": true,
     "kubeconfig": "/etc/cassanova/kubeconfig",
+    "contexts": null,
     "namespace": "default",
     "suffix": "-service",
     "periodic_discovery_enabled": true,
@@ -111,7 +112,7 @@ Create a `cassanova.json` file. This includes the `auth` section:
 docker run -p 8080:8080 \
   -e CASSANOVA_CONFIG_PATH=/config/cassanova.json \
   -v $(pwd)/cassanova.json:/config/cassanova.json \
-  poortuna/cassanova:v1.13.0
+  poortuna/cassanova:v1.14.0
 ```
 
 > **Note**: Ensure your Cassandra nodes are reachable from within the container.

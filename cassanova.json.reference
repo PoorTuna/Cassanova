@@ -102,6 +102,7 @@
   "k8s": {
     "enabled": false,
     "kubeconfig": null,
+    "contexts": null,
     "namespace": null,
     "suffix": "-service",
     "periodic_discovery_enabled": true,
