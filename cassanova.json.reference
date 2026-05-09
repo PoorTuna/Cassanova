@@ -107,6 +107,8 @@
     "suffix": "-service",
     "periodic_discovery_enabled": true,
     "discovery_interval_seconds": 60,
+    "external_only": false,
+    "stale_threshold": 3,
     "node_recovery": {
       "enabled": false
     }

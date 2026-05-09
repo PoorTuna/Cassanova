@@ -28,6 +28,23 @@ class SessionManager:
             return cls._sessions[cluster_name]
 
     @classmethod
+    def shutdown(cls, name: str) -> None:
+        with cls._lock:
+            session = cls._sessions.pop(name, None)
+            cluster = cls._instances.pop(name, None)
+
+        if session:
+            try:
+                session.shutdown()
+            except Exception as e:
+                logger.warning(f"Error shutting down session '{name}': {e}")
+        if cluster:
+            try:
+                cluster.shutdown()
+            except Exception as e:
+                logger.warning(f"Error shutting down cluster '{name}': {e}")
+
+    @classmethod
     def shutdown_all(cls) -> None:
         with cls._lock:
             for name, session in cls._sessions.items():

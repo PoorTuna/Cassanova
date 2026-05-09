@@ -75,6 +75,8 @@ config:
     suffix: "-service"
     periodicDiscoveryEnabled: false
     discoveryIntervalSeconds: 60
+    externalOnly: false
+    staleThreshold: 3
     nodeRecovery:
       enabled: false
 

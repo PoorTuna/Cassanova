@@ -8,7 +8,7 @@
   "auth": { "enabled": false },
   "clusters": {
     "local": {
-      "contact_points": ["cassandra"],
+      "contact_points": ["cassandra-node"],
       "port": 9042
     }
   }

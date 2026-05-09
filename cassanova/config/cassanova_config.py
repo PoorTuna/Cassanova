@@ -1,4 +1,5 @@
 import os
+from datetime import UTC, datetime
 from functools import cache
 from logging import getLogger
 from pathlib import Path
@@ -14,6 +15,7 @@ from pydantic_settings import (
 from cassanova.config.app_config import APPConfig
 from cassanova.config.auth_config import AuthConfig
 from cassanova.config.cluster_config import ClusterConnectionConfig
+from cassanova.config.cluster_metadata import ClusterMetadata
 from cassanova.config.k8s_config import K8sConfig
 from cassanova.config.logging_config import LoggingConfig
 from cassanova.config.timeouts_config import TimeoutConfig
@@ -27,6 +29,7 @@ class CassanovaConfig(BaseSettings):
     )
 
     clusters: dict[str, ClusterConnectionConfig] = {}
+    cluster_metadata: dict[str, ClusterMetadata] = {}
     auth: AuthConfig = AuthConfig()
     app_config: APPConfig = APPConfig()
     logging: LoggingConfig = LoggingConfig()
@@ -52,24 +55,47 @@ class CassanovaConfig(BaseSettings):
 
     def model_post_init(self, __context: Any) -> None:
         super().model_post_init(__context)
-        if self.k8s.enabled:
-            from cassanova.core.k8s_discovery import discover_k8s_clusters
 
-            logger.info("Starting K8s Service Discovery...")
-            try:
-                discovered = discover_k8s_clusters(
-                    kubeconfig_path=self.k8s.kubeconfig,
-                    namespace=self.k8s.namespace,
-                    service_suffix=self.k8s.suffix,
-                    contexts=self.k8s.contexts,
-                )
-                if discovered:
-                    self.clusters.update(discovered)
-                    logger.info(
-                        f"K8s Discovery added {len(discovered)} clusters: {list(discovered.keys())}"
-                    )
-            except Exception as e:
-                logger.error(f"K8s Discovery failed: {e}")
+        for name in self.clusters:
+            self.cluster_metadata.setdefault(name, ClusterMetadata(source="static"))
+
+        if self.k8s.enabled:
+            self._run_initial_k8s_discovery()
+
+    def _run_initial_k8s_discovery(self) -> None:
+        from cassanova.core.k8s_discovery import KubernetesDiscoveryError, discover_k8s_clusters
+
+        logger.info("Starting K8s Service Discovery...")
+        try:
+            discovered = discover_k8s_clusters(
+                kubeconfig_path=self.k8s.kubeconfig,
+                namespace=self.k8s.namespace,
+                service_suffix=self.k8s.suffix,
+                contexts=self.k8s.contexts,
+                external_only=self.k8s.external_only,
+            )
+        except KubernetesDiscoveryError as e:
+            logger.error(f"K8s Discovery failed: {e}")
+            return
+        except Exception as e:
+            logger.error(f"K8s Discovery failed unexpectedly: {e}")
+            return
+
+        if not discovered:
+            return
+
+        now = datetime.now(UTC)
+        for name, dc in discovered.items():
+            self.clusters[name] = dc.config
+            self.cluster_metadata[name] = ClusterMetadata(
+                source="k8s",
+                context=dc.context,
+                discovered_at=now,
+                last_seen=now,
+            )
+        logger.info(
+            f"K8s Discovery added {len(discovered)} clusters: {list(discovered.keys())}"
+        )
 
 
 @cache

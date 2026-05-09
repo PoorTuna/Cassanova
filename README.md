@@ -62,7 +62,7 @@ To run Cassanova using Docker:
 #### 1. Pull the image:
 
 ```bash
-docker pull poortuna/cassanova:v1.14.0
+docker pull poortuna/cassanova:v1.15.0
 ```
 
 #### 2. Create a configuration file:
@@ -111,7 +111,9 @@ Create a `cassanova.json` file. This includes the `auth` section:
     "namespace": "default",
     "suffix": "-service",
     "periodic_discovery_enabled": true,
-    "discovery_interval_seconds": 60
+    "discovery_interval_seconds": 60,
+    "external_only": false,
+    "stale_threshold": 3
   }
 }
 ```
@@ -124,7 +126,7 @@ Create a `cassanova.json` file. This includes the `auth` section:
 docker run -p 8080:8080 \
   -e CASSANOVA_CONFIG_PATH=/config/cassanova.json \
   -v $(pwd)/cassanova.json:/config/cassanova.json \
-  poortuna/cassanova:v1.14.0
+  poortuna/cassanova:v1.15.0
 ```
 
 > **Note**: Ensure your Cassandra nodes are reachable from within the container.
@@ -152,12 +154,53 @@ Cassanova can discover `K8ssandraCluster` instances from a Kubernetes cluster.
 | `k8s.suffix` | Service name suffix (e.g., `-metallb`) | `-service` |
 | `k8s.periodic_discovery_enabled` | Enable periodic background scans | `false` |
 | `k8s.discovery_interval_seconds` | Interval for periodic scans in seconds | `60` |
+| `k8s.external_only` | Only accept LoadBalancer IPs and `externalIPs`; skip ClusterIP and DNS | `false` |
+| `k8s.stale_threshold` | Consecutive missed scans before a discovered cluster is evicted | `3` |
 
 **Mechanism:**
 1. Cassanova scans for `K8ssandraCluster` CRs.
 2. Fetches credentials from the `<cluster>-superuser` Secret.
 3. Identifies Services matching `<cluster>-<dc><suffix>` to extract contact points.
 4. Merges discovered clusters into the configuration.
+5. Clusters not seen for `stale_threshold` consecutive scans are evicted and their sessions closed.
+
+> **`external_only` mode**: When enabled, only LoadBalancer ingress IPs and `externalIPs` are accepted as contact points. Useful when Cassanova runs outside the cluster (e.g., external monitoring host) and must reach Cassandra via MetalLB or cloud load balancers rather than internal DNS.
+
+### Admin API
+
+Cassanova exposes a cluster inventory endpoint for operators and automation.
+
+**Requires permission**: `cluster:admin`
+
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/api/v1/admin/clusters` | `GET` | List all registered clusters with provenance metadata |
+
+**Query parameters:**
+
+| Parameter | Default | Description |
+|-----------|---------|-------------|
+| `expose_credentials` | `true` | Include plaintext credentials in the response. Set to `false` to mask them. |
+
+**Example response:**
+```json
+[
+  {
+    "name": "my-cluster",
+    "source": "k8s",
+    "context": null,
+    "contact_points": ["10.0.0.249"],
+    "port": 9042,
+    "credentials": { "username": "my-cluster-superuser", "password": "..." },
+    "jmx_credentials": null,
+    "has_credentials": true,
+    "has_jmx_credentials": false,
+    "has_additional_kwargs": false,
+    "last_seen": "2026-05-09T20:19:24Z",
+    "miss_count": 0
+  }
+]
+```
 
 ### Node Recovery
 

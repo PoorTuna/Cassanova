@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends
 
 from cassanova.api.dependencies.auth import require_permission, require_user
+from cassanova.api.routes.api.admin_routes import admin_router
 from cassanova.api.routes.api.auth_routes import auth_router
 from cassanova.api.routes.api.cluster_routes import cluster_router
 from cassanova.api.routes.api.data_routes import data_router
@@ -23,6 +24,9 @@ def get_cassanova_api_router() -> APIRouter:
     )
     cassanova_api_router.include_router(
         node_recovery_router, dependencies=[Depends(require_permission("cluster:admin"))]
+    )
+    cassanova_api_router.include_router(
+        admin_router, dependencies=[Depends(require_permission("cluster:admin"))]
     )
 
     return cassanova_api_router

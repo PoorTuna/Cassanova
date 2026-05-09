@@ -1,5 +1,6 @@
 import base64
 import os
+from dataclasses import dataclass
 from logging import getLogger
 from typing import Any
 
@@ -16,12 +17,23 @@ from cassanova.config.cluster_config import ClusterConnectionConfig, ClusterCred
 logger = getLogger(__name__)
 
 
+class KubernetesDiscoveryError(Exception):
+    pass
+
+
+@dataclass
+class DiscoveredCluster:
+    config: ClusterConnectionConfig
+    context: str | None
+
+
 def discover_k8s_clusters(
     kubeconfig_path: str | None = None,
     namespace: str | None = None,
     service_suffix: str = "-service",
     contexts: list[str] | None = None,
-) -> dict[str, ClusterConnectionConfig]:
+    external_only: bool = False,
+) -> dict[str, DiscoveredCluster]:
     if not K8S_AVAILABLE:
         logger.warning("Kubernetes package not installed. Skipping K8s discovery.")
         return {}
@@ -29,18 +41,30 @@ def discover_k8s_clusters(
     target_contexts = _resolve_contexts(kubeconfig_path, contexts)
 
     if target_contexts is None:
-        return _discover_for_context(kubeconfig_path, None, namespace, service_suffix, prefix=False)
-
-    discovered: dict[str, ClusterConnectionConfig] = {}
-    multi = len(target_contexts) > 1
-    for ctx in target_contexts:
-        ctx_discovered = _discover_for_context(
-            kubeconfig_path, ctx, namespace, service_suffix, prefix=multi
+        return _discover_for_context(
+            kubeconfig_path, None, namespace, service_suffix, external_only, prefix=False
         )
-        for key, value in ctx_discovered.items():
-            if key in discovered:
-                logger.warning(f"Duplicate cluster key '{key}' across contexts; overwriting.")
-            discovered[key] = value
+
+    discovered: dict[str, DiscoveredCluster] = {}
+    successful_queries = 0
+    multi = len(target_contexts) > 1
+
+    for ctx in target_contexts:
+        try:
+            ctx_discovered = _discover_for_context(
+                kubeconfig_path, ctx, namespace, service_suffix, external_only, prefix=multi
+            )
+            successful_queries += 1
+            for key, value in ctx_discovered.items():
+                if key in discovered:
+                    logger.warning(f"Duplicate cluster key '{key}' across contexts; overwriting.")
+                discovered[key] = value
+        except KubernetesDiscoveryError as e:
+            logger.error(f"Failed to query context '{ctx}': {e}")
+
+    if successful_queries == 0 and target_contexts:
+        raise KubernetesDiscoveryError("No kubeconfig contexts could be reached")
+
     return discovered
 
 
@@ -67,33 +91,30 @@ def _discover_for_context(
     context: str | None,
     namespace: str | None,
     service_suffix: str,
+    external_only: bool,
     prefix: bool,
-) -> dict[str, ClusterConnectionConfig]:
-    if not _load_k8s_config(kubeconfig_path, context):
-        return {}
+) -> dict[str, DiscoveredCluster]:
+    _load_k8s_config(kubeconfig_path, context)
 
     core_api = client.CoreV1Api()
     custom_api = client.CustomObjectsApi()
 
     k8s_clusters = _fetch_k8ssandra_clusters(custom_api, namespace)
-    if not k8s_clusters:
-        return {}
-
     items = k8s_clusters.get("items", [])
-    logger.info(
-        f"Context '{context or 'default'}': found {len(items)} K8ssandraClusters."
-    )
+    logger.info(f"Context '{context or 'default'}': found {len(items)} K8ssandraClusters.")
 
-    discovered: dict[str, ClusterConnectionConfig] = {}
+    raw: dict[str, ClusterConnectionConfig] = {}
     for item in items:
-        _process_k8ssandra_cluster(item, core_api, namespace, service_suffix, discovered)
+        _process_k8ssandra_cluster(item, core_api, namespace, service_suffix, external_only, raw)
 
-    if prefix and context:
-        return {f"{context}/{key}": value for key, value in discovered.items()}
-    return discovered
+    result: dict[str, DiscoveredCluster] = {}
+    for key, cc in raw.items():
+        prefixed_key = f"{context}/{key}" if prefix and context else key
+        result[prefixed_key] = DiscoveredCluster(config=cc, context=context)
+    return result
 
 
-def _load_k8s_config(kubeconfig_path: str | None, context: str | None = None) -> bool:
+def _load_k8s_config(kubeconfig_path: str | None, context: str | None = None) -> None:
     try:
         if kubeconfig_path and os.path.exists(kubeconfig_path):
             config.load_kube_config(config_file=kubeconfig_path, context=context)
@@ -102,13 +123,13 @@ def _load_k8s_config(kubeconfig_path: str | None, context: str | None = None) ->
                 config.load_incluster_config()
             except config.ConfigException:
                 config.load_kube_config(context=context)
-        return True
     except Exception as e:
-        logger.error(f"Failed to load kubeconfig (context={context}): {e}")
-        return False
+        raise KubernetesDiscoveryError(
+            f"Failed to load kubeconfig (context={context}): {e}"
+        ) from e
 
 
-def _fetch_k8ssandra_clusters(custom_api: Any, namespace: str | None) -> dict[str, Any] | None:
+def _fetch_k8ssandra_clusters(custom_api: Any, namespace: str | None) -> dict[str, Any]:
     try:
         if namespace:
             return custom_api.list_namespaced_custom_object(  # type: ignore[no-any-return]
@@ -124,9 +145,10 @@ def _fetch_k8ssandra_clusters(custom_api: Any, namespace: str | None) -> dict[st
     except ApiException as e:
         if e.status == 404:
             logger.info("No K8ssandraCluster CRDs found.")
-        else:
-            logger.error(f"Error listing K8ssandraClusters: {e}")
-        return None
+            return {"items": []}
+        raise KubernetesDiscoveryError(
+            f"K8s API error listing K8ssandraClusters (status={e.status}): {e}"
+        ) from e
 
 
 def _process_k8ssandra_cluster(
@@ -134,6 +156,7 @@ def _process_k8ssandra_cluster(
     core_api: Any,
     namespace: str | None,
     service_suffix: str,
+    external_only: bool,
     discovered_clusters: dict[str, ClusterConnectionConfig],
 ) -> None:
     metadata = item.get("metadata", {})
@@ -154,6 +177,7 @@ def _process_k8ssandra_cluster(
             cluster_namespace,
             namespace,
             service_suffix,
+            external_only,
             core_api,
             credentials,
             discovered_clusters,
@@ -185,6 +209,7 @@ def _process_datacenter(
     cluster_namespace: str,
     namespace: str | None,
     service_suffix: str,
+    external_only: bool,
     core_api: Any,
     credentials: ClusterCredentials | None,
     discovered_clusters: dict[str, ClusterConnectionConfig],
@@ -196,7 +221,9 @@ def _process_datacenter(
     service_names = _build_service_names(cluster_name, dc_name, service_suffix)
 
     for svc_name in service_names:
-        contact_points = _discover_service_contact_points(core_api, svc_name, cluster_namespace)
+        contact_points = _discover_service_contact_points(
+            core_api, svc_name, cluster_namespace, external_only
+        )
         if contact_points:
             config_key = _build_config_key(cluster_name, cluster_namespace, namespace)
             discovered_clusters[config_key] = ClusterConnectionConfig(
@@ -215,35 +242,40 @@ def _build_service_names(cluster_name: str, dc_name: str, service_suffix: str) -
 
 
 def _discover_service_contact_points(
-    core_api: Any, svc_name: str, cluster_namespace: str
+    core_api: Any,
+    svc_name: str,
+    cluster_namespace: str,
+    external_only: bool = False,
 ) -> list[str] | None:
     try:
         svc = core_api.read_namespaced_service(svc_name, cluster_namespace)
-        contact_points = []
-        svc_spec = svc.spec
-        svc_status = svc.status
-
-        if svc_spec.type == "LoadBalancer":
-            ingresses = svc_status.load_balancer.ingress or []
-            for ing in ingresses:
-                if ing.ip:
-                    contact_points.append(ing.ip)
-                if ing.hostname:
-                    contact_points.append(ing.hostname)
-
-        if svc_spec.external_i_ps:
-            contact_points.extend(svc_spec.external_i_ps)
-
-        if not contact_points and svc_spec.cluster_ip and svc_spec.cluster_ip != "None":
-            contact_points.append(svc_spec.cluster_ip)
-
-        if not contact_points:
-            svc_dns = f"{svc_name}.{cluster_namespace}.svc.cluster.local"
-            contact_points.append(svc_dns)
-
-        return contact_points if contact_points else None
     except ApiException:
         return None
+
+    contact_points: list[str] = []
+    svc_spec = svc.spec
+    svc_status = svc.status
+
+    if svc_spec.type == "LoadBalancer":
+        for ing in svc_status.load_balancer.ingress or []:
+            if ing.ip:
+                contact_points.append(ing.ip)
+            if ing.hostname:
+                contact_points.append(ing.hostname)
+
+    if svc_spec.external_i_ps:
+        contact_points.extend(svc_spec.external_i_ps)
+
+    if external_only:
+        return contact_points or None
+
+    if not contact_points and svc_spec.cluster_ip and svc_spec.cluster_ip != "None":
+        contact_points.append(svc_spec.cluster_ip)
+
+    if not contact_points:
+        contact_points.append(f"{svc_name}.{cluster_namespace}.svc.cluster.local")
+
+    return contact_points or None
 
 
 def _build_config_key(cluster_name: str, cluster_namespace: str, namespace: str | None) -> str:

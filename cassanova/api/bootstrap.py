@@ -1,4 +1,5 @@
 from asyncio import create_task, sleep, to_thread
+from datetime import UTC, datetime
 from logging import getLogger
 
 from fastapi import FastAPI
@@ -21,9 +22,10 @@ from cassanova.api.exception_handlers.system_views_unavailable_handler import (
 )
 from cassanova.config.app_config import APPConfig
 from cassanova.config.cassanova_config import CassanovaConfig, get_clusters_config
+from cassanova.config.cluster_metadata import ClusterMetadata
 from cassanova.config.tls_config import TLSConfig
 from cassanova.consts.app_routers import APPConsts
-from cassanova.core.k8s_discovery import discover_k8s_clusters
+from cassanova.core.k8s_discovery import DiscoveredCluster, discover_k8s_clusters
 from cassanova.core.session_manager import session_manager
 from cassanova.middleware.auth_middleware import AuthMiddleware
 from cassanova.middleware.tls_middleware import (
@@ -154,22 +156,83 @@ async def run_periodic_discovery(config: CassanovaConfig) -> None:
     while True:
         try:
             await sleep(config.k8s.discovery_interval_seconds)
-            discovered = await to_thread(
-                discover_k8s_clusters,
-                config.k8s.kubeconfig,
-                config.k8s.namespace,
-                config.k8s.suffix,
-                config.k8s.contexts,
-            )
-
-            if discovered:
-                logger.debug(f"Periodic scan found {len(discovered)} clusters")
-                new_clusters = dict(config.clusters)
-                for name, cluster_config in discovered.items():
-                    if name not in new_clusters:
-                        logger.info(f"New cluster discovered: {name}")
-                        new_clusters[name] = cluster_config
-                config.clusters = new_clusters
-
+            await to_thread(_run_discovery_pass, config)
         except Exception as e:
-            logger.error(f"Error in periodic K8s discovery: {e}")
+            logger.error(f"Unhandled error in periodic discovery loop: {e}")
+
+
+def _run_discovery_pass(config: CassanovaConfig) -> None:
+    try:
+        discovered = discover_k8s_clusters(
+            config.k8s.kubeconfig,
+            config.k8s.namespace,
+            config.k8s.suffix,
+            config.k8s.contexts,
+            config.k8s.external_only,
+        )
+    except Exception as e:
+        logger.error(f"K8s discovery FAILED — skipping miss accounting: {e}")
+        return
+
+    now = datetime.now(UTC)
+    new_clusters = dict(config.clusters)
+    new_meta = dict(config.cluster_metadata)
+
+    _merge_discovered_clusters(discovered, new_clusters, new_meta, now)
+    _evict_stale_clusters(new_clusters, new_meta, discovered, config.k8s.stale_threshold)
+
+    config.clusters = new_clusters
+    config.cluster_metadata = new_meta
+
+
+def _merge_discovered_clusters(
+    discovered: dict[str, DiscoveredCluster],
+    clusters: dict,
+    metadata: dict,
+    now: datetime,
+) -> None:
+    for name, dc in discovered.items():
+        if name not in clusters:
+            logger.info(f"New cluster discovered: {name}")
+            clusters[name] = dc.config
+
+        existing = metadata.get(name)
+        metadata[name] = ClusterMetadata(
+            source="k8s",
+            context=dc.context,
+            discovered_at=existing.discovered_at if existing else now,
+            last_seen=now,
+            miss_count=0,
+        )
+
+
+def _evict_stale_clusters(
+    clusters: dict,
+    metadata: dict,
+    discovered: dict[str, DiscoveredCluster],
+    stale_threshold: int,
+) -> None:
+    for name in list(metadata):
+        meta = metadata[name]
+        if meta.source != "k8s" or name in discovered:
+            continue
+
+        new_miss_count = meta.miss_count + 1
+        logger.debug(f"Cluster '{name}' missed scan ({new_miss_count}/{stale_threshold})")
+
+        if new_miss_count >= stale_threshold:
+            logger.warning(
+                f"Evicting stale k8s cluster '{name}' "
+                f"(missed {new_miss_count} consecutive scans)"
+            )
+            clusters.pop(name, None)
+            metadata.pop(name, None)
+            session_manager.shutdown(name)
+        else:
+            metadata[name] = ClusterMetadata(
+                source=meta.source,
+                context=meta.context,
+                discovered_at=meta.discovered_at,
+                last_seen=meta.last_seen,
+                miss_count=new_miss_count,
+            )
