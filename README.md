@@ -33,6 +33,18 @@ Built with Python (FastAPI), it provides cluster monitoring, data exploration, a
 
 <img src="docs/images/cql-console.png" alt="CQL Console" width="600" />
 
+### Role Management
+- **Cassandra Roles**: View, create, modify, and delete Cassandra roles directly from the UI.
+- **Permission Grants**: Grant and revoke per-resource permissions (SELECT, MODIFY, ALTER, etc.) with a visual access map.
+- **Login Filter**: Toggle between all roles and login-enabled roles only.
+- **Access required**: `roles:view` permission.
+
+### Schema Comparison
+- **Side-by-side diff**: Compare keyspace and table schemas across any two clusters.
+- **Visual tree**: Hierarchical diff view with `Identical`, `Different`, `Only A`, and `Only B` status badges.
+- **Schema browser**: Select the same cluster on both sides to browse its full schema as a tree.
+- **Always available**: Accessible regardless of cluster count.
+
 ### Core Capabilities
 - **Cluster Monitoring**: Node status, VNode distribution, and Token Range maps.
 - **Multi-Cluster Support**: Manage multiple Cassandra clusters from a single dashboard.
