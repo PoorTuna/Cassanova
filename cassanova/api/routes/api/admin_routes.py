@@ -66,7 +66,7 @@ def _build_cluster_view(
     )
 
 
-@admin_router.get("/clusters", response_model=list[AdminClusterView])
+@admin_router.get("/config/clusters", response_model=list[AdminClusterView])
 def list_all_clusters(
     expose_credentials: bool = Query(default=True),
 ) -> list[AdminClusterView]:
