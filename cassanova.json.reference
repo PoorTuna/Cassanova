@@ -104,6 +104,8 @@
     "kubeconfig": null,
     "contexts": null,
     "namespace": null,
+    "cluster_include": [],
+    "cluster_exclude": [],
     "suffix": "-service",
     "periodic_discovery_enabled": true,
     "discovery_interval_seconds": 60,

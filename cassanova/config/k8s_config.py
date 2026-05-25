@@ -14,6 +14,20 @@ class K8sConfig(BaseModel):
         ),
     )
     namespace: str | None = None
+    cluster_include: list[str] = Field(
+        default_factory=list,
+        description=(
+            "Glob patterns matched against K8ssandraCluster metadata.name "
+            "(fnmatch syntax: *, ?, [seq]). Empty list = match all clusters."
+        ),
+    )
+    cluster_exclude: list[str] = Field(
+        default_factory=list,
+        description=(
+            "Glob patterns matched against K8ssandraCluster metadata.name. "
+            "Exclude takes precedence over include."
+        ),
+    )
     suffix: str = "-service"
     periodic_discovery_enabled: bool = Field(
         default=False, description="Enable periodic discovery of K8s clusters"

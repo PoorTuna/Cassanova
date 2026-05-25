@@ -71,6 +71,8 @@ data:
         "contexts": {{ .Values.config.k8s.contexts | toJson }},
         {{- end }}
         "namespace": {{ .Values.config.k8s.namespace | default "" | quote }},
+        "cluster_include": {{ .Values.config.k8s.clusterInclude | default list | toJson }},
+        "cluster_exclude": {{ .Values.config.k8s.clusterExclude | default list | toJson }},
         "suffix": {{ .Values.config.k8s.suffix | quote }},
         "periodic_discovery_enabled": {{ .Values.config.k8s.periodicDiscoveryEnabled }},
         "discovery_interval_seconds": {{ .Values.config.k8s.discoveryIntervalSeconds }},

@@ -169,6 +169,8 @@ def _run_discovery_pass(config: CassanovaConfig) -> None:
             config.k8s.suffix,
             config.k8s.contexts,
             config.k8s.external_only,
+            config.k8s.cluster_include,
+            config.k8s.cluster_exclude,
         )
     except Exception as e:
         logger.error(f"K8s discovery FAILED — skipping miss accounting: {e}")

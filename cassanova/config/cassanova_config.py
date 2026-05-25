@@ -73,6 +73,8 @@ class CassanovaConfig(BaseSettings):
                 service_suffix=self.k8s.suffix,
                 contexts=self.k8s.contexts,
                 external_only=self.k8s.external_only,
+                cluster_include=self.k8s.cluster_include,
+                cluster_exclude=self.k8s.cluster_exclude,
             )
         except KubernetesDiscoveryError as e:
             logger.error(f"K8s Discovery failed: {e}")

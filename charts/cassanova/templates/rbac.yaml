@@ -10,8 +10,11 @@ rules:
   - apiGroups: ["k8ssandra.io"]
     resources: ["k8ssandraclusters"]
     verbs: ["get", "list", "watch"]
+  - apiGroups: ["control.k8ssandra.io"]
+    resources: ["k8ssandratasks"]
+    verbs: ["get", "list", "create", "delete"]
   - apiGroups: [""]
-    resources: ["services", "secrets"]
+    resources: ["pods", "services", "secrets"]
     verbs: ["get", "list"]
 ---
 apiVersion: rbac.authorization.k8s.io/v1
@@ -39,8 +42,11 @@ rules:
   - apiGroups: ["k8ssandra.io"]
     resources: ["k8ssandraclusters"]
     verbs: ["get", "list", "watch"]
+  - apiGroups: ["control.k8ssandra.io"]
+    resources: ["k8ssandratasks"]
+    verbs: ["get", "list", "create", "delete"]
   - apiGroups: [""]
-    resources: ["services", "secrets"]
+    resources: ["pods", "services", "secrets"]
     verbs: ["get", "list"]
 ---
 apiVersion: rbac.authorization.k8s.io/v1

@@ -1,4 +1,5 @@
 import base64
+import fnmatch
 import os
 from dataclasses import dataclass
 from logging import getLogger
@@ -21,6 +22,14 @@ class KubernetesDiscoveryError(Exception):
     pass
 
 
+def _cluster_name_allowed(name: str, include: list[str], exclude: list[str]) -> bool:
+    if any(fnmatch.fnmatchcase(name, p) for p in exclude):
+        return False
+    if not include:
+        return True
+    return any(fnmatch.fnmatchcase(name, p) for p in include)
+
+
 @dataclass
 class DiscoveredCluster:
     config: ClusterConnectionConfig
@@ -33,16 +42,20 @@ def discover_k8s_clusters(
     service_suffix: str = "-service",
     contexts: list[str] | None = None,
     external_only: bool = False,
+    cluster_include: list[str] | None = None,
+    cluster_exclude: list[str] | None = None,
 ) -> dict[str, DiscoveredCluster]:
     if not K8S_AVAILABLE:
         logger.warning("Kubernetes package not installed. Skipping K8s discovery.")
         return {}
 
+    include = cluster_include or []
+    exclude = cluster_exclude or []
     target_contexts = _resolve_contexts(kubeconfig_path, contexts)
 
     if target_contexts is None:
         return _discover_for_context(
-            kubeconfig_path, None, namespace, service_suffix, external_only, prefix=False
+            kubeconfig_path, None, namespace, service_suffix, external_only, include, exclude, prefix=False
         )
 
     discovered: dict[str, DiscoveredCluster] = {}
@@ -52,7 +65,7 @@ def discover_k8s_clusters(
     for ctx in target_contexts:
         try:
             ctx_discovered = _discover_for_context(
-                kubeconfig_path, ctx, namespace, service_suffix, external_only, prefix=multi
+                kubeconfig_path, ctx, namespace, service_suffix, external_only, include, exclude, prefix=multi
             )
             successful_queries += 1
             for key, value in ctx_discovered.items():
@@ -92,6 +105,8 @@ def _discover_for_context(
     namespace: str | None,
     service_suffix: str,
     external_only: bool,
+    cluster_include: list[str],
+    cluster_exclude: list[str],
     prefix: bool,
 ) -> dict[str, DiscoveredCluster]:
     _load_k8s_config(kubeconfig_path, context)
@@ -105,7 +120,9 @@ def _discover_for_context(
 
     raw: dict[str, ClusterConnectionConfig] = {}
     for item in items:
-        _process_k8ssandra_cluster(item, core_api, namespace, service_suffix, external_only, raw)
+        _process_k8ssandra_cluster(
+            item, core_api, namespace, service_suffix, external_only, cluster_include, cluster_exclude, raw
+        )
 
     result: dict[str, DiscoveredCluster] = {}
     for key, cc in raw.items():
@@ -157,6 +174,8 @@ def _process_k8ssandra_cluster(
     namespace: str | None,
     service_suffix: str,
     external_only: bool,
+    cluster_include: list[str],
+    cluster_exclude: list[str],
     discovered_clusters: dict[str, ClusterConnectionConfig],
 ) -> None:
     metadata = item.get("metadata", {})
@@ -165,6 +184,10 @@ def _process_k8ssandra_cluster(
     cluster_namespace = metadata.get("namespace", "default")
 
     if not cluster_name:
+        return
+
+    if not _cluster_name_allowed(cluster_name, cluster_include, cluster_exclude):
+        logger.debug(f"Skipping cluster '{cluster_name}' (filtered by include/exclude)")
         return
 
     credentials = _extract_cluster_credentials(core_api, cluster_name, cluster_namespace)

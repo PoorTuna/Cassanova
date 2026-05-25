@@ -118,10 +118,25 @@
           "type": "object",
           "properties": {
             "enabled": { "type": "boolean", "default": false },
+            "contexts": { "type": "array", "items": { "type": "string" }, "default": [] },
             "namespace": { "type": "string" },
+            "clusterInclude": {
+              "type": "array",
+              "items": { "type": "string" },
+              "default": [],
+              "description": "Glob patterns matched against K8ssandraCluster metadata.name. Empty = match all."
+            },
+            "clusterExclude": {
+              "type": "array",
+              "items": { "type": "string" },
+              "default": [],
+              "description": "Glob patterns matched against K8ssandraCluster metadata.name. Exclude wins over include."
+            },
             "suffix": { "type": "string", "default": "-service" },
             "periodicDiscoveryEnabled": { "type": "boolean", "default": false },
             "discoveryIntervalSeconds": { "type": "integer", "minimum": 10, "default": 60 },
+            "externalOnly": { "type": "boolean", "default": false },
+            "staleThreshold": { "type": "integer", "minimum": 1, "default": 3 },
             "nodeRecovery": {
               "type": "object",
               "properties": {
@@ -145,8 +160,8 @@
         "rbac": {
           "type": "object",
           "properties": {
-            "create": { "type": "boolean", "default": false },
-            "clusterWide": { "type": "boolean", "default": false }
+            "create": { "type": "boolean", "default": true },
+            "clusterWide": { "type": "boolean", "default": true }
           }
         }
       }

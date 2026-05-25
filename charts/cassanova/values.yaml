@@ -72,6 +72,12 @@ config:
     # -- Use to scrape multiple clusters from a merged kubeconfig.
     contexts: []
     namespace: ""
+    # -- Glob patterns (fnmatch: *, ?, [seq]) matched against K8ssandraCluster metadata.name.
+    # -- Empty list = match all clusters.
+    clusterInclude: []
+    # -- Glob patterns matched against K8ssandraCluster metadata.name.
+    # -- Exclude takes precedence over include.
+    clusterExclude: []
     suffix: "-service"
     periodicDiscoveryEnabled: false
     discoveryIntervalSeconds: 60
@@ -90,9 +96,9 @@ serviceAccount:
   name: ""
   # -- Create RBAC rules for K8ssandra cluster discovery
   rbac:
-    create: false
+    create: true
     # -- Use ClusterRole (true) or namespace-scoped Role (false)
-    clusterWide: false
+    clusterWide: true
 
 service:
   type: ClusterIP
@@ -143,8 +149,6 @@ podAnnotations: {}
 podLabels: {}
 podSecurityContext:
   runAsNonRoot: true
-  runAsUser: 1000
-  fsGroup: 1000
 securityContext:
   allowPrivilegeEscalation: false
   readOnlyRootFilesystem: false

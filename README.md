@@ -62,7 +62,7 @@ To run Cassanova using Docker:
 #### 1. Pull the image:
 
 ```bash
-docker pull poortuna/cassanova:v1.15.0
+docker pull poortuna/cassanova:1.16.0
 ```
 
 #### 2. Create a configuration file:
@@ -109,6 +109,8 @@ Create a `cassanova.json` file. This includes the `auth` section:
     "kubeconfig": "/etc/cassanova/kubeconfig",
     "contexts": null,
     "namespace": "default",
+    "cluster_include": [],
+    "cluster_exclude": [],
     "suffix": "-service",
     "periodic_discovery_enabled": true,
     "discovery_interval_seconds": 60,
@@ -126,7 +128,7 @@ Create a `cassanova.json` file. This includes the `auth` section:
 docker run -p 8080:8080 \
   -e CASSANOVA_CONFIG_PATH=/config/cassanova.json \
   -v $(pwd)/cassanova.json:/config/cassanova.json \
-  poortuna/cassanova:v1.15.0
+  poortuna/cassanova:1.16.0
 ```
 
 > **Note**: Ensure your Cassandra nodes are reachable from within the container.
@@ -151,6 +153,8 @@ Cassanova can discover `K8ssandraCluster` instances from a Kubernetes cluster.
 | `k8s.enabled` | Enable K8s discovery on startup | `false` |
 | `k8s.kubeconfig` | Path to kubeconfig file | `null` |
 | `k8s.namespace` | Namespace to scan (or all if null) | `null` |
+| `k8s.cluster_include` | Glob patterns matched against `K8ssandraCluster` name; empty = match all | `[]` |
+| `k8s.cluster_exclude` | Glob patterns matched against `K8ssandraCluster` name; exclude wins over include | `[]` |
 | `k8s.suffix` | Service name suffix (e.g., `-metallb`) | `-service` |
 | `k8s.periodic_discovery_enabled` | Enable periodic background scans | `false` |
 | `k8s.discovery_interval_seconds` | Interval for periodic scans in seconds | `60` |
@@ -165,6 +169,18 @@ Cassanova can discover `K8ssandraCluster` instances from a Kubernetes cluster.
 5. Clusters not seen for `stale_threshold` consecutive scans are evicted and their sessions closed.
 
 > **`external_only` mode**: When enabled, only LoadBalancer ingress IPs and `externalIPs` are accepted as contact points. Useful when Cassanova runs outside the cluster (e.g., external monitoring host) and must reach Cassandra via MetalLB or cloud load balancers rather than internal DNS.
+
+> **Cluster filtering**: Use `cluster_include` and `cluster_exclude` with fnmatch glob patterns (`*`, `?`, `[seq]`) to control which `K8ssandraCluster` names are imported. Exclude takes precedence over include. An empty `cluster_include` matches all clusters.
+
+### OpenShift
+
+The Helm chart supports OpenShift natively without requiring `anyuid` or `privileged` SCC grants.
+
+- Pod runs as non-root (`runAsNonRoot: true`). OpenShift injects a namespace-allocated UID automatically.
+- `allowPrivilegeEscalation: false` and `capabilities.drop: [ALL]` satisfy the `restricted` SCC out of the box.
+- A `ClusterRole` and `ClusterRoleBinding` are created automatically by the chart (RBAC enabled by default). No manual `oc` commands needed.
+
+The chart also includes an optional `Route` resource for OpenShift ingress (`route.enabled: true`).
 
 ### Admin API
 
