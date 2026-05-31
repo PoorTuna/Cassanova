@@ -161,6 +161,31 @@ Cassanova can discover `K8ssandraCluster` instances from a Kubernetes cluster.
 | `k8s.external_only` | Only accept LoadBalancer IPs and `externalIPs`; skip ClusterIP and DNS | `false` |
 | `k8s.stale_threshold` | Consecutive missed scans before a discovered cluster is evicted | `3` |
 
+**Providing a kubeconfig (Helm chart):** when Cassanova runs outside the target cluster, point it at a kubeconfig three ways:
+
+| Chart value | Behavior |
+|-------------|----------|
+| _(unset)_ | Uses the pod ServiceAccount (in-cluster config). Default. |
+| `config.k8s.kubeconfig` | Inline kubeconfig content. Rendered into a Secret, mounted at `/etc/cassanova/kubeconfig/config`, and `k8s.kubeconfig` is pointed there automatically. Good for ArgoCD external values repos. |
+| `config.k8s.kubeconfigSecret` | Name of a pre-existing Secret holding the kubeconfig under key `kubeconfig`. Mounted the same way. Takes precedence over `config.k8s.kubeconfig`. |
+
+```yaml
+# Inline (e.g. from an ArgoCD values repo)
+config:
+  k8s:
+    enabled: true
+    kubeconfig: |
+      apiVersion: v1
+      kind: Config
+      clusters: [...]
+
+# Or reference an existing secret
+config:
+  k8s:
+    enabled: true
+    kubeconfigSecret: my-cluster-kubeconfig
+```
+
 **Mechanism:**
 1. Cassanova scans for `K8ssandraCluster` CRs.
 2. Fetches credentials from the `<cluster>-superuser` Secret.

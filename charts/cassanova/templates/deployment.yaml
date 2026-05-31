@@ -27,6 +27,7 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       serviceAccountName: {{ include "cassanova.serviceAccountName" . }}
+      automountServiceAccountToken: {{ .Values.config.k8s.enabled }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
@@ -63,6 +64,11 @@ spec:
             - name: config
               mountPath: /config
               readOnly: true
+            {{- if or .Values.config.k8s.kubeconfig .Values.config.k8s.kubeconfigSecret }}
+            - name: kubeconfig
+              mountPath: /etc/cassanova/kubeconfig
+              readOnly: true
+            {{- end }}
             {{- with .Values.extraVolumeMounts }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
@@ -79,6 +85,14 @@ spec:
           configMap:
             name: {{ include "cassanova.fullname" . }}-config
           {{- end }}
+        {{- if or .Values.config.k8s.kubeconfig .Values.config.k8s.kubeconfigSecret }}
+        - name: kubeconfig
+          secret:
+            secretName: {{ .Values.config.k8s.kubeconfigSecret | default (printf "%s-kubeconfig" (include "cassanova.fullname" .)) }}
+            items:
+              - key: kubeconfig
+                path: config
+        {{- end }}
         {{- with .Values.extraVolumes }}
         {{- toYaml . | nindent 8 }}
         {{- end }}

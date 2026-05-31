@@ -68,6 +68,13 @@ config:
   # -- Kubernetes service discovery for K8ssandra clusters
   k8s:
     enabled: false
+    # -- Inline kubeconfig content. When set, it is rendered into a Secret, mounted
+    # -- into the pod, and k8s.kubeconfig is pointed at it automatically. Useful when
+    # -- the kubeconfig lives in an ArgoCD external values repo instead of a pre-created secret.
+    kubeconfig: ""
+    # -- Reference an existing Secret holding the kubeconfig (under key "kubeconfig")
+    # -- instead of inlining it above. Takes precedence over .kubeconfig.
+    kubeconfigSecret: ""
     # -- Optional list of kubeconfig contexts to scrape. Empty = all contexts in the kubeconfig.
     # -- Use to scrape multiple clusters from a merged kubeconfig.
     contexts: []

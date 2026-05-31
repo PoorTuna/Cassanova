@@ -67,6 +67,9 @@ data:
       },
       "k8s": {
         "enabled": {{ .Values.config.k8s.enabled }},
+        {{- if or .Values.config.k8s.kubeconfig .Values.config.k8s.kubeconfigSecret }}
+        "kubeconfig": "/etc/cassanova/kubeconfig/config",
+        {{- end }}
         {{- if .Values.config.k8s.contexts }}
         "contexts": {{ .Values.config.k8s.contexts | toJson }},
         {{- end }}

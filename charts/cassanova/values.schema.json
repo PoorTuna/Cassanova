@@ -118,6 +118,8 @@
           "type": "object",
           "properties": {
             "enabled": { "type": "boolean", "default": false },
+            "kubeconfig": { "type": "string", "description": "Inline kubeconfig content; rendered into a Secret and mounted automatically." },
+            "kubeconfigSecret": { "type": "string", "description": "Name of an existing Secret holding the kubeconfig under key 'kubeconfig'. Takes precedence over kubeconfig." },
             "contexts": { "type": "array", "items": { "type": "string" }, "default": [] },
             "namespace": { "type": "string" },
             "clusterInclude": {
