@@ -12,7 +12,7 @@ python-dotenv==1.0.1
 python-jose[cryptography]==3.4.0
 python-multipart==0.0.19
 uvicorn==0.34.0
-kubernetes>=28.1.0
+kubernetes==36.0.2
 python-ldap>=3.4.0
 pytest>=7.0
 pytest-asyncio>=0.23.0
