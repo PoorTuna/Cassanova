@@ -62,7 +62,7 @@ class TestDiscoverK8sClustersFiltering:
         svc = MagicMock()
         svc.spec.type = "LoadBalancer"
         svc.spec.cluster_ip = ip
-        svc.spec.external_i_ps = []
+        svc.spec.external_ips = []
         ing = MagicMock()
         ing.ip = ip
         ing.hostname = None

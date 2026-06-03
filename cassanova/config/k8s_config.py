@@ -39,7 +39,7 @@ class K8sConfig(BaseModel):
         default=False,
         description=(
             "When true, skip cluster_ip and svc.cluster.local DNS fallbacks. "
-            "Only LoadBalancer ingress IPs and external_i_ps are accepted as contact points. "
+            "Only LoadBalancer ingress IPs and external_ips are accepted as contact points. "
             "Required when Cassanova runs outside the target Kubernetes cluster."
         ),
     )

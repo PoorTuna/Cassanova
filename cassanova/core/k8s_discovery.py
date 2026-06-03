@@ -286,8 +286,8 @@ def _discover_service_contact_points(
             if ing.hostname:
                 contact_points.append(ing.hostname)
 
-    if svc_spec.external_i_ps:
-        contact_points.extend(svc_spec.external_i_ps)
+    if svc_spec.external_ips:
+        contact_points.extend(svc_spec.external_ips)
 
     if external_only:
         return contact_points or None

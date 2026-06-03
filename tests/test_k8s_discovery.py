@@ -19,7 +19,7 @@ def _make_svc(
     svc = MagicMock()
     svc.spec.type = svc_type
     svc.spec.cluster_ip = cluster_ip
-    svc.spec.external_i_ps = external_ips or []
+    svc.spec.external_ips = external_ips or []
 
     if lb_ingress:
         ingress_objs = []
